@@ -6,17 +6,17 @@ import router from "./router";
 Vue.use(VueI18n);
 
 const i18n = new VueI18n({
-    locale: "zh", // 定义默认语言为中文
-    messages: {
-        zh: require("./i18n/zh"),
+  locale: "zh", // 定义默认语言为中文
+  messages: {
+    zh: require("./i18n/zh"),
 
-        en: require("./i18n/zh"),
-    },
+    en: require("./i18n/zh"),
+  },
 });
 Vue.config.productionTip = false;
 
 new Vue({
-    router,
-    i18n,
-    render: (h) => h(App),
+  router,
+  i18n,
+  render: (h) => h(App),
 }).$mount("#app");
