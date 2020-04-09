@@ -5,19 +5,19 @@ import HelloPage from "src/layout/pages/hello-page";
 Vue.use(Router);
 
 const routes = [
-    {
-        path: "/",
-        redirect: "/hello",
-    },
-    {
-        path: "/hello",
-        name: "hello",
-        component: HelloPage,
-    },
+  {
+    path: "/",
+    redirect: "/hello",
+  },
+  {
+    path: "/hello",
+    name: "hello",
+    component: HelloPage,
+  },
 ];
 
 const router = new Router({
-    routes,
+  routes,
 });
 
 export default router;
