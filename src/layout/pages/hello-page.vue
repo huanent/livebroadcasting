@@ -13,7 +13,6 @@ export default {
     data() {
         return { msg: "hello-page" };
     },
-<<<<<<< HEAD
     mounted () {
         console.log(this.token)
         console.log('123')
@@ -21,11 +20,6 @@ export default {
     computed: {
         ...mapGetters("account", ["token"]),
     }
-=======
-    mounted() {
-        console.log("test");
-    },
->>>>>>> ed950e77da638a27d3eca96ea91bb30318b3437a
 };
 </script>
 
