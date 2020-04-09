@@ -12,6 +12,9 @@ export default {
     data() {
         return { msg: "hello-page" };
     },
+    mounted() {
+        console.log("test");
+    },
 };
 </script>
 

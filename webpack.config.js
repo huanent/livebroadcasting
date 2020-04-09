@@ -1,5 +1,5 @@
 const { VueLoaderPlugin } = require("vue-loader");
-
+const webpack = require("webpack");
 const { resolve } = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -132,6 +132,7 @@ module.exports = function (env) {
                 filename: "index.html",
                 template: resolve("src/index.html"),
             }),
+            new webpack.HotModuleReplacementPlugin(),
         ],
         optimization: {
             minimize: true,
