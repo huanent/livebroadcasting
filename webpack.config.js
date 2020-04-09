@@ -165,6 +165,7 @@ module.exports = function (env) {
             },
         },
         devServer: {
+            clientLogLevel: "none",
             contentBase: path.resolve("dist"),
             compress: true,
             port: 8080,
