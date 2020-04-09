@@ -7,11 +7,19 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
     name: "hello-page",
     data() {
         return { msg: "hello-page" };
     },
+    mounted () {
+        console.log(this.token)
+        console.log('123')
+    },
+    computed: {
+        ...mapGetters("account", ["token"]),
+    }
 };
 </script>
 
