@@ -2,7 +2,6 @@
   <div class="main-container">
     {{ msg }}
     {{ $t("login") }}
-    <img src="../../assets/1.png" />
   </div>
 </template>
 
@@ -15,7 +14,6 @@ export default {
   },
   mounted() {
     console.log(this.token);
-    console.log("123");
   },
   computed: {
     ...mapGetters("account", ["token"]),
