@@ -1,5 +1,5 @@
 const path = require("path");
-// const isProduction = process.env.NODE_ENV === 'production';
+// const isDev = process.env.NODE_ENV === "development";
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
