@@ -1,7 +1,7 @@
-const path = require('path')
+const path = require("path");
 // const isProduction = process.env.NODE_ENV === 'production';
 function resolve(dir) {
-  return path.join(__dirname, dir)
+  return path.join(__dirname, dir);
 }
 module.exports = {
   devServer: {
@@ -10,8 +10,8 @@ module.exports = {
       errors: false
     },
     proxy: {
-      '/api': {
-        target: 'http://oa.jinrui.kooboo.site',
+      "/api": {
+        target: "http://oa.jinrui.kooboo.site",
         changeOrigin: true
       }
     }
@@ -20,7 +20,7 @@ module.exports = {
     loaderOptions: {
       scss: {
         prependData: `@import "~@/assets/style/variable.scss";`
-      },
+      }
     }
   },
   productionSourceMap: false,
@@ -34,13 +34,14 @@ module.exports = {
   },
   chainWebpack: config => {
     config.resolve.alias
-      .set('@', resolve('./src'))
-      .set('@c', resolve('./src/components'))
-      .set('@v', resolve('./src/views'))
-    config.plugin('html').tap(options => {
-      options[0].title = 'live boardcasting'
-      return options
-    })
-    config.entry.app = ['babel-polyfill', './src/main.js']
+      .set("@", resolve("./src"))
+      .set("@c", resolve("./src/components"))
+      .set("@v", resolve("./src/views"))
+      .set("@style", resolve("./src/assets/style"));
+    config.plugin("html").tap(options => {
+      options[0].title = "live boardcasting";
+      return options;
+    });
+    config.entry.app = ["babel-polyfill", "./src/main.js"];
   }
 };
