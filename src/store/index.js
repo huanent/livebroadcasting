@@ -1,10 +1,10 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import account from "./account";
-Vue.use(Vuex);
+import Vue from 'vue'
+import Vuex from 'vuex'
+import account from './account'
+Vue.use(Vuex)
 
-export const store = new Vuex.Store({
+export default new Vuex.Store({
   modules: {
-    account,
-  },
-});
+    account
+  }
+})
