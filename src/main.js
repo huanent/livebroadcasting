@@ -5,8 +5,9 @@ import router from "./router";
 import store from "./store";
 import i18n from "./plugins/i18n";
 import "babel-polyfill";
-import "element-ui/lib/theme-chalk/index.css";
+// import "element-ui/lib/theme-chalk/index.css";
 import element from "./components/element/index";
+import "./assets/style/element-variable.scss";
 
 Vue.use(element);
 
