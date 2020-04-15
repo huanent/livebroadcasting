@@ -7,7 +7,7 @@
     <svg-icon icon-class="revoke" :size="24" />
     <svg-icon icon-class="recovery" :size="24" />
     <svg-icon icon-class="empty" :size="24" />
-    <svg-icon icon-class="newBuild" :size="200" />
+    <svg-icon icon-class="newBuild" :size="20" />
   </div>
 </template>
 
