@@ -7,36 +7,36 @@ const routes = [
   {
     path: "/",
     name: "Home",
+    component: () => import("@v/Main.vue"),
     meta: {
-      requireAuth: true
+      requireAuth: true,
     },
-    component: () => import("@c/HelloWorld.vue")
   },
   {
     path: "/login",
     name: "Login",
-    component: () => import("@v/Login.vue")
-  }
+    component: () => import("@v/Login.vue"),
+  },
 ];
 
 const router = new VueRouter({
-  routes
+  routes,
 });
 
-// const hasToken = () => Boolean(localStorage.getItem("token"));
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(item => item.meta.requireAuth)) {
-//     if (!hasToken()) {
-//       next({
-//         path: "/login",
-//         replace: true
-//       });
-//     } else {
-//       next();
-//     }
-//   } else {
-//     next();
-//   }
-// });
+const hasUserSig = () => Boolean(localStorage.getItem("userSig"));
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((item) => item.meta.requireAuth)) {
+    if (!hasUserSig()) {
+      next({
+        path: "/login",
+        replace: true,
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 export default router;

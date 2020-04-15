@@ -1,23 +1,33 @@
 const state = {
-    token: localStorage.getItem('token') ? localStorage.getItem('token') : ''
-}
+  sdkappid: "1400345310",
+  account: "",
+  userSig: localStorage.getItem("userSig")
+    ? localStorage.getItem("userSig")
+    : "",
+};
 
 const getters = {
-    token: state => {
-        return state.token
-    }
-}
+  userSig: (state) => {
+    return state.userSig;
+  },
+};
 
 const mutations = {
-    setToken(state, token) {
-        state.token = token
-        localStorage.setItem('token', token)
-    }
-}
+  setSdkAppId(state, sdkappid) {
+    state.sdkappid = sdkappid;
+  },
+  setUserSig(state, userSig) {
+    state.userSig = userSig;
+    localStorage.setItem("userSig", userSig);
+  },
+  setAccount(state, account) {
+    state.account = account;
+  },
+};
 
 export default {
-    namespaced: true,
-    state,
-    getters,
-    mutations
-}
+  namespaced: true,
+  state,
+  getters,
+  mutations,
+};
