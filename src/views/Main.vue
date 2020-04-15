@@ -1,5 +1,5 @@
 <template>
-  <div>page</div>
+  <svg-icon icon-class="play" />
 </template>
 
 <script>

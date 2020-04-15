@@ -4,10 +4,10 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import i18n from "./plugins/i18n";
-import "babel-polyfill";
-// import "element-ui/lib/theme-chalk/index.css";
-import element from "./components/element/index";
+import element from "./components/common/Element/index";
 import "./assets/style/element-variable.scss";
+import "babel-polyfill";
+import "@/icons";
 
 Vue.use(element);
 
@@ -17,5 +17,5 @@ new Vue({
   router,
   store,
   i18n,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount("#app");
