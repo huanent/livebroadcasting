@@ -1,16 +1,16 @@
 <template>
-  <chat-room />
+  <chatroom />
 </template>
 
 <script>
-import ChatRoom from "@c/liveBroadcast/ChatRoom";
+import Chatroom from "@c/liveBroadcast/Chatroom";
 export default {
   name: "Main",
   data() {
     return {};
   },
   components: {
-    ChatRoom,
+    Chatroom,
   },
 };
 </script>
