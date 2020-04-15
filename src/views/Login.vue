@@ -18,7 +18,11 @@
           ></el-input>
         </el-form-item> -->
         <el-form-item>
-          <el-select v-model="userToken" @change="handleChange">
+          <el-select
+            v-model="userToken"
+            @change="handleChange"
+            :placeholder="$t('login.chooseAccount')"
+          >
             <el-option
               v-for="item in options"
               :key="item.user"
