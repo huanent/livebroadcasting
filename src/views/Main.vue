@@ -1,5 +1,5 @@
 <template>
-  <svg-icon icon-class="play" />
+  <svg-icon icon-class="play" :size="200" color="red" />
 </template>
 
 <script>

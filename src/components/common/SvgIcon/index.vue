@@ -2,7 +2,7 @@
   <svg
     :class="svgClass"
     aria-hidden="true"
-    :style="{ width: size + 'px', height: size + 'px' }"
+    :style="{ width: size + 'px', height: size + 'px', fill: color }"
   >
     <use :xlink:href="iconName" />
   </svg>
@@ -18,7 +18,11 @@ export default {
     },
     size: {
       type: Number,
-      default: 18,
+      default: 16,
+    },
+    color: {
+      type: String,
+      default: "currentColor",
     },
     className: {
       type: String,
@@ -42,10 +46,9 @@ export default {
 
 <style scoped>
 .svg-icon {
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
+  display: inline-block;
+  fill: none;
+  vertical-align: middle;
   overflow: hidden;
 }
 </style>
