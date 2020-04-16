@@ -28,33 +28,33 @@ export default {
     return {
       gridStyle: undefined,
       originPosition: [0, 0],
-      total: 0,
+      total: 0
     };
   },
   components: {
-    Toolbar,
+    Toolbar
   },
   mounted() {
     Split({
       columnGutters: [
         {
           track: 1,
-          element: document.querySelector("#gutter"),
-        },
+          element: document.querySelector("#gutter")
+        }
       ],
       rowGutters: [
         {
           track: 1,
-          element: document.querySelector("#gutter1-1"),
+          element: document.querySelector("#gutter1-1")
         },
         {
           track: 1,
-          element: document.querySelector("#gutter2-1"),
-        },
-      ],
+          element: document.querySelector("#gutter2-1")
+        }
+      ]
     });
   },
-  methods: {},
+  methods: {}
 };
 </script>
 
