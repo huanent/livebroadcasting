@@ -73,13 +73,13 @@ export default {
 }
 .workplace-panel-content {
   display: grid;
-  grid-template-columns: 80% 2px auto;
+  grid-template-columns: 79.8% 0.2% 20%;
   height: 100%;
 }
 #workplace-panel-left {
   background: #1a1b1d;
   display: grid;
-  grid-template-rows: 20% 2px calc(80% - 2px);
+  grid-template-rows: 20% 0.2% 79.8%;
   height: calc(100vh - 2rem);
   div {
     height: 100%;
@@ -88,7 +88,7 @@ export default {
 #workplace-panel-right {
   background: #212224;
   display: grid;
-  grid-template-rows: 20% 2px calc(80% - 2px);
+  grid-template-rows: 20% 0.2% 79.8%;
   height: calc(100vh - 2rem);
   div {
     height: 100%;
@@ -98,7 +98,7 @@ export default {
   background-color: #292929;
 }
 .gutter-row {
-  cursor: ow-resize;
+  cursor: row-resize;
 }
 .gutter-col {
   cursor: col-resize;
