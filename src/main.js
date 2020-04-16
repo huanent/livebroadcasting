@@ -6,8 +6,9 @@ import store from "./store";
 import i18n from "./plugins/i18n";
 import "@/plugins/icons";
 import element from "./components/common/Element/index";
+import "@style/normalize.css";
 import "./assets/style/element-variable.scss";
-import "babel-polyfill";
+import "@style/custom.scss";
 
 Vue.use(element);
 

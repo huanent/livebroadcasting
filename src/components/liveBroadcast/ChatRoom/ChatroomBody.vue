@@ -1,6 +1,6 @@
 <template>
   <div class="chatroom-body">
-    <ul class="chatroom-msg-list">
+    <ul class="chatroom-msg-list roll-scroll">
       <message-item v-for="item in msgList" :key="item.ID" :item="item" />
     </ul>
   </div>
@@ -251,5 +251,10 @@ export default {
 <style lang="scss" scoped>
 .chatroom-body {
   padding-bottom: 20px;
+  height: 100%;
+  .chatroom-msg-list {
+    height: calc(100% - 60px);
+    overflow: auto;
+  }
 }
 </style>

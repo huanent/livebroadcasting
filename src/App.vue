@@ -5,10 +5,7 @@
 </template>
 
 <script>
-import "@style/normalize.css";
-import "@style/custom.scss";
-
 export default {
-  name: "App"
+  name: "App",
 };
 </script>

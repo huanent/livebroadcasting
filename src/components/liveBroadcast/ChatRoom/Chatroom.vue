@@ -22,6 +22,5 @@ export default {
 .chatroom-container {
   min-width: 240px;
   position: relative;
-  // background-color: #323338;
 }
 </style>

@@ -6,14 +6,16 @@
         <div class="camera—pannel"></div>
         <div id="gutter1-1" class="gutter-row"></div>
         <div class="main—workplace-pannel">
-          <toolbar />
+          <!-- <toolbar /> -->
         </div>
       </div>
       <div id="gutter" class="gutter-col"></div>
       <div id="workplace-panel-right">
         <div class="self-camera—pannel"></div>
         <div id="gutter2-1" class="gutter-row"></div>
-        <div class="message—pannel"></div>
+        <div class="message—pannel">
+          <chatroom />
+        </div>
       </div>
     </div>
   </div>
@@ -21,40 +23,42 @@
 
 <script>
 import Split from "split-grid";
-import Toolbar from "@c/common/Toolbar";
+// import Toolbar from "@c/common/Toolbar";
+import Chatroom from "@c/liveBroadcast/Chatroom/Chatroom";
 export default {
   name: "workplace-panel-page",
   data: function() {
     return {
       gridStyle: undefined,
       originPosition: [0, 0],
-      total: 0
+      total: 0,
     };
   },
   components: {
-    Toolbar
+    // Toolbar,
+    Chatroom,
   },
   mounted() {
     Split({
       columnGutters: [
         {
           track: 1,
-          element: document.querySelector("#gutter")
-        }
+          element: document.querySelector("#gutter"),
+        },
       ],
       rowGutters: [
         {
           track: 1,
-          element: document.querySelector("#gutter1-1")
+          element: document.querySelector("#gutter1-1"),
         },
         {
           track: 1,
-          element: document.querySelector("#gutter2-1")
-        }
-      ]
+          element: document.querySelector("#gutter2-1"),
+        },
+      ],
     });
   },
-  methods: {}
+  methods: {},
 };
 </script>
 
@@ -75,7 +79,8 @@ export default {
 #workplace-panel-left {
   background: #1a1b1d;
   display: grid;
-  grid-template-rows: 20% 2px auto;
+  grid-template-rows: 20% 2px calc(80% - 2px);
+  height: calc(100vh - 2rem);
   div {
     height: 100%;
   }
@@ -83,7 +88,8 @@ export default {
 #workplace-panel-right {
   background: #212224;
   display: grid;
-  grid-template-rows: 20% 2px auto;
+  grid-template-rows: 20% 2px calc(80% - 2px);
+  height: calc(100vh - 2rem);
   div {
     height: 100%;
   }

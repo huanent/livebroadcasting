@@ -56,6 +56,6 @@ module.exports = {
       options[0].title = "live boardcasting";
       return options;
     });
-    config.entry.app = ["babel-polyfill", "./src/main.js"];
+    config.entry.app = "./src/main.js";
   },
 };
