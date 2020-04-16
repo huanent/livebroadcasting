@@ -21,7 +21,7 @@
 
 <script>
 import Split from "split-grid";
-import MainWorkpace from "../../components/main-workplace/main-workpace";
+import MainWorkpace from "../../components/main-workplace/main-workplace";
 export default {
   name: "WorkplacePanelPage",
   components: { MainWorkpace },
