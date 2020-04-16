@@ -3,15 +3,22 @@
     <div class="workplace-panel-header"></div>
     <div class="workplace-panel-content">
       <div id="workplace-panel-left">
-        <div class="camera—pannel"></div>
+        <div class="camera—pannel">
+
+
+        </div>
         <div id="gutter1-1" class="gutter-row"></div>
-        <div class="main—workplace-pannel"></div>
+        <div class="main—workplace-pannel">
+          <icon name="indent" :size="24" class="test" style="padding: 0.25rem;transform:rotate(180deg)"/>
+        </div>
       </div>
       <div id="gutter" class="gutter-col"></div>
       <div id="workplace-panel-right">
         <div class="self-camera—pannel"></div>
         <div id="gutter2-1" class="gutter-row"></div>
-        <div class="message—pannel"></div>
+        <div class="message—pannel">
+
+        </div>
       </div>
     </div>
   </div>
@@ -47,7 +54,6 @@ export default {
         }
       ]
     });
-    console.log(Split);
   },
   methods: {}
 };
@@ -57,7 +63,7 @@ export default {
 .workplace-panel {
   display: grid;
   height: 100vh;
-  grid-template-rows: 42px auto;
+  grid-template-rows: 2rem auto;
 }
 .workplace-panel-header {
   background: #34363b;
@@ -87,7 +93,7 @@ export default {
   background-color: #292929;
 }
 .gutter-row {
-  cursor: row-resize;
+  cursor: ow-resize;
 }
 .gutter-col {
   cursor: col-resize;

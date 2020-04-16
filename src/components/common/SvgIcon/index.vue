@@ -1,6 +1,6 @@
 <template>
   <svg
-    :class="svgClass"
+    :class="{'svg-icon': hasClass}"
     aria-hidden="true"
     :style="{ width: size + 'px', height: size + 'px', fill: color }"
   >
@@ -21,22 +21,19 @@ export default {
       default: 20,
     },
     color: {
-      type: String,
-      default: "currentColor",
-    },
-    class: {
-      type: String,
-      default: "",
-    },
+      type: String
+    }
+  },
+  data(){
+    return {
+      hasClass:true,
+    }
   },
   computed: {
     iconName() {
       return `#icon-${this.name}`;
     },
-    svgClass() {
-      return this.class ? "svg-icon " + this.class : "svg-icon";
-    },
-  },
+  }
 };
 </script>
 
