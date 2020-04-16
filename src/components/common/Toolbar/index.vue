@@ -5,7 +5,7 @@
         @click.prevent="shapeBoxIsshow = true"
         @mouseleave="shapeBoxIsshow = false"
       >
-        <a><svg-icon icon-class="pen" :size="21" color="#b4b4b5"/></a>
+        <a><icon name="pen" :size="21" color="#b4b4b5"/></a>
         <span class="toolHover">形状</span>
         <div
           class="shapeBox"
@@ -18,22 +18,16 @@
           <div>
             <ul class="shapeSelect">
               <li>
-                <a><svg-icon icon-class="line2" :size="24" color="#b4b4b5"/></a>
+                <a><icon name="line2" :size="24" color="#b4b4b5"/></a>
               </li>
               <li>
-                <a
-                  ><svg-icon icon-class="curve2" :size="24" color="#b4b4b5"
-                /></a>
+                <a><icon name="curve2" :size="24" color="#b4b4b5"/></a>
               </li>
               <li>
-                <a
-                  ><svg-icon icon-class="circle" :size="24" color="#b4b4b5"
-                /></a>
+                <a><icon name="circle" :size="24" color="#b4b4b5"/></a>
               </li>
               <li>
-                <a
-                  ><svg-icon icon-class="rectangle" :size="24" color="#b4b4b5"
-                /></a>
+                <a><icon name="rectangle" :size="24" color="#b4b4b5"/></a>
               </li>
             </ul>
           </div>
@@ -46,7 +40,7 @@
         @click.prevent="textBoxIsshow = true"
         @mouseleave="textBoxIsshow = false"
       >
-        <a><svg-icon icon-class="text2" :size="27" color="#b4b4b5"/></a>
+        <a><icon name="text2" :size="27" color="#b4b4b5"/></a>
         <span class="toolHover">文本</span>
         <div
           class="shapeBox"
@@ -62,31 +56,31 @@
         </div>
       </li>
       <li>
-        <a><svg-icon icon-class="laserPen2" :size="27" color="#b4b4b5"/></a>
+        <a><icon name="laserPen2" :size="27" color="#b4b4b5"/></a>
         <span class="toolHover">激光笔</span>
       </li>
       <li>
-        <a><svg-icon icon-class="eraser4" :size="24" color="#b4b4b5"/></a>
+        <a><icon name="eraser4" :size="24" color="#b4b4b5"/></a>
         <span class="toolHover">橡皮擦</span>
       </li>
       <li>
-        <a><svg-icon icon-class="revoke3" :size="24" color="#b4b4b5"/></a>
+        <a><icon name="revoke3" :size="24" color="#b4b4b5"/></a>
         <span class="toolHover">撤销</span>
       </li>
       <li>
-        <a><svg-icon icon-class="recovery2" :size="24" color="#b4b4b5"/></a>
+        <a><icon name="recovery2" :size="24" color="#b4b4b5"/></a>
         <span class="toolHover">返回</span>
       </li>
       <li>
-        <a><svg-icon icon-class="clear" :size="21" color="#b4b4b5"/></a>
+        <a><icon name="clear" :size="21" color="#b4b4b5"/></a>
         <span class="toolHover">清空</span>
       </li>
       <li>
-        <a><svg-icon icon-class="add" :size="30" color="#b4b4b5"/></a>
+        <a><icon name="add" :size="30" color="#b4b4b5"/></a>
         <span class="toolHover">新建</span>
       </li>
       <li @mousedown="moveToolbar($event)">
-        <a><svg-icon icon-class="move" :size="24" color="#b4b4b5"/></a>
+        <a><icon name="move" :size="24" color="#b4b4b5"/></a>
         <span class="toolHover">移动</span>
       </li>
 
@@ -96,7 +90,7 @@
         :class="[item.fontawesome, { active: current == index }]"
         @click="addClass(index, $event)"
       >
-        <a><svg-icon icon-class="empty" :size="20" color="#b4b4b5"/></a>
+        <a><icon name="empty" :size="20" color="#b4b4b5"/></a>
       </li> -->
     </ul>
   </div>
