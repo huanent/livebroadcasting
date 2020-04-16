@@ -1,6 +1,6 @@
 <template>
   <svg
-    :class="{'svg-icon': hasClass}"
+    :class="{ 'svg-icon': hasClass }"
     aria-hidden="true"
     :style="{ width: size + 'px', height: size + 'px', fill: color }"
   >
@@ -17,23 +17,23 @@ export default {
       required: true,
     },
     size: {
-      type: Number,
+      type: [Number, String],
       default: 20,
     },
     color: {
-      type: String
-    }
+      type: String,
+    },
   },
-  data(){
+  data() {
     return {
-      hasClass:true,
-    }
+      hasClass: true,
+    };
   },
   computed: {
     iconName() {
       return `#icon-${this.name}`;
     },
-  }
+  },
 };
 </script>
 
