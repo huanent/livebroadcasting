@@ -2,96 +2,83 @@
   <div class="toolbar">
     <ul ref="toolbarul">
       <li
-        @click.prevent="shapeBoxIsshow = true"
+        v-for="(item, index) in toolslist"
+        :key="index"
+        :class="[item.fontawesome, { active: toolslistcurrent == index }]"
+      >
+        <a
+          @click.prevent="
+            addToolsClass(index);
+            showBox(index);
+          "
+          >{{ item.index
+          }}<icon :name="item.name" :size="item.size" color="#b4b4b5"
+        /></a>
+        <span class="tool-hover">{{ item.tips }}</span>
+      </li>
+      <!-- 形状的面板 -->
+      <div
+        class="shape-box"
+        v-if="shapeBoxIsshow"
         @mouseleave="shapeBoxIsshow = false"
       >
-        <a><icon name="pen" :size="21" color="#b4b4b5"/></a>
-        <span class="toolHover">形状</span>
-        <div
-          class="shapeBox"
-          v-if="shapeBoxIsshow"
-          @mouseleave="shapeBoxIsshow = false"
-        >
-          <div class="block">
-            <el-slider v-model="thickness"></el-slider>
-          </div>
-          <div>
-            <ul class="shapeSelect">
-              <li>
-                <a><icon name="line2" :size="24" color="#b4b4b5"/></a>
-              </li>
-              <li>
-                <a><icon name="curve2" :size="24" color="#b4b4b5"/></a>
-              </li>
-              <li>
-                <a><icon name="circle" :size="24" color="#b4b4b5"/></a>
-              </li>
-              <li>
-                <a><icon name="rectangle" :size="24" color="#b4b4b5"/></a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <el-color-picker v-model="shapecolor"></el-color-picker>
-          </div>
+        <div class="block">
+          <el-slider v-model="thickness"></el-slider>
         </div>
-      </li>
-      <li
-        @click.prevent="textBoxIsshow = true"
+        <div>
+          <ul class="shape-select">
+            <li
+              v-for="(item, index) in toolitems"
+              :key="index"
+              :class="[{ active: toolitemscurrent == index }]"
+              @click="addToolitemClass(index)"
+            >
+              <a
+                >{{ item.index
+                }}<icon :name="item.name" :size="24" color="#b4b4b5"
+              /></a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <el-color-picker v-model="shapecolor"></el-color-picker>
+        </div>
+      </div>
+
+      <!-- 字体选择面板 -->
+      <div
+        class="text-box"
+        v-if="textBoxIsshow"
         @mouseleave="textBoxIsshow = false"
       >
-        <a><icon name="text2" :size="27" color="#b4b4b5"/></a>
-        <span class="toolHover">文本</span>
-        <div
-          class="shapeBox"
-          v-if="textBoxIsshow"
-          @mouseleave="textBoxIsshow = false"
-        >
-          <div class="block">
-            <el-slider v-model="fontSize"></el-slider>
-          </div>
-          <div>
-            <el-color-picker v-model="textcolor"></el-color-picker>
-          </div>
+        <div class="block">
+          <el-slider v-model="fontSize"></el-slider>
         </div>
-      </li>
-      <li>
-        <a><icon name="laserPen2" :size="27" color="#b4b4b5"/></a>
-        <span class="toolHover">激光笔</span>
-      </li>
-      <li>
-        <a><icon name="eraser4" :size="24" color="#b4b4b5"/></a>
-        <span class="toolHover">橡皮擦</span>
-      </li>
+        <div>
+          <el-color-picker v-model="textcolor"></el-color-picker>
+        </div>
+      </div>
+
       <li>
         <a><icon name="revoke3" :size="24" color="#b4b4b5"/></a>
-        <span class="toolHover">撤销</span>
+        <span class="tool-hover">{{ $t("toolbar.revoke") }}</span>
       </li>
       <li>
         <a><icon name="recovery2" :size="24" color="#b4b4b5"/></a>
-        <span class="toolHover">返回</span>
+        <span class="tool-hover">{{ $t("toolbar.recovery") }}</span>
       </li>
       <li>
         <a><icon name="clear" :size="21" color="#b4b4b5"/></a>
-        <span class="toolHover">清空</span>
+        <span class="tool-hover">{{ $t("toolbar.clear") }}</span>
       </li>
       <li>
         <a><icon name="add" :size="30" color="#b4b4b5"/></a>
-        <span class="toolHover">新建</span>
+        <span class="tool-hover">{{ $t("toolbar.add") }}</span>
       </li>
       <li @mousedown="moveToolbar($event)">
         <a><icon name="move" :size="24" color="#b4b4b5"/></a>
-        <span class="toolHover">移动</span>
+        <span class="tool-hover">{{ $t("toolbar.move") }}</span>
       </li>
-
-      <!-- <li
-        v-for="(item, index) in toolitems"
-        :key="index"
-        :class="[item.fontawesome, { active: current == index }]"
-        @click="addClass(index, $event)"
-      >
-        <a><icon name="empty" :size="20" color="#b4b4b5"/></a>
-      </li> -->
     </ul>
   </div>
 </template>
@@ -108,31 +95,70 @@ export default {
       shapeBoxIsshow: false,
       textBoxIsshow: false,
       toolHoverIsshow: true,
-      // current: 0,
-      // toolitems: [
-      //   {
-      //     icon: "empty",
-      //     content: "形状",
-      //   },
-      //   { icon: "fa fa-envelope", content: "文本" },
-      //   { icon: "fa fa-address-book", content: "激光笔" },
-      //   { icon: "fa fa-history", content: "橡皮擦" },
-      //   { icon: "fa fa-cogs", content: "撤销" },
-      //   { icon: "fa fa-cogs", content: "返回" },
-      //   { icon: "fa fa-cogs", content: "清空" },
-      //   { icon: "fa fa-cogs", content: "新建" },
-      // ],
+
+      toolitemscurrent: 0,
+      toolitems: [
+        {
+          name: "line2",
+        },
+        {
+          name: "curve2",
+        },
+        {
+          name: "circle",
+        },
+        {
+          name: "rectangle",
+        },
+      ],
+
+      toolslistcurrent: 0,
+      toolslist: [
+        {
+          name: "pen",
+          size: 21,
+          tips: this.$t("toolbar.shape"),
+        },
+        {
+          name: "text2",
+          size: 27,
+          tips: this.$t("toolbar.text"),
+        },
+        {
+          name: "laserPen2",
+          size: 27,
+          tips: this.$t("toolbar.laserPen"),
+        },
+        {
+          name: "eraser4",
+          size: 25,
+          tips: this.$t("toolbar.eraser"),
+        },
+      ],
     };
   },
   computed: {},
-  components: {
-    // ChatRoom,
-  },
+  components: {},
   methods: {
-    // addClass(index, event) {
-    //   console.log(index);
-    //   console.log(event);
-    // },
+    addToolitemClass(index) {
+      this.toolitemscurrent = index;
+    },
+    addToolsClass(index) {
+      this.toolslistcurrent = index;
+    },
+    showBox(index) {
+      if (index == 0) {
+        this.textBoxIsshow = false;
+        this.shapeBoxIsshow = true;
+        return;
+      }
+      if (index == 1) {
+        this.shapeBoxIsshow = false;
+        this.textBoxIsshow = true;
+        return;
+      }
+      (this.shapeBoxIsshow = false), (this.textBoxIsshow = false);
+    },
     moveToolbar(e) {
       console.log(e);
       let odiv = this.$refs.toolbarul;
@@ -160,13 +186,18 @@ export default {
   font-weight: 100;
 }
 .toolbar {
+  z-index: 999;
+  position: absolute;
+  right: 50px;
   > ul {
     position: absolute;
     width: 50px;
     float: left;
     background-color: rgba(33, 35, 37, 0.8);
-    left: 1000px;
     color: white;
+    .tool-actived {
+      background-color: black;
+    }
     > li {
       position: relative;
       width: 30px;
@@ -174,34 +205,19 @@ export default {
       padding: 10px;
       cursor: pointer;
       text-align: center;
-      .shapeBox {
-        text-align: center;
-        padding: 10px;
-        .shapeSelect {
-          li {
-            float: left;
-            padding: 5px;
-          }
-        }
-        position: absolute;
-        right: 50px;
-        top: -10px;
-        width: 150px;
-        background-color: rgba(33, 35, 37, 1);
-      }
-      &:visited .toolHover {
-        visibility: hidden;
-      }
-      &:hover .toolHover {
+      &:hover .tool-hover {
         visibility: visible;
       }
+      &:hover {
+        background-color: black;
+      }
 
-      .toolHover {
+      .tool-hover {
         visibility: hidden;
         transition: all 0.15s ease;
         position: absolute;
         top: 10px;
-        right: 50px;
+        left: 50px;
         white-space: nowrap;
         padding: 2px 6px;
         height: 20px;
@@ -213,5 +229,50 @@ export default {
       }
     }
   }
+}
+.shape-box {
+  text-align: center;
+  padding: 10px;
+  position: absolute;
+  right: 50px;
+  top: 0;
+  width: 150px;
+  background-color: rgba(33, 35, 37, 1);
+  .shape-select {
+    li {
+      text-align: center;
+      float: left;
+      width: 30px;
+      height: 30px;
+      padding: 3px;
+      & :hover {
+        background-color: black;
+      }
+    }
+  }
+}
+.text-box {
+  text-align: center;
+  padding: 10px;
+  position: absolute;
+  right: 50px;
+  top: 30px;
+  width: 150px;
+  background-color: rgba(33, 35, 37, 1);
+  .shape-select {
+    li {
+      text-align: center;
+      float: left;
+      width: 30px;
+      height: 30px;
+      padding: 3px;
+      & :hover {
+        background-color: black;
+      }
+    }
+  }
+}
+.active {
+  background-color: black;
 }
 </style>

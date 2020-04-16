@@ -9,5 +9,15 @@
   "login.successTips": "登录成功",
   "login.failedTips": "登录失败",
 
-  "button.send": "发送"
+  "button.send": "发送",
+
+  "toolbar.shape": "形状",
+  "toolbar.text": "文本",
+  "toolbar.laserPen": "激光笔",
+  "toolbar.eraser": "橡皮擦",
+  "toolbar.revoke": "撤销",
+  "toolbar.recovery": "恢复",
+  "toolbar.clear": "清空",
+  "toolbar.add": "新建",
+  "toolbar.move": "移动"
 }

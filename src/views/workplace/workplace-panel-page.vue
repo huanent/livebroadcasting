@@ -102,6 +102,7 @@ export default {
 }
 .main—workplace-pannel {
   background: #1a1b1d;
+  position: relative;
 }
 .self-camera—pannel {
   background: #212224;
