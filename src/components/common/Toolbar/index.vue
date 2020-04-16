@@ -1,6 +1,6 @@
 <template>
   <div class="toolbar">
-    <ul>
+    <ul ref="toolbarul">
       <li
         @click.prevent="shapeBoxIsshow = true"
         @mouseleave="shapeBoxIsshow = false"
@@ -85,6 +85,10 @@
         <a><svg-icon icon-class="add" :size="27" color="#b4b4b5"/></a>
         <span class="toolHover">新建</span>
       </li>
+      <li @mousedown="moveToolbar($event)">
+        <a><svg-icon icon-class="move" :size="24" color="#b4b4b5"/></a>
+        <span class="toolHover">移动</span>
+      </li>
 
       <!-- <li
         v-for="(item, index) in toolitems"
@@ -135,6 +139,25 @@ export default {
     //   console.log(index);
     //   console.log(event);
     // },
+    moveToolbar(e) {
+      console.log(e);
+      let odiv = this.$refs.toolbarul;
+      let disX = e.clientX - odiv.offsetLeft;
+      let disY = e.clientY - odiv.offsetTop;
+      document.onmousemove = (e) => {
+        let left = e.clientX - disX;
+        let top = e.clientY - disY;
+        this.positionX = top;
+        this.positionY = left;
+        odiv.style.left = left + "px";
+        odiv.style.top = top + "px";
+      };
+      document.onmouseup = (e) => {
+        console.log(e);
+        document.onmousemove = null;
+        document.onmouseup = null;
+      };
+    },
   },
 };
 </script>
@@ -148,8 +171,15 @@ export default {
     width: 50px;
     float: left;
     background-color: rgba(33, 35, 37, 0.8);
-    margin-left: 300px;
+    left: 1000px;
+    color: white;
     > li {
+      position: relative;
+      width: 30px;
+      height: 30px;
+      padding: 10px;
+      cursor: pointer;
+      text-align: center;
       .shapeBox {
         text-align: center;
         padding: 10px;
@@ -163,23 +193,21 @@ export default {
         right: 50px;
         top: -10px;
         width: 150px;
-        background-color: rgba(33, 35, 37, 0.8);
+        background-color: rgba(33, 35, 37, 1);
+      }
+      &:visited .toolHover {
+        visibility: hidden;
       }
       &:hover .toolHover {
         visibility: visible;
       }
-      position: relative;
-      width: 30px;
-      height: 30px;
-      padding: 10px;
-      cursor: pointer;
-      text-align: center;
+
       .toolHover {
         visibility: hidden;
         transition: all 0.15s ease;
         position: absolute;
-        top: 0px;
-        right: 40px;
+        top: 10px;
+        right: 50px;
         white-space: nowrap;
         padding: 2px 6px;
         height: 20px;

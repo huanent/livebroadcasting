@@ -5,7 +5,9 @@
       <div id="workplace-panel-left">
         <div class="camera—pannel"></div>
         <div id="gutter1-1" class="gutter-row"></div>
-        <div class="main—workplace-pannel"></div>
+        <div class="main—workplace-pannel">
+          <toolbar />
+        </div>
       </div>
       <div id="gutter" class="gutter-col"></div>
       <div id="workplace-panel-right">
@@ -19,37 +21,42 @@
 
 <script>
 import Split from "split-grid";
+import Toolbar from "@c/common/Toolbar";
 export default {
   name: "workplace-panel-page",
   data: function() {
     return {
       gridStyle: undefined,
       originPosition: [0, 0],
-      total: 0
+      total: 0,
     };
+  },
+  components: {
+    // ChatRoom,
+    Toolbar,
   },
   mounted() {
     Split({
       columnGutters: [
         {
           track: 1,
-          element: document.querySelector("#gutter")
-        }
+          element: document.querySelector("#gutter"),
+        },
       ],
       rowGutters: [
         {
           track: 1,
-          element: document.querySelector("#gutter1-1")
+          element: document.querySelector("#gutter1-1"),
         },
         {
           track: 1,
-          element: document.querySelector("#gutter2-1")
-        }
-      ]
+          element: document.querySelector("#gutter2-1"),
+        },
+      ],
     });
     console.log(Split);
   },
-  methods: {}
+  methods: {},
 };
 </script>
 
