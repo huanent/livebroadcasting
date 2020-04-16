@@ -6,7 +6,12 @@
         <div class="camera—pannel"></div>
         <div id="gutter1-1" class="gutter-row"></div>
         <div class="main—workplace-pannel">
-          <toolbar />
+          <icon
+            name="indent"
+            :size="24"
+            class="test"
+            style="padding: 0.25rem;transform:rotate(180deg)"
+          />
         </div>
       </div>
       <div id="gutter" class="gutter-col"></div>
@@ -21,7 +26,6 @@
 
 <script>
 import Split from "split-grid";
-import Toolbar from "@c/common/Toolbar";
 export default {
   name: "workplace-panel-page",
   data: function() {
@@ -31,10 +35,7 @@ export default {
       total: 0,
     };
   },
-  components: {
-    // ChatRoom,
-    Toolbar,
-  },
+  components: {},
   mounted() {
     Split({
       columnGutters: [
@@ -54,7 +55,6 @@ export default {
         },
       ],
     });
-    console.log(Split);
   },
   methods: {},
 };
@@ -64,7 +64,7 @@ export default {
 .workplace-panel {
   display: grid;
   height: 100vh;
-  grid-template-rows: 42px auto;
+  grid-template-rows: 2rem auto;
 }
 .workplace-panel-header {
   background: #34363b;
@@ -94,7 +94,7 @@ export default {
   background-color: #292929;
 }
 .gutter-row {
-  cursor: row-resize;
+  cursor: ow-resize;
 }
 .gutter-col {
   cursor: col-resize;

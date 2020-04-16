@@ -10,7 +10,6 @@ module.exports = {
       errors: false,
     },
     hot: true,
-    hotOnly: true,
     proxy: {
       "/api": {
         target: "http://oa.jinrui.kooboo.site",
