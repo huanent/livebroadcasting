@@ -24,8 +24,8 @@
 <script>
 import Split from "split-grid";
 // import Toolbar from "@c/common/Toolbar";
-import Chatroom from "@c/liveBroadcast/Chatroom/Chatroom";
-import MainWorkplace from "../../components/main-workplace/main-workplace";
+import MainWorkplace from "@c//main-workplace/main-workplace";
+import Chatroom from "@c/liveBroadcast/ChatRoom";
 export default {
   name: "workplace-panel-page",
   data: function() {

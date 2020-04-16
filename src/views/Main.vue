@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import Chatroom from "@c/liveBroadcast/Chatroom/Chatroom";
 import Toolbar from "@c/common/Toolbar";
 export default {
   name: "Main",
@@ -13,7 +12,6 @@ export default {
     return {};
   },
   components: {
-    Chatroom,
     Toolbar,
   },
 };
