@@ -7,15 +7,17 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: () => import("@v/Main.vue"),
-    meta: {
-      requireAuth: true,
-    },
+    redirect: "/workplace"
   },
   {
     path: "/login",
     name: "Login",
     component: () => import("@v/Login.vue"),
+  },
+  {
+    path: "/workplace",
+    name: "Workplace",
+    component: () => import("@v/workplace/workplace-panel-page.vue"),
   },
 ];
 
