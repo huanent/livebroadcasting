@@ -5,12 +5,12 @@
         v-for="(item, index) in toolslist"
         :key="index"
         :class="[item.fontawesome, { active: toolslistcurrent == index }]"
+        @click.prevent="
+          addToolsClass(index);
+          showBox(index);
+        "
       >
         <a
-          @click.prevent="
-            addToolsClass(index);
-            showBox(index);
-          "
           >{{ item.index
           }}<icon :name="item.name" :size="item.size" color="#b4b4b5"
         /></a>
@@ -181,6 +181,7 @@ export default {
   z-index: 999;
   position: absolute;
   right: 50px;
+  top: 50px;
   > ul {
     position: absolute;
     width: 50px;
