@@ -26,16 +26,13 @@ export default {
   props: {
     item: Object,
   },
-  mounted() {
-    console.log(this.item);
-  },
 };
 </script>
 
 <style lang="scss" scoped>
 .chatroom-msg {
-  margin-top: 20px;
-  padding: 0 10px;
+  margin-top: 10px;
+  padding: 0 10px 10px;
   .chatroom-msg-head {
     display: flex;
     align-items: center;
@@ -73,6 +70,7 @@ export default {
         padding: 10px;
         line-height: normal;
         background: #8a9099;
+        text-align: left;
         border-radius: 4px;
       }
       &:before {
