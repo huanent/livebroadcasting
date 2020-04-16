@@ -17,11 +17,7 @@
         <span class="tool-hover">{{ item.tips }}</span>
       </li>
       <!-- 形状的面板 -->
-      <div
-        class="shape-box"
-        v-if="shapeBoxIsshow"
-        @mouseleave="shapeBoxIsshow = false"
-      >
+      <div class="shape-box" v-if="shapeBoxIsshow">
         <div class="block">
           <el-slider v-model="thickness"></el-slider>
         </div>
@@ -46,11 +42,7 @@
       </div>
 
       <!-- 字体选择面板 -->
-      <div
-        class="text-box"
-        v-if="textBoxIsshow"
-        @mouseleave="textBoxIsshow = false"
-      >
+      <div class="text-box" v-if="textBoxIsshow">
         <div class="block">
           <el-slider v-model="fontSize"></el-slider>
         </div>
@@ -209,6 +201,7 @@ export default {
         visibility: visible;
       }
       &:hover {
+        border: 1px solid #b4b4b5;
         background-color: black;
       }
 
@@ -239,15 +232,15 @@ export default {
   width: 150px;
   background-color: rgba(33, 35, 37, 1);
   .shape-select {
+    text-align: center;
+    & :hover {
+      background-color: black;
+    }
     li {
       text-align: center;
       float: left;
       width: 30px;
-      height: 30px;
       padding: 3px;
-      & :hover {
-        background-color: black;
-      }
     }
   }
 }
@@ -266,9 +259,9 @@ export default {
       width: 30px;
       height: 30px;
       padding: 3px;
-      & :hover {
-        background-color: black;
-      }
+    }
+    & :hover {
+      background-color: black;
     }
   }
 }
