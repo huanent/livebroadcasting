@@ -5,9 +5,7 @@
       <div id="workplace-panel-left">
         <div class="camera—pannel"></div>
         <div id="gutter1-1" class="gutter-row"></div>
-        <div class="main—workplace-pannel">
-          <toolbar />
-        </div>
+        <div class="main—workplace-pannel"></div>
       </div>
       <div id="gutter" class="gutter-col"></div>
       <div id="workplace-panel-right">
@@ -21,7 +19,6 @@
 
 <script>
 import Split from "split-grid";
-import Toolbar from "@c/common/Toolbar";
 export default {
   name: "workplace-panel-page",
   data: function() {
@@ -30,9 +27,6 @@ export default {
       originPosition: [0, 0],
       total: 0,
     };
-  },
-  components: {
-    Toolbar,
   },
   mounted() {
     Split({
@@ -69,13 +63,14 @@ export default {
 }
 .workplace-panel-content {
   display: grid;
-  grid-template-columns: 80% 2px auto;
+  grid-template-columns: 79.8% 0.2% 20%;
   height: 100%;
 }
 #workplace-panel-left {
   background: #1a1b1d;
   display: grid;
-  grid-template-rows: 20% 2px auto;
+  grid-template-rows: 20% 0.2% 79.8%;
+  height: calc(100vh - 2rem);
   div {
     height: 100%;
   }
@@ -83,7 +78,8 @@ export default {
 #workplace-panel-right {
   background: #212224;
   display: grid;
-  grid-template-rows: 20% 2px auto;
+  grid-template-rows: 20% 0.2% 79.8%;
+  height: calc(100vh - 2rem);
   div {
     height: 100%;
   }
@@ -92,7 +88,7 @@ export default {
   background-color: #292929;
 }
 .gutter-row {
-  cursor: ow-resize;
+  cursor: row-resize;
 }
 .gutter-col {
   cursor: col-resize;
