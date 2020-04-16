@@ -6,7 +6,7 @@
         <div class="camera—pannel"></div>
         <div id="gutter1-1" class="gutter-row"></div>
         <div class="main—workplace-pannel">
-          <!-- <toolbar /> -->
+          <MainWorkplace></MainWorkplace>
         </div>
       </div>
       <div id="gutter" class="gutter-col"></div>
@@ -25,6 +25,7 @@
 import Split from "split-grid";
 // import Toolbar from "@c/common/Toolbar";
 import Chatroom from "@c/liveBroadcast/Chatroom/Chatroom";
+import MainWorkplace from "../../components/main-workplace/main-workplace";
 export default {
   name: "workplace-panel-page",
   data: function() {
@@ -35,7 +36,7 @@ export default {
     };
   },
   components: {
-    // Toolbar,
+    MainWorkplace,
     Chatroom,
   },
   mounted() {

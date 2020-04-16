@@ -7,8 +7,8 @@
 <script>
 import Toolbar from "../common/Toolbar/index";
 export default {
-  name: "MainWorkpace",
-  components: { Toolbar }
+  name: "MainWorkplace",
+  components: { Toolbar },
 };
 </script>
 
