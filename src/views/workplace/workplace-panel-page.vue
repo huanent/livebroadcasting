@@ -6,7 +6,7 @@
         <div class="camera—pannel"></div>
         <div id="gutter1-1" class="gutter-row"></div>
         <div class="main—workplace-pannel">
-          <toolbar />
+          <MainWorkpace></MainWorkpace>
         </div>
       </div>
       <div id="gutter" class="gutter-col"></div>
@@ -21,18 +21,16 @@
 
 <script>
 import Split from "split-grid";
-import Toolbar from "@c/common/Toolbar";
+import MainWorkpace from "../../components/main-workplace/main-workpace";
 export default {
-  name: "workplace-panel-page",
+  name: "WorkplacePanelPage",
+  components: { MainWorkpace },
   data: function() {
     return {
       gridStyle: undefined,
       originPosition: [0, 0],
       total: 0
     };
-  },
-  components: {
-    Toolbar
   },
   mounted() {
     Split({
@@ -54,7 +52,7 @@ export default {
       ]
     });
   },
-  methods: {}
+  methods: {},
 };
 </script>
 
