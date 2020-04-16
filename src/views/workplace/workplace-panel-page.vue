@@ -11,7 +11,9 @@
       <div id="workplace-panel-right">
         <div class="self-camera—pannel"></div>
         <div id="gutter2-1" class="gutter-row"></div>
-        <div class="message—pannel"></div>
+        <div class="message—pannel">
+          <chatroom />
+        </div>
       </div>
     </div>
   </div>
@@ -19,13 +21,14 @@
 
 <script>
 import Split from "split-grid";
+import Chatroom from "@c/liveBroadcast/Chatroom/Chatroom";
 export default {
   name: "workplace-panel-page",
   data: function() {
     return {
       gridStyle: undefined,
       originPosition: [0, 0],
-      total: 0
+      total: 0,
     };
   },
   mounted() {
@@ -33,23 +36,26 @@ export default {
       columnGutters: [
         {
           track: 1,
-          element: document.querySelector("#gutter")
-        }
+          element: document.querySelector("#gutter"),
+        },
       ],
       rowGutters: [
         {
           track: 1,
-          element: document.querySelector("#gutter1-1")
+          element: document.querySelector("#gutter1-1"),
         },
         {
           track: 1,
-          element: document.querySelector("#gutter2-1")
-        }
-      ]
+          element: document.querySelector("#gutter2-1"),
+        },
+      ],
     });
     console.log(Split);
   },
-  methods: {}
+  methods: {},
+  components: {
+    Chatroom,
+  },
 };
 </script>
 
