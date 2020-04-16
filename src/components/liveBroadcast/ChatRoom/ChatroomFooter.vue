@@ -1,7 +1,14 @@
 <template>
-  <div class="chatroom-footer input-placeholder">
-    <el-input v-model="message" size="small" class="mr10"></el-input>
-    <el-button type="primary" size="small">{{ $t("button.send") }}</el-button>
+  <div class="chatroom-footer">
+    <el-input
+      v-model="message"
+      size="small"
+      class="mr10"
+      @keyup.enter.native="onSubmit"
+    ></el-input>
+    <el-button type="primary" size="small" @click="onSubmit">{{
+      $t("button.send")
+    }}</el-button>
   </div>
 </template>
 
@@ -12,6 +19,15 @@ export default {
     return {
       message: "",
     };
+  },
+  methods: {
+    onSubmit() {
+      if (this.message.trim().length === 0) {
+        return;
+      }
+      this.$emit("send", this.message);
+      this.message = "";
+    },
   },
 };
 </script>

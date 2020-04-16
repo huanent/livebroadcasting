@@ -26,14 +26,3 @@ body {
 .roll-scroll::-webkit-scrollbar-track {
   border-radius: 8px;
 }
-
-*::-webkit-input-placeholder {
-  color: red;
-}
-*:-moz-placeholder {
-  color: red;
-}
-*:-ms-input-placeholder {
-  /* IE10+ */
-  color: red;
-}
