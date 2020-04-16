@@ -6,7 +6,7 @@
         <div class="camera—pannel"></div>
         <div id="gutter1-1" class="gutter-row"></div>
         <div class="main—workplace-pannel">
-          <MainWorkpace></MainWorkpace>
+          <MainWorkplace></MainWorkplace>
         </div>
       </div>
       <div id="gutter" class="gutter-col"></div>
@@ -21,10 +21,10 @@
 
 <script>
 import Split from "split-grid";
-import MainWorkpace from "../../components/main-workplace/main-workplace";
+import MainWorkplace from "../../components/main-workplace/main-workplace";
 export default {
-  name: "WorkplacePanelPage",
-  components: { MainWorkpace },
+  name: "WorkplacePanelPlage",
+  components: { MainWorkplace },
   data: function() {
     return {
       gridStyle: undefined,
@@ -90,7 +90,7 @@ export default {
   background-color: #292929;
 }
 .gutter-row {
-  cursor: ow-resize;
+  cursor: row-resize;
 }
 .gutter-col {
   cursor: col-resize;
