@@ -1,8 +1,6 @@
 <template>
   <div>
     <toolbar />
-    <svg-icon icon-class="stop" :size="24" />
-    <chatroom />
   </div>
 </template>
 
