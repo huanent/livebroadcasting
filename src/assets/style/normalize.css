@@ -27,7 +27,20 @@ p,
 textarea {
   padding: 0;
   margin: 0;
-  font-family: Arial, "Microsoft YaHei", "宋体";
+  font-family: Roboto, San Francisco, Helvetica Neue, Helvetica, Arial,
+    PingFangSC-Light, Hiragina Sans GB, WenQuanYi Micro Hei, microsoft yahei ui,
+    microsoft yahei, sans-serif;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: Roboto, San Francisco, Helvetica Neue, Helvetica, Arial,
+    PingFangSC-Light, Hiragina Sans GB, WenQuanYi Micro Hei, microsoft yahei ui,
+    microsoft yahei, sans-serif;
+  font-size: 12px;
 }
 
 ul,

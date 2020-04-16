@@ -1,12 +1,11 @@
 <template>
   <div>
     <toolbar />
-    <svg-icon icon-class="stop" :size="24" />
   </div>
 </template>
 
 <script>
-// import ChatRoom from "@c/liveBroadcast/ChatRoom";
+import Chatroom from "@c/liveBroadcast/Chatroom/Chatroom";
 import Toolbar from "@c/common/Toolbar";
 export default {
   name: "Main",
@@ -14,7 +13,7 @@ export default {
     return {};
   },
   components: {
-    // ChatRoom,
+    Chatroom,
     Toolbar,
   },
 };

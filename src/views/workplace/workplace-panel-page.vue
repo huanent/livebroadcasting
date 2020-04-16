@@ -6,21 +6,14 @@
         <div class="camera—pannel"></div>
         <div id="gutter1-1" class="gutter-row"></div>
         <div class="main—workplace-pannel">
-          <icon
-            name="indent"
-            :size="24"
-            class="test"
-            style="padding: 0.25rem;transform:rotate(180deg)"
-          />
+          <toolbar />
         </div>
       </div>
       <div id="gutter" class="gutter-col"></div>
       <div id="workplace-panel-right">
         <div class="self-camera—pannel"></div>
         <div id="gutter2-1" class="gutter-row"></div>
-        <div class="message—pannel">
-          </div>
-        </div>
+        <div class="message—pannel"></div>
       </div>
     </div>
   </div>
@@ -28,38 +21,40 @@
 
 <script>
 import Split from "split-grid";
-import Chatroom from "../../components/liveBroadcast/ChatRoom/index";
+import Toolbar from "@c/common/Toolbar";
 export default {
   name: "workplace-panel-page",
   data: function() {
     return {
       gridStyle: undefined,
       originPosition: [0, 0],
-      total: 0
+      total: 0,
     };
   },
-  components: { Chatroom },
+  components: {
+    Toolbar,
+  },
   mounted() {
     Split({
       columnGutters: [
         {
           track: 1,
-          element: document.querySelector("#gutter")
-        }
+          element: document.querySelector("#gutter"),
+        },
       ],
       rowGutters: [
         {
           track: 1,
-          element: document.querySelector("#gutter1-1")
+          element: document.querySelector("#gutter1-1"),
         },
         {
           track: 1,
-          element: document.querySelector("#gutter2-1")
-        }
-      ]
+          element: document.querySelector("#gutter2-1"),
+        },
+      ],
     });
   },
-  methods: {}
+  methods: {},
 };
 </script>
 
@@ -80,8 +75,7 @@ export default {
 #workplace-panel-left {
   background: #1a1b1d;
   display: grid;
-  grid-template-rows: 20% 2px calc(80% - 2px);
-  height: calc(100vh - 2rem);
+  grid-template-rows: 20% 2px auto;
   div {
     height: 100%;
   }
@@ -89,8 +83,7 @@ export default {
 #workplace-panel-right {
   background: #212224;
   display: grid;
-  grid-template-rows: 20% 2px calc(80% - 2px);
-  height: calc(100vh - 2rem);
+  grid-template-rows: 20% 2px auto;
   div {
     height: 100%;
   }

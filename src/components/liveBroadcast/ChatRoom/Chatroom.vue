@@ -20,7 +20,8 @@ export default {
 
 <style lang="scss" scoped>
 .chatroom-container {
+  min-width: 240px;
   position: relative;
-  background-color: $chatroom-bg;
+  // background-color: #323338;
 }
 </style>
