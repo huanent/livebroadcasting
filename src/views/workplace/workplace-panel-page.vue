@@ -32,7 +32,6 @@ export default {
     };
   },
   components: {
-    // ChatRoom,
     Toolbar,
   },
   mounted() {
