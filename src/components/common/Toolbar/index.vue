@@ -82,7 +82,7 @@
         <span class="toolHover">清空</span>
       </li>
       <li>
-        <a><svg-icon icon-class="add" :size="27" color="#b4b4b5"/></a>
+        <a><svg-icon icon-class="add" :size="30" color="#b4b4b5"/></a>
         <span class="toolHover">新建</span>
       </li>
       <li @mousedown="moveToolbar($event)">
