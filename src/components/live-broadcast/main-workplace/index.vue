@@ -19,8 +19,8 @@
 import Toolbar from "../toolbar/index";
 import BoardTabs from "./board-tabs";
 import BoardTabsItem from "./board-tabs-item";
+import { liveBroadcastService } from "../../../main";
 // import { enterRoom } from "../../../core/data/data-service";
-import { LiveBroadcastService as liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, BoardTabsItem },
