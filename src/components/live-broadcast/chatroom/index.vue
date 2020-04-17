@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import ChatroomBody from "./ChatroomBody";
-import ChatroomFooter from "./ChatroomFooter";
+import ChatroomBody from "./chatroom-body";
+import ChatroomFooter from "./chatroom-footer";
 
 export default {
   name: "Chatroom",
@@ -28,9 +28,9 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
           payload: {
-            text: "消息内容",
+            text: "消息内容"
           },
-          isTeacher: false,
+          isTeacher: false
         },
         {
           ID: "11435",
@@ -47,9 +47,9 @@ export default {
           avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
           payload: {
             text:
-              "消息内,消息内容消息内容消息内容,消息内容消息内容消息内容,消息内容消息内容消息内容容",
+              "消息内,消息内容消息内容消息内容,消息内容消息内容消息内容,消息内容消息内容消息内容容"
           },
-          isTeacher: true,
+          isTeacher: true
         },
         {
           ID: "11232312",
@@ -66,9 +66,9 @@ export default {
           avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
           payload: {
             text:
-              "消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容",
+              "消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容"
           },
-          isTeacher: false,
+          isTeacher: false
         },
         {
           ID: "11212",
@@ -85,9 +85,9 @@ export default {
           avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
           payload: {
             text:
-              "消息消息内容消息内容,消息内容消息内容,消息内容消息内容消息内容消息内容,消息内容消息内容内容",
+              "消息消息内容消息内容,消息内容消息内容,消息内容消息内容消息内容消息内容,消息内容消息内容内容"
           },
-          isTeacher: true,
+          isTeacher: true
         },
         {
           ID: "11211312",
@@ -103,9 +103,9 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
           payload: {
-            text: "消息内容",
+            text: "消息内容"
           },
-          isTeacher: false,
+          isTeacher: false
         },
         {
           ID: "112312",
@@ -122,9 +122,9 @@ export default {
           avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
           payload: {
             text:
-              "消息内,消息内容消息内容消息内容,消息内容消息内容消息内容,消息内容消息内容消息内容容",
+              "消息内,消息内容消息内容消息内容,消息内容消息内容消息内容,消息内容消息内容消息内容容"
           },
-          isTeacher: true,
+          isTeacher: true
         },
         {
           ID: "1121312",
@@ -141,9 +141,9 @@ export default {
           avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
           payload: {
             text:
-              "消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容",
+              "消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容"
           },
-          isTeacher: false,
+          isTeacher: false
         },
         {
           ID: "11222",
@@ -160,9 +160,9 @@ export default {
           avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
           payload: {
             text:
-              "消息消息内容消息内容,消息内容消息内容,消息内容消息内容消息内容消息内容,消息内容消息内容内容",
+              "消息消息内容消息内容,消息内容消息内容,消息内容消息内容消息内容消息内容,消息内容消息内容内容"
           },
-          isTeacher: true,
+          isTeacher: true
         },
         {
           ID: "112212",
@@ -178,9 +178,9 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
           payload: {
-            text: "消息内容",
+            text: "消息内容"
           },
-          isTeacher: false,
+          isTeacher: false
         },
         {
           ID: "1422312",
@@ -197,9 +197,9 @@ export default {
           avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
           payload: {
             text:
-              "消息内,消息内容消息内容消息内容,消息内容消息内容消息内容,消息内容消息内容消息内容容",
+              "消息内,消息内容消息内容消息内容,消息内容消息内容消息内容,消息内容消息内容消息内容容"
           },
-          isTeacher: true,
+          isTeacher: true
         },
         {
           ID: "31231232312",
@@ -216,9 +216,9 @@ export default {
           avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
           payload: {
             text:
-              "消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容",
+              "消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容"
           },
-          isTeacher: false,
+          isTeacher: false
         },
         {
           ID: "11221321312",
@@ -235,11 +235,11 @@ export default {
           avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
           payload: {
             text:
-              "消息消息内容消息内容,消息内容消息内容,消息内容消息内容消息内容消息内容,消息内容消息内容内容",
+              "消息消息内容消息内容,消息内容消息内容,消息内容消息内容消息内容消息内容,消息内容消息内容内容"
           },
-          isTeacher: true,
-        },
-      ],
+          isTeacher: true
+        }
+      ]
     };
   },
   methods: {
@@ -258,23 +258,24 @@ export default {
         isRevoked: false,
         avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
         payload: {
-          text: msg,
+          text: msg
         },
-        isTeacher: true,
+        isTeacher: true
       });
       console.log(this.$refs["chatroomBody"].scrollToBottom());
-    },
+    }
   },
   components: {
     ChatroomBody,
-    ChatroomFooter,
-  },
+    ChatroomFooter
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .chatroom-container {
   min-width: 240px;
+  height: 100%;
   position: relative;
 }
 </style>
