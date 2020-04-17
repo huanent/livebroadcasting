@@ -12,17 +12,17 @@ const routes = [
   {
     path: "/login",
     name: "Login",
-    component: () => import("@v/Login.vue"),
+    component: () => import("@v/login.vue")
   },
   {
     path: "/workplace",
     name: "Workplace",
-    component: () => import("@v/workplace/workplace-panel-page.vue"),
-  },
+    component: () => import("@v/workplace/workplace-panel-page.vue")
+  }
 ];
 
 const router = new VueRouter({
-  routes,
+  routes
 });
 
 // const hasUserSig = () => Boolean(localStorage.getItem("userSig"));

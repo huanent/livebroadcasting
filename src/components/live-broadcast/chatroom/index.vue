@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import ChatroomBody from "./ChatroomBody";
-import ChatroomFooter from "./ChatroomFooter";
+import ChatroomBody from "./chatroom-body";
+import ChatroomFooter from "./chatroom-footer";
 
 export default {
   name: "Chatroom",

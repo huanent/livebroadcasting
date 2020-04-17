@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Toolbar from "../common/Toolbar/index";
+import Toolbar from "../../common/toolbar";
 import BoardTabs from "./board-tabs";
 import BoardTabsItem from "./board-tabs-item";
 export default {
