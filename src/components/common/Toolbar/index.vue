@@ -4,7 +4,7 @@
       <li
         v-for="(item, index) in toolslist"
         :key="index"
-        :class="[item.fontawesome, { active: toolslistcurrent == index }]"
+        :class="[item.fontawesome, { toolactive: toolslistcurrent == index }]"
         @click.prevent="
           addToolsClass(index);
           showBox(index);
@@ -202,7 +202,8 @@ export default {
         visibility: visible;
       }
       &:hover {
-        border: 1px solid #b4b4b5;
+        box-shadow: 0 0 2px 2px #b4b4b5;
+        border-radius: 10px;
         background-color: black;
       }
 
@@ -228,7 +229,7 @@ export default {
   text-align: center;
   padding: 10px;
   position: absolute;
-  right: 50px;
+  right: 53px;
   top: 0;
   width: 150px;
   background-color: rgba(33, 35, 37, 1);
@@ -249,7 +250,7 @@ export default {
   text-align: center;
   padding: 10px;
   position: absolute;
-  right: 50px;
+  right: 53px;
   top: 30px;
   width: 150px;
   background-color: rgba(33, 35, 37, 1);
@@ -268,5 +269,12 @@ export default {
 }
 .active {
   background-color: black;
+  border-radius: 10px;
+}
+
+.toolactive {
+  background-color: black;
+  box-shadow: 0 0 2px 2px #b4b4b5;
+  border-radius: 10px;
 }
 </style>
