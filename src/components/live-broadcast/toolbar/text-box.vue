@@ -3,7 +3,7 @@
     <div class="block">
       <el-slider v-model="fontSize"></el-slider>
     </div>
-    <div>
+    <div ref="colorpck">
       <el-color-picker v-model="textcolor" size="small"></el-color-picker>
     </div>
   </div>
@@ -16,6 +16,11 @@ export default {
       fontSize: 10,
       textcolor: "#000000"
     };
+  },
+  mounted: function() {
+    this.$nextTick(function() {
+      this.$refs.colorpck.children[0].children[0].style.border = "none";
+    });
   }
 };
 </script>

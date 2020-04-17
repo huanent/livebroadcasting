@@ -18,7 +18,7 @@
         </li>
       </ul>
     </div>
-    <div>
+    <div ref="colorpck">
       <el-color-picker v-model="shapecolor" size="mini"></el-color-picker>
     </div>
   </div>
@@ -50,6 +50,11 @@ export default {
         }
       ]
     };
+  },
+  mounted: function() {
+    this.$nextTick(function() {
+      this.$refs.colorpck.children[0].children[0].style.border = "none";
+    });
   },
   methods: {
     addToolitemClass(index) {
