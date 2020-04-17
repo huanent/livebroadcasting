@@ -1,33 +1,33 @@
 const state = {
-  sdkappid: "1400345310",
-  account: "",
-  userSig: localStorage.getItem("userSig")
-    ? localStorage.getItem("userSig")
+  tx_user_id: "",
+  tx_userSig: localStorage.getItem("tx_userSig")
+    ? localStorage.getItem("tx_userSig")
     : "",
+  tx_privateMapKey: ""
 };
 
 const getters = {
-  userSig: (state) => {
+  tx_userSig: state => {
     return state.userSig;
-  },
+  }
 };
 
 const mutations = {
-  setSdkAppId(state, sdkappid) {
-    state.sdkappid = sdkappid;
+  setUserId(state, tx_user_id) {
+    state.tx_user_id = tx_user_id;
   },
-  setUserSig(state, userSig) {
-    state.userSig = userSig;
+  setUserSig(state, tx_userSig) {
+    state.tx_userSig = tx_userSig;
     localStorage.setItem("userSig", userSig);
   },
-  setAccount(state, account) {
-    state.account = account;
-  },
+  setPrivateMapKey(state, tx_privateMapKey) {
+    state.tx_privateMapKey = tx_privateMapKey;
+  }
 };
 
 export default {
   namespaced: true,
   state,
   getters,
-  mutations,
+  mutations
 };
