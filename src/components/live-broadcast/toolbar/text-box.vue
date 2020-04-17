@@ -29,7 +29,7 @@ export default {
   text-align: center;
   padding: 10px;
   position: absolute;
-  right: 50px;
+  left: -170px;
   top: 30px;
   width: 150px;
   background-color: rgba(33, 35, 37, 0.8);

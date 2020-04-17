@@ -1,5 +1,5 @@
 <template>
-  <ul ref="toolbarul" class="not-tool">
+  <ul class="not-tool">
     <li
       v-for="(item2, index) in toolslist2"
       :key="index"
@@ -59,20 +59,52 @@ export default {
     },
     moveToolbar(index, e) {
       if (index == 4) {
-        console.log(e);
         let odiv = this.$parent.$refs.toolbarul;
         let disX = e.clientX - odiv.offsetLeft;
         let disY = e.clientY - odiv.offsetTop;
         document.onmousemove = e => {
-          let left = e.clientX - disX;
-          let top = e.clientY - disY;
-          this.positionX = top;
-          this.positionY = left;
-          odiv.style.left = left + "px";
-          odiv.style.top = top + "px";
+          if (e.clientY > 340) {
+            let left = e.clientX - disX;
+            let top = e.clientY - disY;
+            this.positionX = top;
+            this.positionY = left;
+            odiv.style.left = left + "px";
+            odiv.style.top = top + "px";
+            return;
+          }
+          if (e.clientY <= 340) {
+            let left = e.clientX - disX;
+            odiv.style.left = left + "px";
+            odiv.clientY = 340 + "px";
+            return;
+          }
         };
         document.onmouseup = e => {
-          console.log(e);
+          let xOffset = this.$parent.$parent.$el.offsetWidth - e.clientX;
+          let yOffset = this.$parent.$parent.$el.offsetHeight - e.clientY;
+          // console.log("白板宽度" + this.$parent.$parent.$el.offsetWidth);
+          // console.log("白板高度" + this.$parent.$parent.$el.offsetHeight);
+          // console.log("client x是" + e.clientX);
+          // console.log("client y是" + e.clientY);
+          // console.log("xoffset 是" + xOffset);
+          // console.log("yoffset 是" + yOffset);
+          if (e.clientX < 170) {
+            this.$parent.$children[5].$el.style.left = "50px";
+            this.$parent.$children[6].$el.style.left = "50px";
+          } else {
+            this.$parent.$children[5].$el.style.left = "-170px";
+            this.$parent.$children[6].$el.style.left = "-170px";
+          }
+          if (
+            xOffset < 100 &&
+            xOffset > -50 &&
+            yOffset < 100 &&
+            yOffset > -100
+          ) {
+            this.$parent.$el.style.left = "";
+            this.$parent.$el.style.top = "";
+            // this.$parent.$el.style.transition = " left 0.5s";
+          }
           document.onmousemove = null;
           document.onmouseup = null;
         };

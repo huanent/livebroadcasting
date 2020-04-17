@@ -17,18 +17,25 @@
         <span class="tool-hover">{{ item.tips }}</span>
       </li>
 
-      <!-- 形状的面板 -->
-      <div v-if="shapeBoxIsshow">
-        <ShapeBox></ShapeBox>
-      </div>
-
-      <!-- 字体选择面板 -->
-      <div v-if="textBoxIsshow">
-        <TextBox></TextBox>
-      </div>
       <!-- 可操作性工具 -->
-      <ActionTools></ActionTools>
+      <div
+        @mousedown="
+          shapeBoxIsshow = false;
+          textBoxIsshow = false;
+        "
+      >
+        <ActionTools></ActionTools>
+      </div>
     </ul>
+    <!-- 形状的面板 -->
+    <div v-show="shapeBoxIsshow">
+      <ShapeBox></ShapeBox>
+    </div>
+
+    <!-- 字体选择面板 -->
+    <div v-show="textBoxIsshow">
+      <TextBox></TextBox>
+    </div>
   </div>
 </template>
 
@@ -102,7 +109,7 @@ export default {
   z-index: 999;
   position: absolute;
   right: 50px;
-  top: 80px;
+  bottom: 640px;
   > ul {
     box-sizing: content-box;
     position: absolute;
