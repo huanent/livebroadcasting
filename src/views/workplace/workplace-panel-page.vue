@@ -38,7 +38,7 @@
 import Split from "split-grid";
 // import Toolbar from "@c/common/Toolbar";
 import MainWorkplace from "@c/main-workplace/main-workplace";
-import Chatroom from "@c/liveBroadcast/Chatroom";
+import Chatroom from "@c/liveBroadcast/ChatRoom";
 export default {
   name: "workplace-panel-page",
   data: function() {
@@ -84,8 +84,6 @@ export default {
             parseFloat(list[0]) / parseFloat(list[2]) < 0.01
           ) {
             vm.showCameraPannel = false;
-            console.log(list[0]);
-            console.log(vm.showCameraPannel);
           } else {
             vm.showCameraPannel = true;
           }
@@ -106,8 +104,8 @@ export default {
             parseFloat(list[2]) > 0 &&
             parseFloat(list[0]) / parseFloat(list[2]) < 0.01
           ) {
-            list[0] = "1fr";
-            list[2] = "4fr";
+            list[0] = "20%";
+            list[2] = "78.5%";
             document.getElementById(
               "workplace-panel-left"
             ).style.gridTemplateRows = list.join(" ");
@@ -131,13 +129,13 @@ export default {
 }
 .workplace-panel-content {
   display: grid;
-  grid-template-columns: 4fr 3px 1fr;
+  grid-template-columns: 78.5% 0.5% 20%;
   height: 100%;
 }
 #workplace-panel-left {
   background: #1a1b1d;
   display: grid;
-  grid-template-rows: 1fr 3px 4fr;
+  grid-template-rows: 20% 0.5% 78.5%;
   height: calc(100vh - 2rem);
   div {
     height: 100%;
@@ -146,7 +144,7 @@ export default {
 #workplace-panel-right {
   background: #212224;
   display: grid;
-  grid-template-rows: 1fr 3px 4fr;
+  grid-template-rows: 20% 0.5% 78.5%;
   height: calc(100vh - 2rem);
 }
 
