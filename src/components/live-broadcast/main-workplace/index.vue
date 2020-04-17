@@ -19,6 +19,7 @@
 import Toolbar from "../toolbar/index";
 import BoardTabs from "./board-tabs";
 import BoardTabsItem from "./board-tabs-item";
+import { testApi } from "../../../core/data/data-service";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, BoardTabsItem },
@@ -30,6 +31,9 @@ export default {
   },
   methods: {
     onTabsClose() {}
+  },
+  mounted() {
+    testApi();
   }
 };
 </script>
