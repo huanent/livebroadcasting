@@ -47,6 +47,7 @@ export default {
   .chatroom-msg-list {
     height: calc(100% - 60px);
     overflow: auto;
+    scroll-behavior: smooth;
   }
 }
 </style>
