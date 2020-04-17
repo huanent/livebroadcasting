@@ -9,6 +9,7 @@ import element from "@c/common/element";
 import "@style/normalize.css";
 import "./assets/style/element-variable.scss";
 import "@style/custom.scss";
+import { LiveBroadcastService } from "./core/live-broadcast/live-broadcast-service";
 
 Vue.use(element);
 
@@ -20,3 +21,5 @@ new Vue({
   i18n,
   render: h => h(App)
 }).$mount("#app");
+
+export const liveBroadcastService = new LiveBroadcastService();
