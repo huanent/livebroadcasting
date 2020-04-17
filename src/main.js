@@ -5,7 +5,7 @@ import router from "./router";
 import store from "./store";
 import i18n from "./plugins/i18n";
 import "@/plugins/icons";
-import element from "./components/common/Element/index";
+import element from "@c/common/element";
 import "@style/normalize.css";
 import "./assets/style/element-variable.scss";
 import "@style/custom.scss";
@@ -18,5 +18,5 @@ new Vue({
   router,
   store,
   i18n,
-  render: (h) => h(App),
+  render: h => h(App)
 }).$mount("#app");

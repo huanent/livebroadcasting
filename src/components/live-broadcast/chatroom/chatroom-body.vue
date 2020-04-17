@@ -1,42 +1,25 @@
 <template>
   <div class="chatroom-body">
-    <ul class="chatroom-msg-list roll-scroll" ref="messageList">
-      <message-item v-for="item in msgList" :key="item.ID" :item="item" />
-    </ul>
+    <chatroom-message :msgList="msgList" ref="messageList" />
   </div>
 </template>
 
 <script>
-import MessageItem from "./message-item";
+import ChatroomMessage from "./chatroom-message";
 
 export default {
   name: "ChatroomBody",
   props: {
-    msgList: Array,
+    msgList: Array
   },
   data() {
     return {};
   },
-  mounted() {
-    this.scrollToBottom();
-  },
-  methods: {
-    scrollToBottom() {
-      const ele = this.$refs["messageList"];
-      if (ele) {
-        const offsetHeight = ele.offsetHeight;
-        const scrollHeight = ele.scrollHeight;
-        if (scrollHeight > offsetHeight) {
-          this.$nextTick(() => {
-            ele.scrollTop = scrollHeight;
-          });
-        }
-      }
-    },
-  },
+  mounted() {},
+  methods: {},
   components: {
-    MessageItem,
-  },
+    ChatroomMessage
+  }
 };
 </script>
 

@@ -7,23 +7,23 @@ module.exports = {
   devServer: {
     overlay: {
       warnings: false,
-      errors: false,
+      errors: false
     },
     hot: true,
     proxy: {
       "/api": {
-        target: "http://oa.jinrui.kooboo.site",
-        changeOrigin: true,
-      },
-    },
+        target: "http://livebroadcasting.jinrui.kooboo.site",
+        changeOrigin: true
+      }
+    }
   },
   css: {
     sourceMap: true,
     loaderOptions: {
       scss: {
-        prependData: `@import "~@/assets/style/variable.scss";`,
-      },
-    },
+        prependData: `@import "~@/assets/style/variable.scss";`
+      }
+    }
   },
   productionSourceMap: false,
   pluginOptions: {
@@ -31,10 +31,10 @@ module.exports = {
       locale: "en",
       fallbackLocale: "en",
       localeDir: "locales",
-      enableInSFC: false,
-    },
+      enableInSFC: false
+    }
   },
-  chainWebpack: (config) => {
+  chainWebpack: config => {
     config.resolve.alias
       .set("@", resolve("./src"))
       .set("@c", resolve("./src/components"))
@@ -50,12 +50,12 @@ module.exports = {
       .use("svg-sprite-loader")
       .loader("svg-sprite-loader")
       .options({
-        symbolId: "icon-[name]",
+        symbolId: "icon-[name]"
       });
-    config.plugin("html").tap((options) => {
+    config.plugin("html").tap(options => {
       options[0].title = "live boardcasting";
       return options;
     });
     config.entry.app = "./src/main.js";
-  },
+  }
 };
