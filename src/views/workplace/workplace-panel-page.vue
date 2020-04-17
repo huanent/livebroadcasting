@@ -7,13 +7,7 @@
         :class="{ 'workplace-panel-left-hide': !showCameraPannel }"
       >
         <div class="camera-pannel">
-          <div
-            @click="toggleCameraPannel"
-            style="cursor: pointer;
-          height: auto;
-          position: absolute;
-          bottom: calc(-2rem - 28px)"
-          >
+          <div @click="toggleCameraPannel" class="camera-icon-box">
             <icon
               name="indent"
               v-if="showCameraPannel"
@@ -154,10 +148,8 @@ export default {
   display: grid;
   grid-template-rows: 1fr 3px 4fr;
   height: calc(100vh - 2rem);
-  div {
-    height: 100%;
-  }
 }
+
 #gutter {
   background-color: #292929;
 }
@@ -191,5 +183,13 @@ export default {
   padding: 5px;
   background-color: rgba(0, 0, 0, 0.59);
   transform: rotate(-90deg);
+}
+
+.camera-icon-box {
+  cursor: pointer;
+  height: auto !important;
+  z-index: 1000;
+  position: absolute;
+  bottom: calc(-2rem - 28px);
 }
 </style>
