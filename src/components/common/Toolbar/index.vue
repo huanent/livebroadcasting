@@ -50,27 +50,24 @@
           <el-color-picker v-model="textcolor"></el-color-picker>
         </div>
       </div>
-
-      <li>
-        <a><icon name="revoke3" :size="24" color="#b4b4b5"/></a>
-        <span class="tool-hover">{{ $t("toolbar.revoke") }}</span>
-      </li>
-      <li>
-        <a><icon name="recovery2" :size="24" color="#b4b4b5"/></a>
-        <span class="tool-hover">{{ $t("toolbar.recovery") }}</span>
-      </li>
-      <li>
-        <a><icon name="clear" :size="21" color="#b4b4b5"/></a>
-        <span class="tool-hover">{{ $t("toolbar.clear") }}</span>
-      </li>
-      <li>
-        <a><icon name="add" :size="30" color="#b4b4b5"/></a>
-        <span class="tool-hover">{{ $t("toolbar.add") }}</span>
-      </li>
-      <li @mousedown="moveToolbar($event)">
-        <a><icon name="move" :size="24" color="#b4b4b5"/></a>
-        <span class="tool-hover">{{ $t("toolbar.move") }}</span>
-      </li>
+      <ul ref="toolbarul" class="not-tool">
+        <li
+          v-for="(item2, index) in toolslist2"
+          :key="index"
+          :class="[{ toolactive: toolslistcurrent2 == index }]"
+          @mousedown="
+            moveToolbar(index, $event);
+            mousedownClass(index);
+          "
+          @mouseup="toolslistcurrent2 = -1"
+        >
+          <a
+            >{{ item2.index
+            }}<icon :name="item2.name" :size="item2.size" color="#b4b4b5"
+          /></a>
+          <span class="tool-hover">{{ item2.tips }}</span>
+        </li>
+      </ul>
     </ul>
   </div>
 </template>
@@ -104,7 +101,7 @@ export default {
         },
       ],
 
-      toolslistcurrent: 0,
+      toolslistcurrent: -1,
       toolslist: [
         {
           name: "pen",
@@ -125,6 +122,34 @@ export default {
           name: "eraser4",
           size: 25,
           tips: this.$t("toolbar.eraser"),
+        },
+      ],
+      toolslistcurrent2: -1,
+      toolslist2: [
+        {
+          name: "revoke3",
+          size: 24,
+          tips: this.$t("toolbar.revoke"),
+        },
+        {
+          name: "recovery2",
+          size: 24,
+          tips: this.$t("toolbar.recovery"),
+        },
+        {
+          name: "clear",
+          size: 21,
+          tips: this.$t("toolbar.clear"),
+        },
+        {
+          name: "add",
+          size: 30,
+          tips: this.$t("toolbar.add"),
+        },
+        {
+          name: "move",
+          size: 24,
+          tips: this.$t("toolbar.move"),
         },
       ],
     };
@@ -151,24 +176,29 @@ export default {
       }
       (this.shapeBoxIsshow = false), (this.textBoxIsshow = false);
     },
-    moveToolbar(e) {
-      console.log(e);
-      let odiv = this.$refs.toolbarul;
-      let disX = e.clientX - odiv.offsetLeft;
-      let disY = e.clientY - odiv.offsetTop;
-      document.onmousemove = (e) => {
-        let left = e.clientX - disX;
-        let top = e.clientY - disY;
-        this.positionX = top;
-        this.positionY = left;
-        odiv.style.left = left + "px";
-        odiv.style.top = top + "px";
-      };
-      document.onmouseup = (e) => {
+    mousedownClass(index) {
+      this.toolslistcurrent2 = index;
+    },
+    moveToolbar(index, e) {
+      if (index == 4) {
         console.log(e);
-        document.onmousemove = null;
-        document.onmouseup = null;
-      };
+        let odiv = this.$refs.toolbarul;
+        let disX = e.clientX - odiv.offsetLeft;
+        let disY = e.clientY - odiv.offsetTop;
+        document.onmousemove = (e) => {
+          let left = e.clientX - disX;
+          let top = e.clientY - disY;
+          this.positionX = top;
+          this.positionY = left;
+          odiv.style.left = left + "px";
+          odiv.style.top = top + "px";
+        };
+        document.onmouseup = (e) => {
+          console.log(e);
+          document.onmousemove = null;
+          document.onmouseup = null;
+        };
+      }
     },
   },
 };
@@ -183,28 +213,34 @@ export default {
   right: 50px;
   top: 50px;
   > ul {
+    box-sizing: content-box;
     position: absolute;
-    width: 50px;
+    width: 70px;
     float: left;
     background-color: rgba(33, 35, 37, 0.8);
     color: white;
     .tool-actived {
       background-color: black;
     }
+    > li:nth-child(1) {
+      margin-top: 10px;
+    }
     > li {
       position: relative;
       width: 30px;
       height: 30px;
       padding: 10px;
+      margin-bottom: 10px;
+      margin-left: 10px;
+      margin-right: 10px;
       cursor: pointer;
       text-align: center;
       &:hover .tool-hover {
         visibility: visible;
       }
       &:hover {
-        box-shadow: 0 0 2px 2px #b4b4b5;
-        border-radius: 10px;
         background-color: black;
+        // box-shadow: 0 0 2px 2px #b4b4b5 inset;
       }
 
       .tool-hover {
@@ -220,7 +256,7 @@ export default {
         font-size: 12px;
         color: #fff;
         background: rgba(0, 0, 0, 0.8);
-        border-radius: 2px;
+        // border-radius: 2px;
       }
     }
   }
@@ -229,7 +265,7 @@ export default {
   text-align: center;
   padding: 10px;
   position: absolute;
-  right: 53px;
+  right: 70px;
   top: 0;
   width: 150px;
   background-color: rgba(33, 35, 37, 1);
@@ -250,7 +286,7 @@ export default {
   text-align: center;
   padding: 10px;
   position: absolute;
-  right: 53px;
+  right: 70px;
   top: 30px;
   width: 150px;
   background-color: rgba(33, 35, 37, 1);
@@ -267,14 +303,62 @@ export default {
     }
   }
 }
+.not-tool {
+  box-sizing: content-box;
+  position: absolute;
+  width: 70px;
+  float: left;
+  background-color: rgba(33, 35, 37, 0.8);
+  color: white;
+  .tool-actived {
+    background-color: black;
+  }
+  > li:nth-child(1) {
+    margin-top: 10px;
+  }
+  > li {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    text-align: center;
+    &:hover .tool-hover {
+      visibility: visible;
+    }
+    &:hover {
+      background-color: black;
+      // box-shadow: 0 0 2px 2px #b4b4b5 inset;
+    }
+
+    .tool-hover {
+      visibility: hidden;
+      transition: all 0.15s ease;
+      position: absolute;
+      top: 10px;
+      left: 50px;
+      white-space: nowrap;
+      padding: 2px 6px;
+      height: 20px;
+      line-height: 20px;
+      font-size: 12px;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.8);
+      // border-radius: 2px;
+    }
+  }
+}
 .active {
   background-color: black;
-  border-radius: 10px;
 }
 
 .toolactive {
   background-color: black;
-  box-shadow: 0 0 2px 2px #b4b4b5;
-  border-radius: 10px;
+  // box-sizing: content-box;
+  // border: 3px solid #b4b4b5;
+  box-shadow: 0 0 0 3px #b4b4b5 inset;
 }
 </style>
