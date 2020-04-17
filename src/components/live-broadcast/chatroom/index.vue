@@ -15,6 +15,28 @@ export default {
     return {
       msgList: [
         {
+          ID: "1881312",
+          type: "TIM.TYPES.MSG_GRP_TIP",
+          nick: "caffrey",
+          time: "10:02:52",
+          flow: "in",
+          conversationID: "",
+          conversationType: "TIM.TYPES.CONV_GROUP",
+          to: "",
+          from: "",
+          status: "success",
+          isRevoked: false,
+          avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
+          payload: {
+            operatorID: "111",
+            operationType: "TIM.TYPES.GRP_TIP_MBR_JOIN",
+            userIDList: ["1112312", "234342"],
+            newGroupProfile: null,
+            memberList: ["112123"]
+          },
+          isTeacher: false
+        },
+        {
           ID: "112211312",
           type: "TIM.TYPES.MSG_TEXT",
           nick: "caffrey",
