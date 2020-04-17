@@ -1,6 +1,10 @@
 <template>
   <div class="chatroom-container">
-    <chatroom-body :msgList="msgList" ref="chatroomBody" />
+    <chatroom-body
+      :msgList="msgList"
+      ref="chatroom-body"
+      @loadMore="loadMore"
+    />
     <chatroom-footer @send="sendMessage" />
   </div>
 </template>
@@ -15,32 +19,10 @@ export default {
     return {
       msgList: [
         {
-          ID: "1881312",
-          type: "TIM.TYPES.MSG_GRP_TIP",
-          nick: "caffrey",
-          time: "10:02:52",
-          flow: "in",
-          conversationID: "",
-          conversationType: "TIM.TYPES.CONV_GROUP",
-          to: "",
-          from: "",
-          status: "success",
-          isRevoked: false,
-          avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
-          payload: {
-            operatorID: "111",
-            operationType: "TIM.TYPES.GRP_TIP_MBR_JOIN",
-            userIDList: ["1112312", "234342"],
-            newGroupProfile: null,
-            memberList: ["112123"]
-          },
-          isTeacher: false
-        },
-        {
           ID: "112211312",
           type: "TIM.TYPES.MSG_TEXT",
           nick: "caffrey",
-          time: "10:02:52",
+          time: "10:02:5211111",
           flow: "in",
           conversationID: "",
           conversationType: "TIM.TYPES.CONV_GROUP",
@@ -265,6 +247,13 @@ export default {
     };
   },
   methods: {
+    loadMore() {
+      const currentScrollHeight = this.$refs["chatroom-body"].$refs[
+        "message-list"
+      ].$el.scrollHeight;
+      this.msgList = [...this.msgList, ...this.msgList];
+      this.$refs["chatroom-body"].scrollToCurrent(currentScrollHeight);
+    },
     sendMessage(msg) {
       this.msgList.push({
         ID: Math.ceil(Math.random() * 10000),
@@ -284,7 +273,7 @@ export default {
         },
         isTeacher: true
       });
-      console.log(this.$refs["chatroomBody"].scrollToBottom());
+      this.$refs["chatroom-body"].scrollToBottom();
     }
   },
   components: {

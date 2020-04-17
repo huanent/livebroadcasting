@@ -1,8 +1,14 @@
 <template>
   <ul class="chatroom-msg-list roll-scroll" ref="messageList">
+    <li class="load-more">
+      <div @click="$emit('loadMore')">
+        <icon name="clock" color="#dcebeb" size="14" />
+        <span>{{ $t("chatroom.readMore") }}</span>
+      </div>
+    </li>
     <li
-      v-for="item in msgList"
-      :key="item.ID"
+      v-for="(item, index) in msgList"
+      :key="index"
       class="chatroom-msg"
       :class="{ 'own-msg': item.flow === 'out', 'teacher-msg': item.isTeacher }"
     >
@@ -32,23 +38,6 @@ export default {
   },
   data() {
     return {};
-  },
-  mounted() {
-    this.scrollToBottom();
-  },
-  methods: {
-    scrollToBottom() {
-      const ele = this.$refs["messageList"];
-      if (ele) {
-        const offsetHeight = ele.offsetHeight;
-        const scrollHeight = ele.scrollHeight;
-        if (scrollHeight > offsetHeight) {
-          this.$nextTick(() => {
-            ele.scrollTop = scrollHeight;
-          });
-        }
-      }
-    }
   }
 };
 </script>
@@ -56,8 +45,19 @@ export default {
 <style lang="scss" scoped>
 .chatroom-msg-list {
   height: calc(100% - 60px);
-  overflow: auto;
-  scroll-behavior: smooth;
+  .load-more {
+    color: #dcebeb;
+    margin-top: 15px;
+    padding: 0 10px 10px;
+    > div {
+      cursor: pointer;
+      display: flex;
+      width: 100px;
+      align-items: center;
+      justify-content: space-around;
+      margin: 0 auto;
+    }
+  }
   .chatroom-msg {
     margin-top: 10px;
     padding: 0 10px 10px;
