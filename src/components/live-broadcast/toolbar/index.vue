@@ -74,7 +74,7 @@
 
 <script>
 export default {
-  name: "Toolbar",
+  name: "toolbar",
   data() {
     return {
       thickness: 10,
@@ -88,17 +88,17 @@ export default {
       toolitemscurrent: 0,
       toolitems: [
         {
-          name: "line2",
+          name: "line2"
         },
         {
-          name: "curve2",
+          name: "curve2"
         },
         {
-          name: "circle",
+          name: "circle"
         },
         {
-          name: "rectangle",
-        },
+          name: "rectangle"
+        }
       ],
 
       toolslistcurrent: -1,
@@ -106,52 +106,52 @@ export default {
         {
           name: "pen",
           size: 21,
-          tips: this.$t("toolbar.shape"),
+          tips: this.$t("toolbar.shape")
         },
         {
           name: "text2",
           size: 27,
-          tips: this.$t("toolbar.text"),
+          tips: this.$t("toolbar.text")
         },
         {
           name: "laserPen2",
           size: 27,
-          tips: this.$t("toolbar.laserPen"),
+          tips: this.$t("toolbar.laserPen")
         },
         {
           name: "eraser4",
           size: 25,
-          tips: this.$t("toolbar.eraser"),
-        },
+          tips: this.$t("toolbar.eraser")
+        }
       ],
       toolslistcurrent2: -1,
       toolslist2: [
         {
           name: "revoke3",
           size: 24,
-          tips: this.$t("toolbar.revoke"),
+          tips: this.$t("toolbar.revoke")
         },
         {
           name: "recovery2",
           size: 24,
-          tips: this.$t("toolbar.recovery"),
+          tips: this.$t("toolbar.recovery")
         },
         {
           name: "clear",
           size: 21,
-          tips: this.$t("toolbar.clear"),
+          tips: this.$t("toolbar.clear")
         },
         {
           name: "add",
           size: 30,
-          tips: this.$t("toolbar.add"),
+          tips: this.$t("toolbar.add")
         },
         {
           name: "move",
           size: 24,
-          tips: this.$t("toolbar.move"),
-        },
-      ],
+          tips: this.$t("toolbar.move")
+        }
+      ]
     };
   },
   computed: {},
@@ -185,7 +185,7 @@ export default {
         let odiv = this.$refs.toolbarul;
         let disX = e.clientX - odiv.offsetLeft;
         let disY = e.clientY - odiv.offsetTop;
-        document.onmousemove = (e) => {
+        document.onmousemove = e => {
           let left = e.clientX - disX;
           let top = e.clientY - disY;
           this.positionX = top;
@@ -193,14 +193,14 @@ export default {
           odiv.style.left = left + "px";
           odiv.style.top = top + "px";
         };
-        document.onmouseup = (e) => {
+        document.onmouseup = e => {
           console.log(e);
           document.onmousemove = null;
           document.onmouseup = null;
         };
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -210,8 +210,8 @@ export default {
 .toolbar {
   z-index: 999;
   position: absolute;
-  right: 50px;
-  top: 50px;
+  right: 70px;
+  top: 80px;
   > ul {
     box-sizing: content-box;
     position: absolute;
