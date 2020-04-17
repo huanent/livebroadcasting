@@ -18,7 +18,7 @@ const mutations = {
   },
   setUserSig(state, tx_userSig) {
     state.tx_userSig = tx_userSig;
-    localStorage.setItem("userSig", userSig);
+    localStorage.setItem("tx_userSig", tx_userSig);
   },
   setPrivateMapKey(state, tx_privateMapKey) {
     state.tx_privateMapKey = tx_privateMapKey;
