@@ -17,6 +17,9 @@ const routes = [
   {
     path: "/workplace",
     name: "Workplace",
+    meta: {
+      requireAuth: true
+    },
     component: () => import("@v/workplace/workplace-panel-page.vue")
   }
 ];
@@ -25,13 +28,13 @@ const router = new VueRouter({
   routes
 });
 
-// const hasUserSig = () => Boolean(localStorage.getItem("userSig"));
+// const hasToken = () => Boolean(localStorage.getItem("lb_token"));
 // router.beforeEach((to, from, next) => {
-//   if (to.matched.some((item) => item.meta.requireAuth)) {
-//     if (!hasUserSig()) {
+//   if (to.matched.some(item => item.meta.requireAuth)) {
+//     if (!hasToken()) {
 //       next({
 //         path: "/login",
-//         replace: true,
+//         replace: true
 //       });
 //     } else {
 //       next();

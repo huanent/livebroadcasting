@@ -114,7 +114,7 @@ export default {
   // },
   methods: {
     // 获取store内namespace为account下的mutations方法
-    ...mapMutations("account", ["setUserSig", "setAccount"]),
+    ...mapMutations("account", ["setLBToken"]),
     onSubmit(formName) {
       // console.log(formName);
       // this.$router.push({ name: "Home" });
@@ -130,9 +130,9 @@ export default {
                 this.$message.success(this.$t("login.successTips"));
                 const token = res.data.token;
                 if (token) {
-                  this.setToken(res.data.token);
+                  this.setLBToken(res.data.token);
+                  this.$router.push({ name: "Workplace" });
                 }
-                this.$router.push({ name: "Home" });
               } else {
                 this.$message.error(this.$t("login.failedTips"));
               }

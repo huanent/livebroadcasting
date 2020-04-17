@@ -1,5 +1,6 @@
 const state = {
-  tx_user_id: "",
+  lb_token: "",
+  tx_userId: "",
   tx_userSig: localStorage.getItem("tx_userSig")
     ? localStorage.getItem("tx_userSig")
     : "",
@@ -13,14 +14,18 @@ const getters = {
 };
 
 const mutations = {
-  setUserId(state, tx_user_id) {
-    state.tx_user_id = tx_user_id;
+  setLBToken(state, lb_token) {
+    state.lb_token = lb_token;
+    localStorage.setItem("lb_token", lb_token);
   },
-  setUserSig(state, tx_userSig) {
+  setTXUserId(state, tx_userId) {
+    state.tx_userId = tx_userId;
+  },
+  setTXUserSig(state, tx_userSig) {
     state.tx_userSig = tx_userSig;
     localStorage.setItem("tx_userSig", tx_userSig);
   },
-  setPrivateMapKey(state, tx_privateMapKey) {
+  setTXPrivateMapKey(state, tx_privateMapKey) {
     state.tx_privateMapKey = tx_privateMapKey;
   }
 };

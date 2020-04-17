@@ -7,11 +7,10 @@ axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(
   function(config) {
-    // const token = localStorage.getItem('token')
-    // if (token) {
-    //   config.headers.Authorization = token
-    // }
-    // Do something before request is sent
+    const token = localStorage.getItem("lb_token");
+    if (token) {
+      config.headers.Authorization = token;
+    }
     return config;
   },
   function(error) {
