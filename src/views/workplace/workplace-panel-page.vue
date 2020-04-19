@@ -24,7 +24,9 @@
       </div>
       <div id="gutter" class="gutter-col"></div>
       <div id="workplace-panel-right">
-        <div class="self-camera-pannel"></div>
+        <div class="self-camera-pannel">
+          <div id="local_video" style="height: 100%;width: 100%"></div>
+        </div>
         <div id="gutter2-1" class="gutter-row"></div>
         <div class="message-pannel">
           <chatroom />

@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { tokenPool } from "./get-token-mock";
 
-/*const APP_ID = "";*/
+/*const APP_ID = "1400345310";*/
 
 export const createRoom = function() {
   let roomId = parseInt(Math.random() * 10);
