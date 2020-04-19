@@ -3,7 +3,6 @@ import axios from "axios";
 
 axios.defaults.baseURL = "/api";
 axios.defaults.timeout = 60 * 1000;
-axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(
   function(config) {
