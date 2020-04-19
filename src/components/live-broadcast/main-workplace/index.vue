@@ -2,8 +2,8 @@
   <div class="main-workplace-container">
     <BoardTabs :lables.sync="lables" @on-close="onTabsClose($event)">
       <BoardTabsItem style="background-color: #0a818c;height:100%;"
-        >1</BoardTabsItem
-      >
+        ><div id="board_el" style="height: 400px; width: 560px"></div
+      ></BoardTabsItem>
       <BoardTabsItem style="background-color: #8c436a;height:100%;"
         >2</BoardTabsItem
       >

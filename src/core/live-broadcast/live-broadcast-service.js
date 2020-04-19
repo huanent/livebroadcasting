@@ -1,5 +1,14 @@
 import TRTC from "trtc-js-sdk";
 import { enterRoom } from "../data/data-service";
+
+import TIM from "tim-js-sdk";
+
+import COS from "cos-js-sdk-v5";
+window["COS"] = COS;
+
+import axios from "axios";
+window["axios"] = axios;
+
 export class LiveBroadcastService {
   config;
   sdkAppId = "1400345310";
@@ -25,11 +34,71 @@ export class LiveBroadcastService {
       }
     });
   }
+
+  initBoard() {
+    const roomId = "1234567890";
+    const toUserId = "u2";
+    const sdkAppId = "1400351114";
+    const userId = "u1";
+    const userSig =
+      "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwqWGUNHilOzEgoLMFCUrQxMDA2NTQ0NDE4hMakVBZlEqUNzU1NTIwMAAIlqSmQsWszCzNDQzMoeqLc5MBxqa75ThnWhpkpHvbOaenJsd6ppdGKOfZ6Kd6Rga7heaEpDq6exW5l*REuJdmm*rVAsAe3owfg__";
+
+    var initParams = {
+      id: "board_el",
+      classId: roomId,
+      sdkAppId: sdkAppId,
+      userId: userId,
+      userSig: userSig
+    };
+    let TEduBoard = window["TEduBoard"];
+    var teduBoard = new TEduBoard(initParams);
+    let options = {
+      SDKAppID: sdkAppId
+    };
+
+    let tim = TIM.create(options); // SDK 实例通常用 tim 表示
+
+    tim.setLogLevel(0); // 普通级别，日志量较多，接入时建议使用
+    // 注册 COS SDK 插件
+    tim.registerPlugin({ "cos-js-sdk": COS });
+    let promise = tim.login({ userID: userId, userSig: userSig });
+    promise
+      .then(imResponse => {
+        console.log(imResponse.data); // 登录成功
+        console.log("tim 登录成功");
+      })
+      .catch(imError => {
+        console.warn("login error:", imError); // 登录失败的相关信息
+      });
+
+    teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
+      console.log(data);
+      let message = tim.createCustomMessage({
+        to: toUserId,
+        conversationType: TIM.TYPES.CONV_C2C,
+        payload: {
+          data: JSON.stringify(data),
+          description: "",
+          extension: "TXWhiteBoardExt"
+        }
+      });
+      tim.sendMessage(message).then(
+        () => {
+          // 同步成功
+        },
+        () => {
+          // 同步失败
+        }
+      );
+    });
+  }
   init() {
     return new Promise(resolve => {
       this.getUserSig("default").then(token => {
         this.createClient("default", token.id, token.userSig);
-        this.joinroom().then(() => {});
+        this.joinroom().then(() => {
+          this.initBoard();
+        });
       });
     });
   }
