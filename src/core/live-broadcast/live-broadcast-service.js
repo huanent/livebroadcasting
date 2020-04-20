@@ -1,5 +1,5 @@
 import TRTC from "trtc-js-sdk";
-import { enterRoom } from "../data/data-service";
+import { createRoom, enterRoom, getSdkAppId } from "../data/data-service";
 
 import TIM from "tim-js-sdk";
 
@@ -7,16 +7,19 @@ import COS from "cos-js-sdk-v5";
 window["COS"] = COS;
 
 import axios from "axios";
+import { liveBroadcastService } from "../../main";
+
 window["axios"] = axios;
 
 export class LiveBroadcastService {
   config;
-  sdkAppId = "1400345310";
+  sdkAppId = getSdkAppId();
   mode = "live";
   clientList = {};
   TokenList = {};
   roomId = "1234567890";
   activeBoard;
+  userId = "test";
   getUserSig(key) {
     if (!key) {
       key = "default";
@@ -25,7 +28,7 @@ export class LiveBroadcastService {
       if (this.TokenList[key] && !this.TokenList[key].isExpired) {
         resolve(this.TokenList[key]);
       } else {
-        enterRoom("test-user01", this.roomId).then(res => {
+        enterRoom(this.userId, this.roomId).then(res => {
           if (res.data.success) {
             let token = Object.assign({ isExpired: false }, res.data.model);
             this.TokenList[key] = token;
@@ -46,14 +49,14 @@ export class LiveBroadcastService {
     activeBoard.reset();
   }
   initBoard() {
-    const roomId = "1234567890";
-    const toUserId = "u2";
-    const sdkAppId = "1400351114";
-    const userId = "u1";
-    const userSig =
-      "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwqWGUNHilOzEgoLMFCUrQxMDA2NTQ0NDE4hMakVBZlEqUNzU1NTIwMAAIlqSmQsWszCzNDQzMoeqLc5MBxqa75ThnWhpkpHvbOaenJsd6ppdGKOfZ6Kd6Rga7heaEpDq6exW5l*REuJdmm*rVAsAe3owfg__";
-    const tooltype = 2;
-    var initParams = {
+    const roomId = this.roomId;
+    const toUserId = "7";
+    const sdkAppId = this.sdkAppId;
+    let token = this.TokenList["default"];
+    let userId = token.id;
+    let userSig = token.userSig;
+
+    let initParams = {
       id: "board_el",
       classId: roomId,
       sdkAppId: sdkAppId,
@@ -80,7 +83,7 @@ export class LiveBroadcastService {
       .catch(imError => {
         console.warn("login error:", imError); // 登录失败的相关信息
       });
-
+    this.activeBoard = teduBoard;
     teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
       console.log(data);
       let message = tim.createCustomMessage({
@@ -105,11 +108,18 @@ export class LiveBroadcastService {
   }
   init() {
     return new Promise(resolve => {
-      this.getUserSig("default").then(token => {
-        this.createClient("default", token.id, token.userSig);
-        this.joinroom().then(() => {
-          this.initBoard();
-        });
+      createRoom(this.userId).then(res => {
+        if (res.data.success) {
+          this.roomId = res.data.model.roomId;
+          this.getUserSig("default").then(token => {
+            this.createClient("default", token.id, token.userSig);
+            this.joinroom().then(() => {
+              this.initBoard();
+            });
+          });
+        } else {
+          console.error(res.data.messages);
+        }
       });
     });
   }
