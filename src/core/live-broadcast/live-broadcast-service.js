@@ -88,7 +88,7 @@ export class LiveBroadcastService {
     this.activeBoard = teduBoard;
     setTimeout(() => {
       this.initBoardOptions();
-    }, 10);
+    }, 1000);
     teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
       console.log(data);
       let message = tim.createCustomMessage({
