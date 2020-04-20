@@ -34,7 +34,8 @@ export default {
     onTabsClose() {}
   },
   mounted() {
-    liveBroadcastService.init();
+    const liveBroadcasting = liveBroadcastService.init();
+    const board = liveBroadcasting.activeBoard;
   }
 };
 </script>

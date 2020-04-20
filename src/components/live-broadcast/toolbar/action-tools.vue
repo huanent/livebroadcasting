@@ -90,11 +90,8 @@ export default {
           // console.log("yoffset 是" + yOffset);
           if (e.clientX < 170) {
             this.$emit("changeSet", "50px");
-            // this.$parent.$children[6].$el.style.left = "50px";
           } else {
             this.$emit("changeSet", "-170px");
-            // this.$parent.$children[5].$el.style.left = "-170px";
-            // this.$parent.$children[6].$el.style.left = "-170px";
           }
           if (
             xOffset < 100 &&

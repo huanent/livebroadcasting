@@ -35,65 +35,65 @@ const mutations = {
  * 设置涂鸦粗细
  * @param {*} num 
  */
-  onSetThin(num) {
-    teduBoard.setBrushThin(num);
-  },
+  // onSetThin(num) {
+  //   teduBoard.setBrushThin(num);
+  // },
 
-  /**
-   * 清空当前页涂鸦(保留背景色/图片)
-   */
-  onclearDraws() {
-    teduBoard.clear();
-  },
+  // /**
+  //  * 清空当前页涂鸦(保留背景色/图片)
+  //  */
+  // onclearDraws() {
+  //   teduBoard.clear();
+  // },
 
-  /**
-   * 清空当前页涂鸦 + 背景色/图片
-   */
-  onClear() {
-    teduBoard.clear(true);
-  },
+  // /**
+  //  * 清空当前页涂鸦 + 背景色/图片
+  //  */
+  // onClear() {
+  //   teduBoard.clear(true);
+  // },
 
-  // 回退
-  onUndo() {
-    teduBoard.undo();
-  },
+  // // 回退
+  // onUndo() {
+  //   teduBoard.undo();
+  // },
 
-  // 重做
-  onRedo() {
-    teduBoard.redo();
-  },
+  // // 重做
+  // onRedo() {
+  //   teduBoard.redo();
+  // },
 
   //Board(涂鸦操作)
-  onSetDrawEnable() {
-    this.teduBoard.setDrawEnable(this.drawEnable);
-  },
+  // onSetDrawEnable() {
+  //   this.teduBoard.setDrawEnable(this.drawEnable);
+  // },
 
-  onSetTextSize(size) {
-    this.teduBoard.setTextSize(size);
-  },
+  // onSetTextSize(size) {
+  //   this.teduBoard.setTextSize(size);
+  // },
 
-  onSetTextColor(color) {
-    this.textColor = this.rgbToHex(color);
-    this.teduBoard.setTextColor(this.textColor);
-  },
+  // onSetTextColor(color) {
+  //   this.textColor = this.rgbToHex(color);
+  //   this.teduBoard.setTextColor(this.textColor);
+  // },
 
-  onSetBackgroundImage(backgroundImage) {
-    var path = backgroundImage;
-    this.teduBoard.setBackgroundImage(path);
-  },
+  // onSetBackgroundImage(backgroundImage) {
+  //   var path = backgroundImage;
+  //   this.teduBoard.setBackgroundImage(path);
+  // },
 
-  onSetBackgroundH5(backgroundImageH5) {
-    var path = backgroundImageH5;
-    this.teduBoard.setBackgroundH5(path);
-  },
+  // onSetBackgroundH5(backgroundImageH5) {
+  //   var path = backgroundImageH5;
+  //   this.teduBoard.setBackgroundH5(path);
+  // },
 
-  onGotoBoard(boardId) {
-    this.teduBoard.gotoBoard(boardId, false);
-  },
+  // onGotoBoard(boardId) {
+  //   this.teduBoard.gotoBoard(boardId, false);
+  // },
 
-  onSetScale(scale) {
-    this.teduBoard.setBoardScale(scale);
-  },
+  // onSetScale(scale) {
+  //   this.teduBoard.setBoardScale(scale);
+  // },
 };
 
 export default {

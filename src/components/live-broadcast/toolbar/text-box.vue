@@ -17,15 +17,11 @@ export default {
   name: "TextBox",
   data() {
     return {
-      fontSize: 10,
-      textcolor: "#000000"
+      fontSize: this.$store.state.textSize,
+      textcolor: this.$store.state.textColor
     };
   },
-  mounted: function() {
-    // this.$nextTick(function() {
-    //   this.$refs.colorpck.children[0].children[0].style.border = "none";
-    // });
-  }
+  mounted: function() {}
 };
 </script>
 <style lang="scss" scoped>

@@ -40,6 +40,8 @@
 </template>
 
 <script>
+// import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { mapMutations } from "vuex";
 import ActionTools from "./action-tools";
 import ShapeBox from "./shape-box";
 import TextBox from "./text-box";

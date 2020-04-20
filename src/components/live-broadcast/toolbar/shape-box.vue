@@ -28,9 +28,9 @@ export default {
   name: "ShapeBox",
   data() {
     return {
-      shapecolor: "red",
+      shapecolor: this.$store.state.brushColor,
+      thickness: this.$store.state.brushThin,
       toolitemscurrent: 0,
-      thickness: 10,
       toolitems: [
         {
           name: "line2",
