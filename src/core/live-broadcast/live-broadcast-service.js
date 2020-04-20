@@ -1,5 +1,5 @@
 import TRTC from "trtc-js-sdk";
-import { enterRoom } from "../data/data-service";
+import { createRoom, enterRoom, getSdkAppId } from "../data/data-service";
 
 import TIM from "tim-js-sdk";
 
@@ -19,6 +19,7 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "1234567890";
   activeBoard;
+  userId = "test";
   getUserSig(key) {
     if (!key) {
       key = "default";
