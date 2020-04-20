@@ -10,6 +10,7 @@ import axios from "axios";
 import { liveBroadcastService } from "../../main";
 
 window["axios"] = axios;
+import store from "@/store";
 
 export class LiveBroadcastService {
   config;
@@ -48,6 +49,7 @@ export class LiveBroadcastService {
   resetBoard(activeBoard) {
     activeBoard.reset();
   }
+
   initBoard() {
     const roomId = this.roomId;
     const toUserId = "7";
@@ -84,6 +86,9 @@ export class LiveBroadcastService {
         console.warn("login error:", imError); // 登录失败的相关信息
       });
     this.activeBoard = teduBoard;
+    setTimeout(() => {
+      this.initBoardOptions();
+    }, 10000);
     teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
       console.log(data);
       let message = tim.createCustomMessage({
@@ -105,6 +110,11 @@ export class LiveBroadcastService {
         }
       );
     });
+  }
+  initBoardOptions() {
+    // this.activeBoard.reset();
+    const brushColor = store.state.board.brushColor;
+    this.activeBoard.setBrushColor(brushColor);
   }
   init() {
     return new Promise(resolve => {

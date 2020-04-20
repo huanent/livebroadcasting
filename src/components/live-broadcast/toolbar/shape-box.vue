@@ -55,6 +55,7 @@ export default {
     // this.$nextTick(function() {
     //   this.$refs.colorpck.children[0].children[0].style.border = "none";
     // });
+    console.log("------------------", this.$store);
   },
   methods: {
     addToolitemClass(index) {
