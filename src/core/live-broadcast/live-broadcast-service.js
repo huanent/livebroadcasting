@@ -16,6 +16,7 @@ export class LiveBroadcastService {
   clientList = {};
   TokenList = {};
   roomId = "1234567890";
+  activeBoard;
   getUserSig(key) {
     if (!key) {
       key = "default";
@@ -35,6 +36,15 @@ export class LiveBroadcastService {
     });
   }
 
+  getActiveBoard() {
+    return this.activeBoard;
+  }
+  setActiveBoard(activeBoard) {
+    this.activeBoard = activeBoard;
+  }
+  resetBoard(activeBoard) {
+    activeBoard.reset();
+  }
   initBoard() {
     const roomId = "1234567890";
     const toUserId = "u2";
@@ -85,6 +95,7 @@ export class LiveBroadcastService {
       tim.sendMessage(message).then(
         () => {
           // 同步成功
+          this.activeBoard = teduBoard;
         },
         () => {
           // 同步失败
