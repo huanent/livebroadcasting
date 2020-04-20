@@ -19,16 +19,23 @@
       </ul>
     </div>
     <div ref="colorpck">
-      <el-color-picker v-model="shapecolor" size="mini"></el-color-picker>
+      <el-color-picker
+        v-model="shapecolor"
+        size="mini"
+        @change="onColorPicked"
+      ></el-color-picker>
     </div>
   </div>
 </template>
+
 <script>
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
   name: "ShapeBox",
   data() {
     return {
-      shapecolor: "red",
+      shapecolor: "",
       toolitemscurrent: 0,
       thickness: 10,
       toolitems: [
@@ -51,15 +58,17 @@ export default {
       ]
     };
   },
-  mounted: function() {
-    // this.$nextTick(function() {
-    //   this.$refs.colorpck.children[0].children[0].style.border = "none";
-    // });
-    console.log("------------------", this.$store);
+  created() {
+    this.shapecolor = this.$store.state.board.brushColor;
   },
   methods: {
+    ...mapMutations("board", ["SET_BRUSH_COLOR"]),
     addToolitemClass(index) {
       this.toolitemscurrent = index;
+    },
+    onColorPicked(color) {
+      console.log(color);
+      this.SET_BRUSH_COLOR(color);
     }
   }
 };

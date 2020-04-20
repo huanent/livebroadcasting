@@ -10,7 +10,7 @@ const state = {
   // backgroundImageH5: "背景图H5",
   // backgroundColor: "#ff0000",
   // globalBackgroundColor: "#ff0000",
-  brushColor: "#0000ff" // 画笔颜色
+  brushColor: "#BABA81" // 画笔颜色
   // textColor: "#ff0000",
   // textStyle: "#ff0000",
   // textFamily: "sans-serif,serif,monospace",
@@ -24,7 +24,7 @@ const state = {
 
 const getters = {
   // 获取画笔颜色
-  getBrushColor: state => {
+  brushColor: state => {
     return state.brushColor;
   }
 };
@@ -33,7 +33,7 @@ const mutations = {
   // 设置画笔颜色
   SET_BRUSH_COLOR(state, color) {
     state.brushColor = this.color;
-    this.liveBroadcastService.activeBoard.setBrushColor(color);
+    liveBroadcastService.activeBoard.setBrushColor(color);
   }
 };
 

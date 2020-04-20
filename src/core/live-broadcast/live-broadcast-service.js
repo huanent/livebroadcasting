@@ -19,7 +19,7 @@ export class LiveBroadcastService {
   clientList = {};
   TokenList = {};
   roomId = "1234567890";
-  activeBoard;
+  activeBoard = null;
   userId = "test";
   getUserSig(key) {
     if (!key) {
@@ -73,7 +73,7 @@ export class LiveBroadcastService {
 
     let tim = TIM.create(options); // SDK 实例通常用 tim 表示
 
-    tim.setLogLevel(0); // 普通级别，日志量较多，接入时建议使用
+    tim.setLogLevel(1); // 普通级别，日志量较多，接入时建议使用
     // 注册 COS SDK 插件
     tim.registerPlugin({ "cos-js-sdk": COS });
     let promise = tim.login({ userID: userId, userSig: userSig });
@@ -112,7 +112,8 @@ export class LiveBroadcastService {
     });
   }
   initBoardOptions() {
-    this.activeBoard.reset();
+    // this.activeBoard.reset();
+    // 初始化画笔颜色
     const brushColor = store.state.board.brushColor;
     this.activeBoard.setBrushColor(brushColor);
   }
