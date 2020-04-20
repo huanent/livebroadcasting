@@ -1,22 +1,33 @@
 import axios from "axios";
 
-import { tokenPool } from "./get-token-mock";
+import {
+  createRoomMock,
+  getMockIdleToken,
+  getSdkAppIdMock,
+  tokenPool
+} from "./get-token-mock";
 
 /*const APP_ID = "1400345310";*/
 
-export const createRoom = function() {
-  let roomId = parseInt(Math.random() * 10);
-  return new Promise(resolve => {
-    resolve({
-      model: {
-        roomId: roomId
-      },
-      dataChange: false,
-      success: true,
-      messages: [],
-      fieldErrors: []
-    });
-  });
+export const getIdleToken = function(userId) {
+  if (process.env.NODE_ENV === "development") {
+    return getMockIdleToken();
+  } else {
+    return axios.get("/freeToken?userId=" + userId);
+  }
+};
+export const createRoom = function(appid) {
+  if (process.env.NODE_ENV === "development") {
+    return createRoomMock(appid);
+  } else {
+    return axios.post("/createRoom", { appid });
+  }
+};
+export const getSdkAppId = function() {
+  if (process.env.NODE_ENV === "development") {
+    return getSdkAppIdMock();
+  } else {
+  }
 };
 
 export const enterRoom = function(userId, roomId) {
@@ -60,10 +71,6 @@ export const initAllTokenData = function() {
     });
 };
 
-export const getIdleToken = function(userId) {
-  return axios.get("/freeToken?userId=" + userId);
-};
-
 export const updataTokenById = function(id, item) {
   item.id = id;
   return axios.post("/token/post", item);
@@ -79,5 +86,6 @@ export const freedToken = function(id) {
     });
   });
 };
+
 window["initAllTokenData"] = initAllTokenData;
 window["freedToken"] = freedToken;

@@ -23,3 +23,7 @@ new Vue({
 }).$mount("#app");
 
 export const liveBroadcastService = new LiveBroadcastService();
+
+if (process.env.NODE_ENV === "development") {
+  window["liveBroadcastService"] = liveBroadcastService;
+}
