@@ -1,20 +1,20 @@
 <template>
   <ul class="not-tool">
     <li
-      v-for="(item2, index) in toolslist2"
+      v-for="(item, index) in toolslist2"
       :key="index"
       :class="[{ toolactive: toolslistcurrent2 == index }]"
       @mousedown="
-        moveToolbar(index, $event);
+        moveToolbar(item, $event);
         mousedownClass(index);
       "
       @mouseup="toolslistcurrent2 = -1"
     >
       <a
-        >{{ item2.index
-        }}<icon :name="item2.name" :size="item2.size" color="#b4b4b5"
+        >{{ item.index
+        }}<icon :name="item.name" :size="item.size" color="#b4b4b5"
       /></a>
-      <span class="tool-hover">{{ item2.tips }}</span>
+      <span class="tool-hover">{{ item.tips }}</span>
     </li>
   </ul>
 </template>
@@ -28,26 +28,31 @@ export default {
         {
           name: "revoke3",
           size: 18,
+          action: "revoke",
           tips: this.$t("toolbar.revoke")
         },
         {
           name: "recovery2",
           size: 18,
+          action: "recovery",
           tips: this.$t("toolbar.recovery")
         },
         {
           name: "clear",
           size: 18,
+          action: "clear",
           tips: this.$t("toolbar.clear")
         },
         {
           name: "add",
           size: 24,
+          action: "add",
           tips: this.$t("toolbar.add")
         },
         {
           name: "move",
           size: 18,
+          action: "move",
           tips: this.$t("toolbar.move")
         }
       ]
@@ -57,13 +62,16 @@ export default {
     mousedownClass(index) {
       this.toolslistcurrent2 = index;
     },
-    moveToolbar(index, e) {
-      if (index == 4) {
+    moveToolbar(item, e) {
+      if (item.action == "move") {
+        let parentY = this.$parent.$parent.$el.offsetHeight;
         let odiv = this.$parent.$refs.toolbarul;
         let disX = e.clientX - odiv.offsetLeft;
         let disY = e.clientY - odiv.offsetTop;
         document.onmousemove = e => {
-          if (e.clientY > 340) {
+          console.log(parentY);
+          console.log(e.clientY);
+          if (e.clientY > parentY) {
             let left = e.clientX - disX;
             let top = e.clientY - disY;
             this.positionX = top;
@@ -72,10 +80,10 @@ export default {
             odiv.style.top = top + "px";
             return;
           }
-          if (e.clientY <= 340) {
+          if (e.clientY < parentY) {
             let left = e.clientX - disX;
             odiv.style.left = left + "px";
-            odiv.clientY = 340 + "px";
+            odiv.style.top = 30 + "px";
             return;
           }
         };
@@ -145,7 +153,6 @@ export default {
   background-color: black;
   box-shadow: 0 0 0 2px #b4b4b5 inset;
 }
-
 .tool-hover {
   visibility: hidden;
   transition: all 0.15s ease;

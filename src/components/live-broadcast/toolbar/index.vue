@@ -7,7 +7,7 @@
         :class="[item.fontawesome, { toolactive: toolslistcurrent == index }]"
         @click.prevent="
           addToolsClass(index);
-          showBox(index);
+          showBox(item);
         "
       >
         <a
@@ -58,21 +58,25 @@ export default {
         {
           name: "pen",
           size: 18,
+          tool: "pen",
           tips: this.$t("toolbar.shape")
         },
         {
           name: "text2",
           size: 23,
+          tool: "text",
           tips: this.$t("toolbar.text")
         },
         {
           name: "laserPen2",
           size: 21,
+          tool: "",
           tips: this.$t("toolbar.laserPen")
         },
         {
           name: "eraser4",
           size: 19,
+          tool: "",
           tips: this.$t("toolbar.eraser")
         }
       ]
@@ -91,13 +95,13 @@ export default {
       this.$refs.shapeBox.$el.style.left = site;
       this.$refs.textBox.$el.style.left = site;
     },
-    showBox(index) {
-      if (index == 0) {
+    showBox(item) {
+      if (item.tool == "pen") {
         this.textBoxIsshow = false;
         this.shapeBoxIsshow = true;
         return;
       }
-      if (index == 1) {
+      if (item.tool == "text") {
         this.shapeBoxIsshow = false;
         this.textBoxIsshow = true;
         return;
@@ -115,7 +119,7 @@ export default {
   z-index: 999;
   position: absolute;
   right: 50px;
-  bottom: 640px;
+  bottom: 80%;
   > ul {
     box-sizing: content-box;
     position: absolute;

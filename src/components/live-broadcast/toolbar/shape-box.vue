@@ -9,7 +9,7 @@
           v-for="(item, index) in toolitems"
           :key="index"
           :class="[{ active: toolitemscurrent == index }]"
-          @click="addToolitemClass(index)"
+          @click="addToolitemClass(index, item)"
         >
           <a
             >{{ item.index
@@ -34,18 +34,22 @@ export default {
       toolitems: [
         {
           name: "line2",
+          shape: "line",
           size: 18
         },
         {
           name: "curve2",
+          shape: "curve",
           size: 18
         },
         {
           name: "circle",
+          shape: "circle",
           size: 18
         },
         {
           name: "rectangle",
+          shape: "rectangle",
           size: 18
         }
       ]
@@ -57,8 +61,20 @@ export default {
     // });
   },
   methods: {
-    addToolitemClass(index) {
+    addToolitemClass(index, item) {
       this.toolitemscurrent = index;
+      if (item.shape == "line") {
+        console.log("选择了直线");
+      }
+      if (item.shape == "curve") {
+        console.log("选择了曲线");
+      }
+      if (item.shape == "circle") {
+        console.log("选择了曲线");
+      }
+      if (item.shape == "rectangle") {
+        console.log("选择了曲线");
+      }
     }
   }
 };

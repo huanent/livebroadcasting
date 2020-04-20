@@ -35,7 +35,9 @@ export default {
   },
   mounted() {
     const liveBroadcasting = liveBroadcastService.init();
-    const board = liveBroadcasting.activeBoard;
+    // const board = liveBroadcasting.activeBoard;
+    // console.log("----------------------------------------------------------");
+    // console.log(liveBroadcasting);
   }
 };
 </script>
