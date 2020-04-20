@@ -88,7 +88,7 @@ export class LiveBroadcastService {
     this.activeBoard = teduBoard;
     setTimeout(() => {
       this.initBoardOptions();
-    }, 10000);
+    }, 10);
     teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
       console.log(data);
       let message = tim.createCustomMessage({
@@ -100,19 +100,19 @@ export class LiveBroadcastService {
           extension: "TXWhiteBoardExt"
         }
       });
-      tim.sendMessage(message).then(
-        () => {
-          // 同步成功
-          this.activeBoard = teduBoard;
-        },
-        () => {
-          // 同步失败
-        }
-      );
+      // tim.sendMessage(message).then(
+      //   () => {
+      //     // 同步成功
+      //     this.activeBoard = teduBoard;
+      //   },
+      //   () => {
+      //     // 同步失败
+      //   }
+      // );
     });
   }
   initBoardOptions() {
-    // this.activeBoard.reset();
+    this.activeBoard.reset();
     const brushColor = store.state.board.brushColor;
     this.activeBoard.setBrushColor(brushColor);
   }
