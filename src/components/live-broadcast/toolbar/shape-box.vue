@@ -19,17 +19,28 @@
       </ul>
     </div>
     <div ref="colorpck">
-      <el-color-picker v-model="shapecolor" size="mini"></el-color-picker>
+      <el-color-picker
+        v-model="shapecolor"
+        size="mini"
+        @change="onColorPicked"
+      ></el-color-picker>
     </div>
   </div>
 </template>
+
 <script>
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
   name: "ShapeBox",
   data() {
     return {
+<<<<<<< HEAD
       shapecolor: this.$store.state.brushColor,
       thickness: this.$store.state.brushThin,
+=======
+      shapecolor: "",
+>>>>>>> 5207480196c0c7aac664aa671e345dbfd6f12c4b
       toolitemscurrent: 0,
       toolitems: [
         {
@@ -55,26 +66,17 @@ export default {
       ]
     };
   },
-  mounted: function() {
-    // this.$nextTick(function() {
-    //   this.$refs.colorpck.children[0].children[0].style.border = "none";
-    // });
+  created() {
+    this.shapecolor = this.$store.state.board.brushColor;
   },
   methods: {
-    addToolitemClass(index, item) {
+    ...mapMutations("board", ["SET_BRUSH_COLOR"]),
+    addToolitemClass(index) {
       this.toolitemscurrent = index;
-      if (item.shape == "line") {
-        console.log("选择了直线");
-      }
-      if (item.shape == "curve") {
-        console.log("选择了曲线");
-      }
-      if (item.shape == "circle") {
-        console.log("选择了曲线");
-      }
-      if (item.shape == "rectangle") {
-        console.log("选择了曲线");
-      }
+    },
+    onColorPicked(color) {
+      console.log(color);
+      this.SET_BRUSH_COLOR(color);
     }
   }
 };

@@ -10,6 +10,7 @@ import axios from "axios";
 import { liveBroadcastService } from "../../main";
 
 window["axios"] = axios;
+import store from "@/store";
 
 export class LiveBroadcastService {
   config;
@@ -18,7 +19,7 @@ export class LiveBroadcastService {
   clientList = {};
   TokenList = {};
   roomId = "1234567890";
-  activeBoard;
+  activeBoard = null;
   userId = "test";
   getUserSig(key) {
     if (!key) {
@@ -48,6 +49,7 @@ export class LiveBroadcastService {
   resetBoard(activeBoard) {
     activeBoard.reset();
   }
+
   initBoard() {
     const roomId = this.roomId;
     const toUserId = "7";
@@ -71,7 +73,7 @@ export class LiveBroadcastService {
 
     let tim = TIM.create(options); // SDK 实例通常用 tim 表示
 
-    tim.setLogLevel(0); // 普通级别，日志量较多，接入时建议使用
+    tim.setLogLevel(1); // 普通级别，日志量较多，接入时建议使用
     // 注册 COS SDK 插件
     tim.registerPlugin({ "cos-js-sdk": COS });
     let promise = tim.login({ userID: userId, userSig: userSig });
@@ -84,6 +86,9 @@ export class LiveBroadcastService {
         console.warn("login error:", imError); // 登录失败的相关信息
       });
     this.activeBoard = teduBoard;
+    setTimeout(() => {
+      this.initBoardOptions();
+    }, 1000);
     teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
       console.log(data);
       let message = tim.createCustomMessage({
@@ -95,16 +100,22 @@ export class LiveBroadcastService {
           extension: "TXWhiteBoardExt"
         }
       });
-      tim.sendMessage(message).then(
-        () => {
-          // 同步成功
-          this.activeBoard = teduBoard;
-        },
-        () => {
-          // 同步失败
-        }
-      );
+      // tim.sendMessage(message).then(
+      //   () => {
+      //     // 同步成功
+      //     this.activeBoard = teduBoard;
+      //   },
+      //   () => {
+      //     // 同步失败
+      //   }
+      // );
     });
+  }
+  initBoardOptions() {
+    this.activeBoard.reset();
+    // 初始化画笔颜色
+    const brushColor = store.state.board.brushColor;
+    this.activeBoard.setBrushColor(brushColor);
   }
   init() {
     return new Promise(resolve => {
