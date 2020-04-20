@@ -112,7 +112,7 @@ export class LiveBroadcastService {
     });
   }
   initBoardOptions() {
-    // this.activeBoard.reset();
+    this.activeBoard.reset();
     // 初始化画笔颜色
     const brushColor = store.state.board.brushColor;
     this.activeBoard.setBrushColor(brushColor);
