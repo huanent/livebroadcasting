@@ -28,6 +28,11 @@ export class LiveBroadcastService {
         enterRoom("test-user01", this.roomId).then(res => {
           if (res.data.success) {
             let token = Object.assign({ isExpired: false }, res.data.model);
+
+            token.id = "6",
+              token.userID = "6",
+              token.userSig = "eJwtzFELgjAUBeD-slfDrt5tiNDjiECISBCkl3CzbkMZNsKI-ntj7fF853A*rG3O*cssrGZlDmwTM2kzexopskj41PbqHGlWFxwAucAC-o1ZHS0muBCiBEjqaYpWScQw5emFbuHzqJxvRqTLNjvhoIa2X7gclYTJVtg-uoNd97OAd3bv1I59fyMCLxc_"
+
             this.TokenList[key] = token;
             resolve(token);
           }
@@ -52,7 +57,7 @@ export class LiveBroadcastService {
     const userId = "u1";
     const userSig =
       "eJyrVgrxCdYrSy1SslIy0jNQ0gHzM1NS80oy0zLBwqWGUNHilOzEgoLMFCUrQxMDA2NTQ0NDE4hMakVBZlEqUNzU1NTIwMAAIlqSmQsWszCzNDQzMoeqLc5MBxqa75ThnWhpkpHvbOaenJsd6ppdGKOfZ6Kd6Rga7heaEpDq6exW5l*REuJdmm*rVAsAe3owfg__";
-
+    const tooltype = 2;
     var initParams = {
       id: "board_el",
       classId: roomId,

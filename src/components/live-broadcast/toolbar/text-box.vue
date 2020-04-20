@@ -3,8 +3,12 @@
     <div class="block">
       <el-slider v-model="fontSize"></el-slider>
     </div>
-    <div ref="colorpck">
-      <el-color-picker v-model="textcolor" size="small"></el-color-picker>
+    <div>
+      <el-color-picker
+        style="border:none"
+        v-model="textcolor"
+        size="small"
+      ></el-color-picker>
     </div>
   </div>
 </template>
@@ -18,9 +22,9 @@ export default {
     };
   },
   mounted: function() {
-    this.$nextTick(function() {
-      this.$refs.colorpck.children[0].children[0].style.border = "none";
-    });
+    // this.$nextTick(function() {
+    //   this.$refs.colorpck.children[0].children[0].style.border = "none";
+    // });
   }
 };
 </script>
@@ -33,5 +37,8 @@ export default {
   top: 30px;
   width: 150px;
   background-color: rgba(33, 35, 37, 0.8);
+  /deep/.el-color-picker__trigger {
+    border: none;
+  }
 }
 </style>

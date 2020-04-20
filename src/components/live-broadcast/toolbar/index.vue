@@ -24,17 +24,17 @@
           textBoxIsshow = false;
         "
       >
-        <ActionTools></ActionTools>
+        <ActionTools @changeSet="fromchangeSet"></ActionTools>
       </div>
     </ul>
     <!-- 形状的面板 -->
     <div v-show="shapeBoxIsshow">
-      <ShapeBox></ShapeBox>
+      <ShapeBox ref="shapeBox"></ShapeBox>
     </div>
 
     <!-- 字体选择面板 -->
     <div v-show="textBoxIsshow">
-      <TextBox></TextBox>
+      <TextBox ref="textBox"></TextBox>
     </div>
   </div>
 </template>
@@ -84,6 +84,10 @@ export default {
   methods: {
     addToolsClass(index) {
       this.toolslistcurrent = index;
+    },
+    fromchangeSet(site) {
+      this.$refs.shapeBox.$el.style.left = site;
+      this.$refs.textBox.$el.style.left = site;
     },
     showBox(index) {
       if (index == 0) {

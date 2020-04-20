@@ -52,9 +52,9 @@ export default {
     };
   },
   mounted: function() {
-    this.$nextTick(function() {
-      this.$refs.colorpck.children[0].children[0].style.border = "none";
-    });
+    // this.$nextTick(function() {
+    //   this.$refs.colorpck.children[0].children[0].style.border = "none";
+    // });
   },
   methods: {
     addToolitemClass(index) {
@@ -90,6 +90,9 @@ export default {
       padding: 3px;
       margin-bottom: 5px;
     }
+  }
+  /deep/.el-color-picker__trigger {
+    border: none;
   }
 }
 .active {
