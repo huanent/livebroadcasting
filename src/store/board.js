@@ -38,7 +38,7 @@ const getters = {
   },
   textSize: state => {
     return state.textSize;
-  },
+  }
 };
 
 const mutations = {
@@ -73,7 +73,7 @@ const mutations = {
     liveBroadcastService.activeBoard.undo();
   },
   ADD_BOARD() {
-    liveBroadcastService.activeBoard.addBoard();
+    liveBroadcastService.addBoard();
   }
 };
 
