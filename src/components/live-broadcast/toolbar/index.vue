@@ -4,42 +4,88 @@
       <li
         v-for="(item, index) in toolslist"
         :key="index"
-        :class="[item.fontawesome, { toolactive: toolslistcurrent == index }]"
+        :class="[
+          item.fontawesome,
+          { toolactive: toolslistcurrent == item.tool }
+        ]"
         @click.prevent="
-          addToolsClass(index);
-          showBox(index);
+          addToolsClass(index, item);
+          showBox(item);
+          changeTool(item.toolNum);
         "
       >
-        <a
-          >{{ item.index
-          }}<icon :name="item.name" :size="item.size" color="#b4b4b5"
-        /></a>
+        <el-popover
+          placement="left"
+          trigger="click"
+          :visible-arrow="false"
+          popper-class="popper"
+        >
+          <div v-show="shapeBoxIsshow">
+            <!-- 形状的面板 -->
+            <ShapeBox ref="shapeBox"></ShapeBox>
+          </div>
+          <div v-show="textBoxIsshow">
+            <!-- 字体选择面板 -->
+            <TextBox ref="textBox"></TextBox>
+          </div>
+          <a slot="reference"
+            ><icon :name="item.name" :size="item.size" color="#b4b4b5"
+          /></a>
+        </el-popover>
+        <span class="tool-hover">{{ item.tips }}</span>
+      </li>
+
+      <li
+        v-for="(item, index) in toolslistNotbox"
+        :key="item.tool"
+        :class="[
+          item.fontawesome,
+          { toolactive: toolslistcurrent == item.tool }
+        ]"
+        @click.prevent="
+          addToolsClass(index, item);
+          showBox(item);
+          changeTool(item.toolNum);
+        "
+      >
+        <el-popover
+          placement="left"
+          visible-arrow="false"
+          trigger="click"
+          :disabled="true"
+        >
+          <a slot="reference"
+            ><icon :name="item.name" :size="item.size" color="#b4b4b5"
+          /></a>
+        </el-popover>
         <span class="tool-hover">{{ item.tips }}</span>
       </li>
 
       <!-- 可操作性工具 -->
       <div
         @mousedown="
-          shapeBoxIsshow = false;
+          shapeBoxIsshow = true;
           textBoxIsshow = false;
         "
       >
         <ActionTools @changeSet="fromchangeSet"></ActionTools>
       </div>
     </ul>
+
     <!-- 形状的面板 -->
-    <div v-show="shapeBoxIsshow">
+    <!-- <div v-show="shapeBoxIsshow">
       <ShapeBox ref="shapeBox"></ShapeBox>
-    </div>
+    </div> -->
 
     <!-- 字体选择面板 -->
-    <div v-show="textBoxIsshow">
+    <!-- <div v-show="textBoxIsshow">
       <TextBox ref="textBox"></TextBox>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
+import { mapGetters, mapMutations } from "vuex";
 import ActionTools from "./action-tools";
 import ShapeBox from "./shape-box";
 import TextBox from "./text-box";
@@ -47,30 +93,40 @@ export default {
   name: "toolbar",
   data() {
     return {
-      shapeBoxIsshow: false,
+      shapeBoxIsshow: true,
       textBoxIsshow: false,
       toolHoverIsshow: true,
 
-      toolslistcurrent: -1,
+      toolslistcurrent: "",
       toolslist: [
         {
           name: "pen",
           size: 18,
+          tool: "pen",
+          toolNum: 1,
           tips: this.$t("toolbar.shape")
         },
         {
           name: "text2",
           size: 23,
+          tool: "text",
+          toolNum: 11,
           tips: this.$t("toolbar.text")
-        },
+        }
+      ],
+      toolslistNotbox: [
         {
           name: "laserPen2",
           size: 21,
+          tool: "laserPen",
+          toolNum: 3,
           tips: this.$t("toolbar.laserPen")
         },
         {
           name: "eraser4",
           size: 19,
+          tool: "eraser",
+          toolNum: 2,
           tips: this.$t("toolbar.eraser")
         }
       ]
@@ -82,25 +138,30 @@ export default {
     TextBox
   },
   methods: {
-    addToolsClass(index) {
-      this.toolslistcurrent = index;
+    ...mapMutations("board", ["SET_TOOL_TYPE"]),
+    changeTool(toolNum) {
+      console.log(toolNum);
+      this.SET_TOOL_TYPE(toolNum);
+    },
+    addToolsClass(index, item) {
+      this.toolslistcurrent = item.tool;
     },
     fromchangeSet(site) {
-      this.$refs.shapeBox.$el.style.left = site;
-      this.$refs.textBox.$el.style.left = site;
+      // this.$refs.shapeBox.$el.style.left = site;
+      // this.$refs.textBox.$el.style.left = site;
     },
-    showBox(index) {
-      if (index == 0) {
-        this.textBoxIsshow = false;
+    showBox(item) {
+      if (item.tool == "pen") {
         this.shapeBoxIsshow = true;
+        this.textBoxIsshow = false;
         return;
       }
-      if (index == 1) {
-        this.shapeBoxIsshow = false;
+      if (item.tool == "text") {
         this.textBoxIsshow = true;
+        this.shapeBoxIsshow = false;
+
         return;
       }
-      (this.shapeBoxIsshow = false), (this.textBoxIsshow = false);
     }
   }
 };
@@ -113,7 +174,7 @@ export default {
   z-index: 999;
   position: absolute;
   right: 50px;
-  bottom: 640px;
+  bottom: 90%;
   > ul {
     box-sizing: content-box;
     position: absolute;
@@ -165,4 +226,13 @@ export default {
   color: #fff;
   background: rgba(0, 0, 0, 0.8);
 }
+// /deep/.el-popper,
+// .el-popover {
+//   margin: 0;
+//   padding: 0;
+//   box-shadow: none;
+//   text-shadow: none;
+//   border: none;
+//   border-radius: inherit;
+// }
 </style>
