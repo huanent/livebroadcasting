@@ -8,7 +8,9 @@ import {
   Option,
   Slider,
   ColorPicker,
-  Dialog
+  Dialog,
+  Popover,
+  Upload
 } from "element-ui";
 const element = {
   install: function(Vue) {
