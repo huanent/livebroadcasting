@@ -118,8 +118,9 @@ export class LiveBroadcastService {
     this.activeBoard = teduBoard;
     setTimeout(function() {
       let fileListInfo = teduBoard.getFileInfoList();
-      store.state.workplace.activeBoardIndex = 0;
       store.commit("workplace/BOARD_PROFILES", fileListInfo);
+      let lastindex = fileListInfo.length - 1;
+      store.commit("workplace/BOARD_INDEX", lastindex);
     }, 1000);
   }
   initBoardOptions() {
@@ -210,18 +211,23 @@ export class LiveBroadcastService {
             let self = this;
             setTimeout(function() {
               let fileListInfo = self.activeBoard.getFileInfoList();
-              store.commit("workplace/BOARD_PROFILES", fileListInfo);
               let id = self.activeBoard.getCurrentFile();
-              fileListInfo.find((item, index) => {
-                if (item.fid === id) {
-                  store.commit("workplace/BOARD_INDEX", index);
-                }
-              });
+              let index = self.getIndexByFid(fileListInfo, id);
+              store.commit("workplace/BOARD_PROFILES", fileListInfo);
+              store.commit("workplace/BOARD_INDEX", index);
             }, 1000);
           }
         }
       });
+      this.activeBoard.on(TEduBoard.EVENT.TEB_INIT, res => {
+        let lastindex = store.state.workplace.boardProfiles.length - 1;
+        store.commit("workplace/BOARD_INDEX", lastindex);
+      });
     }
+  }
+  addBoard() {
+    liveBroadcastService.activeBoard.addBoard();
+    store.commit("workplace/BOARD_INDEX", 0);
   }
   clearAllBoardFiles() {
     let list = this.activeBoard.getFileInfoList();
@@ -230,12 +236,18 @@ export class LiveBroadcastService {
       this.activeBoard.deleteFile(file.fid);
     });
   }
+  getIndexByFid(fileListInfo, fid) {
+    let result;
+    fileListInfo.find((item, index) => {
+      if (item.fid === id) {
+        result = index;
+      }
+    });
+    return result;
+  }
   deleteCurrentFile() {
     let id = this.activeBoard.getCurrentFile();
     this.activeBoard.deleteFile(id);
-  }
-  test(index) {
-    store.commit("workplace/BOARD_INDEX", index);
   }
   async joinroom() {
     let token = this.TokenList["default"];
