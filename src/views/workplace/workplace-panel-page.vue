@@ -147,7 +147,7 @@ export default {
 #workplace-panel-right {
   background: #212224;
   display: grid;
-  grid-template-rows: 20% 0.5% 79.5%;
+  grid-template-rows: 23.5% 0.5% 75%;
   height: calc(100vh - 2rem);
 }
 
