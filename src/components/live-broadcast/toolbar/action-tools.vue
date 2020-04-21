@@ -74,34 +74,43 @@ export default {
         let parentY = this.$parent.$parent.$el.offsetHeight;
         let parentY2 = parseInt(this.$parent.$parent.$el.offsetHeight - 145);
         let parentX = this.$parent.$parent.$el.offsetWidth;
+        let parentX2 = parseInt(this.$parent.$parent.$el.offsetWidth - 50);
         let odiv = this.$parent.$refs.toolbarul;
         let disX = e.clientX - odiv.offsetLeft;
         let disY = e.clientY - odiv.offsetTop;
         document.onmousemove = e => {
-          console.log(parentY);
-          console.log(e.clientY);
-          if (e.clientY > parentY2) {
-            // if (e.clientX < parentX) {
-            //   let top = e.clientY - disY;
-            //   odiv.style.right = 50 + "px";
-            //   odiv.style.top = top + "px";
-            //   return;
-            // }
-            let left = e.clientX - disX;
-            let top = e.clientY - disY;
-            this.positionX = top;
-            this.positionY = left;
-            odiv.style.left = left + "px";
-            odiv.style.top = top + "px";
-            return;
+          // console.log(parentX);
+          // console.log(e.clientX);
+          if (e.clientX < parentX) {
+            if (e.clientY > parentY2) {
+              let left = e.clientX - disX;
+              let top = e.clientY - disY;
+              this.positionX = top;
+              this.positionY = left;
+              odiv.style.left = left + "px";
+              odiv.style.top = top + "px";
+            } else {
+              let left = e.clientX - disX;
+              odiv.style.left = left + "px";
+              odiv.style.top = 30 + "px";
+              return;
+            }
           } else {
-            let left = e.clientX - disX;
-            odiv.style.left = left + "px";
-            odiv.style.top = 30 + "px";
-            return;
+            if (e.clientY > parentY2) {
+              let top = e.clientY - disY;
+              odiv.style.left = parentX2 + "px";
+              odiv.style.top = top + "px";
+              return;
+            } else {
+              odiv.style.left = parentX2 + "px";
+              odiv.style.top = 30 + "px";
+              return;
+            }
           }
         };
         document.onmouseup = e => {
+          console.log(this.$parent.$parent.$el.offsetHeight);
+          console.log(this.$parent);
           let xOffset = this.$parent.$parent.$el.offsetWidth - e.clientX;
           let yOffset = this.$parent.$parent.$el.offsetHeight - e.clientY;
           // console.log("白板宽度" + this.$parent.$parent.$el.offsetWidth);

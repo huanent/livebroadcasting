@@ -5,7 +5,7 @@
       @on-close="onTabsClose($event)"
       :active-ndex="index"
     >
-      <BoardTabsItem v-for="(item, index) in boardProfiles"
+      <BoardTabsItem v-for="(item, index) in boardProfiles" :key="index"
         ><div :id="'board_el_' + index" style="height: 100%; width: 100%"></div
       ></BoardTabsItem>
     </BoardTabs>

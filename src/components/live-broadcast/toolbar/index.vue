@@ -35,6 +35,7 @@
         <span class="tool-hover">{{ item.tips }}</span>
       </li>
 
+      <!-- 无面板工具 -->
       <li
         v-for="(item, index) in toolslistNotbox"
         :key="item.tool"
@@ -64,8 +65,8 @@
       <!-- 可操作性工具 -->
       <div
         @mousedown="
-          shapeBoxIsshow = true;
-          textBoxIsshow = false;
+          shapeBoxIsshow ? true : false;
+          textBoxIsshow ? true : false;
         "
       >
         <ActionTools @changeSet="fromchangeSet"></ActionTools>
@@ -174,7 +175,7 @@ export default {
   z-index: 999;
   position: absolute;
   right: 50px;
-  bottom: 90%;
+  top: 160px;
   > ul {
     box-sizing: content-box;
     position: absolute;
