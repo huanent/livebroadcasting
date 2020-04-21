@@ -86,6 +86,7 @@ export default {
         this.tabItemList[newVal].isActive = true;
       }
       this.$emit("index-change", newVal);
+      this.$emit("active-index", newVal);
     }
   },
   methods: {
