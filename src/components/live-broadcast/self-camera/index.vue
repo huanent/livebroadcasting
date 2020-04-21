@@ -1,17 +1,60 @@
 <template>
   <div class="self-camera-panel">
     <div class="self-camera-mask">
-      <icon name="microphone" color="#737882" :size="24" />
-      <icon name="video" color="#737882" :size="24" />
+      <div class="self-camera-icons">
+        <icon
+          @click.native.stop="onMicroStateChange"
+          :name="microIcon"
+          color="#737882"
+          :size="20"
+        />
+        <icon
+          @click.native.stop="onVideoStateChange"
+          :name="videoIcon"
+          color="#737882"
+          :size="20"
+        />
+      </div>
     </div>
     <div id="local_video" style="height: 100%;width: 100%"></div>
-    <div class="self-camera-footer"></div>
+    <div class="self-camera-footer">
+      <icon name="microphone" color="#0A818C" :size="18" />
+      <voice-intensity :intensity="0.4" />
+    </div>
   </div>
 </template>
 
 <script>
+import VoiceIntensity from "./voice-intensity";
+
 export default {
-  name: "SelfCamera"
+  name: "SelfCamera",
+  data() {
+    return {
+      isMicroOpen: true,
+      isVideoOpen: true
+    };
+  },
+  components: {
+    VoiceIntensity
+  },
+  computed: {
+    microIcon() {
+      return this.isMicroOpen ? "microphone" : "microphone-slash";
+    },
+    videoIcon() {
+      return this.isVideoOpen ? "video" : "video-slash";
+    }
+  },
+  methods: {
+    onMicroStateChange() {
+      // state must stored in vuex
+      this.isMicroOpen = !this.isMicroOpen;
+    },
+    onVideoStateChange() {
+      this.isVideoOpen = !this.isVideoOpen;
+    }
+  }
 };
 </script>
 
@@ -22,13 +65,29 @@ export default {
   position: relative;
   .self-camera-mask {
     position: absolute;
-    opacity: 0;
+    visibility: hidden;
     transition: all 0.1s;
     z-index: 9;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    .self-camera-icons {
+      position: relative;
+      top: 50%;
+      margin-top: -12px;
+      svg {
+        background-color: #34363b;
+        border-radius: 50%;
+        padding: 8px;
+        &:hover {
+          fill: #dcebeb !important;
+        }
+        &:last-child {
+          margin-left: 30px;
+        }
+      }
+    }
   }
   .self-camera-footer {
     position: absolute;
@@ -36,13 +95,13 @@ export default {
     right: 0;
     bottom: 0;
     height: 32px;
-    line-height: 24px;
+    line-height: 32px;
     padding: 6px 10px;
     background-color: rgba(0, 0, 0, 0.45);
   }
   &:hover {
     .self-camera-mask {
-      opacity: 1;
+      visibility: visible;
       background-color: rgba(0, 0, 0, 0.5);
       border: 2px solid #0a818c;
       text-align: center;

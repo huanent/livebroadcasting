@@ -52,10 +52,10 @@ export let tokenPool = [
 
 const sdkAppId = "1400349760";
 
-const userId = tokenPool[0].user_id;
-const tx_user_id = tokenPool[0].tx_user_id;
+const userId = tokenPool[3].user_id;
+const tx_user_id = tokenPool[3].tx_user_id;
 const roomId = "1234567890";
-const tx_token = tokenPool[0].tx_token;
+const tx_token = tokenPool[3].tx_token;
 
 const privateMapKey = (Math.random() * 10).toString();
 
