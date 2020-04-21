@@ -19,6 +19,7 @@
   </ul>
 </template>
 <script>
+import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "ActionTools",
   data() {
@@ -59,19 +60,33 @@ export default {
     };
   },
   methods: {
+    ...mapMutations("board", [
+      "CLEAR_BOARD",
+      "ADD_BOARD",
+      "CAN_REDO",
+      "CAN_UNDO"
+    ]),
     mousedownClass(index) {
       this.toolslistcurrent2 = index;
     },
     moveToolbar(item, e) {
       if (item.action == "move") {
         let parentY = this.$parent.$parent.$el.offsetHeight;
+        let parentY2 = parseInt(this.$parent.$parent.$el.offsetHeight - 145);
+        let parentX = this.$parent.$parent.$el.offsetWidth;
         let odiv = this.$parent.$refs.toolbarul;
         let disX = e.clientX - odiv.offsetLeft;
         let disY = e.clientY - odiv.offsetTop;
         document.onmousemove = e => {
           console.log(parentY);
           console.log(e.clientY);
-          if (e.clientY > parentY) {
+          if (e.clientY > parentY2) {
+            // if (e.clientX < parentX) {
+            //   let top = e.clientY - disY;
+            //   odiv.style.right = 50 + "px";
+            //   odiv.style.top = top + "px";
+            //   return;
+            // }
             let left = e.clientX - disX;
             let top = e.clientY - disY;
             this.positionX = top;
@@ -79,8 +94,7 @@ export default {
             odiv.style.left = left + "px";
             odiv.style.top = top + "px";
             return;
-          }
-          if (e.clientY < parentY) {
+          } else {
             let left = e.clientX - disX;
             odiv.style.left = left + "px";
             odiv.style.top = 30 + "px";
@@ -97,9 +111,9 @@ export default {
           // console.log("xoffset 是" + xOffset);
           // console.log("yoffset 是" + yOffset);
           if (e.clientX < 170) {
-            this.$emit("changeSet", "50px");
+            // this.$emit("changeSet", "50px");
           } else {
-            this.$emit("changeSet", "-170px");
+            // this.$emit("changeSet", "-170px");
           }
           if (
             xOffset < 100 &&
@@ -109,11 +123,22 @@ export default {
           ) {
             this.$parent.$el.style.left = "";
             this.$parent.$el.style.top = "";
-            // this.$parent.$el.style.transition = " left 0.5s";
           }
           document.onmousemove = null;
           document.onmouseup = null;
         };
+      }
+      if (item.action == "clear") {
+        this.CLEAR_BOARD();
+      }
+      if (item.action == "revoke") {
+        this.CAN_UNDO();
+      }
+      if (item.action == "recovery") {
+        this.CAN_REDO();
+      }
+      if (item.action == "add") {
+        this.ADD_BOARD();
       }
     }
   }

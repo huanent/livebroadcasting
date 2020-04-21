@@ -112,10 +112,22 @@ export class LiveBroadcastService {
     });
   }
   initBoardOptions() {
-    this.activeBoard.reset();
+    // this.activeBoard.reset();
     // 初始化画笔颜色
     const brushColor = store.state.board.brushColor;
+    // 初始化画笔粗细
+    const brushThin = store.state.board.brushThin;
+    // 初始化文本颜色
+    const textColor = store.state.board.textColor;
+    // 初始化文本大小
+    const textSize = store.state.board.textSize;
+    //初始化使用的工具
+    const toolType = store.state.board.toolType;
     this.activeBoard.setBrushColor(brushColor);
+    this.activeBoard.setBrushThin(brushThin);
+    this.activeBoard.setTextSize(textSize);
+    this.activeBoard.setTextColor(textColor);
+    this.activeBoard.setToolType(toolType);
   }
   init() {
     return new Promise(resolve => {

@@ -7,7 +7,8 @@ import {
   Select,
   Option,
   Slider,
-  ColorPicker
+  ColorPicker,
+  Popover
 } from "element-ui";
 const element = {
   install: function (Vue) {
@@ -20,6 +21,7 @@ const element = {
     Vue.use(Option);
     Vue.use(Slider);
     Vue.use(ColorPicker);
+    Vue.use(Popover);
   },
 };
 export default element;
