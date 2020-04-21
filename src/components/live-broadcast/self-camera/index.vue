@@ -72,6 +72,8 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
+    border: 2px solid #0a818c;
+    text-align: center;
     .self-camera-icons {
       position: relative;
       top: 50%;
@@ -103,8 +105,6 @@ export default {
     .self-camera-mask {
       visibility: visible;
       background-color: rgba(0, 0, 0, 0.5);
-      border: 2px solid #0a818c;
-      text-align: center;
     }
   }
 }
