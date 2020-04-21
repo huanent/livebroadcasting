@@ -1,5 +1,5 @@
 <template>
-  <div v-show="isActive">
+  <div class="board-tabs-item" v-show="isActive">
     <slot></slot>
   </div>
 </template>
@@ -14,4 +14,11 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.board-tabs-item {
+  height: 100%;
+  width: 100%;
+  padding: 2rem;
+  display: block !important;
+}
+</style>

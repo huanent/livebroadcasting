@@ -1,15 +1,13 @@
 <template>
   <div class="main-workplace-container">
-    <BoardTabs :lables.sync="lables" @on-close="onTabsClose($event)">
-      <BoardTabsItem style="height:100%; padding: 2rem"
-        ><div id="board_el" style="height: 100%; width: 100%"></div
+    <BoardTabs
+      :lables.sync="lables"
+      @on-close="onTabsClose($event)"
+      :active-ndex="index"
+    >
+      <BoardTabsItem v-for="(item, index) in boardProfiles"
+        ><div :id="'board_el_' + index" style="height: 100%; width: 100%"></div
       ></BoardTabsItem>
-      <BoardTabsItem style="background-color: #8c436a;height:100%;"
-        >2</BoardTabsItem
-      >
-      <BoardTabsItem style="background-color: #888c2f;height:100%;"
-        >3</BoardTabsItem
-      >
     </BoardTabs>
     <Toolbar></Toolbar>
   </div>
@@ -20,24 +18,40 @@ import Toolbar from "../toolbar/index";
 import BoardTabs from "./board-tabs";
 import BoardTabsItem from "./board-tabs-item";
 import { liveBroadcastService } from "../../../main";
+import { mapMutations } from "vuex";
 // import { enterRoom } from "../../../core/data/data-service";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, BoardTabsItem },
   data() {
     return {
-      lables: ["开学第一课.ppt", "开学第二课.ppt", "开学第三课.ppt"],
-      index: 0
+      lables: [],
+      boardProfiles: this.$store.state.workplace.boardProfiles,
+      index: this.$store.state.workplace.activeBoardIndex
     };
   },
   methods: {
-    onTabsClose() {}
+    ...mapMutations("workplace", ["SET_BOARD_PROFILES"]),
+    onTabsClose() {},
+    getLables() {
+      let temp = this.boardProfiles.map(item => {
+        return item.title;
+      });
+      this.lables = temp;
+    }
   },
   mounted() {
-    const liveBroadcasting = liveBroadcastService.init();
-    // const board = liveBroadcasting.activeBoard;
-    // console.log("----------------------------------------------------------");
-    // console.log(liveBroadcasting);
+    liveBroadcastService.init();
+    this.getLables();
+    /*this.SET_BOARD_PROFILES(this.boardProfiles);*/
+  },
+  watch: {
+    boardProfiles: {
+      handler: function() {
+        this.getLables();
+      },
+      deep: true
+    }
   }
 };
 </script>
