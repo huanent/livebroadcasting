@@ -7,7 +7,6 @@ import COS from "cos-js-sdk-v5";
 window["COS"] = COS;
 
 import axios from "axios";
-import { liveBroadcastService } from "../../main";
 
 window["axios"] = axios;
 import store from "@/store";

@@ -4,31 +4,29 @@
     <div class="workplace-panel-content">
       <div
         id="workplace-panel-left"
-        :class="{ 'workplace-panel-left-hide': !showCameraPannel }"
+        :class="{ 'workplace-panel-left-hide': !showCameraPanel }"
       >
-        <div class="camera-pannel">
-          <div @click="toggleCameraPannel" class="camera-icon-box">
+        <div class="camera-panel">
+          <div @click="toggleCameraPanel" class="camera-icon-box">
             <icon
               name="indent"
-              v-if="showCameraPannel"
-              class="pannel-icon"
+              v-if="showCameraPanel"
+              class="panel-icon"
               :size="18"
             ></icon>
-            <icon name="outdent" v-else class="pannel-icon" :size="18"></icon>
+            <icon name="outdent" v-else class="panel-icon" :size="18"></icon>
           </div>
         </div>
         <div id="gutter1-1" class="gutter-row"></div>
-        <div class="main-workplace-pannel">
+        <div class="main-workplace-panel">
           <MainWorkplace></MainWorkplace>
         </div>
       </div>
       <div id="gutter"></div>
       <div id="workplace-panel-right">
-        <div class="self-camera-pannel">
-          <div id="local_video" style="height: 100%;width: 100%"></div>
-        </div>
+        <self-camera />
         <div id="gutter2-1"></div>
-        <div class="message-pannel">
+        <div class="message-panel">
           <chatroom />
         </div>
       </div>
@@ -41,19 +39,21 @@ import Split from "split-grid";
 // import Toolbar from "@c/common/Toolbar";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
+import SelfCamera from "@c/live-broadcast/self-camera";
 export default {
   name: "workplace-panel-page",
   data: function() {
     return {
       gridStyle: undefined,
-      showCameraPannel: true,
+      showCameraPanel: true,
       originPosition: [0, 0],
       total: 0
     };
   },
   components: {
     MainWorkplace,
-    Chatroom
+    Chatroom,
+    SelfCamera
   },
   mounted() {
     const vm = this;
@@ -85,17 +85,17 @@ export default {
             parseFloat(list[2]) > 0 &&
             parseFloat(list[0]) / parseFloat(list[2]) < 0.01
           ) {
-            vm.showCameraPannel = false;
+            vm.showCameraPanel = false;
           } else {
-            vm.showCameraPannel = true;
+            vm.showCameraPanel = true;
           }
         }
       }
     });
   },
   methods: {
-    toggleCameraPannel() {
-      if (!this.showCameraPannel) {
+    toggleCameraPanel() {
+      if (!this.showCameraPanel) {
         let str = document.getElementById("workplace-panel-left").style
           .gridTemplateRows;
         if (str) {
@@ -114,7 +114,7 @@ export default {
           }
         }
       }
-      this.showCameraPannel = !this.showCameraPannel;
+      this.showCameraPanel = !this.showCameraPanel;
     }
   }
 };
@@ -163,23 +163,20 @@ export default {
 .gutter-col {
   cursor: col-resize;
 }
-.camera-pannel {
+.camera-panel {
   background: #212224;
   position: relative;
 }
-.main-workplace-pannel {
+.main-workplace-panel {
   background: #1a1b1d;
-}
-.self-camera-pannel {
-  background: #212224;
 }
 .workplace-panel-left-hide {
   grid-template-rows: 0 3px 1fr !important;
 }
-.message-pannel {
+.message-panel {
   background: #292b2e;
 }
-.pannel-icon {
+.panel-icon {
   fill: #8a8a8a;
   padding: 5px;
   background-color: rgba(0, 0, 0, 0.59);
