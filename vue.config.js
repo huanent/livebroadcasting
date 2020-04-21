@@ -53,7 +53,7 @@ module.exports = {
         symbolId: "icon-[name]"
       });
     config.plugin("html").tap(options => {
-      options[0].title = "live boardcasting";
+      options[0].title = "live broadcasting";
       return options;
     });
     config.entry.app = "./src/main.js";
