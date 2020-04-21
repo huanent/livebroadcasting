@@ -3,18 +3,21 @@ const state = {
   boardProfiles: []
 };
 
-const getters = {};
+const getters = {
+  boardProfiles: state => {
+    return state.boardProfiles;
+  }
+};
 
 const mutations = {
   // 设置画笔颜色
-  SET_BOARD_PROFILES(state, boardProfiles) {
+  BOARD_PROFILES(state, boardProfiles) {
     state.boardProfiles = boardProfiles;
   },
   SET_BOARD_index(state, index) {
     state.activeBoardIndex = index;
   }
 };
-
 export default {
   namespaced: true,
   state,

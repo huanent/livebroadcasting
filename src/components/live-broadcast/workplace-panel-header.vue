@@ -17,27 +17,62 @@
       :before-close="onCoursewareClose"
       :append-to-body="true"
     >
-      <div class="courseware-content"></div>
+      <div class="courseware-content">
+        <div>
+          <el-upload
+            class="upload-demo"
+            :limit="3"
+            action="#"
+            :on-change="handleChange"
+            :file-list="fileList"
+            :http-request="requestUpload"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <!--           <div slot="tip" class="el-upload__tip">
+              只能上传jpg/png文件，且不超过500kb
+            </div>-->
+          </el-upload>
+        </div>
+        <!--        <el-button @click="addBoardFilesHandler" type="primary"
+          >添加文件</el-button-->
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="onCoursewareClose">取 消</el-button>
+        <el-button type="primary" @click="onCoursewareClose">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { liveBroadcastService } from "../../main";
+
 export default {
   name: "WorkplacePanelHeader",
   data() {
-    return { dialogVisible: false };
+    return {
+      dialogVisible: false,
+      addFileVisible: false,
+      fileList: []
+    };
   },
   methods: {
     onCoursewareOpen() {
       this.dialogVisible = true;
-
     },
+    requestUpload() {},
     onCoursewareClose(done) {
       this.dialogVisible = false;
-      if (done) {
+      if (done && done instanceof Function) {
         done();
       }
+    },
+    async handleChange(file, fileList) {
+      let rawFile = file.raw;
+      await liveBroadcastService.addBoardFiles(rawFile);
+    },
+    addBoardFilesHandler() {
+      this.addFileVisible = true;
     }
   }
 };

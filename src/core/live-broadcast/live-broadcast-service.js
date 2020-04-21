@@ -9,6 +9,8 @@ window["COS"] = COS;
 import axios from "axios";
 
 window["axios"] = axios;
+let TEduBoard = window["TEduBoard"];
+
 import store from "@/store";
 
 export class LiveBroadcastService {
@@ -80,31 +82,30 @@ export class LiveBroadcastService {
     let token = this.TokenList["default"];
     let userId = token.id;
     let userSig = token.userSig;
-    let boardProfiles = store.state.workplace.boardProfiles;
-    boardProfiles.push({ title: "开学第一课.ppt" });
-    setTimeout(() => {
-      let elId = "board_el_" + (boardProfiles.length - 1);
-      let initParams = {
-        id: elId,
-        classId: roomId,
-        sdkAppId: sdkAppId,
-        userId: userId,
-        userSig: userSig
-      };
-      let TEduBoard = window["TEduBoard"];
-      var teduBoard = new TEduBoard(initParams);
 
-      teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
-        let message = this.tim.createCustomMessage({
-          to: toUserId,
-          conversationType: TIM.TYPES.CONV_C2C,
-          payload: {
-            data: JSON.stringify(data),
-            description: "",
-            extension: "TXWhiteBoardExt"
-          }
-        });
-        this.tim.sendMessage(message).then(
+    let elId = "board_el";
+    let initParams = {
+      id: elId,
+      classId: roomId,
+      sdkAppId: sdkAppId,
+      userId: userId,
+      userSig: userSig
+    };
+
+    let teduBoard = new TEduBoard(initParams);
+    let self = this;
+    teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
+      let message = this.tim.createCustomMessage({
+        to: toUserId,
+        conversationType: TIM.TYPES.CONV_C2C,
+        payload: {
+          data: JSON.stringify(data),
+          description: "",
+          extension: "TXWhiteBoardExt"
+        }
+      });
+      if (self.tim && self.tim.sendMessage instanceof Promise) {
+        self.tim.sendMessage(message).then(
           () => {
             return;
           },
@@ -112,9 +113,14 @@ export class LiveBroadcastService {
             // 同步失败
           }
         );
-      });
-      this.activeBoard = teduBoard;
-    }, 100);
+      }
+    });
+    this.activeBoard = teduBoard;
+    setTimeout(function() {
+      let fileListInfo = teduBoard.getFileInfoList();
+      store.state.workplace.activeBoardIndex = 1;
+      store.commit("workplace/BOARD_PROFILES", fileListInfo);
+    }, 300);
   }
   initBoardOptions() {
     // this.activeBoard.reset();
@@ -155,6 +161,73 @@ export class LiveBroadcastService {
       userSig: userSig
     });
     return this.clientList[key];
+  }
+  async addBoardFiles(file) {
+    if (/\.(bmp|jpg|jpeg|png|gif|webp|svg|psd|ai)/i.test(file.name)) {
+      this.activeBoard.addImageElement({
+        data: file,
+        userData: "image"
+      });
+    } else {
+      this.activeBoard.applyFileTranscode(
+        {
+          data: file,
+          userData: "123456"
+        },
+        {
+          minResolution: "960x540",
+          isStaticPPT: false,
+          thumbnailResolution: "200x200"
+        }
+      );
+      this.activeBoard.on(TEduBoard.EVENT.TEB_TRANSCODEPROGRESS, res => {
+        console.log(
+          "=======  TEB_TRANSCODEPROGRESS 转码进度：",
+          JSON.stringify(res)
+        );
+        if (res.code) {
+          console.log("转码失败code:" + res.code + " message:" + res.message);
+        } else {
+          let status = res.status;
+          if (status === "ERROR") {
+            console.log("转码失败");
+          } else if (status === "UPLOADING") {
+            console.log("上传中，当前进度:" + parseInt(res.progress) + "%");
+          } else if (status === "CREATED") {
+            console.log("创建转码任务");
+          } else if (status === "QUEUED") {
+            console.log("正在排队等待转码");
+          } else if (status === "PROCESSING") {
+            console.log("转码中，当前进度:" + res.progress + "%");
+          } else if (status === "FINISHED") {
+            console.log("转码完成");
+            this.activeBoard.addTranscodeFile({
+              url: res.resultUrl,
+              title: res.title,
+              pages: res.pages,
+              resolution: res.resolution
+            });
+            let self = this;
+            setTimeout(function() {
+              let fileListInfo = self.activeBoard.getFileInfoList();
+              store.state.workplace.activeBoardIndex = 1;
+              store.commit("workplace/BOARD_PROFILES", fileListInfo);
+            }, 300);
+          }
+        }
+      });
+    }
+  }
+  clearAllBoardFiles() {
+    let list = this.activeBoard.getFileInfoList();
+    let id = this.activeBoard.getCurrentFile();
+    list.forEach(file => {
+      this.activeBoard.deleteFile(file.fid);
+    });
+  }
+  deleteCurrentFile() {
+    let id = this.activeBoard.getCurrentFile();
+    this.activeBoard.deleteFile(id);
   }
   async joinroom() {
     let token = this.TokenList["default"];

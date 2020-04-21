@@ -85,7 +85,7 @@ export default {
       if (this.tabItemList[newVal]) {
         this.tabItemList[newVal].isActive = true;
       }
-      this.$emit("active-index", newVal);
+      this.$emit("index-change", newVal);
     }
   },
   methods: {

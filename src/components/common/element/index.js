@@ -8,11 +8,10 @@ import {
   Option,
   Slider,
   ColorPicker,
-  Popover,
   Dialog
 } from "element-ui";
 const element = {
-  install: function (Vue) {
+  install: function(Vue) {
     Vue.prototype.$message = Message;
     Vue.use(Form);
     Vue.use(FormItem);
@@ -24,6 +23,7 @@ const element = {
     Vue.use(ColorPicker);
     Vue.use(Popover);
     Vue.use(Dialog);
-  },
+    Vue.use(Upload);
+  }
 };
 export default element;

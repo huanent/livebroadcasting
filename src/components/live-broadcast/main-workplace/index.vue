@@ -3,11 +3,10 @@
     <BoardTabs
       :lables.sync="lables"
       @on-close="onTabsClose($event)"
-      :active-ndex="index"
+      :active-index.sync="index"
+      @index-change="indexChange($event)"
     >
-      <BoardTabsItem v-for="(item, index) in boardProfiles" :key="index">
-        <div :id="'board_el_' + index" style="height: 100%; width: 100%"></div>
-      </BoardTabsItem>
+      <div id="board_el" style="height: 100%; width: 100%"></div>
     </BoardTabs>
     <Toolbar></Toolbar>
   </div>
@@ -19,14 +18,12 @@ import BoardTabs from "./board-tabs";
 import BoardTabsItem from "./board-tabs-item";
 import { liveBroadcastService } from "../../../main";
 import { mapMutations } from "vuex";
-// import { enterRoom } from "../../../core/data/data-service";
 export default {
   name: "MainWorkplace",
-  components: { Toolbar, BoardTabs, BoardTabsItem },
+  components: { Toolbar, BoardTabs },
   data() {
     return {
       lables: [],
-      boardProfiles: this.$store.state.workplace.boardProfiles,
       index: this.$store.state.workplace.activeBoardIndex
     };
   },
@@ -38,6 +35,9 @@ export default {
         return item.title;
       });
       this.lables = temp;
+    },
+    indexChange(index) {
+      console.log(this.boardProfiles[index]);
     }
   },
   mounted() {
@@ -45,12 +45,20 @@ export default {
     this.getLables();
     /*this.SET_BOARD_PROFILES(this.boardProfiles);*/
   },
+  computed: {
+    boardProfiles() {
+      return this.$store.state.workplace.boardProfiles;
+    }
+  },
   watch: {
     boardProfiles: {
       handler: function() {
         this.getLables();
       },
       deep: true
+    },
+    index: function(value) {
+      console.log(this.boardProfiles[value]);
     }
   }
 };
