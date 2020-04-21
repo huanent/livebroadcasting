@@ -4,6 +4,9 @@ const state = {
 };
 
 const getters = {
+  activeBoardIndex: state => {
+    return state.activeBoardIndex;
+  },
   boardProfiles: state => {
     return state.boardProfiles;
   }
@@ -14,7 +17,7 @@ const mutations = {
   BOARD_PROFILES(state, boardProfiles) {
     state.boardProfiles = boardProfiles;
   },
-  SET_BOARD_index(state, index) {
+  BOARD_INDEX(state, index) {
     state.activeBoardIndex = index;
   }
 };
