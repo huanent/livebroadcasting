@@ -7,10 +7,11 @@ import {
   Select,
   Option,
   Slider,
-  ColorPicker
+  ColorPicker,
+  Dialog
 } from "element-ui";
 const element = {
-  install: function (Vue) {
+  install: function(Vue) {
     Vue.prototype.$message = Message;
     Vue.use(Form);
     Vue.use(FormItem);
@@ -20,6 +21,7 @@ const element = {
     Vue.use(Option);
     Vue.use(Slider);
     Vue.use(ColorPicker);
-  },
+    Vue.use(Dialog);
+  }
 };
 export default element;
