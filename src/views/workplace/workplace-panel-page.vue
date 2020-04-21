@@ -22,12 +22,12 @@
           <MainWorkplace></MainWorkplace>
         </div>
       </div>
-      <div id="gutter" class="gutter-col"></div>
+      <div id="gutter"></div>
       <div id="workplace-panel-right">
         <div class="self-camera-pannel">
           <div id="local_video" style="height: 100%;width: 100%"></div>
         </div>
-        <div id="gutter2-1" class="gutter-row"></div>
+        <div id="gutter2-1"></div>
         <div class="message-pannel">
           <chatroom />
         </div>
@@ -59,20 +59,20 @@ export default {
     const vm = this;
     Split({
       columnGutters: [
-        {
-          track: 1,
-          element: document.querySelector("#gutter")
-        }
+        // {
+        //   track: 1,
+        //   element: document.querySelector("#gutter")
+        // }
       ],
       rowGutters: [
         {
           track: 1,
           element: document.querySelector("#gutter1-1")
-        },
-        {
-          track: 1,
-          element: document.querySelector("#gutter2-1")
         }
+        // {
+        //   track: 1,
+        //   element: document.querySelector("#gutter2-1")
+        // }
       ],
       onDragEnd: () => {
         let str = document.getElementById("workplace-panel-left").style
