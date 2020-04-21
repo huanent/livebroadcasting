@@ -105,16 +105,16 @@ export class LiveBroadcastService {
             extension: "TXWhiteBoardExt"
           }
         });
+        this.tim.sendMessage(message).then(
+          () => {
+            return;
+          },
+          () => {
+            // 同步失败
+          }
+        );
       });
       this.activeBoard = teduBoard;
-      this.tim.sendMessage(message).then(
-        () => {
-          return;
-        },
-        () => {
-          // 同步失败
-        }
-      );
     }, 100);
   }
   initBoardOptions() {
