@@ -44,7 +44,7 @@ import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
 export default {
-  name: "workplace-panel-page",
+  name: "workplace",
   data: function() {
     return {
       gridStyle: undefined,
