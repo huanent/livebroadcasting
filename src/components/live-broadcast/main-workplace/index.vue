@@ -5,9 +5,11 @@
       @on-close="onTabsClose($event)"
       :active-index.sync="index"
       @index-change="indexChange($event)"
+      class="workplace-content"
     >
       <div id="board_el" style="height: 100%; width: 100%"></div>
     </BoardTabs>
+    <div class="workplace-footer"></div>
     <Toolbar></Toolbar>
   </div>
 </template>
@@ -15,7 +17,7 @@
 <script>
 import Toolbar from "../toolbar/index";
 import BoardTabs from "./board-tabs";
-import BoardTabsItem from "./board-tabs-item";
+import WorkplaceFooter from "../workplace-footer";
 import { liveBroadcastService } from "../../../main";
 import { mapMutations } from "vuex";
 export default {
@@ -23,31 +25,31 @@ export default {
   components: { Toolbar, BoardTabs },
   data() {
     return {
-      lables: [],
-      index: this.$store.state.workplace.activeBoardIndex
+      lables: []
     };
   },
   methods: {
     ...mapMutations("workplace", ["SET_BOARD_PROFILES"]),
     onTabsClose() {},
     getLables() {
-      let temp = this.boardProfiles.map(item => {
+      this.lables = this.boardProfiles.map(item => {
         return item.title;
       });
-      this.lables = temp;
     },
     indexChange(index) {
-      console.log(this.boardProfiles[index]);
+      this.$store.commit("workplace/BOARD_INDEX", index);
     }
   },
   mounted() {
     liveBroadcastService.init();
     this.getLables();
-    /*this.SET_BOARD_PROFILES(this.boardProfiles);*/
   },
   computed: {
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
+    },
+    index() {
+      return this.$store.state.workplace.activeBoardIndex;
     }
   },
   watch: {
@@ -57,8 +59,14 @@ export default {
       },
       deep: true
     },
-    index: function(value) {
-      console.log(this.boardProfiles[value]);
+    index(value) {
+      let fileInfo = this.boardProfiles[value];
+      console.log(fileInfo);
+      liveBroadcastService.activeBoard.switchFile(
+        fileInfo.fid,
+        fileInfo.currentPageIndex,
+        fileInfo.currentPageStep
+      );
     }
   }
 };
@@ -69,5 +77,12 @@ export default {
   height: 100%;
   width: 100%;
   position: relative;
+}
+.workplace-footer {
+  height: 1.5rem;
+  background-color: #171717;
+}
+.workplace-content {
+  height: calc(100% - 1.5rem);
 }
 </style>
