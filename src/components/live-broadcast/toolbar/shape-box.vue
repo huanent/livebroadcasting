@@ -126,9 +126,19 @@ export default {
   background-color: rgba(33, 35, 37, 0.8);
   .shape-select {
     text-align: center;
-    padding-left: 5px;
     & :hover {
       background-color: black;
+    }
+    ul :nth-child(1) {
+      text-align: center;
+      float: left;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      padding: 3px;
+      margin-bottom: 5px;
+      margin-top: 1px;
+      margin-left: 0px;
     }
     li {
       text-align: center;
@@ -139,6 +149,7 @@ export default {
       padding: 3px;
       margin-bottom: 5px;
       margin-top: 1px;
+      margin-left: 3px;
     }
   }
   /deep/.el-color-picker__trigger {
