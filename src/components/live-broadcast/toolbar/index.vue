@@ -63,14 +63,13 @@
       </li>
 
       <!-- 可操作性工具 -->
-      <div
+      <ActionTools
         @mousedown="
           shapeBoxIsshow ? true : false;
           textBoxIsshow ? true : false;
         "
-      >
-        <ActionTools @changeSet="fromchangeSet"></ActionTools>
-      </div>
+        @changeSet="fromchangeSet"
+      ></ActionTools>
     </ul>
 
     <!-- 形状的面板 -->
@@ -175,7 +174,7 @@ export default {
   z-index: 999;
   position: absolute;
   right: 50px;
-  top: 160px;
+  top: calc(50% - 185px);
   > ul {
     box-sizing: content-box;
     position: absolute;

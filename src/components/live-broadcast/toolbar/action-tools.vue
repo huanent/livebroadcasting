@@ -70,69 +70,215 @@ export default {
       this.toolslistcurrent2 = index;
     },
     moveToolbar(item, e) {
+      // if (item.action == "move") {
+      //   let odiv = this.$parent.$refs.toolbarul;
+      //   let disX = e.clientX - odiv.offsetLeft;
+      //   let disY = e.clientY - odiv.offsetTop;
+      //   document.onmousemove = e => {
+
+      //   document.onmouseup = e => {
+      //     // console.log(this.$parent.$parent.$el.offsetHeight);
+      //     // console.log(this.$parent);
+      //     let xOffset = this.$parent.$parent.$el.offsetWidth - e.clientX;
+      //     let yOffset = this.$parent.$parent.$el.offsetHeight - e.clientY;
+      //     if (e.clientX < 170) {
+      //       // this.$emit("changeSet", "50px");
+      //     } else {
+      //       // this.$emit("changeSet", "-170px");
+      //     }
+      //     if (
+      //       xOffset < 100 &&
+      //       xOffset > -50 &&
+      //       yOffset < 100 &&
+      //       yOffset > -100
+      //     ) {
+      //       this.$parent.$el.style.left = "";
+      //       this.$parent.$el.style.top = "";
+      //     }
+      //     document.onmousemove = null;
+      //     document.onmouseup = null;
+      //   };
+      // }
+
       if (item.action == "move") {
-        let parentY = this.$parent.$parent.$el.offsetHeight;
-        let parentY2 = parseInt(this.$parent.$parent.$el.offsetHeight - 145);
-        let parentX = this.$parent.$parent.$el.offsetWidth;
-        let parentX2 = parseInt(this.$parent.$parent.$el.offsetWidth - 50);
         let odiv = this.$parent.$refs.toolbarul;
         let disX = e.clientX - odiv.offsetLeft;
         let disY = e.clientY - odiv.offsetTop;
         document.onmousemove = e => {
-          // console.log(parentX);
-          // console.log(e.clientX);
-          if (e.clientX < parentX) {
-            if (e.clientY > parentY2) {
+          let reftop = odiv.getBoundingClientRect().top;
+          let refbottom = odiv.getBoundingClientRect().bottom;
+          let refleft = odiv.getBoundingClientRect().left;
+          let refright = odiv.getBoundingClientRect().right;
+
+          let parenttop = this.$parent.$parent.$el.getBoundingClientRect().top;
+          let parentbottom = this.$parent.$parent.$el.getBoundingClientRect()
+            .bottom;
+          let parentleft = this.$parent.$parent.$el.getBoundingClientRect()
+            .left;
+          let parentright = this.$parent.$parent.$el.getBoundingClientRect()
+            .right;
+          let parentheight = this.$parent.$parent.$el.offsetHeight;
+          // console.log(e.clientX, e.clientY);
+          //顶部判断
+          // if (reftop > parenttop) {
+          //   //加左侧判断
+          //   if (refleft > 0) {
+          //     //加右侧判断
+          //     if (refleft + 48 < parentright) {
+          //       //加底部判断
+          //       if (refbottom + 370 < parentbottom) {
+          //         console.log("正常");
+          //         let left = e.clientX - disX;
+          //         let top = e.clientY - disY;
+          //         odiv.style.left = left + "px";
+          //         odiv.style.top = top + "px";
+          //         return;
+          //       } else {
+          //         if (refleft > 0) {
+          //           if (refleft + 48 < parentright) {
+          //             console.log("到底了");
+          //             let left = e.clientX - disX;
+          //             let top = e.clientY - disY;
+          //             odiv.style.left = left + "px";
+          //             // odiv.style.top = "50%";
+          //             return;
+          //           } else {
+          //             console.log("到右下角");
+          //             let left = e.clientX - disX;
+          //             let top = e.clientY - disY;
+          //             odiv.style.left = parentright - 48 + "px";
+          //             odiv.style.top = parentbottom - refbottom - 30 + "px";
+          //             // odiv.style.top = "50%";
+          //             return;
+          //           }
+          //         } else {
+          //           console.log("到左下角");
+          //           let left = e.clientX - disX;
+          //           let top = e.clientY - disY;
+          //           odiv.style.left = 0 + "px";
+          //           odiv.style.top = parentbottom - refbottom - 30 + "px";
+          //           // odiv.style.top = "50%";
+          //           return;
+          //         }
+          //       }
+          //     }
+          //     if (refbottom + 370 < parentbottom) {
+          //       console.log("到右侧了");
+          //       let left = e.clientX - disX;
+          //       let top = e.clientY - disY;
+          //       odiv.style.left = parentright - 48 + "px";
+          //       odiv.style.top = top + "px";
+          //       return;
+          //     } else {
+          //       console.log("到右下角了");
+          //       // debugger;
+          //       let left = e.clientX - disX;
+          //       let top = e.clientY - disY;
+          //       odiv.style.left = parentright - 48 + "px";
+          //       odiv.style.top = parentbottom - refbottom - 30 + "px";
+          //       // odiv.style.top = "50%";
+          //       return;
+          //     }
+          //   } else {
+          //     if (refbottom + 370 < parentbottom) {
+          //       console.log("到左侧了");
+          //       let left = e.clientX - disX;
+          //       let top = e.clientY - disY;
+          //       odiv.style.left = 0 + "px";
+          //       odiv.style.top = top + "px";
+          //       return;
+          //     } else {
+          //       console.log("到左下角了");
+          //       // debugger;
+          //       let left = e.clientX - disX;
+          //       let top = e.clientY - disY;
+          //       odiv.style.left = 0 + "px";
+          //       odiv.style.top = parentbottom - refbottom - 30 + "px";
+          //       return;
+          //     }
+          //   }
+          // } else {
+          //   if (refleft > 0) {
+          //     if (refleft + 48 < parentright) {
+          //       console.log("到顶了");
+          //       let left = e.clientX - disX;
+          //       let top = e.clientY - disY;
+          //       odiv.style.left = left + "px";
+          //       odiv.style.top = 0 + "px";
+          //       return;
+          //     } else {
+          //       console.log("到右上角");
+          //       let left = e.clientX - disX;
+          //       let top = e.clientY - disY;
+          //       odiv.style.left = parentright - 48 + "px";
+          //       odiv.style.top = 0 + "px";
+          //       return;
+          //     }
+          //   } else {
+          //     console.log("到左上角");
+          //     let left = e.clientX - disX;
+          //     let top = e.clientY - disY;
+          //     odiv.style.left = 0 + "px";
+          //     odiv.style.top = 0 + "px";
+          //     return;
+          //   }
+          // }
+
+          let left = e.clientX - disX;
+          let top = e.clientY - disY;
+          //顶部判断
+          if (
+            reftop < parenttop ||
+            refbottom + 350 > parentbottom ||
+            refleft < 0 ||
+            refleft + 48 > parentright
+          ) {
+            if (reftop < parenttop) {
               let left = e.clientX - disX;
-              let top = e.clientY - disY;
               this.positionX = top;
               this.positionY = left;
               odiv.style.left = left + "px";
+              odiv.style.top = 0 + "px";
+            } else {
+              document.onmousemove = null;
+            }
+            //加底部判断
+            if (refbottom + 350 > parentbottom) {
+              let left = e.clientX - disX;
+              this.positionX = top;
+              this.positionY = left;
+              odiv.style.left = left + "px";
+              odiv.style.top = parentheight - 370 + "px";
+            } else {
+              document.onmousemove = null;
+            }
+            //加左侧判断
+            if (refleft < 0) {
+              let top = e.clientY - disY;
+              this.positionX = top;
+              this.positionY = left;
+              odiv.style.left = 0 + "px";
               odiv.style.top = top + "px";
             } else {
-              let left = e.clientX - disX;
-              odiv.style.left = left + "px";
-              odiv.style.top = 30 + "px";
-              return;
+              document.onmousemove = null;
+            }
+            //加右侧判断
+            if (refleft + 48 > parentright) {
+              let top = e.clientY - disY;
+              this.positionX = top;
+              this.positionY = left;
+              odiv.style.left = parentright - 48 + "px";
+              odiv.style.top = top + "px";
+            } else {
+              document.onmousemove = null;
             }
           } else {
-            if (e.clientY > parentY2) {
-              let top = e.clientY - disY;
-              odiv.style.left = parentX2 + "px";
-              odiv.style.top = top + "px";
-              return;
-            } else {
-              odiv.style.left = parentX2 + "px";
-              odiv.style.top = 30 + "px";
-              return;
-            }
+            // console.log("外部正常");
+            odiv.style.left = left + "px";
+            odiv.style.top = top + "px";
           }
         };
         document.onmouseup = e => {
-          console.log(this.$parent.$parent.$el.offsetHeight);
-          console.log(this.$parent);
-          let xOffset = this.$parent.$parent.$el.offsetWidth - e.clientX;
-          let yOffset = this.$parent.$parent.$el.offsetHeight - e.clientY;
-          // console.log("白板宽度" + this.$parent.$parent.$el.offsetWidth);
-          // console.log("白板高度" + this.$parent.$parent.$el.offsetHeight);
-          // console.log("client x是" + e.clientX);
-          // console.log("client y是" + e.clientY);
-          // console.log("xoffset 是" + xOffset);
-          // console.log("yoffset 是" + yOffset);
-          if (e.clientX < 170) {
-            // this.$emit("changeSet", "50px");
-          } else {
-            // this.$emit("changeSet", "-170px");
-          }
-          if (
-            xOffset < 100 &&
-            xOffset > -50 &&
-            yOffset < 100 &&
-            yOffset > -100
-          ) {
-            this.$parent.$el.style.left = "";
-            this.$parent.$el.style.top = "";
-          }
           document.onmousemove = null;
           document.onmouseup = null;
         };

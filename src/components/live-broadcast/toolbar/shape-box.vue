@@ -118,6 +118,7 @@ export default {
 .shape-box {
   text-align: center;
   padding: 10px;
+  margin-top: 4px;
   // position: absolute;
   // left: -170px;
   // top: 0;
