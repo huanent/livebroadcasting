@@ -17,6 +17,7 @@
 <script>
 import Toolbar from "../toolbar/index";
 import BoardTabs from "./board-tabs";
+import WorkplaceFooter from "../workplace-footer";
 import { liveBroadcastService } from "../../../main";
 import { mapMutations } from "vuex";
 export default {

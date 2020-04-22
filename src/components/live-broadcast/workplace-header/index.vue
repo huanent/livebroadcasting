@@ -43,7 +43,7 @@
 import { liveBroadcastService } from "../../../main";
 
 export default {
-  name: "WorkplacePanelHeader",
+  name: "WorkplaceHeader",
   data() {
     return {
       dialogVisible: false,

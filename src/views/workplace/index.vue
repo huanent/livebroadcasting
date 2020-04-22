@@ -1,6 +1,6 @@
 <template>
   <div class="workplace-panel">
-    <div class="workplace-panel-header">
+    <div class="workplace-header">
       <WorkplacePanelHeader></WorkplacePanelHeader>
     </div>
     <div class="workplace-panel-content">
@@ -39,7 +39,7 @@
 <script>
 import Split from "split-grid";
 // import Toolbar from "@c/common/Toolbar";
-import WorkplacePanelHeader from "@c/live-broadcast/workplace-panel-header";
+import WorkplacePanelHeader from "@c/live-broadcast/workplace-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
@@ -130,7 +130,7 @@ export default {
   height: 100vh;
   grid-template-rows: 2rem auto;
 }
-.workplace-panel-header {
+.workplace-header {
   background: #34363b;
 }
 .workplace-panel-content {
