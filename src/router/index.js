@@ -20,7 +20,7 @@ const routes = [
     meta: {
       requireAuth: true
     },
-    component: () => import("@v/workplace/workplace-panel-page.vue")
+    component: () => import("@v/workplace")
   }
 ];
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="camera-voice--intensity">
+  <div class="camera-voice-intensity">
     <span
       v-for="(item, index) in lines"
       :key="index"
@@ -39,7 +39,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.camera-voice--intensity {
+.camera-voice-intensity {
   color: #0a818c;
   height: 16px;
   display: inline-block;
