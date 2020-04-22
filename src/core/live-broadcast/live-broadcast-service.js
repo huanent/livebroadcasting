@@ -13,7 +13,10 @@ window["axios"] = axios;
 let TEduBoard = window["TEduBoard"];
 
 import store from "@/store";
-
+import { Emitter } from "../emit";
+Emitter.on("split-change", () => {
+  liveBroadcastService.activeBoard.resize();
+});
 export class LiveBroadcastService {
   config;
   sdkAppId = getSdkAppId();
