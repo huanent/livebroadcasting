@@ -39,7 +39,7 @@
 <script>
 import Split from "split-grid";
 // import Toolbar from "@c/common/Toolbar";
-import WorkplacePanelHeader from "../../components/live-broadcast/workplace-panel-header";
+import WorkplacePanelHeader from "@c/live-broadcast/workplace-panel-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
