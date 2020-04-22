@@ -1,5 +1,5 @@
 <template>
-  <div class="workplace-panel-header-component">
+  <div class="workplace-header-component">
     <div class="menu-operation">
       <a @click="onCoursewareOpen"
         ><icon name="import_contacts" class="pannel-icon" :size="15"></icon
@@ -74,7 +74,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.workplace-panel-header-component {
+.workplace-header-component {
   height: 100%;
   width: 100%;
   color: #eee;

@@ -43,6 +43,8 @@ import WorkplacePanelHeader from "@c/live-broadcast/workplace-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
+import { liveBroadcastService } from "../../main";
+import { Emitter } from "../../core/emit";
 export default {
   name: "workplace",
   data: function() {
@@ -78,6 +80,9 @@ export default {
         //   element: document.querySelector("#gutter2-1")
         // }
       ],
+      onDrag: (direction, track) => {
+        Emitter.emit("split-change");
+      },
       onDragEnd: () => {
         let str = document.getElementById("workplace-panel-left").style
           .gridTemplateRows;

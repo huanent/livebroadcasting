@@ -15,6 +15,7 @@
     "core-js": "^3.6.4",
     "cos-js-sdk-v5": "^0.5.26",
     "element-ui": "^2.13.1",
+    "eventemitter2": "^6.3.1",
     "split-grid": "^1.0.9",
     "tim-js-sdk": "^2.6.1",
     "trtc-js-sdk": "^4.3.11",
