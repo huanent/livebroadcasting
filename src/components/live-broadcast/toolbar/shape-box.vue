@@ -138,13 +138,22 @@ export default {
       line-height: 20px;
       padding: 3px;
       margin-bottom: 5px;
+      margin-top: 1px;
     }
   }
   /deep/.el-color-picker__trigger {
     border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+  }
+  /deep/.el-color-picker--mini .el-color-picker__trigger {
+    height: 27px;
+    width: 27px;
   }
 }
 .active {
   background-color: black;
+  box-shadow: 0 0 0px 1px #888888;
 }
 </style>
