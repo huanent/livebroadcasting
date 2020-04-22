@@ -7,6 +7,7 @@ import COS from "cos-js-sdk-v5";
 window["COS"] = COS;
 
 import axios from "axios";
+import { liveBroadcastService } from "../../main";
 
 window["axios"] = axios;
 let TEduBoard = window["TEduBoard"];
@@ -220,6 +221,7 @@ export class LiveBroadcastService {
         }
       });
       this.activeBoard.on(TEduBoard.EVENT.TEB_INIT, res => {
+        console.log(res);
         let lastindex = store.state.workplace.boardProfiles.length - 1;
         store.commit("workplace/BOARD_INDEX", lastindex);
       });
@@ -231,7 +233,7 @@ export class LiveBroadcastService {
   }
   clearAllBoardFiles() {
     let list = this.activeBoard.getFileInfoList();
-    let id = this.activeBoard.getCurrentFile();
+    // let id = this.activeBoard.getCurrentFile();
     list.forEach(file => {
       this.activeBoard.deleteFile(file.fid);
     });
@@ -239,7 +241,7 @@ export class LiveBroadcastService {
   getIndexByFid(fileListInfo, fid) {
     let result;
     fileListInfo.find((item, index) => {
-      if (item.fid === id) {
+      if (item.fid === fid) {
         result = index;
       }
     });
