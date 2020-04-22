@@ -129,17 +129,6 @@ export default {
     & :hover {
       background-color: black;
     }
-    ul :nth-child(1) {
-      text-align: center;
-      float: left;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      padding: 3px;
-      margin-bottom: 5px;
-      margin-top: 1px;
-      margin-left: 0px;
-    }
     li {
       text-align: center;
       float: left;
@@ -149,7 +138,8 @@ export default {
       padding: 3px;
       margin-bottom: 5px;
       margin-top: 1px;
-      margin-left: 3px;
+      margin-left: 2px;
+      margin-right: 2px;
     }
   }
   /deep/.el-color-picker__trigger {
