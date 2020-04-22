@@ -10,10 +10,11 @@ import {
   ColorPicker,
   Dialog,
   Popover,
-  Upload
+  Upload,
+  MessageBox
 } from "element-ui";
 const element = {
-  install: function(Vue) {
+  install: function (Vue) {
     Vue.prototype.$message = Message;
     Vue.use(Form);
     Vue.use(FormItem);
@@ -26,6 +27,7 @@ const element = {
     Vue.use(Popover);
     Vue.use(Dialog);
     Vue.use(Upload);
+    Vue.prototype.$confirm = MessageBox.confirm;
   }
 };
 export default element;
