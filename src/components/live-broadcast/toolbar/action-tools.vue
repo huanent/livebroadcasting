@@ -9,6 +9,7 @@
         mousedownClass(index);
       "
       @mouseup="toolslistcurrent2 = -1"
+      @mouseleave="toolslistcurrent2 = -1"
     >
       <a
         >{{ item.index
@@ -226,19 +227,20 @@ export default {
 
           let left = e.clientX - disX;
           let top = e.clientY - disY;
-          //顶部判断
+          //边界判断
           if (
             reftop < parenttop ||
             refbottom + 350 > parentbottom ||
             refleft < 0 ||
             refleft + 48 > parentright
           ) {
+            //顶部判断
             if (reftop < parenttop) {
               let left = e.clientX - disX;
               this.positionX = top;
               this.positionY = left;
               odiv.style.left = left + "px";
-              odiv.style.top = 0 + "px";
+              odiv.style.top = 5 + "px";
             } else {
               document.onmousemove = null;
             }
@@ -257,17 +259,17 @@ export default {
               let top = e.clientY - disY;
               this.positionX = top;
               this.positionY = left;
-              odiv.style.left = 0 + "px";
+              odiv.style.left = 5 + "px";
               odiv.style.top = top + "px";
             } else {
               document.onmousemove = null;
             }
             //加右侧判断
-            if (refleft + 48 > parentright) {
+            if (refleft + 50 > parentright) {
               let top = e.clientY - disY;
               this.positionX = top;
               this.positionY = left;
-              odiv.style.left = parentright - 48 + "px";
+              odiv.style.left = parentright - 55 + "px";
               odiv.style.top = top + "px";
             } else {
               document.onmousemove = null;
