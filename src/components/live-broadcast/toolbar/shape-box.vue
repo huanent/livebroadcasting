@@ -135,11 +135,14 @@ export default {
       width: 20px;
       height: 20px;
       line-height: 20px;
-      padding: 3px;
+      padding: 2px 3px 3px 3px;
       margin-bottom: 5px;
       margin-top: 1px;
       margin-left: 2px;
       margin-right: 2px;
+      &:hover svg {
+        fill: rgb(255, 255, 255) !important;
+      }
     }
   }
   /deep/.el-color-picker__trigger {
@@ -156,5 +159,8 @@ export default {
 .active {
   background-color: black;
   box-shadow: 0 0 0px 1px #888888;
+  svg {
+    fill: rgb(255, 255, 255) !important;
+  }
 }
 </style>

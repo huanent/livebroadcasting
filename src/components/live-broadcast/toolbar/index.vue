@@ -203,7 +203,11 @@ export default {
         visibility: visible;
       }
       &:hover {
+        cursor: pointer;
         background-color: black;
+      }
+      &:hover svg {
+        fill: rgb(255, 255, 255) !important;
       }
     }
   }
@@ -211,6 +215,9 @@ export default {
 .toolactive {
   background-color: black;
   box-shadow: 0 0 0 2px #b4b4b5 inset;
+  svg {
+    fill: rgb(255, 255, 255) !important;
+  }
 }
 .tool-hover {
   visibility: hidden;
@@ -226,13 +233,4 @@ export default {
   color: #fff;
   background: rgba(0, 0, 0, 0.8);
 }
-// /deep/.el-popper,
-// .el-popover {
-//   margin: 0;
-//   padding: 0;
-//   box-shadow: none;
-//   text-shadow: none;
-//   border: none;
-//   border-radius: inherit;
-// }
 </style>

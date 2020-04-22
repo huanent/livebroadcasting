@@ -329,11 +329,17 @@ export default {
     &:hover {
       background-color: black;
     }
+    &:hover svg {
+      fill: rgb(255, 255, 255) !important;
+    }
   }
 }
 .toolactive {
   background-color: black;
   box-shadow: 0 0 0 2px #b4b4b5 inset;
+  svg {
+    fill: rgb(255, 255, 255) !important;
+  }
 }
 .tool-hover {
   visibility: hidden;
