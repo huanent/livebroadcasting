@@ -14,31 +14,32 @@ export default {
   props: {
     name: {
       type: String,
-      required: true,
+      required: true
     },
     size: {
       type: [Number, String],
-      default: 20,
+      default: 20
     },
     color: {
-      type: String,
-    },
+      type: String
+    }
   },
   data() {
     return {
-      hasClass: true,
+      hasClass: true
     };
   },
   computed: {
     iconName() {
       return `#icon-${this.name}`;
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .svg-icon {
+  cursor: pointer;
   display: inline-block;
   fill: none;
   vertical-align: middle;

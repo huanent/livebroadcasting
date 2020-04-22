@@ -68,7 +68,6 @@ export default {
     user-select: none;
   }
   > svg {
-    cursor: pointer;
     &:hover {
       fill: #dcebeb !important;
     }
