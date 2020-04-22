@@ -5,9 +5,11 @@
       @on-close="onTabsClose($event)"
       :active-index.sync="index"
       @index-change="indexChange($event)"
+      class="workplace-content"
     >
       <div id="board_el" style="height: 100%; width: 100%"></div>
     </BoardTabs>
+    <div class="workplace-footer"></div>
     <Toolbar></Toolbar>
   </div>
 </template>
@@ -74,5 +76,12 @@ export default {
   height: 100%;
   width: 100%;
   position: relative;
+}
+.workplace-footer {
+  height: 1.5rem;
+  background-color: #171717;
+}
+.workplace-content {
+  height: calc(100% - 1.5rem);
 }
 </style>

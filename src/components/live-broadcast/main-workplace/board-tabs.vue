@@ -1,6 +1,6 @@
 <template>
   <div class="board-tabs">
-    <div class="board-tabs-header" id="test">
+    <div class="board-tabs-header">
       <div
         class="tab-item"
         v-for="(item, i) in lables"
@@ -39,40 +39,6 @@ export default {
   },
   mounted() {
     this.init();
-
-    let targetNode = document.querySelector(`#test`);
-
-    // Options for the observer (which mutations to observe)
-    let config = {
-      attributes: true,
-      childList: true,
-      subtree: true
-    };
-    const mutationCallback = mutationsList => {
-      for (let mutation of mutationsList) {
-        let type = mutation.type;
-        switch (type) {
-          case "childList":
-            console.log("A child node has been added or removed.");
-            break;
-          case "attributes":
-            console.log(
-              `The ${mutation.attributeName} attribute was modified.`
-            );
-            break;
-          case "subtree":
-            console.log(`The subtree was modified.`);
-            break;
-          default:
-            break;
-        }
-      }
-    };
-    let observer = new MutationObserver(mutationCallback);
-
-    observer.observe(targetNode, config);
-
-    /*    observer.disconnect();*/
   },
   watch: {
     activeIndex(value) {
@@ -122,7 +88,7 @@ export default {
   user-select: none;
 }
 .tab-body {
-  height: 100%;
+  height: calc(100% - 1.8rem);
 }
 .tab-item {
   padding: 0.3rem;

@@ -28,13 +28,8 @@
             :http-request="requestUpload"
           >
             <el-button size="small" type="primary">点击上传</el-button>
-            <!--           <div slot="tip" class="el-upload__tip">
-              只能上传jpg/png文件，且不超过500kb
-            </div>-->
           </el-upload>
         </div>
-        <!--        <el-button @click="addBoardFilesHandler" type="primary"
-          >添加文件</el-button-->
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="onCoursewareClose">取 消</el-button>
@@ -45,7 +40,7 @@
 </template>
 
 <script>
-import { liveBroadcastService } from "../../main";
+import { liveBroadcastService } from "../../../main";
 
 export default {
   name: "WorkplacePanelHeader",
