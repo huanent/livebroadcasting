@@ -2,13 +2,13 @@
   <div class="workplace-header-component">
     <div class="menu-operation">
       <a @click="onCoursewareOpen"
-        ><icon name="import_contacts" class="pannel-icon" :size="15"></icon
+        ><icon name="import_contacts" class="pannel-icon" :size="20"></icon
       ></a>
-      <a><icon name="person_outline" class="pannel-icon" :size="15"></icon></a>
-      <a><icon name="widgets" class="pannel-icon" :size="15"></icon></a>
-      <a><icon name="settings" class="pannel-icon" :size="15"></icon></a>
-      <a><icon name="exit_to_app" class="pannel-icon" :size="15"></icon></a>
-      <a><icon name="info_outline" class="pannel-icon" :size="15"></icon></a>
+      <a><icon name="person_outline" class="pannel-icon" :size="20"></icon></a>
+      <a><icon name="widgets" class="pannel-icon" :size="20"></icon></a>
+      <a><icon name="settings" class="pannel-icon" :size="20"></icon></a>
+      <a><icon name="exit_to_app" class="pannel-icon" :size="20"></icon></a>
+      <a><icon name="info_outline" class="pannel-icon" :size="20"></icon></a>
     </div>
     <el-dialog
       title="课件库"
