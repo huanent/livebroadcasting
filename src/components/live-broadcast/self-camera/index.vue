@@ -1,5 +1,5 @@
 <template>
-  <div class="self-camera-panel">
+  <div :class="{ 'self-camera-panel': true, hide: !visibility }">
     <div class="self-camera-mask">
       <div class="self-camera-icons">
         <icon
@@ -16,7 +16,7 @@
         />
       </div>
     </div>
-    <div id="local_video" style="height: 100%;width: 100%"></div>
+    <div id="local_video" ref="video"></div>
     <div class="self-camera-footer">
       <div>
         <icon name="microphone" color="#0A818C" :size="18" />
@@ -35,7 +35,8 @@ export default {
   data() {
     return {
       isMicroOpen: true,
-      isVideoOpen: true
+      isVideoOpen: true,
+      visibility: false
     };
   },
   components: {
@@ -49,7 +50,32 @@ export default {
       return this.isVideoOpen ? "video" : "video-slash";
     }
   },
+  mounted() {
+    this.observerVideoInit();
+  },
   methods: {
+    observerVideoInit() {
+      if (!this.$refs.video) return;
+      let targetNode = this.$refs.video;
+      let config = {
+        childList: true,
+        subtree: true
+      };
+      let observer;
+      const mutationCallback = mutationsList => {
+        for (let mutation of mutationsList) {
+          let type = mutation.type;
+          if (type === "childList") {
+            this.visibility = true;
+            if (observer) {
+              observer.disconnect();
+            }
+          }
+        }
+      };
+      observer = new MutationObserver(mutationCallback);
+      observer.observe(targetNode, config);
+    },
     onMicroStateChange() {
       // state must stored in vuex
       this.isMicroOpen = !this.isMicroOpen;
@@ -103,8 +129,13 @@ export default {
     justify-content: space-between;
     height: 32px;
     line-height: 32px;
-    padding: 6px 10px;
-    background-color: rgba(0, 0, 0, 0.45);
+    padding: 30px 10px 6px 10px;
+    background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0.6) 35%,
+      rgba(0, 0, 0, 0) 100%
+    );
     > div {
       display: flex;
       align-items: center;
@@ -122,5 +153,12 @@ export default {
       background-color: rgba(0, 0, 0, 0.5);
     }
   }
+}
+.hide {
+  visibility: hidden;
+}
+#local_video {
+  height: 100%;
+  width: 100%;
 }
 </style>
