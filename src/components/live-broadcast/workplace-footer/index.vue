@@ -1,10 +1,17 @@
 <template>
-  <div>hello</div>
+  <div>
+    <zoom-controller />
+  </div>
 </template>
 
 <script>
+import ZoomController from "./zoom-controller";
+
 export default {
-  name: "WorkplaceFooter"
+  name: "WorkplaceFooter",
+  components: {
+    ZoomController
+  }
 };
 </script>
 

@@ -9,7 +9,9 @@
     >
       <div id="board_el" style="height: 100%; width: 100%"></div>
     </BoardTabs>
-    <div class="workplace-footer"></div>
+    <div class="workplace-footer">
+      <workplace-footer />
+    </div>
     <Toolbar></Toolbar>
   </div>
 </template>
@@ -22,7 +24,7 @@ import { liveBroadcastService } from "../../../main";
 import { mapMutations } from "vuex";
 export default {
   name: "MainWorkplace",
-  components: { Toolbar, BoardTabs },
+  components: { Toolbar, BoardTabs, WorkplaceFooter },
   data() {
     return {
       lables: []
@@ -79,10 +81,11 @@ export default {
   position: relative;
 }
 .workplace-footer {
-  height: 1.5rem;
+  height: 2rem;
+  color: #737882;
   background-color: #171717;
 }
 .workplace-content {
-  height: calc(100% - 1.5rem);
+  height: calc(100% - 2rem);
 }
 </style>
