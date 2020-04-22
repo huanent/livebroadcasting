@@ -18,8 +18,11 @@
     </div>
     <div id="local_video" style="height: 100%;width: 100%"></div>
     <div class="self-camera-footer">
-      <icon name="microphone" color="#0A818C" :size="18" />
-      <voice-intensity :intensity="0.4" />
+      <div>
+        <icon name="microphone" color="#0A818C" :size="18" />
+        <voice-intensity :intensity="0.6" />
+      </div>
+      <span>123</span>
     </div>
   </div>
 </template>
@@ -96,10 +99,22 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
+    display: flex;
+    justify-content: space-between;
     height: 32px;
     line-height: 32px;
     padding: 6px 10px;
     background-color: rgba(0, 0, 0, 0.45);
+    > div {
+      display: flex;
+      align-items: center;
+    }
+    > span {
+      color: #ccc;
+      font-size: 12px;
+      height: 32px;
+      line-height: 32px;
+    }
   }
   &:hover {
     .self-camera-mask {

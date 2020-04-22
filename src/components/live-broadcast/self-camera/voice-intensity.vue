@@ -3,7 +3,7 @@
     <span
       v-for="(item, index) in lines"
       :key="index"
-      :class="['camera-voice__line', { active: true }]"
+      :class="['camera-voice__line', { active: activeIndex >= index + 1 }]"
     ></span>
   </div>
 </template>
@@ -22,6 +22,17 @@ export default {
     intensity: {
       type: Number,
       default: 0
+    }
+  },
+  computed: {
+    activeIndex() {
+      if (this.intensity >= 1) {
+        return this.lines;
+      } else if (this.intensity <= 0) {
+        return 0;
+      } else {
+        return Math.ceil(this.intensity * this.lines);
+      }
     }
   }
 };
