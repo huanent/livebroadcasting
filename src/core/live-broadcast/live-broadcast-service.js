@@ -53,8 +53,10 @@ export class LiveBroadcastService {
     return this.activeBoard;
   }
   switchFile(fid) {
+    debugger;
     let activeBoard = this.getActiveBoard();
     let info = activeBoard.getFileInfo(fid);
+    if (!info) return;
     activeBoard.switchFile(
       info.fid,
       info.currentPageIndex,
@@ -189,12 +191,15 @@ export class LiveBroadcastService {
       }
     });
     this.activeBoard = teduBoard;
-    setTimeout(function() {
-      let fileListInfo = teduBoard.getFileInfoList();
-      store.commit("workplace/BOARD_PROFILES", fileListInfo);
-      let lastindex = fileListInfo.length - 1;
-      store.commit("workplace/BOARD_INDEX", lastindex);
-    }, 1000);
+
+    teduBoard.on(TEduBoard.EVENT.TEB_INIT, () => {
+      setTimeout(function() {
+        let fileListInfo = teduBoard.getFileInfoList();
+        store.commit("workplace/BOARD_PROFILES", fileListInfo);
+        let lastindex = fileListInfo.length - 1;
+        store.commit("workplace/BOARD_INDEX", lastindex);
+      }, 3000);
+    });
   }
   initBoardOptions() {
     // this.activeBoard.reset();
