@@ -63,12 +63,7 @@ export default {
     },
     index(value) {
       let fileInfo = this.boardProfiles[value];
-      console.log(fileInfo);
-      liveBroadcastService.activeBoard.switchFile(
-        fileInfo.fid,
-        fileInfo.currentPageIndex,
-        fileInfo.currentPageStep
-      );
+      liveBroadcastService.switchFile(fileInfo.fid);
     }
   }
 };

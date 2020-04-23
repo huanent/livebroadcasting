@@ -7,7 +7,7 @@
       @click.native.stop="handleMinus"
     />
     <span
-      >{{ d_pageNum + "/" }}<em>{{ pageTotal }}</em></span
+      >{{ pageNum + "/" }}<em>{{ pageTotal }}</em></span
     >
     <icon
       name="chevron-circle-right"
@@ -21,39 +21,27 @@
 <script>
 export default {
   name: "PageController",
-  props: {
-    pageTotal: {
-      type: Number,
-      require: true
+  props: {},
+  computed: {
+    pageTotal() {
+      return this.$store.state.workplace.boardTotalPage;
     },
-    pageNum: {
-      type: Number,
-      require: true
+    pageNum() {
+      return this.$store.state.workplace.boardNumber;
     }
   },
-  data() {
-    return {
-      d_pageNum: this.pageNum
-    };
-  },
-  filters: {},
   methods: {
     handleMinus() {
-      if (this.d_pageNum <= 1) {
+      if (this.pageNum <= 1) {
         return;
       }
-      this.d_pageNum -= 1;
+      this.$store.commit("workplace/BOARD_NUMBER_DECREASE");
     },
     handleAdd() {
-      if (this.d_pageNum === this.pageTotal) {
+      if (this.pageNum === this.pageTotal) {
         return;
       }
-      this.d_pageNum += 1;
-    }
-  },
-  watch: {
-    d_pageNum(value) {
-      this.$emit("update:page-num", value);
+      this.$store.commit("workplace/BOARD_NUMBER_INCREASE");
     }
   }
 };

@@ -33,7 +33,6 @@ export class LiveBroadcastService {
   activeBoard = null;
   userId = "test";
   tim;
-  classGrounp;
   async getUserSig(key) {
     if (!key) {
       key = "default";
@@ -53,13 +52,24 @@ export class LiveBroadcastService {
   getActiveBoard() {
     return this.activeBoard;
   }
+  switchFile(fid) {
+    let activeBoard = this.getActiveBoard();
+    let info = activeBoard.getFileInfo(fid);
+    activeBoard.switchFile(
+      info.fid,
+      info.currentPageIndex,
+      info.currentPageStep
+    );
+    let scale = info.scale;
+    store.commit("workplace/BOARD_TOTAL_PAGE", info.pageCount);
+    store.commit("workplace/BOARD_NUMBER", info.currentPageIndex + 1);
+  }
   setActiveBoard(activeBoard) {
     this.activeBoard = activeBoard;
   }
   resetBoard(activeBoard) {
     activeBoard.reset();
   }
-
   async sendMessage(msg) {
     let message = this.tim.createCustomMessage({
       to: "7",
@@ -80,10 +90,7 @@ export class LiveBroadcastService {
     );
   }
   async initRoom() {
-    debugger;
-    getClassByRoomID(this.roomId).then(res => {
-      debugger;
-    });
+    getClassByRoomID(this.roomId).then(res => {});
     /*setTimeout(() => {
       let grounpId = self.roomId;
       tim
