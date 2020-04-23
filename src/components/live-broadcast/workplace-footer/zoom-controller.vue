@@ -21,11 +21,15 @@ export default {
   name: "ZoomController",
   data() {
     return {
-      zoomParam: 1,
       rate: 0.5,
-      max: 4,
-      min: 1
+      max: 400,
+      min: 25
     };
+  },
+  computed: {
+    zoomParam() {
+      return this.$store.state.workplace.boardScale;
+    }
   },
   filters: {
     NumToPercent(num) {
@@ -33,22 +37,28 @@ export default {
       if (num <= 0 || isNaN(num)) {
         return "0%";
       } else {
-        return Math.round(num * 100) + "%";
+        return Math.round(num * 100) / 100 + "%";
       }
     }
   },
   methods: {
     handleMinus() {
-      if (this.zoomParam <= 1) {
+      if (this.zoomParam <= this.min) {
         return;
       }
-      this.zoomParam -= this.rate;
+      this.$store.commit(
+        "workplace/BOARD_SCALE_DECREASE",
+        this.zoomParam * this.rate
+      );
     },
     handleAdd() {
-      if (this.zoomParam >= 4) {
+      if (this.zoomParam >= this.max) {
         return;
       }
-      this.zoomParam += this.rate;
+      this.$store.commit(
+        "workplace/BOARD_SCALE_INCREASE",
+        this.zoomParam * this.rate * 2
+      );
     }
   }
 };

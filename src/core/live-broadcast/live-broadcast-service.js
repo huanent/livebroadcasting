@@ -53,7 +53,6 @@ export class LiveBroadcastService {
     return this.activeBoard;
   }
   switchFile(fid) {
-    debugger;
     let activeBoard = this.getActiveBoard();
     let info = activeBoard.getFileInfo(fid);
     if (!info) return;
@@ -65,6 +64,7 @@ export class LiveBroadcastService {
     let scale = info.scale;
     store.commit("workplace/BOARD_TOTAL_PAGE", info.pageCount);
     store.commit("workplace/BOARD_NUMBER", info.currentPageIndex + 1);
+    store.commit("workplace/BOARD_SCALE", scale);
   }
   setActiveBoard(activeBoard) {
     this.activeBoard = activeBoard;

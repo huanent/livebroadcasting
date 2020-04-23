@@ -2,7 +2,8 @@ const state = {
   activeBoardIndex: 0,
   boardProfiles: [],
   boardTotalPage: 1,
-  boardNumber: 1
+  boardNumber: 1,
+  boardScale: 100
 };
 
 const getters = {
@@ -16,8 +17,10 @@ const getters = {
     return state.boardTotalPage;
   },
   boardNumber: state => {
-    debugger;
     return state.boardNumber;
+  },
+  boardScale: state => {
+    return state.boardScale;
   }
 };
 
@@ -42,6 +45,21 @@ const mutations = {
   BOARD_NUMBER_DECREASE(state, boardNumber) {
     state.boardNumber--;
     liveBroadcastService.getActiveBoard().prevBoard();
+  },
+  BOARD_SCALE(state, boardScale) {
+    state.boardScale = boardScale;
+    /*    liveBroadcastService.getActiveBoard().setBoardScale(state.boardScale);
+    liveBroadcastService.getActiveBoard().reset();*/
+  },
+  BOARD_SCALE_INCREASE(state, stepScale) {
+    state.boardScale = state.boardScale + stepScale;
+    /*    liveBroadcastService.getActiveBoard().setBoardScale(state.boardScale);
+    liveBroadcastService.getActiveBoard().reset();*/
+  },
+  BOARD_SCALE_DECREASE(state, stepScale) {
+    state.boardScale = state.boardScale - stepScale;
+    /*    liveBroadcastService.getActiveBoard().setBoardScale(state.boardScale);
+    liveBroadcastService.getActiveBoard().reset();*/
   }
 };
 export default {
