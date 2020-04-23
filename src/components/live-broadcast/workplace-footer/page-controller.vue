@@ -7,7 +7,7 @@
       @click.native.stop="handleMinus"
     />
     <span
-      >{{ pageNum + "/" }}<em>{{ pageTotal }}</em></span
+      >{{ d_pageNum + "/" }}<em>{{ pageTotal }}</em></span
     >
     <icon
       name="chevron-circle-right"
@@ -21,25 +21,39 @@
 <script>
 export default {
   name: "PageController",
+  props: {
+    pageTotal: {
+      type: Number,
+      require: true
+    },
+    pageNum: {
+      type: Number,
+      require: true
+    }
+  },
   data() {
     return {
-      pageTotal: 45,
-      pageNum: 31
+      d_pageNum: this.pageNum
     };
   },
   filters: {},
   methods: {
     handleMinus() {
-      if (this.pageNum <= 1) {
+      if (this.d_pageNum <= 1) {
         return;
       }
-      this.pageNum -= 1;
+      this.d_pageNum -= 1;
     },
     handleAdd() {
-      if (this.pageNum === this.pageTotal) {
+      if (this.d_pageNum === this.pageTotal) {
         return;
       }
-      this.pageNum += 1;
+      this.d_pageNum += 1;
+    }
+  },
+  watch: {
+    d_pageNum(value) {
+      this.$emit("update:page-num", value);
     }
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="workplace-footer-main">
     <zoom-controller />
-    <page-controller />
+    <page-controller :page-total="pageTotal" :page-num.sync="pageNum" />
   </div>
 </template>
 
@@ -10,6 +10,12 @@ import ZoomController from "./zoom-controller";
 import PageController from "./page-controller";
 export default {
   name: "WorkplaceFooter",
+  data() {
+    return {
+      pageTotal: 10,
+      pageNum: 5
+    };
+  },
   components: {
     ZoomController,
     PageController
