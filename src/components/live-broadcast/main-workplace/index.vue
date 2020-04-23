@@ -7,7 +7,9 @@
       @index-change="indexChange($event)"
       class="workplace-content"
     >
-      <div id="board_el" style="height: 100%; width: 100%"></div>
+      <div class="board-wrapper">
+        <div id="board_el" class="roll-scroll" @></div>
+      </div>
     </BoardTabs>
     <div class="workplace-footer">
       <workplace-footer />
@@ -22,6 +24,7 @@ import BoardTabs from "./board-tabs";
 import WorkplaceFooter from "../workplace-footer";
 import { liveBroadcastService } from "../../../main";
 import { mapMutations } from "vuex";
+
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, WorkplaceFooter },
@@ -82,5 +85,18 @@ export default {
 }
 .workplace-content {
   height: calc(100% - 2rem);
+}
+#board_el {
+  position: absolute;
+  z-index: 99;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.board-wrapper {
+  position: relative;
+  height: calc(100% - 4rem);
+  width: calc(100% - 10rem);
+  margin: 2rem 5rem;
 }
 </style>

@@ -53,13 +53,13 @@ const mutations = {
   },
   BOARD_SCALE_INCREASE(state, stepScale) {
     state.boardScale = state.boardScale + stepScale;
-    /*    liveBroadcastService.getActiveBoard().setBoardScale(state.boardScale);
-    liveBroadcastService.getActiveBoard().reset();*/
+    liveBroadcastService.getActiveBoard().setBoardScale(state.boardScale);
+    liveBroadcastService.getActiveBoard().resize();
   },
   BOARD_SCALE_DECREASE(state, stepScale) {
     state.boardScale = state.boardScale - stepScale;
-    /*    liveBroadcastService.getActiveBoard().setBoardScale(state.boardScale);
-    liveBroadcastService.getActiveBoard().reset();*/
+    liveBroadcastService.getActiveBoard().setBoardScale(state.boardScale);
+    liveBroadcastService.getActiveBoard().resize();
   }
 };
 export default {
