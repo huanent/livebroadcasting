@@ -21,25 +21,27 @@
 <script>
 export default {
   name: "PageController",
-  data() {
-    return {
-      pageTotal: 45,
-      pageNum: 31
-    };
+  props: {},
+  computed: {
+    pageTotal() {
+      return this.$store.state.workplace.boardTotalPage;
+    },
+    pageNum() {
+      return this.$store.state.workplace.boardNumber;
+    }
   },
-  filters: {},
   methods: {
     handleMinus() {
       if (this.pageNum <= 1) {
         return;
       }
-      this.pageNum -= 1;
+      this.$store.commit("workplace/BOARD_NUMBER_DECREASE");
     },
     handleAdd() {
       if (this.pageNum === this.pageTotal) {
         return;
       }
-      this.pageNum += 1;
+      this.$store.commit("workplace/BOARD_NUMBER_INCREASE");
     }
   }
 };

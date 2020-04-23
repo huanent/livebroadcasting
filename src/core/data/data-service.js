@@ -1,6 +1,7 @@
 /* eslint-disable*/
-import axios from "axios";
+/*import axios from "axios";*/
 
+const axios = window["axios"];
 import {
   createRoomMock,
   getMockIdleToken,
@@ -16,6 +17,13 @@ export const getIdleToken = function(userId) {
   } else {
     return axios.get("/freeToken?userId=" + userId);
   }
+};
+
+export const getClassByRoomID = function(roomId) {
+  return axios.get("/getClass?classId=1");
+};
+export const setClassByRoomID = function(body) {
+  return axios.post("/setClass", body);
 };
 export const createRoom = function(appid) {
   if (process.env.NODE_ENV === "development") {

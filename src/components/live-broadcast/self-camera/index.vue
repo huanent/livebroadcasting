@@ -20,7 +20,7 @@
     <div class="self-camera-footer">
       <div>
         <icon name="microphone" color="#0A818C" :size="18" />
-        <voice-intensity :intensity="0.6" />
+        <voice-intensity :intensity="0.8" />
       </div>
       <span>123</span>
     </div>
@@ -129,11 +129,11 @@ export default {
     justify-content: space-between;
     height: 32px;
     line-height: 32px;
-    padding: 30px 10px 6px 10px;
+    padding: 15px 10px 6px 10px;
     background: linear-gradient(
       0deg,
       rgba(0, 0, 0, 0.7) 0%,
-      rgba(0, 0, 0, 0.6) 35%,
+      rgba(0, 0, 0, 0.5) 35%,
       rgba(0, 0, 0, 0) 100%
     );
     > div {

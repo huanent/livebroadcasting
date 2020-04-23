@@ -10,6 +10,9 @@ import ZoomController from "./zoom-controller";
 import PageController from "./page-controller";
 export default {
   name: "WorkplaceFooter",
+  data() {
+    return {};
+  },
   components: {
     ZoomController,
     PageController

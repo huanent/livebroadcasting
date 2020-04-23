@@ -5,11 +5,10 @@
         class="tab-item"
         v-for="(item, i) in lables"
         :key="i"
+        @click="switchTab(i, item)"
         :class="{ 'tab-item-active': d_activeIndex === i }"
       >
-        <span @click="switchTab(i, item)" class="board-tab-title-container">{{
-          item
-        }}</span>
+        <span class="board-tab-title-container">{{ item }}</span>
         <span @click="onClose(i, item)" class="board-tab-icon-container">
           <icon class="board-tab-icon" name="times" :size="12"></icon>
         </span>

@@ -1,15 +1,18 @@
 import TRTC from "trtc-js-sdk";
-import { createRoom, enterRoom, getSdkAppId } from "../data/data-service";
+import {
+  createRoom,
+  enterRoom,
+  getClassByRoomID,
+  getSdkAppId
+} from "../data/data-service";
 
 import TIM from "tim-js-sdk";
 
 import COS from "cos-js-sdk-v5";
 window["COS"] = COS;
 
-import axios from "axios";
 import { liveBroadcastService } from "../../main";
 
-window["axios"] = axios;
 let TEduBoard = window["TEduBoard"];
 
 import store from "@/store";
@@ -17,6 +20,9 @@ import { Emitter } from "../emit";
 Emitter.on("split-change", () => {
   liveBroadcastService.activeBoard.resize();
 });
+
+const toUserId = "7";
+
 export class LiveBroadcastService {
   config;
   sdkAppId = getSdkAppId();
@@ -46,13 +52,78 @@ export class LiveBroadcastService {
   getActiveBoard() {
     return this.activeBoard;
   }
+  switchFile(fid) {
+    let activeBoard = this.getActiveBoard();
+    let info = activeBoard.getFileInfo(fid);
+    if (!info) return;
+    activeBoard.switchFile(
+      info.fid,
+      info.currentPageIndex,
+      info.currentPageStep
+    );
+    let scale = info.scale;
+    store.commit("workplace/BOARD_TOTAL_PAGE", info.pageCount);
+    store.commit("workplace/BOARD_NUMBER", info.currentPageIndex + 1);
+    store.commit("workplace/BOARD_SCALE", scale);
+  }
   setActiveBoard(activeBoard) {
     this.activeBoard = activeBoard;
   }
   resetBoard(activeBoard) {
     activeBoard.reset();
   }
-
+  async sendMessage(msg) {
+    let message = this.tim.createCustomMessage({
+      to: "7",
+      conversationType: TIM.TYPES.CONV_C2C,
+      payload: {
+        data: msg,
+        description: "",
+        extension: "TIM_TEXT"
+      }
+    });
+    this.tim.sendMessage(message).then(
+      () => {
+        return true;
+      },
+      () => {
+        // 同步失败
+      }
+    );
+  }
+  async initRoom() {
+    getClassByRoomID(this.roomId).then(res => {});
+    /*setTimeout(() => {
+      let grounpId = self.roomId;
+      tim
+        .getGroupProfile({
+          groupID: this.roomId,
+          groupCustomFieldFilter: []
+        })
+        .then(function(imResponse) {
+          console.log("--------------------");
+          console.log(imResponse.data.group);
+        })
+        .catch(function(imError) {
+             console.warn("getGroupProfile error:", imError); // 获取群详细资料失败的相关信息
+        });
+      tim
+        .createGroup({
+          type: TIM.TYPES.GRP_PRIVATE,
+          name: grounpId,
+          memberList: [{ userID: "7" }, { userID: "2" }] // 如果填写了 memberList，则必须填写 userID
+        })
+        .then(function(imResponse) {
+          // 创建成功
+          self.classGrounp = imResponse.data.group;
+          console.log("创建群成功--------");
+          console.log(imResponse.data.group); // 创建的群的资料
+        })
+        .catch(function(imError) {
+          console.warn("createGroup error:", imError);
+        });
+    }, 300);*/
+  }
   async initTim() {
     let options = {
       SDKAppID: this.sdkAppId
@@ -65,11 +136,12 @@ export class LiveBroadcastService {
     let token = this.TokenList["default"];
     let userId = token.id;
     let userSig = token.userSig;
+    let self = this;
     tim
       .login({ userID: userId, userSig: userSig })
-      .then(imResponse => {
-        console.log(imResponse.data); // 登录成功
+      .then(async res => {
         console.log("tim 登录成功");
+        await self.initRoom();
         this.initBoard();
         this.initBoardOptions();
       })
@@ -81,7 +153,6 @@ export class LiveBroadcastService {
   }
   initBoard() {
     const roomId = this.roomId;
-    const toUserId = "7";
     const sdkAppId = this.sdkAppId;
     let token = this.TokenList["default"];
     let userId = token.id;
@@ -100,7 +171,7 @@ export class LiveBroadcastService {
     let self = this;
     teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
       let message = this.tim.createCustomMessage({
-        to: toUserId,
+        to: "7",
         conversationType: TIM.TYPES.CONV_C2C,
         payload: {
           data: JSON.stringify(data),
@@ -108,10 +179,10 @@ export class LiveBroadcastService {
           extension: "TXWhiteBoardExt"
         }
       });
-      if (self.tim && self.tim.sendMessage instanceof Promise) {
+      if (self.tim) {
         self.tim.sendMessage(message).then(
           () => {
-            return;
+            return true;
           },
           () => {
             // 同步失败
@@ -120,12 +191,15 @@ export class LiveBroadcastService {
       }
     });
     this.activeBoard = teduBoard;
-    setTimeout(function() {
-      let fileListInfo = teduBoard.getFileInfoList();
-      store.commit("workplace/BOARD_PROFILES", fileListInfo);
-      let lastindex = fileListInfo.length - 1;
-      store.commit("workplace/BOARD_INDEX", lastindex);
-    }, 1000);
+
+    teduBoard.on(TEduBoard.EVENT.TEB_INIT, () => {
+      setTimeout(function() {
+        let fileListInfo = teduBoard.getFileInfoList();
+        store.commit("workplace/BOARD_PROFILES", fileListInfo);
+        let lastindex = fileListInfo.length - 1;
+        store.commit("workplace/BOARD_INDEX", lastindex);
+      }, 3000);
+    });
   }
   initBoardOptions() {
     // this.activeBoard.reset();
@@ -206,6 +280,7 @@ export class LiveBroadcastService {
             console.log("转码中，当前进度:" + res.progress + "%");
           } else if (status === "FINISHED") {
             console.log("转码完成");
+            debugger;
             this.activeBoard.addTranscodeFile({
               url: res.resultUrl,
               title: res.title,
