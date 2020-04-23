@@ -21,5 +21,6 @@
   "toolbar.recovery": "恢复",
   "toolbar.clear": "清空",
   "toolbar.add": "新建",
-  "toolbar.move": "移动"
+  "toolbar.move": "移动",
+  "toolbar.hand": "拖动"
 }

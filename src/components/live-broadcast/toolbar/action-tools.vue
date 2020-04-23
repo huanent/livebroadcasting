@@ -3,7 +3,12 @@
     <li
       v-for="(item, index) in toolslist2"
       :key="index"
-      :class="[{ toolactive: toolslistcurrent2 == index }]"
+      :class="[
+        {
+          toolactive: toolslistcurrent2 == index,
+          movetool: item.action == 'move'
+        }
+      ]"
       @mousedown="
         moveToolbar(item, $event);
         mousedownClass(index);
@@ -71,36 +76,6 @@ export default {
       this.toolslistcurrent2 = index;
     },
     moveToolbar(item, e) {
-      // if (item.action == "move") {
-      //   let odiv = this.$parent.$refs.toolbarul;
-      //   let disX = e.clientX - odiv.offsetLeft;
-      //   let disY = e.clientY - odiv.offsetTop;
-      //   document.onmousemove = e => {
-
-      //   document.onmouseup = e => {
-      //     // console.log(this.$parent.$parent.$el.offsetHeight);
-      //     // console.log(this.$parent);
-      //     let xOffset = this.$parent.$parent.$el.offsetWidth - e.clientX;
-      //     let yOffset = this.$parent.$parent.$el.offsetHeight - e.clientY;
-      //     if (e.clientX < 170) {
-      //       // this.$emit("changeSet", "50px");
-      //     } else {
-      //       // this.$emit("changeSet", "-170px");
-      //     }
-      //     if (
-      //       xOffset < 100 &&
-      //       xOffset > -50 &&
-      //       yOffset < 100 &&
-      //       yOffset > -100
-      //     ) {
-      //       this.$parent.$el.style.left = "";
-      //       this.$parent.$el.style.top = "";
-      //     }
-      //     document.onmousemove = null;
-      //     document.onmouseup = null;
-      //   };
-      // }
-
       if (item.action == "move") {
         let odiv = this.$parent.$refs.toolbarul;
         let disX = e.clientX - odiv.offsetLeft;
@@ -119,111 +94,6 @@ export default {
           let parentright = this.$parent.$parent.$el.getBoundingClientRect()
             .right;
           let parentheight = this.$parent.$parent.$el.offsetHeight;
-          // console.log(e.clientX, e.clientY);
-          //顶部判断
-          // if (reftop > parenttop) {
-          //   //加左侧判断
-          //   if (refleft > 0) {
-          //     //加右侧判断
-          //     if (refleft + 48 < parentright) {
-          //       //加底部判断
-          //       if (refbottom + 370 < parentbottom) {
-          //         console.log("正常");
-          //         let left = e.clientX - disX;
-          //         let top = e.clientY - disY;
-          //         odiv.style.left = left + "px";
-          //         odiv.style.top = top + "px";
-          //         return;
-          //       } else {
-          //         if (refleft > 0) {
-          //           if (refleft + 48 < parentright) {
-          //             console.log("到底了");
-          //             let left = e.clientX - disX;
-          //             let top = e.clientY - disY;
-          //             odiv.style.left = left + "px";
-          //             // odiv.style.top = "50%";
-          //             return;
-          //           } else {
-          //             console.log("到右下角");
-          //             let left = e.clientX - disX;
-          //             let top = e.clientY - disY;
-          //             odiv.style.left = parentright - 48 + "px";
-          //             odiv.style.top = parentbottom - refbottom - 30 + "px";
-          //             // odiv.style.top = "50%";
-          //             return;
-          //           }
-          //         } else {
-          //           console.log("到左下角");
-          //           let left = e.clientX - disX;
-          //           let top = e.clientY - disY;
-          //           odiv.style.left = 0 + "px";
-          //           odiv.style.top = parentbottom - refbottom - 30 + "px";
-          //           // odiv.style.top = "50%";
-          //           return;
-          //         }
-          //       }
-          //     }
-          //     if (refbottom + 370 < parentbottom) {
-          //       console.log("到右侧了");
-          //       let left = e.clientX - disX;
-          //       let top = e.clientY - disY;
-          //       odiv.style.left = parentright - 48 + "px";
-          //       odiv.style.top = top + "px";
-          //       return;
-          //     } else {
-          //       console.log("到右下角了");
-          //       // debugger;
-          //       let left = e.clientX - disX;
-          //       let top = e.clientY - disY;
-          //       odiv.style.left = parentright - 48 + "px";
-          //       odiv.style.top = parentbottom - refbottom - 30 + "px";
-          //       // odiv.style.top = "50%";
-          //       return;
-          //     }
-          //   } else {
-          //     if (refbottom + 370 < parentbottom) {
-          //       console.log("到左侧了");
-          //       let left = e.clientX - disX;
-          //       let top = e.clientY - disY;
-          //       odiv.style.left = 0 + "px";
-          //       odiv.style.top = top + "px";
-          //       return;
-          //     } else {
-          //       console.log("到左下角了");
-          //       // debugger;
-          //       let left = e.clientX - disX;
-          //       let top = e.clientY - disY;
-          //       odiv.style.left = 0 + "px";
-          //       odiv.style.top = parentbottom - refbottom - 30 + "px";
-          //       return;
-          //     }
-          //   }
-          // } else {
-          //   if (refleft > 0) {
-          //     if (refleft + 48 < parentright) {
-          //       console.log("到顶了");
-          //       let left = e.clientX - disX;
-          //       let top = e.clientY - disY;
-          //       odiv.style.left = left + "px";
-          //       odiv.style.top = 0 + "px";
-          //       return;
-          //     } else {
-          //       console.log("到右上角");
-          //       let left = e.clientX - disX;
-          //       let top = e.clientY - disY;
-          //       odiv.style.left = parentright - 48 + "px";
-          //       odiv.style.top = 0 + "px";
-          //       return;
-          //     }
-          //   } else {
-          //     console.log("到左上角");
-          //     let left = e.clientX - disX;
-          //     let top = e.clientY - disY;
-          //     odiv.style.left = 0 + "px";
-          //     odiv.style.top = 0 + "px";
-          //     return;
-          //   }
-          // }
 
           let left = e.clientX - disX;
           let top = e.clientY - disY;
@@ -327,6 +197,13 @@ export default {
   float: left;
   background-color: rgba(33, 35, 37, 0.8);
   color: white;
+  &:hover .movetool {
+    background-color: black;
+    box-shadow: 0 0 0 2px #b4b4b5 inset;
+    svg {
+      fill: rgb(255, 255, 255) !important;
+    }
+  }
   .tool-actived {
     background-color: black;
   }

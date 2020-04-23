@@ -1,5 +1,5 @@
 <template>
-  <div class="toolbar" ref="toolbarul">
+  <div class="toolbar" ref="toolbarul" @mousedown="moveToolbar($event)">
     <ul>
       <li
         v-for="(item, index) in toolslist"
@@ -129,6 +129,13 @@ export default {
           toolNum: 2,
           tips: this.$t("toolbar.eraser")
         }
+        // {
+        //   name: "hand",
+        //   size: 22,
+        //   tool: "hand",
+        //   toolNum: 12,
+        //   tips: this.$t("toolbar.hand")
+        // }
       ]
     };
   },
@@ -162,6 +169,82 @@ export default {
 
         return;
       }
+    },
+    moveToolbar(e) {
+      let odiv = this.$refs.toolbarul;
+      let disX = e.clientX - odiv.offsetLeft;
+      let disY = e.clientY - odiv.offsetTop;
+      document.onmousemove = e => {
+        let reftop = odiv.getBoundingClientRect().top;
+        let refbottom = odiv.getBoundingClientRect().bottom;
+        let refleft = odiv.getBoundingClientRect().left;
+        let refright = odiv.getBoundingClientRect().right;
+
+        let parenttop = this.$parent.$el.getBoundingClientRect().top;
+        let parentbottom = this.$parent.$el.getBoundingClientRect().bottom;
+        let parentleft = this.$parent.$el.getBoundingClientRect().left;
+        let parentright = this.$parent.$el.getBoundingClientRect().right;
+        let parentheight = this.$parent.$el.offsetHeight;
+
+        let left = e.clientX - disX;
+        let top = e.clientY - disY;
+        //边界判断
+        if (
+          reftop < parenttop ||
+          refbottom + 350 > parentbottom ||
+          refleft < 0 ||
+          refleft + 48 > parentright
+        ) {
+          //顶部判断
+          if (reftop < parenttop) {
+            let left = e.clientX - disX;
+            this.positionX = top;
+            this.positionY = left;
+            odiv.style.left = left + "px";
+            odiv.style.top = 5 + "px";
+          } else {
+            document.onmousemove = null;
+          }
+          //加底部判断
+          if (refbottom + 350 > parentbottom) {
+            let left = e.clientX - disX;
+            this.positionX = top;
+            this.positionY = left;
+            odiv.style.left = left + "px";
+            odiv.style.top = parentheight - 370 + "px";
+          } else {
+            document.onmousemove = null;
+          }
+          //加左侧判断
+          if (refleft < 0) {
+            let top = e.clientY - disY;
+            this.positionX = top;
+            this.positionY = left;
+            odiv.style.left = 5 + "px";
+            odiv.style.top = top + "px";
+          } else {
+            document.onmousemove = null;
+          }
+          //加右侧判断
+          if (refleft + 50 > parentright) {
+            let top = e.clientY - disY;
+            this.positionX = top;
+            this.positionY = left;
+            odiv.style.left = parentright - 55 + "px";
+            odiv.style.top = top + "px";
+          } else {
+            document.onmousemove = null;
+          }
+        } else {
+          // console.log("外部正常");
+          odiv.style.left = left + "px";
+          odiv.style.top = top + "px";
+        }
+      };
+      document.onmouseup = e => {
+        document.onmousemove = null;
+        document.onmouseup = null;
+      };
     }
   }
 };
@@ -175,6 +258,9 @@ export default {
   position: absolute;
   right: 50px;
   top: calc(50% - 185px);
+  &:hover {
+    cursor: move;
+  }
   > ul {
     box-sizing: content-box;
     position: absolute;
