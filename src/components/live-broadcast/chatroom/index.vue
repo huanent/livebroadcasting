@@ -13,6 +13,8 @@
 import ChatroomBody from "./chatroom-body";
 import ChatroomFooter from "./chatroom-footer";
 
+import { Emitter } from "../../../core/emit";
+
 export default {
   name: "Chatroom",
   data() {
@@ -32,7 +34,7 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
           payload: {
-            text: "消息内容"
+            data: "消息内容"
           },
           isTeacher: false
         },
@@ -50,7 +52,7 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
           payload: {
-            text:
+            data:
               "消息内,消息内容消息内容消息内容,消息内容消息内容消息内容,消息内容消息内容消息内容容"
           },
           isTeacher: true
@@ -69,7 +71,7 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
           payload: {
-            text:
+            data:
               "消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容"
           },
           isTeacher: false
@@ -88,7 +90,7 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
           payload: {
-            text:
+            data:
               "消息消息内容消息内容,消息内容消息内容,消息内容消息内容消息内容消息内容,消息内容消息内容内容"
           },
           isTeacher: true
@@ -107,7 +109,7 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
           payload: {
-            text: "消息内容"
+            data: "消息内容"
           },
           isTeacher: false
         },
@@ -125,7 +127,7 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
           payload: {
-            text:
+            data:
               "消息内,消息内容消息内容消息内容,消息内容消息内容消息内容,消息内容消息内容消息内容容"
           },
           isTeacher: true
@@ -144,7 +146,7 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
           payload: {
-            text:
+            data:
               "消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容"
           },
           isTeacher: false
@@ -163,7 +165,7 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
           payload: {
-            text:
+            data:
               "消息消息内容消息内容,消息内容消息内容,消息内容消息内容消息内容消息内容,消息内容消息内容内容"
           },
           isTeacher: true
@@ -182,7 +184,7 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
           payload: {
-            text: "消息内容"
+            data: "消息内容"
           },
           isTeacher: false
         },
@@ -200,7 +202,7 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
           payload: {
-            text:
+            data:
               "消息内,消息内容消息内容消息内容,消息内容消息内容消息内容,消息内容消息内容消息内容容"
           },
           isTeacher: true
@@ -219,7 +221,7 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
           payload: {
-            text:
+            data:
               "消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容消息内容"
           },
           isTeacher: false
@@ -238,13 +240,18 @@ export default {
           isRevoked: false,
           avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
           payload: {
-            text:
+            data:
               "消息消息内容消息内容,消息内容消息内容,消息内容消息内容消息内容消息内容,消息内容消息内容内容"
           },
           isTeacher: true
         }
       ]
     };
+  },
+  mounted() {
+    Emitter.on("TIM_CUSTOM_MESSAGE", msg => {
+      this.msgList.push(msg);
+    });
   },
   methods: {
     loadMore() {
@@ -270,7 +277,7 @@ export default {
         isRevoked: false,
         avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
         payload: {
-          text: msg
+          data: msg
         },
         isTeacher: true
       });

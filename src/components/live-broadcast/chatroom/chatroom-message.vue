@@ -22,7 +22,7 @@
       <div class="chatroom-msg-body">
         <div class="chatroom-msg__detail">
           <div class="chatroom-msg__inner">
-            {{ item.payload.text }}
+            {{ item.payload.data }}
           </div>
         </div>
       </div>
