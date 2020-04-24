@@ -29,9 +29,9 @@ export class LiveBroadcastService {
   mode = "live";
   clientList = {};
   TokenList = {};
-  roomId = "1234567890";
+  roomId = "98894785075365";
   activeBoard = null;
-  userId = "test";
+  userId = "jongwong";
   tim;
   async getUserSig(key) {
     if (!key) {
@@ -41,11 +41,10 @@ export class LiveBroadcastService {
       return this.TokenList[key];
     } else {
       let res = await enterRoom(this.userId, this.roomId);
-      if (res.data.success) {
-        let token = Object.assign({ isExpired: false }, res.data.model);
-        this.TokenList[key] = token;
-        return token;
-      }
+
+      let token = Object.assign({ isExpired: false }, res.data);
+      this.TokenList[key] = token;
+      return token;
     }
   }
 
@@ -90,39 +89,6 @@ export class LiveBroadcastService {
         // 同步失败
       }
     );
-  }
-  async initRoom() {
-    getClassByRoomID(this.roomId).then(res => {});
-    /*setTimeout(() => {
-      let grounpId = self.roomId;
-      tim
-        .getGroupProfile({
-          groupID: this.roomId,
-          groupCustomFieldFilter: []
-        })
-        .then(function(imResponse) {
-          console.log("--------------------");
-          console.log(imResponse.data.group);
-        })
-        .catch(function(imError) {
-             console.warn("getGroupProfile error:", imError); // 获取群详细资料失败的相关信息
-        });
-      tim
-        .createGroup({
-          type: TIM.TYPES.GRP_PRIVATE,
-          name: grounpId,
-          memberList: [{ userID: "7" }, { userID: "2" }] // 如果填写了 memberList，则必须填写 userID
-        })
-        .then(function(imResponse) {
-          // 创建成功
-          self.classGrounp = imResponse.data.group;
-          console.log("创建群成功--------");
-          console.log(imResponse.data.group); // 创建的群的资料
-        })
-        .catch(function(imError) {
-          console.warn("createGroup error:", imError);
-        });
-    }, 300);*/
   }
   async initTim() {
     let options = {
@@ -222,7 +188,7 @@ export class LiveBroadcastService {
   async init() {
     let res = await createRoom(this.userId);
     if (res && res.data.success) {
-      this.roomId = res.data.model.roomId;
+      /*   this.roomId = res.data.model.roomId;*/
       let token = await this.getUserSig("default");
       this.createClient("default", token.id, token.userSig);
       await this.joinroom();
@@ -280,7 +246,6 @@ export class LiveBroadcastService {
             console.log("转码中，当前进度:" + res.progress + "%");
           } else if (status === "FINISHED") {
             console.log("转码完成");
-            debugger;
             this.activeBoard.addTranscodeFile({
               url: res.resultUrl,
               title: res.title,
