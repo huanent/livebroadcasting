@@ -23,7 +23,7 @@ export default {
     return {
       rate: 0.5,
       max: 400,
-      min: 25
+      min: 100
     };
   },
   computed: {
