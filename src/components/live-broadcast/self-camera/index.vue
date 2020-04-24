@@ -37,15 +37,39 @@
       :append-to-body="true"
     >
       <div>
-        <el-select v-model="value" placeholder="请选择摄像设备">
-          <el-option
-            v-for="item in cameraDeviceList"
-            :key="item.deviceId"
-            :label="item.label"
-            :value="item.deviceId"
+        <div>
+          <el-select
+            v-model="activeCameraDevice"
+            placeholder="请选择视频输入设备"
           >
-          </el-option>
-        </el-select>
+            <el-option
+              v-for="item in cameraDeviceList"
+              :key="item.deviceId"
+              :label="item.label"
+              :value="item"
+            >
+            </el-option>
+          </el-select>
+        </div>
+        <div>
+          <el-select
+            v-model="activeMicrophonesDevice"
+            placeholder="请选择音频输入设备"
+          >
+            <el-option
+              v-for="item in microphonesDeviceList"
+              :key="item.deviceId"
+              :label="item.label"
+              :value="item"
+            >
+            </el-option>
+          </el-select>
+        </div>
+
+        <div>
+          <el-button @click="onDialogClose()">取 消</el-button>
+          <el-button type="primary" @click="onDialogSave()">确 定</el-button>
+        </div>
       </div>
     </el-dialog>
   </div>
@@ -62,7 +86,8 @@ export default {
       isVideoOpen: true,
       visibility: false,
       dialogVisible: false,
-      value: ""
+      activeCameraDevice: {},
+      activeMicrophonesDevice: {}
     };
   },
   components: {
@@ -77,6 +102,17 @@ export default {
     },
     cameraDeviceList() {
       return this.$store.state.workplace.cameraDeviceList;
+    },
+    microphonesDeviceList() {
+      return this.$store.state.workplace.microphonesDeviceList;
+    },
+    activeCamera() {
+      this.activeCameraDevice = this.$store.state.workplace.activeCamera;
+      return this.$store.state.workplace.activeCamera;
+    },
+    activeMicrophones() {
+      this.activeMicrophonesDevice = this.$store.state.workplace.activeMicrophones;
+      return this.activeMicrophonesDevice;
     }
   },
   mounted() {
@@ -116,6 +152,18 @@ export default {
       this.dialogVisible = true;
     },
     onDialogClose() {
+      this.dialogVisible = false;
+    },
+    onDialogSave() {
+      if (this.activeCameraDevice) {
+        this.$store.commit("workplace/ACTIVE_CAMERA", this.activeCameraDevice);
+      }
+      if (this.activeMicrophonesDevice) {
+        this.$store.commit(
+          "workplace/ACTIVE_MICROPHONES",
+          this.activeMicrophonesDevice
+        );
+      }
       this.dialogVisible = false;
     }
   }
