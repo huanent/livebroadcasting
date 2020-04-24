@@ -6,7 +6,10 @@ const state = {
   boardTotalPage: 1,
   boardNumber: 1,
   boardScale: 100,
-  cameraDeviceList: []
+  cameraDeviceList: [],
+  microphonesDeviceList: [],
+  activeCamera: {},
+  activeMicrophones: {}
 };
 
 const getters = {
@@ -27,6 +30,15 @@ const getters = {
   },
   cameraDeviceList: state => {
     return state.cameraDeviceList;
+  },
+  microphonesDeviceList: state => {
+    return state.microphonesDeviceList;
+  },
+  activeCamera: state => {
+    return state.activeCamera;
+  },
+  activeMicrophones: state => {
+    return state.activeMicrophones;
   }
 };
 
@@ -69,6 +81,17 @@ const mutations = {
   },
   CAMERA_DEVICE_LIST(state, list) {
     state.cameraDeviceList = list;
+  },
+  MICROPHONES_DEVICE_LIST(state, list) {
+    state.microphonesDeviceList = list;
+  },
+  ACTIVE_CAMERA(state, device) {
+    liveBroadcastService.setCamerasDevice(device.deviceId);
+    state.activeCamera = device;
+  },
+  ACTIVE_MICROPHONES(state, device) {
+    liveBroadcastService.setMicrophonesDevice(device.deviceId);
+    state.activeMicrophones = device;
   }
 };
 export default {

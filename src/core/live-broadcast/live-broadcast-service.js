@@ -33,6 +33,7 @@ export class LiveBroadcastService {
   activeBoard = null;
   userId = "jinrui";
   tim;
+  localStream;
   async getUserSig(key) {
     if (!key) {
       key = "default";
@@ -296,6 +297,23 @@ export class LiveBroadcastService {
       store.commit("workplace/CAMERA_DEVICE_LIST", devices);
     });
   }
+  async initMicrophonesDeviceList() {
+    TRTC.getMicrophones().then(devices => {
+      store.commit("workplace/MICROPHONES_DEVICE_LIST", devices);
+    });
+  }
+  async setCamerasDevice(deviceId) {
+    let localStream = this.localStream;
+    localStream.switchDevice("video", deviceId).then(() => {
+      return true;
+    });
+  }
+  async setMicrophonesDevice(deviceId) {
+    let localStream = this.localStream;
+    localStream.switchDevice("'audio'", deviceId).then(() => {
+      return true;
+    });
+  }
   getIndexByFid(fileListInfo, fid) {
     let result;
     fileListInfo.find((item, index) => {
@@ -321,6 +339,7 @@ export class LiveBroadcastService {
       .then(async () => {
         console.log("进房成功");
         await this.initCameraDeviceList();
+        await this.initMicrophonesDeviceList();
         const localStream = TRTC.createStream({
           userId,
           audio: true,
@@ -339,6 +358,7 @@ export class LiveBroadcastService {
               frameRate: 10, // 帧率
               bitrate: 400 // 比特率 kbpsy
             });
+            this.localStream = localStream;
             client
               .publish(localStream)
               .catch(error => {
