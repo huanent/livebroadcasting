@@ -19,9 +19,7 @@
         {
           'toolbar-item-active': activeTool && activeTool.name === item.name
         },
-        {
-          'toolbar-item-disabled': item.class
-        }
+        item.singleclass
       ]"
     >
       <el-tooltip effect="dark" :content="item.tips" placement="right">
@@ -92,7 +90,7 @@ export default {
           name: "hand",
           type: "switch",
           tips: this.$t("toolbar.hand"),
-          class: "toolbar-item-active"
+          singleclass: "toolbar-item-disabled"
         },
         {
           iconName: "undo",
@@ -195,7 +193,6 @@ export default {
           if (this.$store.state.workplace.boardScale > 100) {
             this.SET_TOOL_DRAG();
           }
-
           break;
       }
     }
@@ -254,6 +251,12 @@ export default {
     },
     toggerTool(item, index) {
       if (item.type === "switch") {
+        if (
+          item.name === "hand" &&
+          this.$store.state.workplace.boardScale <= 100
+        ) {
+          return;
+        }
         this.lastActiveSwitchTool = item;
       } else {
         setTimeout(() => {
@@ -285,12 +288,9 @@ export default {
         item.name == "hand" &&
         this.$store.state.workplace.boardScale <= 100
       ) {
-        this.$refs.toolbar.children[index].className +=
-          " toolbar-item-disabled";
-        console.log(this.$store.state.workplace.boardScale);
-        return;
+        item.singleclass = "toolbar-item-disabled";
       } else {
-        this.$refs.toolbar.children[index].className = "toolbar-item";
+        item.singleclass = "";
       }
     }
   }
