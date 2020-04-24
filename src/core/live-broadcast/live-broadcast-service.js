@@ -31,7 +31,7 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "98894785075365";
   activeBoard = null;
-  userId = "lgs";
+  userId = "jongwong";
   tim;
   async getUserSig(key) {
     if (!key) {
