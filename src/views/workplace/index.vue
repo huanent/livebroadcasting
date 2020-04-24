@@ -124,6 +124,9 @@ export default {
         }
       }
       this.showCameraPanel = !this.showCameraPanel;
+      setTimeout(function() {
+        Emitter.emit("split-change");
+      }, 300);
     }
   }
 };

@@ -63,6 +63,7 @@ const mutations = {
     state.textSize = num;
     liveBroadcastService.activeBoard.setTextSize(num);
   },
+
   CLEAR_BOARD() {
     liveBroadcastService.activeBoard.clear();
   },

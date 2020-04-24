@@ -1,244 +1,245 @@
 <template>
-  <div class="toolbar" ref="toolbarul" @mousedown="moveToolbar($event)">
-    <ul>
-      <li
+  <div
+    class="toolbar"
+    ref="toolbar"
+    :style="{
+      left: left + 'px',
+      top: top + 'px'
+    }"
+  >
+    <div>
+      <a
+        class="toolbar-item"
+        v-show="!hideTool"
         v-for="(item, index) in toolslist"
-        :key="index"
-        :class="[
-          item.fontawesome,
-          { toolactive: toolslistcurrent == item.tool }
-        ]"
-        @click.prevent="
-          addToolsClass(index, item);
-          showBox(item);
-          changeTool(item.toolNum);
-        "
+        @mousedown="moveToolbar($event, item)"
+        @click="toggerTool(item, index)"
+        :class="{
+          'toolbar-item-active': activeTool && activeTool.name === item.name
+        }"
       >
-        <el-popover
-          placement="left"
-          trigger="click"
-          :visible-arrow="false"
-          popper-class="popper"
-        >
-          <div v-show="shapeBoxIsshow">
-            <!-- 形状的面板 -->
-            <ShapeBox ref="shapeBox"></ShapeBox>
-          </div>
-          <div v-show="textBoxIsshow">
-            <!-- 字体选择面板 -->
-            <TextBox ref="textBox"></TextBox>
-          </div>
-          <a slot="reference"
-            ><icon :name="item.name" :size="item.size" color="#b4b4b5"
-          /></a>
-        </el-popover>
-        <span class="tool-hover">{{ item.tips }}</span>
-      </li>
-
-      <!-- 无面板工具 -->
-      <li
-        v-for="(item, index) in toolslistNotbox"
-        :key="item.tool"
-        :class="[
-          item.fontawesome,
-          { toolactive: toolslistcurrent == item.tool }
-        ]"
-        @click.prevent="
-          addToolsClass(index, item);
-          showBox(item);
-          changeTool(item.toolNum);
-        "
-      >
-        <el-popover
-          placement="left"
-          visible-arrow="false"
-          trigger="click"
-          :disabled="true"
-        >
-          <a slot="reference"
-            ><icon :name="item.name" :size="item.size" color="#b4b4b5"
-          /></a>
-        </el-popover>
-        <span class="tool-hover">{{ item.tips }}</span>
-      </li>
-
-      <!-- 可操作性工具 -->
-      <ActionTools
-        @mousedown="
-          shapeBoxIsshow ? true : false;
-          textBoxIsshow ? true : false;
-        "
-        @changeSet="fromchangeSet"
-      ></ActionTools>
-    </ul>
-
-    <!-- 形状的面板 -->
-    <!-- <div v-show="shapeBoxIsshow">
-      <ShapeBox ref="shapeBox"></ShapeBox>
-    </div> -->
-
-    <!-- 字体选择面板 -->
-    <!-- <div v-show="textBoxIsshow">
-      <TextBox ref="textBox"></TextBox>
-    </div> -->
+        <el-tooltip effect="dark" :content="item.tips" placement="right">
+          <el-popover
+            placement="left"
+            trigger="click"
+            :visible-arrow="false"
+            popper-class="popper"
+          >
+            <div v-show="item.name === 'pen'">
+              <!-- 形状的面板 -->
+              <ShapeBox ref="shapeBox"></ShapeBox>
+            </div>
+            <div v-show="item.name === 'text'">
+              <!-- 字体选择面板 -->
+              <TextBox ref="textBox"></TextBox>
+            </div>
+            <icon :name="item.iconName" :size="18" slot="reference"></icon>
+          </el-popover>
+        </el-tooltip>
+      </a>
+      <a class="toolbar-item" v-show="hideTool" @click="showTool">
+        <icon name="outdent" :size="18" style="transform: rotate(90deg)"></icon>
+      </a>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
-import ActionTools from "./action-tools";
 import ShapeBox from "./shape-box";
 import TextBox from "./text-box";
+import { Emitter } from "../../../core/emit";
 export default {
   name: "toolbar",
   data() {
     return {
-      shapeBoxIsshow: true,
-      textBoxIsshow: false,
-      toolHoverIsshow: true,
-
-      toolslistcurrent: "",
+      activeTool: undefined,
+      lastActiveSwitchTool: undefined,
+      hideTool: false,
+      toolHight: 0,
       toolslist: [
         {
+          iconName: "pen",
           name: "pen",
-          size: 18,
-          tool: "pen",
-          toolNum: 1,
+          type: "switch",
           tips: this.$t("toolbar.shape")
         },
         {
-          name: "text2",
-          size: 23,
-          tool: "text",
-          toolNum: 11,
+          iconName: "text2",
+          name: "text",
+          type: "switch",
           tips: this.$t("toolbar.text")
-        }
-      ],
-      toolslistNotbox: [
+        },
         {
-          name: "laserPen2",
+          iconName: "laserPen2",
           size: 21,
-          tool: "laserPen",
-          toolNum: 3,
+          type: "switch",
+          name: "laserPen",
           tips: this.$t("toolbar.laserPen")
         },
         {
-          name: "eraser4",
-          size: 19,
-          tool: "eraser",
-          toolNum: 2,
+          iconName: "eraser4",
+          name: "eraser",
+          type: "switch",
           tips: this.$t("toolbar.eraser")
+        },
+        {
+          iconName: "revoke3",
+          name: "revoke",
+          tips: this.$t("toolbar.revoke")
+        },
+        {
+          iconName: "recovery2",
+          name: "recovery",
+          tips: this.$t("toolbar.recovery")
+        },
+        {
+          iconName: "clear",
+          name: "clear",
+          tips: this.$t("toolbar.clear")
+        },
+        {
+          iconName: "add",
+          name: "add",
+          tips: this.$t("toolbar.add")
+        },
+        {
+          iconName: "move",
+          name: "move",
+          tips: this.$t("toolbar.move")
         }
-        // {
-        //   name: "hand",
-        //   size: 22,
-        //   tool: "hand",
-        //   toolNum: 12,
-        //   tips: this.$t("toolbar.hand")
-        // }
-      ]
+      ],
+      left: 0,
+      top: 0
     };
   },
   components: {
-    ActionTools,
     ShapeBox,
     TextBox
   },
+  mounted() {
+    this.activeTool = this.toolslist[0];
+    this.lastActiveSwitchTool = this.activeTool;
+    this.initToolBarPosition();
+    Emitter.on("split-change", () => {
+      let el = this.$refs.toolbar;
+      let parentEl = el.parentElement;
+      if (this.toolHight < el.clientHeight) {
+        this.toolHight = el.clientHeight;
+      }
+      if (this.toolHight > parentEl.clientHeight - 50) {
+        this.hideTool = true;
+        this.initToolBarPosition("bottom", true);
+      } else {
+        this.hideTool = false;
+        this.initToolBarPosition(null, true);
+      }
+    });
+  },
+  watch: {
+    "activeTool.name": function(name) {
+      switch (name) {
+        case "clear":
+          this.$confirm("此操作将清空所有记录, 是否继续?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+            .then(() => {
+              this.CLEAR_BOARD();
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+            })
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "已取消删除"
+              });
+            });
+          break;
+        case "revoke":
+          this.CAN_UNDO();
+          break;
+        case "recovery":
+          this.CAN_REDO();
+          break;
+        case "add":
+          this.ADD_BOARD();
+          break;
+      }
+    }
+  },
   methods: {
-    ...mapMutations("board", ["SET_TOOL_TYPE"]),
-    changeTool(toolNum) {
-      console.log(toolNum);
-      this.SET_TOOL_TYPE(toolNum);
+    ...mapMutations("board", [
+      "SET_TOOL_TYPE",
+      "CLEAR_BOARD",
+      "ADD_BOARD",
+      "CAN_REDO",
+      "CAN_UNDO"
+    ]),
+    showTool() {
+      this.hideTool = false;
+      this.initToolBarPosition("top", true);
     },
-    addToolsClass(index, item) {
-      this.toolslistcurrent = item.tool;
-    },
-    fromchangeSet(site) {
-      // this.$refs.shapeBox.$el.style.left = site;
-      // this.$refs.textBox.$el.style.left = site;
-    },
-    showBox(item) {
-      if (item.tool == "pen") {
-        this.shapeBoxIsshow = true;
-        this.textBoxIsshow = false;
-        return;
-      }
-      if (item.tool == "text") {
-        this.textBoxIsshow = true;
-        this.shapeBoxIsshow = false;
+    initToolBarPosition(type, leftFix) {
+      let el = this.$refs.toolbar;
+      if (el) {
+        let parentEl = el.parentElement;
+        let ph = parentEl.getBoundingClientRect().height;
+        let pw = parentEl.getBoundingClientRect().width;
+        let h = el.getBoundingClientRect().height;
+        let w = el.getBoundingClientRect().width;
+        this.top = ph / 2 - h / 2;
+        if (!leftFix) {
+          this.left = pw - w;
+        }
 
-        return;
+        if (this.toolHight < el.clientHeight) {
+          this.toolHight = el.clientHeight;
+        }
+        if (type === "bottom") {
+          this.top = ph - h;
+        }
+        if (type === "top") {
+          this.top = ph - this.toolHight;
+        }
       }
     },
-    moveToolbar(e) {
-      let odiv = this.$refs.toolbarul;
+    checkEdge(left, top) {
+      let odiv = this.$refs.toolbar;
+      let rect = odiv.getBoundingClientRect();
+      let w = rect.width;
+      let h = rect.height;
+      let prect = odiv.parentElement.getBoundingClientRect();
+      let pw = prect.width;
+      let ph = prect.height;
+      if (left < 0 || top < 0) return true;
+      if (left > 0 && left - pw + w >= 0) return true;
+      if (top > 0 && top - ph + h >= 0) return true;
+    },
+    toggerTool(item, index) {
+      if (item.type === "switch") {
+        this.lastActiveSwitchTool = item;
+      } else {
+        setTimeout(() => {
+          this.activeTool = this.lastActiveSwitchTool;
+        }, 300);
+      }
+      this.activeTool = item;
+    },
+    moveToolbar(e, tool) {
+      if (tool.name !== "move") return;
+      let odiv = this.$refs.toolbar;
       let disX = e.clientX - odiv.offsetLeft;
       let disY = e.clientY - odiv.offsetTop;
       document.onmousemove = e => {
-        let reftop = odiv.getBoundingClientRect().top;
-        let refbottom = odiv.getBoundingClientRect().bottom;
-        let refleft = odiv.getBoundingClientRect().left;
-        let refright = odiv.getBoundingClientRect().right;
-
-        let parenttop = this.$parent.$el.getBoundingClientRect().top;
-        let parentbottom = this.$parent.$el.getBoundingClientRect().bottom;
-        let parentleft = this.$parent.$el.getBoundingClientRect().left;
-        let parentright = this.$parent.$el.getBoundingClientRect().right;
-        let parentheight = this.$parent.$el.offsetHeight;
-
         let left = e.clientX - disX;
         let top = e.clientY - disY;
-        //边界判断
-        if (
-          reftop < parenttop ||
-          refbottom + 350 > parentbottom ||
-          refleft < 0 ||
-          refleft + 48 > parentright
-        ) {
-          //顶部判断
-          if (reftop < parenttop) {
-            let left = e.clientX - disX;
-            this.positionX = top;
-            this.positionY = left;
-            odiv.style.left = left + "px";
-            odiv.style.top = 5 + "px";
-          } else {
-            document.onmousemove = null;
-          }
-          //加底部判断
-          if (refbottom + 350 > parentbottom) {
-            let left = e.clientX - disX;
-            this.positionX = top;
-            this.positionY = left;
-            odiv.style.left = left + "px";
-            odiv.style.top = parentheight - 370 + "px";
-          } else {
-            document.onmousemove = null;
-          }
-          //加左侧判断
-          if (refleft < 0) {
-            let top = e.clientY - disY;
-            this.positionX = top;
-            this.positionY = left;
-            odiv.style.left = 5 + "px";
-            odiv.style.top = top + "px";
-          } else {
-            document.onmousemove = null;
-          }
-          //加右侧判断
-          if (refleft + 50 > parentright) {
-            let top = e.clientY - disY;
-            this.positionX = top;
-            this.positionY = left;
-            odiv.style.left = parentright - 55 + "px";
-            odiv.style.top = top + "px";
-          } else {
-            document.onmousemove = null;
-          }
-        } else {
-          // console.log("外部正常");
-          odiv.style.left = left + "px";
-          odiv.style.top = top + "px";
+        if (!this.checkEdge(left, top)) {
+          this.left = left;
+          this.top = top;
         }
       };
       document.onmouseup = e => {
@@ -250,73 +251,28 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.svg-bold {
-  font-weight: 100;
-}
 .toolbar {
   z-index: 999;
+  width: 2rem;
+  color: #eee;
+  background-color: rgba(48, 49, 51, 0.79);
   position: absolute;
-  right: 50px;
-  top: calc(50% - 185px);
-  &:hover {
-    cursor: move;
-  }
-  > ul {
-    box-sizing: content-box;
-    position: absolute;
-    width: 50px;
-    float: left;
-    background-color: rgba(33, 35, 37, 0.8);
-    color: white;
-    .tool-actived {
-      background-color: black;
-    }
-    > li:nth-child(1) {
-      margin-top: 10px;
-    }
-    > li {
-      position: relative;
-      width: 30px;
-      height: 30px;
-      line-height: 28px;
-      padding: 0;
-      margin-bottom: 10px;
-      margin-left: 10px;
-      margin-right: 10px;
-      cursor: pointer;
-      text-align: center;
-      &:hover .tool-hover {
-        visibility: visible;
-      }
-      &:hover {
-        cursor: pointer;
-        background-color: black;
-      }
-      &:hover svg {
-        fill: rgb(255, 255, 255) !important;
-      }
-    }
-  }
+  padding: 0.3rem 0;
+  text-align: center;
 }
-.toolactive {
-  background-color: black;
-  box-shadow: 0 0 0 2px #b4b4b5 inset;
-  svg {
-    fill: rgb(255, 255, 255) !important;
-  }
+/deep/ .svg-icon {
+  padding: 0.4rem;
+  fill: #eee !important;
 }
-.tool-hover {
-  visibility: hidden;
-  transition: all 0.15s ease;
-  position: absolute;
-  top: 5px;
-  left: 40px;
-  white-space: nowrap;
-  padding: 2px 6px;
-  height: 20px;
-  line-height: 20px;
-  font-size: 12px;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.8);
+.toolbar-item {
+  display: inline-block;
+  margin: 0 auto;
+  width: 100%;
+}
+.toolbar-item:hover {
+  background-color: rgba(0, 0, 0, 0.43);
+}
+.toolbar-item-active {
+  background-color: rgba(0, 0, 0, 0.43);
 }
 </style>
