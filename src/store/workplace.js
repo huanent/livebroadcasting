@@ -1,3 +1,5 @@
+import { liveBroadcastService } from "@/main";
+
 const state = {
   activeBoardIndex: 0,
   boardProfiles: [],
@@ -24,8 +26,8 @@ const getters = {
     return state.boardScale;
   },
   cameraDeviceList: state => {
-  return state.cameraDeviceList;
-},
+    return state.cameraDeviceList;
+  }
 };
 
 const mutations = {
@@ -66,7 +68,7 @@ const mutations = {
     liveBroadcastService.getActiveBoard().resize();
   },
   CAMERA_DEVICE_LIST(state, list) {
-    state.cameraDeviceList = list
+    state.cameraDeviceList = list;
   }
 };
 export default {
