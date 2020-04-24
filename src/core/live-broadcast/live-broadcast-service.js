@@ -73,8 +73,8 @@ export class LiveBroadcastService {
   }
   async sendMessage(msg) {
     let message = this.tim.createCustomMessage({
-      to: "7",
-      conversationType: TIM.TYPES.CONV_C2C,
+      to: this.roomId,
+      conversationType: TIM.TYPES.CONV_GROUP,
       payload: {
         data: msg,
         description: "",
@@ -110,6 +110,16 @@ export class LiveBroadcastService {
         await self.initRoom();
         this.initBoard();
         this.initBoardOptions();
+        tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
+          e.data.forEach(item => {
+            let data = item.payload.data;
+            if (data && item.payload.extension === "TXWhiteBoardExt") {
+              teduBoard.addSyncData(data);
+            } else {
+              Emitter.emit("TIM_CUSTOM_MESSAGE", item);
+            }
+          });
+        });
       })
       .catch(imError => {
         console.warn("login error:", imError); // 登录失败的相关信息
@@ -137,8 +147,8 @@ export class LiveBroadcastService {
     let self = this;
     teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
       let message = this.tim.createCustomMessage({
-        to: "7",
-        conversationType: TIM.TYPES.CONV_C2C,
+        to: this.roomId,
+        conversationType: TIM.TYPES.CONV_GROUP,
         payload: {
           data: JSON.stringify(data),
           description: "",

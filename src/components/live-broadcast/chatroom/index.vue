@@ -251,6 +251,7 @@ export default {
   mounted() {
     Emitter.on("TIM_CUSTOM_MESSAGE", msg => {
       this.msgList.push(msg);
+      this.$refs["chatroom-body"].scrollToBottom();
     });
   },
   methods: {
@@ -262,7 +263,8 @@ export default {
       // this.$refs["chatroom-body"].scrollToCurrent(currentScrollHeight);
       this.$refs["chatroom-body"].scrollToBottom();
     },
-    sendMessage(msg) {
+    async sendMessage(msg) {
+      await liveBroadcastService.sendMessage(msg);
       this.msgList.push({
         ID: Math.ceil(Math.random() * 10000),
         type: "TIM.TYPES.MSG_TEXT",
