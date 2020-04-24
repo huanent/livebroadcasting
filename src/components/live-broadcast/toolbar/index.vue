@@ -195,6 +195,11 @@ export default {
           }
           break;
       }
+    },
+    "$store.state.workplace.boardScale": function() {
+      if (this.$store.state.workplace.boardScale <= 100) {
+        this.activeTool = this.toolslist[0];
+      }
     }
   },
   methods: {

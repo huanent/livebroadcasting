@@ -45,23 +45,19 @@ export default {
       toolitems: [
         {
           name: "line2",
-          shape: "line",
-          toolNum: 4
+          shape: "line"
         },
         {
           name: "curve2",
-          shape: "curve",
-          toolNum: ""
+          shape: "curve"
         },
         {
           name: "circle",
-          shape: "circle",
-          toolNum: 5
+          shape: "circle"
         },
         {
           name: "rectangle",
-          shape: "rectangle",
-          toolNum: 6
+          shape: "rectangle"
         }
       ]
     };
@@ -82,19 +78,15 @@ export default {
     addToolitemClass(index, item) {
       this.toolitemscurrent = item.shape;
       if (item.shape == "line") {
-        console.log("选择了直线");
         this.SET_TOOL_LINE();
       }
       if (item.shape == "curve") {
-        console.log("选择了曲线");
         this.SET_TOOL_PEN();
       }
       if (item.shape == "circle") {
-        console.log("选择了圆形");
         this.SET_TOOL_OVAL();
       }
       if (item.shape == "rectangle") {
-        console.log("选择了矩形");
         this.SET_TOOL_RECT();
       }
     },
