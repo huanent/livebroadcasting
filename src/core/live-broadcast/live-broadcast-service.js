@@ -291,6 +291,11 @@ export class LiveBroadcastService {
       this.activeBoard.deleteFile(file.fid);
     });
   }
+  async initCameraDeviceList() {
+    TRTC.getCameras().then(devices => {
+      store.commit("workplace/CAMERA_DEVICE_LIST", devices);
+    });
+  }
   getIndexByFid(fileListInfo, fid) {
     let result;
     fileListInfo.find((item, index) => {
@@ -313,8 +318,9 @@ export class LiveBroadcastService {
       .catch(error => {
         console.error("进房失败 " + error);
       })
-      .then(() => {
+      .then(async () => {
         console.log("进房成功");
+        await this.initCameraDeviceList();
         const localStream = TRTC.createStream({
           userId,
           audio: true,

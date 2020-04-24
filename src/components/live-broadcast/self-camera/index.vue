@@ -15,6 +15,9 @@
           :size="20"
         />
       </div>
+      <a @click.stop="onOpenSetting()">
+        <icon name="settings" size="16" class="camera-setting"></icon>
+      </a>
     </div>
     <div id="local_video" ref="video"></div>
     <div class="self-camera-footer">
@@ -22,8 +25,29 @@
         <icon name="microphone" color="#0A818C" :size="18" />
         <voice-intensity :intensity="0.8" />
       </div>
-      <span>123</span>
+      <!--      <span>
+        username
+      </span>-->
     </div>
+    <el-dialog
+      title="设置"
+      :visible.sync="dialogVisible"
+      width="40%"
+      :before-close="onDialogClose"
+      :append-to-body="true"
+    >
+      <div>
+        <el-select v-model="value" placeholder="请选择摄像设备">
+          <el-option
+            v-for="item in cameraDeviceList"
+            :key="item.deviceId"
+            :label="item.label"
+            :value="item.deviceId"
+          >
+          </el-option>
+        </el-select>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -36,7 +60,9 @@ export default {
     return {
       isMicroOpen: true,
       isVideoOpen: true,
-      visibility: false
+      visibility: false,
+      dialogVisible: false,
+      value: ""
     };
   },
   components: {
@@ -48,6 +74,9 @@ export default {
     },
     videoIcon() {
       return this.isVideoOpen ? "video" : "video-slash";
+    },
+    cameraDeviceList() {
+      return this.$store.state.workplace.cameraDeviceList;
     }
   },
   mounted() {
@@ -82,6 +111,12 @@ export default {
     },
     onVideoStateChange() {
       this.isVideoOpen = !this.isVideoOpen;
+    },
+    onOpenSetting() {
+      this.dialogVisible = true;
+    },
+    onDialogClose() {
+      this.dialogVisible = false;
     }
   }
 };
@@ -159,6 +194,25 @@ export default {
 }
 #local_video {
   height: 100%;
+
   width: 100%;
 }
+.camera-setting {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 10px;
+  fill: #979da7 !important;
+}
+.camera-setting:hover {
+  fill: #dcebeb !important;
+}
+
+/deep/ .el-dialog {
+  /* background: #212224;*/
+  min-height: 400px;
+}
+/*/deep/ .el-dialog__title {
+  color: white;
+}*/
 </style>
