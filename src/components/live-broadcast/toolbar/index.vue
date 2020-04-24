@@ -7,41 +7,45 @@
       top: top + 'px'
     }"
   >
-    <div>
-      <a
-        class="toolbar-item"
-        v-show="!hideTool"
-        v-for="(item, index) in toolslist"
-        @mousedown="moveToolbar($event, item)"
-        @click="toggerTool(item, index)"
-        :key="index"
-        :class="{
+    <a
+      class="toolbar-item"
+      v-show="!hideTool"
+      v-for="(item, index) in toolslist"
+      @mouseenter="judgeScale(item, index)"
+      @mousedown="moveToolbar($event, item)"
+      @click="toggerTool(item, index)"
+      :key="index"
+      :class="[
+        {
           'toolbar-item-active': activeTool && activeTool.name === item.name
-        }"
-      >
-        <el-tooltip effect="dark" :content="item.tips" placement="right">
-          <el-popover
-            placement="left"
-            trigger="click"
-            :visible-arrow="false"
-            popper-class="popper"
-          >
-            <div v-show="item.name === 'pen'">
-              <!-- 形状的面板 -->
-              <ShapeBox ref="shapeBox"></ShapeBox>
-            </div>
-            <div v-show="item.name === 'text'">
-              <!-- 字体选择面板 -->
-              <TextBox ref="textBox"></TextBox>
-            </div>
-            <icon :name="item.iconName" :size="18" slot="reference"></icon>
-          </el-popover>
-        </el-tooltip>
-      </a>
-      <a class="toolbar-item" v-show="hideTool" @click="showTool">
-        <icon name="outdent" :size="18" style="transform: rotate(90deg)"></icon>
-      </a>
-    </div>
+        },
+        {
+          'toolbar-item-disabled': item.class
+        }
+      ]"
+    >
+      <el-tooltip effect="dark" :content="item.tips" placement="right">
+        <el-popover
+          placement="left"
+          trigger="click"
+          :visible-arrow="false"
+          popper-class="popper"
+        >
+          <div v-show="item.name === 'pen'">
+            <!-- 形状的面板 -->
+            <ShapeBox ref="shapeBox"></ShapeBox>
+          </div>
+          <div v-show="item.name === 'text'">
+            <!-- 字体选择面板 -->
+            <TextBox ref="textBox"></TextBox>
+          </div>
+          <icon :name="item.iconName" :size="18" slot="reference"></icon>
+        </el-popover>
+      </el-tooltip>
+    </a>
+    <a class="toolbar-item" v-show="hideTool" @click="showTool">
+      <icon name="outdent" :size="18" style="transform: rotate(90deg)"></icon>
+    </a>
   </div>
 </template>
 
@@ -87,7 +91,8 @@ export default {
           iconName: "hand",
           name: "hand",
           type: "switch",
-          tips: this.$t("toolbar.hand")
+          tips: this.$t("toolbar.hand"),
+          class: "toolbar-item-active"
         },
         {
           iconName: "undo",
@@ -187,7 +192,10 @@ export default {
           this.SET_TOOL_ERASER();
           break;
         case "hand":
-          this.SET_TOOL_DRAG();
+          if (this.$store.state.workplace.boardScale > 100) {
+            this.SET_TOOL_DRAG();
+          }
+
           break;
       }
     }
@@ -271,6 +279,19 @@ export default {
         document.onmousemove = null;
         document.onmouseup = null;
       };
+    },
+    judgeScale(item, index) {
+      if (
+        item.name == "hand" &&
+        this.$store.state.workplace.boardScale <= 100
+      ) {
+        this.$refs.toolbar.children[index].className +=
+          " toolbar-item-disabled";
+        console.log(this.$store.state.workplace.boardScale);
+        return;
+      } else {
+        this.$refs.toolbar.children[index].className = "toolbar-item";
+      }
     }
   }
 };
@@ -299,5 +320,8 @@ export default {
 }
 .toolbar-item-active {
   background-color: rgba(0, 0, 0, 0.43);
+}
+.toolbar-item-disabled svg {
+  cursor: not-allowed !important;
 }
 </style>

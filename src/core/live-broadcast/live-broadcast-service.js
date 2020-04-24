@@ -31,7 +31,7 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "98894785075365";
   activeBoard = null;
-  userId = "jongwong";
+  userId = "lgs";
   tim;
   async getUserSig(key) {
     if (!key) {
@@ -159,14 +159,14 @@ export class LiveBroadcastService {
     this.activeBoard = teduBoard;
 
     teduBoard.on(TEduBoard.EVENT.TEB_INIT, () => {
-      setTimeout(function() {
+      setTimeout(function () {
         let fileListInfo = teduBoard.getFileInfoList();
         store.commit("workplace/BOARD_PROFILES", fileListInfo);
         let lastindex = fileListInfo.length - 1;
         store.commit("workplace/BOARD_INDEX", lastindex);
       }, 3000);
     });
-    self.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
+    self.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function (e) {
       e.data.forEach(item => {
         let data = item.payload.data;
         if (data && item.payload.extension === "TXWhiteBoardExt") {
@@ -263,7 +263,7 @@ export class LiveBroadcastService {
               resolution: res.resolution
             });
             let self = this;
-            setTimeout(function() {
+            setTimeout(function () {
               let fileListInfo = self.activeBoard.getFileInfoList();
               let id = self.activeBoard.getCurrentFile();
               let index = self.getIndexByFid(fileListInfo, id);
