@@ -30,20 +30,12 @@ body {
 .toolbar .el-popper,
 .el-popover {
   margin: 0;
-  margin-top: 40px;
+  margin-top: 2.5rem;
+  margin-left: 0.6rem;
   padding: 0;
   box-shadow: none;
   text-shadow: none;
   border: none;
   border-radius: inherit;
   background: rgba(0, 0, 0, 0);
-}
-
-.toolbar ul:hover .movetool {
-  background-color: black;
-  box-shadow: 0 0 0 2px #b4b4b5 inset;
-
-  svg {
-    fill: rgb(255, 255, 255) !important;
-  }
 }

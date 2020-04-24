@@ -48,12 +48,12 @@ export default {
 <style lang="scss" scoped>
 .text-box {
   text-align: center;
-  padding: 10px;
+  padding: 0.7rem;
   // position: absolute;
   // left: -170px;
   // top: 30px;
-  width: 150px;
-  background-color: rgba(33, 35, 37, 0.8);
+  width: 9.4rem;
+  background-color: rgba(33, 35, 37, 0.79);
   /deep/.el-color-picker__trigger {
     border: none;
   }

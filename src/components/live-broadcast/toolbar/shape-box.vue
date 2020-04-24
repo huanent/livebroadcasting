@@ -118,13 +118,13 @@ export default {
 }
 .shape-box {
   text-align: center;
-  padding: 10px;
+  padding: 0.7rem;
   margin-top: 0.6rem;
   // position: absolute;
   // left: -170px;
   // top: 0;
-  width: 150px;
-  background-color: rgba(33, 35, 37, 0.8);
+  width: 9.4rem;
+  background-color: rgba(48, 49, 51, 0.79);
   .shape-select {
     text-align: center;
     & :hover {
@@ -133,14 +133,15 @@ export default {
     li {
       text-align: center;
       float: left;
-      width: 18px;
-      height: 18px;
-      line-height: 18px;
-      padding: 3px 4px 5px 4px;
-      margin-bottom: 5px;
-      margin-top: 1px;
-      margin-left: 2px;
-      margin-right: 2px;
+      width: 1.1rem;
+      height: 1.1rem;
+      line-height: 1.1rem;
+      // padding: 3px 4px 5px 4px;
+      padding: 0.2rem 0.25rem 0.25rem 0.25rem;
+      /* margin-bottom: 5px; */
+      margin-top: 0.1rem;
+      margin-left: 0.15rem;
+      margin-right: 0.15rem;
       &:hover svg {
         fill: rgb(255, 255, 255) !important;
       }
@@ -153,8 +154,8 @@ export default {
     margin: 0;
   }
   /deep/.el-color-picker--mini .el-color-picker__trigger {
-    height: 27px;
-    width: 27px;
+    height: 1.7rem;
+    width: 1.7rem;
   }
 }
 .active {
