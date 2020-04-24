@@ -51,9 +51,38 @@ const mutations = {
     state.brushThin = num;
     liveBroadcastService.activeBoard.setBrushThin(num);
   },
-  SET_TOOL_TYPE(state, num) {
-    state.toolType = num;
-    liveBroadcastService.activeBoard.setToolType(num);
+  SET_TOOL_PEN(state) {
+    state.toolType = 1;
+    liveBroadcastService.activeBoard.setToolType(1);
+  },
+  SET_TOOL_TEXT(state) {
+    state.toolType = 11;
+    liveBroadcastService.activeBoard.setToolType(11);
+  },
+  SET_TOOL_LASERPEN(state) {
+    state.toolType = 3;
+    liveBroadcastService.activeBoard.setToolType(3);
+  },
+  SET_TOOL_ERASER(state) {
+    state.toolType = 2;
+    liveBroadcastService.activeBoard.setToolType(2);
+  },
+  SET_TOOL_LINE(state) {
+    state.toolType = 4;
+    liveBroadcastService.activeBoard.setToolType(4);
+  },
+  SET_TOOL_OVAL(state) {
+    state.toolType = 5;
+    liveBroadcastService.activeBoard.setToolType(5);
+  },
+  SET_TOOL_RECT(state) {
+    state.toolType = 6;
+    liveBroadcastService.activeBoard.setToolType(6);
+  },
+  // 拖动 zoom-drag
+  SET_TOOL_DRAG(state) {
+    state.toolType = 12;
+    liveBroadcastService.activeBoard.setToolType(12);
   },
   SET_TEXT_COLOR(state, color) {
     state.textColor = this.color;

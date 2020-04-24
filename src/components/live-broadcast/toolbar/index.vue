@@ -14,6 +14,7 @@
         v-for="(item, index) in toolslist"
         @mousedown="moveToolbar($event, item)"
         @click="toggerTool(item, index)"
+        :key="index"
         :class="{
           'toolbar-item-active': activeTool && activeTool.name === item.name
         }"
@@ -59,20 +60,19 @@ export default {
       toolHight: 0,
       toolslist: [
         {
-          iconName: "pen",
+          iconName: "pen4",
           name: "pen",
           type: "switch",
           tips: this.$t("toolbar.shape")
         },
         {
-          iconName: "text2",
+          iconName: "text3",
           name: "text",
           type: "switch",
           tips: this.$t("toolbar.text")
         },
         {
-          iconName: "laserPen2",
-          size: 21,
+          iconName: "laserPen3",
           type: "switch",
           name: "laserPen",
           tips: this.$t("toolbar.laserPen")
@@ -84,17 +84,23 @@ export default {
           tips: this.$t("toolbar.eraser")
         },
         {
-          iconName: "revoke3",
+          iconName: "hand",
+          name: "hand",
+          type: "switch",
+          tips: this.$t("toolbar.hand")
+        },
+        {
+          iconName: "undo",
           name: "revoke",
           tips: this.$t("toolbar.revoke")
         },
         {
-          iconName: "recovery2",
+          iconName: "redo",
           name: "recovery",
           tips: this.$t("toolbar.recovery")
         },
         {
-          iconName: "clear",
+          iconName: "clear3",
           name: "clear",
           tips: this.$t("toolbar.clear")
         },
@@ -104,7 +110,7 @@ export default {
           tips: this.$t("toolbar.add")
         },
         {
-          iconName: "move",
+          iconName: "move2",
           name: "move",
           tips: this.$t("toolbar.move")
         }
@@ -168,16 +174,35 @@ export default {
         case "add":
           this.ADD_BOARD();
           break;
+        case "pen":
+          this.SET_TOOL_PEN();
+          break;
+        case "text":
+          this.SET_TOOL_TEXT();
+          break;
+        case "laserPen":
+          this.SET_TOOL_LASERPEN();
+          break;
+        case "eraser":
+          this.SET_TOOL_ERASER();
+          break;
+        case "hand":
+          this.SET_TOOL_DRAG();
+          break;
       }
     }
   },
   methods: {
     ...mapMutations("board", [
-      "SET_TOOL_TYPE",
       "CLEAR_BOARD",
       "ADD_BOARD",
       "CAN_REDO",
-      "CAN_UNDO"
+      "CAN_UNDO",
+      "SET_TOOL_TEXT",
+      "SET_TOOL_PEN",
+      "SET_TOOL_LASERPEN",
+      "SET_TOOL_ERASER",
+      "SET_TOOL_DRAG"
     ]),
     showTool() {
       this.hideTool = false;

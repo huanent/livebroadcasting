@@ -17,8 +17,7 @@
           @click="addToolitemClass(index, item)"
         >
           <a
-            >{{ item.index
-            }}<icon :name="item.name" :size="item.size" color="#b4b4b5"
+            >{{ item.index }}<icon :name="item.name" :size="18" color="#b4b4b5"
           /></a>
         </li>
       </ul>
@@ -47,26 +46,22 @@ export default {
         {
           name: "line2",
           shape: "line",
-          toolNum: 4,
-          size: 18
+          toolNum: 4
         },
         {
           name: "curve2",
           shape: "curve",
-          toolNum: "",
-          size: 18
+          toolNum: ""
         },
         {
           name: "circle",
           shape: "circle",
-          toolNum: 5,
-          size: 18
+          toolNum: 5
         },
         {
           name: "rectangle",
           shape: "rectangle",
-          toolNum: 6,
-          size: 18
+          toolNum: 6
         }
       ]
     };
@@ -79,25 +74,28 @@ export default {
     ...mapMutations("board", [
       "SET_BRUSH_COLOR",
       "SET_BRUSH_THIN",
-      "SET_TOOL_TYPE"
+      "SET_TOOL_PEN",
+      "SET_TOOL_LINE",
+      "SET_TOOL_OVAL",
+      "SET_TOOL_RECT"
     ]),
     addToolitemClass(index, item) {
       this.toolitemscurrent = item.shape;
       if (item.shape == "line") {
         console.log("选择了直线");
-        this.SET_TOOL_TYPE(item.toolNum);
+        this.SET_TOOL_LINE();
       }
       if (item.shape == "curve") {
         console.log("选择了曲线");
-        this.SET_TOOL_TYPE(item.toolNum);
+        this.SET_TOOL_PEN();
       }
       if (item.shape == "circle") {
         console.log("选择了圆形");
-        this.SET_TOOL_TYPE(item.toolNum);
+        this.SET_TOOL_OVAL();
       }
       if (item.shape == "rectangle") {
         console.log("选择了矩形");
-        this.SET_TOOL_TYPE(item.toolNum);
+        this.SET_TOOL_RECT();
       }
     },
     onColorPicked(color) {
@@ -115,10 +113,13 @@ export default {
 .svg-bold {
   font-weight: 100;
 }
+.svg-icon {
+  padding: 0rem !important;
+}
 .shape-box {
   text-align: center;
   padding: 10px;
-  margin-top: 4px;
+  margin-top: 0.6rem;
   // position: absolute;
   // left: -170px;
   // top: 0;
@@ -132,10 +133,10 @@ export default {
     li {
       text-align: center;
       float: left;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      padding: 2px 3px 3px 3px;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+      padding: 3px 4px 5px 4px;
       margin-bottom: 5px;
       margin-top: 1px;
       margin-left: 2px;
