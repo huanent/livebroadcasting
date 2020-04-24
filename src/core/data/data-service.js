@@ -40,23 +40,7 @@ export const getSdkAppId = function() {
 };
 
 export const enterRoom = function(userId, roomId) {
-  return new Promise(resolve => {
-    getIdleToken(userId).then(res => {
-      resolve({
-        data: {
-          model: {
-            id: res.data.model["tx_user_id"],
-            userSig: res.data.model["tx_token"],
-            privateMapKey: Math.random() * 10
-          },
-          dataChange: false,
-          success: true,
-          messages: [],
-          fieldErrors: []
-        }
-      });
-    });
-  });
+  return axios.get(`/liveRoom/enter?userId=${userId}&classId=${roomId}`);
 };
 export const destroyRoom = function(roomId) {
   return new Promise(resolve => {
