@@ -31,6 +31,32 @@
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
         </div>
+        <div class="table-container">
+          <el-table
+            :data="tableData"
+            stripe=""
+            style="width: 100%"
+            empty-text="No data"
+          >
+            <el-table-column prop="filename" label="fileName">
+            </el-table-column>
+            <!-- <el-table-column k-attributes="label Label.createdTime">
+						<template slot-scope="scope">
+							<span>{{ scope.row.created_at | toTime }}</span>
+						</template>
+					</el-table-column> -->
+          </el-table>
+          <el-pagination
+            small=""
+            :page-size="pageSize"
+            :current-page="pageNum"
+            @current-change="pageChange"
+            layout="prev, pager, next"
+            :hide-on-single-page="true"
+            :total="total"
+          >
+          </el-pagination>
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="onCoursewareClose">取 消</el-button>
@@ -49,12 +75,26 @@ export default {
     return {
       dialogVisible: false,
       addFileVisible: false,
-      fileList: []
+      fileList: [],
+      pageSize: 0,
+      pageNum: 1,
+      total: 0,
+      tableData: []
     };
   },
   methods: {
+    pageChange(index) {
+      this.pageNum = index;
+      this.getCourseData(this.pageNum, this.pageSize);
+    },
+    getCourseData(pageNum, pageSize) {
+      this.axios.get("/courseFile/list").then(res => {
+        console.log(res);
+      });
+    },
     onCoursewareOpen() {
       this.dialogVisible = true;
+      this.getCourseData();
     },
     handleExceed(file) {
       console.log("文件超出");

@@ -9,7 +9,8 @@ const state = {
   cameraDeviceList: [],
   microphonesDeviceList: [],
   activeCamera: {},
-  activeMicrophones: {}
+  activeMicrophones: {},
+  remoteStreamList: []
 };
 
 const getters = {
@@ -39,6 +40,9 @@ const getters = {
   },
   activeMicrophones: state => {
     return state.activeMicrophones;
+  },
+  remoteStreamList: state => {
+    return state.remoteStreamList;
   }
 };
 
@@ -92,6 +96,18 @@ const mutations = {
   ACTIVE_MICROPHONES(state, device) {
     liveBroadcastService.setMicrophonesDevice(device.deviceId);
     state.activeMicrophones = device;
+  },
+  SET_REMOTE_STREAM_LIST(state, remoteStreamList) {
+    state.remoteStreamList = remoteStreamList;
+  },
+  ADD_REMOTE_STREAM(state, remoteStreamList) {
+    state.remoteStreamList.push(remoteStreamList);
+  },
+  REMOTE_STREAM_PLAY(state, id, elemetId) {
+    liveBroadcastService.remoteStreamPlay(id, elemetId);
+  },
+  async SEND_MESSAGE(msg) {
+    await liveBroadcastService.sendMessage(msg);
   }
 };
 export default {

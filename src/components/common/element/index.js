@@ -12,7 +12,10 @@ import {
   Popover,
   Upload,
   MessageBox,
-  Tooltip
+  Tooltip,
+  Table,
+  TableColumn,
+  Pagination
 } from "element-ui";
 const element = {
   install: function(Vue) {
@@ -29,6 +32,9 @@ const element = {
     Vue.use(Dialog);
     Vue.use(Upload);
     Vue.use(Tooltip);
+    Vue.use(Table);
+    Vue.use(TableColumn);
+    Vue.use(Pagination);
 
     Vue.prototype.$confirm = MessageBox.confirm;
   }

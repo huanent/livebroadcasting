@@ -264,7 +264,7 @@ export default {
       this.$refs["chatroom-body"].scrollToBottom();
     },
     async sendMessage(msg) {
-      await liveBroadcastService.sendMessage(msg);
+      await this.$store.commit("workplace/SEND_MESSAGE", msg);
       this.msgList.push({
         ID: Math.ceil(Math.random() * 10000),
         type: "TIM.TYPES.MSG_TEXT",
