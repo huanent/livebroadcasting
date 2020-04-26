@@ -18,6 +18,7 @@ let TEduBoard = window["TEduBoard"];
 
 import store from "@/store";
 import { Emitter } from "../emit";
+
 Emitter.on("split-change", () => {
   // if (resizeTimer) {
   //   return;
@@ -38,7 +39,7 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "98894785075365";
   activeBoard = null;
-  userId = "jinrui";
+  userId = "jongwong";
   tim;
   localStream;
   async getUserSig(key) {
@@ -378,5 +379,30 @@ export class LiveBroadcastService {
               });
           });
       });
+
+    client.on("stream-added", event => {
+      const remoteStream = event.stream;
+      console.log("远端流增加: " + remoteStream.getId());
+
+      //订阅远端流
+      client.subscribe(remoteStream);
+    });
+    client.on("stream-subscribed", event => {
+      const remoteStream = event.stream;
+      console.log("远端流订阅成功：" + remoteStream.getId());
+      remoteStream.play("remote-video-view-0");
+    });
+    // 监听‘stream-updated’事件
+    client.on("stream-updated", event => {
+      const remoteStream = event.stream;
+      console.log(
+        "remoteStream ID: " +
+          remoteStream.getId() +
+          " was updated hasAudio: " +
+          remoteStream.hasAudio() +
+          " hasVideo: " +
+          remoteStream.hasVideo()
+      );
+    });
   }
 }

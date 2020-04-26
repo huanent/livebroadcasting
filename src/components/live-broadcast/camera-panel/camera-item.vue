@@ -19,7 +19,11 @@
               <icon name="settings" size="16" class="camera-setting"></icon>
               </a>-->
     </div>
-    <!--<div id="local_video" ref="video"></div>-->
+    <div
+      :id="'remote-video-view-' + index"
+      ref="video"
+      class="remote-video-view"
+    ></div>
     <div class="self-camera-footer">
       <div>
         <icon name="microphone" color="#0A818C" :size="18" />
@@ -80,7 +84,10 @@ import VoiceIntensity from "../../live-broadcast/self-camera/voice-intensity";
 export default {
   name: "CameraItem",
   props: {
-    userName: {}
+    userName: {},
+    index: {
+      require: true
+    }
   },
   data() {
     return {
@@ -179,9 +186,8 @@ export default {
 .hide {
   visibility: hidden;
 }
-#local_video {
+.remote-video-view {
   height: 100%;
-
   width: 100%;
 }
 .camera-setting {

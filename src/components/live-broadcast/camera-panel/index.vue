@@ -15,7 +15,7 @@
         }"
       >
         <div
-          v-for="item in data"
+          v-for="(item, index) in data"
           :style="{
             height: perColumnHeight + 'px',
             width: perColumnWidth + 'px'
@@ -26,7 +26,7 @@
             :style="{ height: perColumnHeight + 'px' }"
             style="color: white;display: inline-block;width: 100%"
           >
-            <CameraItem :user-name="item"></CameraItem>
+            <CameraItem :user-name="item" :index="index"></CameraItem>
           </div>
         </div>
       </div>
