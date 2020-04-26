@@ -119,8 +119,8 @@ export default {
             parseFloat(list[2]) > 0 &&
             parseFloat(list[0]) / parseFloat(list[2]) < 0.01
           ) {
-            list[0] = "20%";
-            list[2] = "79.5%";
+            list[0] = "23.5%";
+            list[2] = "76%";
             document.getElementById(
               "workplace-panel-left"
             ).style.gridTemplateRows = list.join(" ");
@@ -163,7 +163,7 @@ export default {
 #workplace-panel-left {
   background: #1a1b1d;
   display: grid;
-  grid-template-rows: 20% 0.5% 79.5%;
+  grid-template-rows: 23.5% 0.5% 76%;
   height: calc(100vh - 2rem);
   width: 100%;
   div {

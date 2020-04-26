@@ -112,7 +112,7 @@ export default {
   background: #212224;
   margin: 10px 10px 5px;
   position: relative;
-  width: 300px;
+  width: calc(100% - 10px);
   height: calc(100% - 15px);
   .self-camera-mask {
     position: absolute;

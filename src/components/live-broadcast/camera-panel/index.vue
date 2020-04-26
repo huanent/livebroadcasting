@@ -14,11 +14,6 @@
           transform: 'translateX(' + translateX + 'px)'
         }"
       >
-        <!--      <CameraItem
-          v-for="(item, index) in cameraList"
-          :key="index"
-          :user-name="item"
-        ></CameraItem>-->
         <div
           v-for="item in data"
           :style="{
@@ -29,9 +24,9 @@
         >
           <div
             :style="{ height: perColumnHeight + 'px' }"
-            style="color: white;background-color: #393939;border: #0a818c solid 1px;display: inline-block;width: 100%"
+            style="color: white;display: inline-block;width: 100%"
           >
-            {{ item }}
+            <CameraItem :user-name="item"></CameraItem>
           </div>
         </div>
       </div>
@@ -58,29 +53,29 @@ export default {
       cameraList: ["1", "2", "3", "4", "5", "6"],
       translateX: 0,
       data: [
-        "1.png",
-        "2.png",
-        "3.png",
-        "4.png",
-        "5.png",
-        "6.png",
-        "7.png",
-        "8.png",
-        "9.png",
-        "10.png",
-        "11.png",
-        "12.png",
-        "13.png",
-        "14.png",
-        "15.png",
-        "16.png",
-        "17.png",
-        "18.png"
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18"
       ],
       perColumnHeight: 185,
       slidesPerColumn: 1,
       perColumnWidth: 400,
-      slidesPerView: 3
+      slidesPerView: 4
     };
   },
   mounted() {
@@ -152,7 +147,6 @@ export default {
 .camera-item-list {
   /*  overflow: scroll;*/
   transition: all 0.1s;
-  background-color: #8a8a8a;
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
@@ -175,7 +169,7 @@ export default {
     padding: 0.5rem;
     cursor: pointer;
     /deep/ .svg-icon {
-      padding: 0.2rem;
+      padding: 1rem;
       margin: 0 auto;
       fill: #979797 !important;
     }
