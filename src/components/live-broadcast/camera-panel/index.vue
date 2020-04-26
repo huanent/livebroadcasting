@@ -15,7 +15,7 @@
         }"
       >
         <div
-          v-for="(item, index) in data"
+          v-for="(item, index) in remoteStreamList"
           :style="{
             height: perColumnHeight + 'px',
             width: perColumnWidth + 'px'
@@ -26,7 +26,11 @@
             :style="{ height: perColumnHeight + 'px' }"
             style="color: white;display: inline-block;width: 100%"
           >
-            <CameraItem :user-name="item" :index="index"></CameraItem>
+            <CameraItem
+              :user-name="item.userId"
+              :stream-id="item.id"
+              @on-ready="play"
+            ></CameraItem>
           </div>
         </div>
       </div>
@@ -48,30 +52,8 @@ import { Emitter } from "../../../core/emit";
 export default {
   name: "CameraPanel",
   data() {
-    var self = this;
     return {
-      cameraList: ["1", "2", "3", "4", "5", "6"],
       translateX: 0,
-      data: [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18"
-      ],
       perColumnHeight: 185,
       slidesPerColumn: 1,
       perColumnWidth: 400,
@@ -82,6 +64,7 @@ export default {
     this.render();
     Emitter.on("split-change", () => {
       let el = this.$refs.swiper.parentElement;
+      if (!el) return;
       let slidesPerColumn = Math.floor(el.clientHeight / this.perColumnHeight);
       if (slidesPerColumn !== this.slidesPerColumn && slidesPerColumn >= 1) {
         this.slidesPerColumn = slidesPerColumn;
@@ -91,14 +74,20 @@ export default {
   },
   computed: {
     width() {
-      let temp = this.data.length / this.slidesPerColumn;
+      let temp = this.remoteStreamList.length / this.slidesPerColumn;
       return Math.ceil(temp) * this.perColumnWidth;
+    },
+    remoteStreamList() {
+      return this.$store.state.workplace.remoteStreamList;
     }
   },
   watch: {
     slidesPerColumn() {
       this.render();
     }
+  },
+  filters: {
+    format(value) {}
   },
   components: {
     CameraItem
@@ -108,6 +97,7 @@ export default {
   methods: {
     render() {
       let el = this.$refs.swiper;
+      if (!el) return;
       this.perColumnWidth = el.clientWidth / this.slidesPerView;
     },
     nextCtl() {
@@ -125,6 +115,9 @@ export default {
         return;
       }
       this.translateX = translateX;
+    },
+    play(e) {
+      this.$store.commit("workplace/REMOTE_STREAM_PLAY", e, e);
     }
   }
 };

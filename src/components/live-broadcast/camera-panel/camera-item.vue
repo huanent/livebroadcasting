@@ -19,11 +19,7 @@
               <icon name="settings" size="16" class="camera-setting"></icon>
               </a>-->
     </div>
-    <div
-      :id="'remote-video-view-' + index"
-      ref="video"
-      class="remote-video-view"
-    ></div>
+    <div :id="streamId" ref="video" class="remote-video-view"></div>
     <div class="self-camera-footer">
       <div>
         <icon name="microphone" color="#0A818C" :size="18" />
@@ -85,7 +81,7 @@ export default {
   name: "CameraItem",
   props: {
     userName: {},
-    index: {
+    streamId: {
       require: true
     }
   },
@@ -99,6 +95,14 @@ export default {
   methods: {
     onMicroStateChange() {},
     onVideoStateChange() {}
+  },
+  mounted() {
+    console.log("=============");
+    console.log(this.$refs.video);
+    console.log(this.streamId);
+    if (this.$refs.video) {
+      this.$emit("on-ready", this.streamId);
+    }
   },
   computed: {
     microIcon() {
