@@ -16,6 +16,14 @@
   "signup.avatar": "头像",
   "signup.tel": "电话",
   "signup.email": "邮箱",
+  "signup.usernameTips": "请填写用户名",
+  "signup.nicknameTips": "请填写昵称",
+  "signup.telTips": "请填写电话",
+  "signup.emailRightTips": "请填写正确的邮箱",
+  "signup.emailTips": "邮箱不能为空",
+  "signup.passwordTips": "请填写密码",
+  "signup.RepeatPasswordTips": "请再次填写密码",
+  "signup.sameTips": "两次密码不一致",
 
   "button.send": "发送",
 

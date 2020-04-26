@@ -8,8 +8,8 @@
         label-width="80px"
       >
         <el-form-item :label="$t('signup.avatar')">
-          <img v-if="poster.length > 0" :src="poster" width="60" height="60" />
-          <el-upload
+          <!-- <img v-if="poster.length > 0" :src="poster" width="60" height="60" /> -->
+          <!-- <el-upload
             v-else
             class="upload-demo"
             ref="upload"
@@ -20,26 +20,58 @@
             :with-credentials="true"
             :show-file-list="false"
             accept="image/*"
+            :on-remove="handleRemove"
           >
             <div class="avatar-add" slot="trigger">
               <icon name="add" :size="20" color="#0a818c"></icon>
-            </div>
-            <!-- <div slot="tip" class="el-upload__tip">
+            </div> -->
+          <!-- <div slot="tip" class="el-upload__tip">
               只能上传jpg/png文件，且不超过500kb
             </div> -->
+          <!-- </el-upload> -->
+          <el-upload
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :class="[
+              {
+                'head-upload': poster.length > 0
+              }
+            ]"
+            list-type="picture-card"
+            ref="upload"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove"
+            :auto-upload="false"
+            :on-change="onFileSelected"
+          >
+            <icon name="add" :size="20" color="#0a818c"></icon>
           </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt="" />
+          </el-dialog>
         </el-form-item>
         <el-form-item prop="username" :label="$t('signup.username')">
           <el-input v-model="signUpForm.username"></el-input>
         </el-form-item>
+        <el-form-item prop="nickname" :label="$t('signup.nickname')">
+          <el-input v-model="signUpForm.nickname"></el-input>
+        </el-form-item>
         <el-form-item prop="password" :label="$t('signup.password')">
           <el-input v-model="signUpForm.password" show-password></el-input>
         </el-form-item>
-        <el-form-item prop="password" :label="$t('signup.repeatPassword')">
+        <el-form-item
+          prop="repeatPassword"
+          :label="$t('signup.repeatPassword')"
+        >
           <el-input
             v-model="signUpForm.repeatPassword"
             show-password
           ></el-input>
+        </el-form-item>
+        <el-form-item prop="tel" :label="$t('signup.tel')">
+          <el-input v-model="signUpForm.tel"></el-input>
+        </el-form-item>
+        <el-form-item prop="email" :label="$t('signup.email')">
+          <el-input v-model="signUpForm.email"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit('signUpForm')">
@@ -55,13 +87,50 @@
 export default {
   name: "Login",
   data() {
+    var validateEmail = (rule, value, callback) => {
+      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+      if (!value) {
+        return callback(this.$t("signup.emailTips"));
+      }
+
+      if (mailReg.test(value)) {
+        callback();
+      } else {
+        callback(this.$t("signup.emailRightTips"));
+      }
+    };
+    var validatePassword = (rule, value, callback) => {
+      if (value === "") {
+        callback(this.$t("signup.passwordTips"));
+      } else {
+        if (this.signUpForm.repeatPassword !== "") {
+          this.$refs.signUpForm.validateField("validateRepeatPassword");
+        }
+        callback();
+      }
+    };
+    var validateRepeatPassword = (rule, value, callback) => {
+      if (value === "") {
+        callback(this.$t("signup.RepeatPasswordTips"));
+      } else if (value !== this.signUpForm.password) {
+        callback(this.$t("signup.sameTips"));
+      } else {
+        callback();
+      }
+    };
+
     return {
+      dialogImageUrl: "",
+      dialogVisible: false,
       poster: "",
       signUpForm: {
+        poster: "",
         username: "",
         nickname: "",
         password: "",
-        repeatPassword: ""
+        repeatPassword: "",
+        tel: "",
+        email: ""
       },
       rules: {
         username: [
@@ -70,18 +139,62 @@ export default {
             message: this.$t("signup.usernameTips"),
             trigger: "change"
           }
+        ],
+        nickname: [
+          {
+            required: true,
+            message: this.$t("signup.nicknameTips"),
+            trigger: "change"
+          }
+        ],
+        password: [
+          {
+            required: true,
+            validator: validatePassword,
+            trigger: "change"
+          }
+        ],
+        repeatPassword: [
+          {
+            required: true,
+            validator: validateRepeatPassword,
+            trigger: "change"
+          }
+        ],
+        tel: [
+          {
+            required: true,
+            message: this.$t("signup.telTips"),
+            trigger: "change"
+          }
+        ],
+        email: [
+          {
+            required: true,
+            validator: validateEmail,
+            trigger: "change"
+          }
         ]
       }
     };
   },
   created() {},
   methods: {
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.signUpForm.poster = this.poster;
           console.log(this.signUpForm);
         }
       });
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+      this.poster = "";
     },
     resetForm: function(formName) {
       this.$refs[formName].resetFields();
@@ -90,7 +203,6 @@ export default {
       const isIMAGE =
         file.raw.type === "image/jpeg" || file.raw.type === "image/png";
       const isLt1M = file.size / 1024 / 1024 < 1;
-
       if (!isIMAGE) {
         this.$message.error("只能上传jpg/png图片!");
         return false;
@@ -145,5 +257,31 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+/deep/ .el-upload-list__item {
+  display: none;
+}
+/deep/ .head-upload .el-upload {
+  display: none;
+}
+/deep/ .head-upload {
+  /deep/ .el-upload-list__item {
+    display: inline-block !important;
+  }
+}
+/deep/ .el-upload {
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  padding: 0;
+  svg {
+    position: relative;
+    left: 0px;
+    top: -45px;
+  }
+}
+/deep/ .el-upload-list--picture-card .el-upload-list__item {
+  width: 60px;
+  height: 60px;
 }
 </style>
