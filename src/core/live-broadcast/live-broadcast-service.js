@@ -14,11 +14,18 @@ window["COS"] = COS;
 import { liveBroadcastService } from "../../main";
 
 let TEduBoard = window["TEduBoard"];
+// let resizeTimer = null;
 
 import store from "@/store";
 import { Emitter } from "../emit";
 Emitter.on("split-change", () => {
+  // if (resizeTimer) {
+  //   return;
+  // }
+  // resizeTimer = setTimeout(() => {
   liveBroadcastService.activeBoard.resize();
+  //   resizeTimer = null;
+  // }, 100);
 });
 
 const toUserId = "7";
