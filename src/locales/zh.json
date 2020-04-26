@@ -9,6 +9,7 @@
   "login.successTips": "登录成功",
   "login.failedTips": "登录失败",
 
+  "signup": "注册",
   "signup.username": "用户名",
   "signup.nickname": "昵称",
   "signup.password": "密码",

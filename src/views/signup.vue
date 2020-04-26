@@ -8,40 +8,19 @@
         label-width="80px"
       >
         <el-form-item :label="$t('signup.avatar')">
-          <!-- <img v-if="poster.length > 0" :src="poster" width="60" height="60" /> -->
-          <!-- <el-upload
-            v-else
-            class="upload-demo"
-            ref="upload"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :on-change="onFileSelected"
-            :auto-upload="false"
-            :multiple="false"
-            :with-credentials="true"
-            :show-file-list="false"
-            accept="image/*"
-            :on-remove="handleRemove"
-          >
-            <div class="avatar-add" slot="trigger">
-              <icon name="add" :size="20" color="#0a818c"></icon>
-            </div> -->
-          <!-- <div slot="tip" class="el-upload__tip">
-              只能上传jpg/png文件，且不超过500kb
-            </div> -->
-          <!-- </el-upload> -->
           <el-upload
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="/api/headImage/upload"
             :class="[
               {
-                'head-upload': poster.length > 0
+                'head-upload': avatar.length > 0
               }
             ]"
             list-type="picture-card"
             ref="upload"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
-            :auto-upload="false"
             :on-change="onFileSelected"
+            :on-success="uploadSuccess"
             accept="image/*"
           >
             <icon name="add" :size="20" color="#0a818c"></icon>
@@ -76,7 +55,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit('signUpForm')">
-            {{ $t("login") }}
+            {{ $t("signup") }}
           </el-button>
         </el-form-item>
       </el-form>
@@ -86,7 +65,7 @@
 
 <script>
 export default {
-  name: "Login",
+  name: "Signup",
   data() {
     var validateEmail = (rule, value, callback) => {
       const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
@@ -123,9 +102,9 @@ export default {
     return {
       dialogImageUrl: "",
       dialogVisible: false,
-      poster: "",
+      avatar: "",
       signUpForm: {
-        poster: "",
+        avatar: "",
         username: "",
         nickname: "",
         password: "",
@@ -185,17 +164,40 @@ export default {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
+    uploadSuccess(response, file, fileList) {
+      console.log(response);
+      this.signUpForm.avatar = response.model.fullFilename;
+    },
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.signUpForm.poster = this.poster;
+          let formData = new FormData();
+          formData.append("username", this.signUpForm.username);
+          formData.append("nickname", this.signUpForm.nickname);
+          formData.append("password", this.signUpForm.password);
+          formData.append("tel", this.signUpForm.tel);
+          formData.append("email", this.signUpForm.email);
+          formData.append("avatar", this.signUpForm.avatar);
           console.log(this.signUpForm);
+          this.axios
+            .post("/user/signup", this.signUpForm)
+            .then(res => {
+              if (res.data.success) {
+                this.$message.success("注册成功");
+                // this.$refs[formName].resetFields();
+              } else {
+                this.$message.error(res.data.message);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
         }
       });
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
-      this.poster = "";
+      this.avatar = "";
     },
     resetForm: function(formName) {
       this.$refs[formName].resetFields();
@@ -218,7 +220,7 @@ export default {
         reader.addEventListener(
           "load",
           () => {
-            this.poster = reader.result;
+            this.avatar = reader.result;
           },
           false
         );
