@@ -20,12 +20,13 @@
       <div class="courseware-content">
         <div>
           <el-upload
-            class="upload-demo"
-            :limit="3"
-            action="#"
-            :on-change="handleChange"
+            action="/api/courseFile/upload"
             :file-list="fileList"
-            :http-request="requestUpload"
+            :limit="3"
+            :on-preview="onFilePreview"
+            :before-upload="beforeUpload"
+            ref="upload"
+            :before-remove="beforeRemove"
           >
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
@@ -55,12 +56,43 @@ export default {
     onCoursewareOpen() {
       this.dialogVisible = true;
     },
+    handleExceed(file) {
+      console.log("文件超出");
+    },
+    onFilePreview(file) {
+      window.open(
+        "http://livebroadcasting.jinrui.kooboo.site" + file.response.model.url,
+        "_blank"
+      );
+    },
     requestUpload() {},
     onCoursewareClose(done) {
       this.dialogVisible = false;
       if (done && done instanceof Function) {
         done();
       }
+    },
+    beforeRemove(file, fileList) {
+      var id = file.response.model.id;
+      let formData = new FormData();
+      formData.append("id", id);
+      this.axios.post("/courseFile/remove", formData).then(res => {
+        if (res.data.success) {
+          console.log("删除成功");
+        }
+      });
+    },
+    beforeUpload(file) {
+      var fileSize = file.size / 1024 / 1024;
+      const isLt100M = fileSize < 100;
+      const isLt0M = fileSize === 0;
+      if (!isLt100M) {
+        alert("文件不能超出100M");
+      }
+      if (isLt0M) {
+        alert("不能是空文件");
+      }
+      return isLt100M && !isLt0M;
     },
     async handleChange(file, fileList) {
       let rawFile = file.raw;

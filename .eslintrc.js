@@ -14,14 +14,14 @@ module.exports = {
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "error" : "warn",
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "warn",
-    "no-unused-vars": process.env.NODE_ENV === "production" ? "error" : "warn"
+    "no-unused-vars": "off"
   },
 
   overrides: [
     {
       files: [
-        '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)'
+        "**/__tests__/*.{j,t}s?(x)",
+        "**/tests/unit/**/*.spec.{j,t}s?(x)"
       ],
       env: {
         jest: true
