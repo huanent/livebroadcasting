@@ -42,6 +42,7 @@
             :on-remove="handleRemove"
             :auto-upload="false"
             :on-change="onFileSelected"
+            accept="image/*"
           >
             <icon name="add" :size="20" color="#0a818c"></icon>
           </el-upload>
@@ -268,6 +269,9 @@ export default {
   /deep/ .el-upload-list__item {
     display: inline-block !important;
   }
+}
+/deep/ .head-upload {
+  height: 60px;
 }
 /deep/ .el-upload {
   width: 60px;
