@@ -18,6 +18,8 @@ let TEduBoard = window["TEduBoard"];
 
 import store from "@/store";
 import { Emitter } from "../emit";
+import router from "../../router";
+
 Emitter.on("split-change", () => {
   // if (resizeTimer) {
   //   return;
@@ -38,9 +40,11 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "98894785075365";
   activeBoard = null;
-  userId = "jinrui";
+  userId = "jongwong";
   tim;
   localStream;
+  remoteStreamList = {};
+  remoteStreamListProfile = {};
   async getUserSig(key) {
     if (!key) {
       key = "default";
@@ -75,6 +79,12 @@ export class LiveBroadcastService {
   }
   setActiveBoard(activeBoard) {
     this.activeBoard = activeBoard;
+  }
+  remoteStreamPlay(id, elementID) {
+    let stream = this.remoteStreamList[id];
+    if (stream) {
+      stream.play(id, elementID);
+    }
   }
   resetBoard(activeBoard) {
     activeBoard.reset();
@@ -338,6 +348,7 @@ export class LiveBroadcastService {
     let token = this.TokenList["default"];
     let client = this.clientList["default"];
     let userId = token.id;
+    var self = this;
     client
       .join({ roomId: this.roomId })
       .catch(error => {
@@ -378,5 +389,55 @@ export class LiveBroadcastService {
               });
           });
       });
+
+    client.on("stream-added", event => {
+      const remoteStream = event.stream;
+      console.log("远端流增加: " + remoteStream.id_);
+      //订阅远端流
+      client.subscribe(remoteStream);
+    });
+    client.on("stream-subscribed", event => {
+      const remoteStream = event.stream;
+      console.log("远端流订阅成功：" + remoteStream.id_);
+      let profile = {
+        userId: remoteStream.userId_,
+        id: remoteStream.id_
+      };
+      self.remoteStreamList[remoteStream.id_] = remoteStream;
+      self.remoteStreamListProfile[remoteStream.id_] = profile;
+      let temp = [];
+      let keys = Object.keys(self.remoteStreamListProfile);
+      keys.forEach(item => {
+        temp.push(self.remoteStreamListProfile[item]);
+      });
+      store.commit("workplace/SET_REMOTE_STREAM_LIST", temp);
+    });
+    // 监听‘stream-updated’事件
+    client.on("stream-updated", event => {
+      const remoteStream = event.stream;
+      console.log(
+        "remoteStream ID: " +
+          remoteStream.getId() +
+          " was updated hasAudio: " +
+          remoteStream.hasAudio() +
+          " hasVideo: " +
+          remoteStream.hasVideo()
+      );
+    });
+    client.on("stream-removed", event => {
+      const remoteStream = event.stream;
+      if (self.remoteStreamList[remoteStream.id_]) {
+        delete self.remoteStreamList[remoteStream.id_];
+      }
+      if (self.remoteStreamListProfile[remoteStream.id_]) {
+        delete self.remoteStreamListProfile[remoteStream.id_];
+      }
+      let temp = [];
+      let keys = Object.keys(self.remoteStreamListProfile);
+      keys.forEach(item => {
+        temp.push(self.remoteStreamListProfile[item]);
+      });
+      store.commit("workplace/SET_REMOTE_STREAM_LIST", temp);
+    });
   }
 }

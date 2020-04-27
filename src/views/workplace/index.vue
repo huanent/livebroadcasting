@@ -9,6 +9,7 @@
         :class="{ 'workplace-panel-left-hide': !showCameraPanel }"
       >
         <div class="camera-panel">
+          <CameraPanel></CameraPanel>
           <div @click="toggleCameraPanel" class="camera-icon-box">
             <icon
               name="indent"
@@ -43,8 +44,10 @@ import WorkplacePanelHeader from "@c/live-broadcast/workplace-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
+import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { liveBroadcastService } from "../../main";
 import { Emitter } from "../../core/emit";
+
 export default {
   name: "workplace",
   data: function() {
@@ -59,7 +62,8 @@ export default {
     MainWorkplace,
     Chatroom,
     SelfCamera,
-    WorkplacePanelHeader
+    WorkplacePanelHeader,
+    CameraPanel
   },
   mounted() {
     const vm = this;
@@ -80,7 +84,7 @@ export default {
         //   element: document.querySelector("#gutter2-1")
         // }
       ],
-      onDrag: (direction, track) => {
+      onDrag: (direction, track, gridTemplateStyle) => {
         Emitter.emit("split-change");
       },
       onDragEnd: () => {
@@ -115,8 +119,8 @@ export default {
             parseFloat(list[2]) > 0 &&
             parseFloat(list[0]) / parseFloat(list[2]) < 0.01
           ) {
-            list[0] = "20%";
-            list[2] = "79.5%";
+            list[0] = "23.5%";
+            list[2] = "76%";
             document.getElementById(
               "workplace-panel-left"
             ).style.gridTemplateRows = list.join(" ");
@@ -134,26 +138,40 @@ export default {
 
 <style scoped lang="scss">
 .workplace-panel {
-  display: grid;
   height: 100vh;
-  grid-template-rows: 2rem auto;
+  margin: 0;
+  padding: 0;
+  /*  display: grid;
+  grid-template-rows: 2rem auto;*/
 }
 .workplace-header {
   background: #34363b;
+  width: 100%;
+  height: 2rem;
+  overflow: hidden;
+  & > * {
+    overflow: hidden;
+  }
 }
 .workplace-panel-content {
   display: grid;
   width: 100%;
   grid-template-columns: 79.5% 0.5% 20%;
   height: 100%;
+  overflow: hidden;
 }
 #workplace-panel-left {
   background: #1a1b1d;
   display: grid;
-  grid-template-rows: 20% 0.5% 79.5%;
+  grid-template-rows: 23.5% 0.5% 76%;
   height: calc(100vh - 2rem);
+  width: 100%;
   div {
     height: 100%;
+  }
+  overflow: hidden;
+  & > * {
+    overflow: hidden;
   }
 }
 #workplace-panel-right {
@@ -161,6 +179,11 @@ export default {
   display: grid;
   grid-template-rows: 23.5% 0.5% 75%;
   height: calc(100vh - 2rem);
+  width: 100%;
+  overflow: hidden;
+  & > * {
+    overflow: hidden;
+  }
 }
 
 #gutter {
