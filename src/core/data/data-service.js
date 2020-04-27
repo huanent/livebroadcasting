@@ -80,5 +80,13 @@ export const freedToken = function(id) {
   });
 };
 
+export const getCourseData = function(pageNum, pageSize, userId) {
+  return axios.get(
+    `/courseFile/list?pageNum=${pageNum}&pageSize=${pageSize}&userId=${userId}`
+  );
+};
+export const removeCourseFile = function(id) {
+  return axios.post("/courseFile/remove", { id });
+};
 window["initAllTokenData"] = initAllTokenData;
 window["freedToken"] = freedToken;

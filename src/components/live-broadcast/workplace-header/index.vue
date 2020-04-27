@@ -19,7 +19,7 @@
       <div class="courseware-content">
         <div>
           <el-upload
-            action="/api/courseFile/upload"
+            :action="'/api/courseFile/upload?userId=' + userId"
             :file-list="fileList"
             :limit="3"
             :on-preview="onFilePreview"
@@ -68,6 +68,10 @@
 <script>
 import { liveBroadcastService } from "../../../main";
 
+import {
+  getCourseData,
+  removeCourseFile
+} from "../../../core/data/data-service";
 export default {
   name: "WorkplaceHeader",
   data() {
@@ -78,28 +82,27 @@ export default {
       pageSize: 6,
       pageNum: 1,
       total: 0,
-      courseFileList: []
+      courseFileList: [],
+      userId: "jongwong-test"
     };
   },
   methods: {
     pageChange(index) {
       this.pageNum = index;
-      this.getCourseData(this.pageNum, this.pageSize);
+      this.getCourseData(this.pageNum, this.pageSize, this.userId);
     },
-    getCourseData(pageNum, pageSize) {
-      this.axios
-        .get(`/courseFile/list?pageNum=${pageNum}&pageSize=${pageSize}`)
-        .then(res => {
-          if (res.data.success) {
-            this.total = res.data.model.total;
-            this.courseFileList = res.data.model.list;
-            console.log(this.total, this.courseFileList);
-          }
-        });
+    getCourseData(pageNum, pageSize, userId) {
+      getCourseData(pageNum, pageSize, userId).then(res => {
+        if (res.data.success) {
+          this.total = res.data.model.total;
+          this.courseFileList = res.data.model.list;
+          console.log(this.total, this.courseFileList);
+        }
+      });
     },
     onCoursewareOpen() {
       this.dialogVisible = true;
-      this.getCourseData(this.pageNum, this.pageSize);
+      this.getCourseData(this.pageNum, this.pageSize, this.userId);
     },
     handleExceed(file) {
       console.log("文件超出");
@@ -119,9 +122,7 @@ export default {
     },
     beforeRemove(file, fileList) {
       var id = file.response.model.id;
-      let formData = new FormData();
-      formData.append("id", id);
-      this.axios.post("/courseFile/remove", formData).then(res => {
+      removeCourseFile(id).then(res => {
         if (res.data.success) {
           console.log("删除成功");
         }
