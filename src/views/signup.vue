@@ -21,7 +21,10 @@
             :on-remove="handleRemove"
             :on-change="onFileSelected"
             :on-success="uploadSuccess"
+            :before-upload="beforeUpload"
             accept="image/*"
+            :auto-upload="false"
+            :data="{ username: signUpForm.username }"
           >
             <icon name="add" :size="20" color="#0a818c"></icon>
           </el-upload>
@@ -171,21 +174,25 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let formData = new FormData();
-          formData.append("username", this.signUpForm.username);
-          formData.append("nickname", this.signUpForm.nickname);
-          formData.append("password", this.signUpForm.password);
-          formData.append("tel", this.signUpForm.tel);
-          formData.append("email", this.signUpForm.email);
-          formData.append("avatar", this.signUpForm.avatar);
-          console.log(this.signUpForm);
+          // let formData = new FormData();
+          // formData.append("username", this.signUpForm.username);
+          // formData.append("nickname", this.signUpForm.nickname);
+          // formData.append("password", this.signUpForm.password);
+          // formData.append("tel", this.signUpForm.tel);
+          // formData.append("email", this.signUpForm.email);
+          // formData.append("avatar", this.signUpForm.avatar);
+          // console.log(this.signUpForm);
           this.axios
             .post("/user/signup", this.signUpForm)
             .then(res => {
               if (res.data.success) {
-                this.$message.success("注册成功");
+                this.$refs.upload.submit();
+                this.$message.success(res.data.message);
                 // this.$refs[formName].resetFields();
               } else {
+                this.$refs.upload.clearFiles();
+                this.$refs[formName].resetFields();
+                this.avatar = "";
                 this.$message.error(res.data.message);
               }
             })
@@ -196,13 +203,15 @@ export default {
       });
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
       this.avatar = "";
     },
     resetForm: function(formName) {
       this.$refs[formName].resetFields();
     },
     onFileSelected(file, filelist) {
+      console.log("选择图片");
+      this.signUpForm.avatar = `user\\${this.signUpForm.username}\\avatar\\${file.name}`;
+      console.log(this.signUpForm.avatar);
       const isIMAGE =
         file.raw.type === "image/jpeg" || file.raw.type === "image/png";
       const isLt1M = file.size / 1024 / 1024 < 1;
@@ -226,6 +235,11 @@ export default {
         );
         reader.readAsDataURL(file.raw);
       }
+    },
+    beforeUpload(file) {
+      console.log("上传前");
+      this.signUpForm.avatar = `user\\${this.signUpForm.username}\\avatar\\${file.name}`;
+      console.log(this.signUpForm.avatar);
     }
   }
 };
@@ -264,16 +278,14 @@ export default {
 /deep/ .el-upload-list__item {
   display: none;
 }
-/deep/ .head-upload .el-upload {
-  display: none;
-}
 /deep/ .head-upload {
+  height: 60px;
   /deep/ .el-upload-list__item {
     display: inline-block !important;
   }
-}
-/deep/ .head-upload {
-  height: 60px;
+  /deep/ .el-upload {
+    display: none;
+  }
 }
 /deep/ .el-upload {
   width: 60px;
