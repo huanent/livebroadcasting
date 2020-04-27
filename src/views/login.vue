@@ -36,6 +36,11 @@
           <el-button type="primary" @click="onSubmit('loginForm')">
             {{ $t("login") }}
           </el-button>
+          <!-- <router-link to="signup" class="signup-button"> -->
+          <el-button type="primary" @click="signup">
+            {{ $t("signup") }}
+          </el-button>
+          <!-- </router-link> -->
         </el-form-item>
       </el-form>
     </div>
@@ -134,7 +139,7 @@ export default {
                   this.$router.push({ name: "Workplace" });
                 }
               } else {
-                this.$message.error(this.$t("login.failedTips"));
+                this.$message.error(res.data.message);
               }
             })
             .catch(err => {
@@ -142,6 +147,9 @@ export default {
             });
         }
       });
+    },
+    signup() {
+      this.$router.push({ path: "/signup" });
     },
     resetForm: function(formName) {
       this.$refs[formName].resetFields();

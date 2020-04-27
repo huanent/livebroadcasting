@@ -189,6 +189,7 @@ export default {
                 this.$refs.upload.submit();
                 this.$message.success(res.data.message);
                 // this.$refs[formName].resetFields();
+                this.$router.push({ path: "/login" });
               } else {
                 this.$refs.upload.clearFiles();
                 this.$refs[formName].resetFields();
