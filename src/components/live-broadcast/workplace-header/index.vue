@@ -13,7 +13,6 @@
     <el-dialog
       title="课件库"
       :visible.sync="dialogVisible"
-      width="70%"
       :before-close="onCoursewareClose"
       :append-to-body="true"
     >
@@ -33,7 +32,7 @@
         </div>
         <div class="table-container">
           <el-table
-            :data="tableData"
+            :data="courseFileList"
             stripe=""
             style="width: 100%"
             empty-text="No data"
@@ -76,10 +75,10 @@ export default {
       dialogVisible: false,
       addFileVisible: false,
       fileList: [],
-      pageSize: 0,
+      pageSize: 6,
       pageNum: 1,
       total: 0,
-      tableData: []
+      courseFileList: []
     };
   },
   methods: {
@@ -88,13 +87,19 @@ export default {
       this.getCourseData(this.pageNum, this.pageSize);
     },
     getCourseData(pageNum, pageSize) {
-      this.axios.get("/courseFile/list").then(res => {
-        console.log(res);
-      });
+      this.axios
+        .get(`/courseFile/list?pageNum=${pageNum}&pageSize=${pageSize}`)
+        .then(res => {
+          if (res.data.success) {
+            this.total = res.data.model.total;
+            this.courseFileList = res.data.model.list;
+            console.log(this.total, this.courseFileList);
+          }
+        });
     },
     onCoursewareOpen() {
       this.dialogVisible = true;
-      this.getCourseData();
+      this.getCourseData(this.pageNum, this.pageSize);
     },
     handleExceed(file) {
       console.log("文件超出");
