@@ -106,7 +106,7 @@ const mutations = {
   REMOTE_STREAM_PLAY(state, id, elemetId) {
     liveBroadcastService.remoteStreamPlay(id, elemetId);
   },
-  async SEND_MESSAGE(msg) {
+  async SEND_MESSAGE(state, msg) {
     await liveBroadcastService.sendMessage(msg);
   }
 };
