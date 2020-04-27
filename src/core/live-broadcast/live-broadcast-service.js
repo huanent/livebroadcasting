@@ -184,6 +184,10 @@ export class LiveBroadcastService {
         store.commit("workplace/BOARD_INDEX", lastindex);
       }, 3000);
     });
+    teduBoard.on(TEduBoard.EVENT.TEB_INIT, res => {
+      let lastindex = store.state.workplace.boardProfiles.length - 1;
+      store.commit("workplace/BOARD_INDEX", lastindex);
+    });
     self.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
       e.data.forEach(item => {
         let data = item.payload.data;
@@ -235,72 +239,24 @@ export class LiveBroadcastService {
     });
     return this.clientList[key];
   }
-  async addBoardFiles(file) {
-    if (/\.(bmp|jpg|jpeg|png|gif|webp|svg|psd|ai)/i.test(file.name)) {
-      this.activeBoard.addImageElement({
-        data: file,
-        userData: "image"
-      });
-    } else {
-      this.activeBoard.applyFileTranscode(
-        {
-          data: file,
-          userData: "123456"
-        },
-        {
-          minResolution: "960x540",
-          isStaticPPT: false,
-          thumbnailResolution: "200x200"
-        }
-      );
-      this.activeBoard.on(TEduBoard.EVENT.TEB_TRANSCODEPROGRESS, res => {
-        console.log(
-          "=======  TEB_TRANSCODEPROGRESS 转码进度：",
-          JSON.stringify(res)
-        );
-        if (res.code) {
-          console.log("转码失败code:" + res.code + " message:" + res.message);
-        } else {
-          let status = res.status;
-          if (status === "ERROR") {
-            console.log("转码失败");
-          } else if (status === "UPLOADING") {
-            console.log("上传中，当前进度:" + parseInt(res.progress) + "%");
-          } else if (status === "CREATED") {
-            console.log("创建转码任务");
-          } else if (status === "QUEUED") {
-            console.log("正在排队等待转码");
-          } else if (status === "PROCESSING") {
-            console.log("转码中，当前进度:" + res.progress + "%");
-          } else if (status === "FINISHED") {
-            console.log("转码完成");
-            this.activeBoard.addTranscodeFile({
-              url: res.resultUrl,
-              title: res.title,
-              pages: res.pages,
-              resolution: res.resolution
-            });
-            let self = this;
-            setTimeout(function() {
-              let fileListInfo = self.activeBoard.getFileInfoList();
-              let id = self.activeBoard.getCurrentFile();
-              let index = self.getIndexByFid(fileListInfo, id);
-              store.commit("workplace/BOARD_PROFILES", fileListInfo);
-              store.commit("workplace/BOARD_INDEX", index);
-            }, 1000);
-          }
-        }
-      });
-      this.activeBoard.on(TEduBoard.EVENT.TEB_INIT, res => {
-        console.log(res);
-        let lastindex = store.state.workplace.boardProfiles.length - 1;
-        store.commit("workplace/BOARD_INDEX", lastindex);
-      });
-    }
+  async addBoardFiles(resultUrl, title, pages, resolution) {
+    this.getActiveBoard().addTranscodeFile({
+      url: resultUrl,
+      title: title,
+      pages: pages,
+      resolution: resolution
+    });
+    this.getBoardFiles();
   }
-  addBoard() {
-    liveBroadcastService.activeBoard.addBoard();
-    store.commit("workplace/BOARD_INDEX", 0);
+  getBoardFiles() {
+    let self = this;
+    setTimeout(function() {
+      let fileListInfo = self.activeBoard.getFileInfoList();
+      let id = self.activeBoard.getCurrentFile();
+      let index = self.getIndexByFid(fileListInfo, id);
+      store.commit("workplace/BOARD_PROFILES", fileListInfo);
+      store.commit("workplace/BOARD_INDEX", index);
+    }, 3000);
   }
   clearAllBoardFiles() {
     let list = this.activeBoard.getFileInfoList();
@@ -343,6 +299,10 @@ export class LiveBroadcastService {
   deleteCurrentFile() {
     let id = this.activeBoard.getCurrentFile();
     this.activeBoard.deleteFile(id);
+  }
+  deleteBoardFile(fid) {
+    this.getActiveBoard().deleteFile(fid);
+    this.getBoardFiles();
   }
   async joinroom() {
     let token = this.TokenList["default"];

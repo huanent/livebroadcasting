@@ -15,7 +15,8 @@ import {
   Tooltip,
   Table,
   TableColumn,
-  Pagination
+  Pagination,
+  Progress
 } from "element-ui";
 const element = {
   install: function(Vue) {
@@ -35,7 +36,7 @@ const element = {
     Vue.use(Table);
     Vue.use(TableColumn);
     Vue.use(Pagination);
-
+    Vue.use(Progress);
     Vue.prototype.$confirm = MessageBox.confirm;
   }
 };

@@ -3,13 +3,13 @@
     <div class="board-tabs-header">
       <div
         class="tab-item"
-        v-for="(item, i) in lables"
+        v-for="(item, i) in datas"
         :key="i"
         @click="switchTab(i, item)"
         :class="{ 'tab-item-active': d_activeIndex === i }"
       >
-        <span class="board-tab-title-container">{{ item }}</span>
-        <span @click="onClose(i, item)" class="board-tab-icon-container">
+        <span class="board-tab-title-container">{{ item.title }}</span>
+        <span @click="onClose(item, i)" class="board-tab-icon-container">
           <icon class="board-tab-icon" name="times" :size="12"></icon>
         </span>
       </div>
@@ -24,7 +24,7 @@
 export default {
   name: "BoardTabs",
   props: {
-    lables: {},
+    datas: {},
     activeIndex: {
       type: Number,
       default: 0
@@ -58,10 +58,9 @@ export default {
     switchTab(index) {
       this.d_activeIndex = index;
     },
-    onClose(i, item) {
-      this.lables.splice(i, 1);
-      this.$emit("on-close", { index: i, item });
-      this.$emit("lables", this.lables);
+    onClose(item, i) {
+      this.datas.splice(i, 1);
+      this.$emit("on-close", item, i);
     },
     init() {
       let temp = [];

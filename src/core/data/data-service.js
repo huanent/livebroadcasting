@@ -85,8 +85,19 @@ export const getCourseData = function(pageNum, pageSize, userId) {
     `/courseFile/list?pageNum=${pageNum}&pageSize=${pageSize}&userId=${userId}`
   );
 };
+
 export const removeCourseFile = function(id) {
   return axios.post("/courseFile/remove", { id });
+};
+
+export const transcodeCreate = function(rawFileUrl) {
+  return axios.post("/transcode/create", { url: rawFileUrl });
+};
+export const transcodeDescribe = function(taskId) {
+  return axios.post("/transcode/describe", { taskId: taskId });
+};
+export const setCourseFile = function(body) {
+  return axios.post("/setCourseFile", body);
 };
 window["initAllTokenData"] = initAllTokenData;
 window["freedToken"] = freedToken;

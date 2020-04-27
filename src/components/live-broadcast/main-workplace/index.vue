@@ -1,8 +1,8 @@
 <template>
   <div class="main-workplace-container">
     <BoardTabs
-      :lables.sync="lables"
-      @on-close="onTabsClose($event)"
+      :datas="boardProfiles"
+      @on-close="onTabsClose"
       :active-index.sync="index"
       @index-change="indexChange($event)"
       class="workplace-content"
@@ -28,18 +28,10 @@ import { mapMutations } from "vuex";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, WorkplaceFooter },
-  data() {
-    return {
-      lables: []
-    };
-  },
   methods: {
     ...mapMutations("workplace", ["SET_BOARD_PROFILES"]),
-    onTabsClose() {},
-    getLables() {
-      this.lables = this.boardProfiles.map(item => {
-        return item.title;
-      });
+    onTabsClose(item, index) {
+      this.$store.commit("workplace/DELETE_BOARD_FILE", item.fid);
     },
     indexChange(index) {
       this.$store.commit("workplace/BOARD_INDEX", index);
@@ -47,7 +39,6 @@ export default {
   },
   mounted() {
     liveBroadcastService.init();
-    this.getLables();
   },
   computed: {
     boardProfiles() {
@@ -58,12 +49,6 @@ export default {
     }
   },
   watch: {
-    boardProfiles: {
-      handler: function() {
-        this.getLables();
-      },
-      deep: true
-    },
     index(value) {
       let fileInfo = this.boardProfiles[value];
       liveBroadcastService.switchFile(fileInfo.fid);

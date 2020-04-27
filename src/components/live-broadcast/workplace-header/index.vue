@@ -25,25 +25,49 @@
             :on-preview="onFilePreview"
             :before-upload="beforeUpload"
             ref="upload"
+            :on-success="onUploadSuccess"
             :before-remove="beforeRemove"
           >
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
         </div>
+        <div v-show="showProgressDialog">
+          ppt 转码中...
+          <el-progress :percentage="transcodeProgress"></el-progress>
+        </div>
+
         <div class="table-container">
           <el-table
             :data="courseFileList"
             stripe=""
             style="width: 100%"
             empty-text="No data"
+            @row-dblclick="rowDblclick"
           >
             <el-table-column prop="filename" label="fileName">
             </el-table-column>
-            <!-- <el-table-column k-attributes="label Label.createdTime">
-						<template slot-scope="scope">
-							<span>{{ scope.row.created_at | toTime }}</span>
-						</template>
-					</el-table-column> -->
+            <el-table-column prop="userId" label="upper"> </el-table-column>
+            <el-table-column prop="resolution" label="resolution	">
+            </el-table-column>
+            <el-table-column prop="pages" label="pages"> </el-table-column>
+            <el-table-column prop="hasTranscode" label="hasTranscode">
+            </el-table-column>
+            <el-table-column
+              fixed="right"
+              label="操作"
+              width="200"
+              prop="hasTranscode"
+            >
+              <template slot-scope="scope">
+                <el-button
+                  type="text"
+                  size="small"
+                  @click="reTranscode(scope.row)"
+                  >重新转码</el-button
+                >
+                <el-button type="text" size="small">删除</el-button>
+              </template>
+            </el-table-column>
           </el-table>
           <el-pagination
             small=""
@@ -70,7 +94,10 @@ import { liveBroadcastService } from "../../../main";
 
 import {
   getCourseData,
-  removeCourseFile
+  removeCourseFile,
+  transcodeCreate,
+  transcodeDescribe,
+  setCourseFile
 } from "../../../core/data/data-service";
 export default {
   name: "WorkplaceHeader",
@@ -83,7 +110,9 @@ export default {
       pageNum: 1,
       total: 0,
       courseFileList: [],
-      userId: "jongwong-test"
+      transcodeProgress: 0,
+      showProgressDialog: false,
+      userId: "jongwong"
     };
   },
   methods: {
@@ -113,12 +142,66 @@ export default {
         "_blank"
       );
     },
-    requestUpload() {},
+    async reTranscode(row) {
+      let res1 = await transcodeCreate(row.url);
+      if (res1.data.success && res1.data.model) {
+        let taskId = res1.data.model;
+        this.getDescribe(taskId);
+      }
+    },
     onCoursewareClose(done) {
       this.dialogVisible = false;
       if (done && done instanceof Function) {
         done();
       }
+    },
+    async onUploadSuccess(res) {
+      if (res.success && res.model.url) {
+        this.reTranscode(res.model);
+      }
+    },
+    getDescribe(taskId, fileId) {
+      let self = this;
+      self.showProgressDialogFun();
+      let interval = setInterval(async () => {
+        let res = await transcodeDescribe(taskId);
+        if (res.data.success) {
+          if (res.data.model.progress) {
+            self.transcodeProgress = res.data.model.progress;
+          }
+          if (self.transcodeProgress >= 100) {
+            clearInterval(interval);
+            console.log(res);
+
+            let model = res.data.model;
+            let body = {
+              id: fileId,
+              hasTranscode: "true",
+              pages: model.pages.toString(),
+              resultUrl: model.resultUrl,
+              compressFileUrl: model.compressFileUrl,
+              taskId: model.taskId,
+              title: model.title,
+              resolution: model.resolution,
+              requestId: model.requestId
+            };
+            let res1 = await setCourseFile(body);
+            if (res1) {
+              self.getCourseData(this.pageNum, this.pageSize, this.userId);
+              self.closeProgressDialogFun();
+            }
+          }
+        }
+      }, 300);
+    },
+    showProgressDialogFun() {
+      /*    this.dialogVisible = false;*/
+      this.showProgressDialog = true;
+    },
+    closeProgressDialogFun() {
+      /*    this.dialogVisible = true;*/
+      this.showProgressDialog = false;
+      this.transcodeProgress = 0;
     },
     beforeRemove(file, fileList) {
       var id = file.response.model.id;
@@ -140,12 +223,13 @@ export default {
       }
       return isLt100M && !isLt0M;
     },
-    async handleChange(file, fileList) {
-      let rawFile = file.raw;
-      await liveBroadcastService.addBoardFiles(rawFile);
-    },
-    addBoardFilesHandler() {
-      this.addFileVisible = true;
+    rowDblclick(file) {
+      this.$store.commit("workplace/ADD_BOARD_FILE", {
+        resultUrl: file.resultUrl,
+        title: file.title,
+        pages: file.pages,
+        resolution: file.resolution
+      });
     }
   }
 };

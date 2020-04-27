@@ -51,6 +51,17 @@ const mutations = {
   BOARD_PROFILES(state, boardProfiles) {
     state.boardProfiles = boardProfiles;
   },
+  async ADD_BOARD_FILE(state, file) {
+    await liveBroadcastService.addBoardFiles(
+      file.resultUrl,
+      file.title,
+      file.pages,
+      file.resolution
+    );
+  },
+  DELETE_BOARD_FILE(state, fid) {
+    liveBroadcastService.deleteBoardFile(fid);
+  },
   BOARD_INDEX(state, index) {
     state.activeBoardIndex = index;
   },
