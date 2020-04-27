@@ -398,12 +398,12 @@ export class LiveBroadcastService {
     });
     client.on("stream-subscribed", event => {
       const remoteStream = event.stream;
-      self.remoteStreamList[remoteStream.id_] = remoteStream;
       console.log("远端流订阅成功：" + remoteStream.id_);
       let profile = {
         userId: remoteStream.userId_,
         id: remoteStream.id_
       };
+      self.remoteStreamList[remoteStream.id_] = remoteStream;
       self.remoteStreamListProfile[remoteStream.id_] = profile;
       let temp = [];
       let keys = Object.keys(self.remoteStreamListProfile);
@@ -423,6 +423,21 @@ export class LiveBroadcastService {
           " hasVideo: " +
           remoteStream.hasVideo()
       );
+    });
+    client.on("stream-removed", event => {
+      const remoteStream = event.stream;
+      if (self.remoteStreamList[remoteStream.id_]) {
+        delete self.remoteStreamList[remoteStream.id_];
+      }
+      if (self.remoteStreamListProfile[remoteStream.id_]) {
+        delete self.remoteStreamListProfile[remoteStream.id_];
+      }
+      let temp = [];
+      let keys = Object.keys(self.remoteStreamListProfile);
+      keys.forEach(item => {
+        temp.push(self.remoteStreamListProfile[item]);
+      });
+      store.commit("workplace/SET_REMOTE_STREAM_LIST", temp);
     });
   }
 }
