@@ -54,6 +54,7 @@ export default {
     onChange(type) {
       this.panelType = type;
       if (this.panelType === "camera") {
+        console.log("yes");
       }
     }
   },
