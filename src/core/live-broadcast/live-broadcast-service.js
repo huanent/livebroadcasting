@@ -40,7 +40,7 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "98894785075365";
   activeBoard = null;
-  userId = "jongwong";
+  userId = "jinrui";
   tim;
   localStream;
   remoteStreamList = {};
@@ -287,6 +287,22 @@ export class LiveBroadcastService {
       return true;
     });
   }
+  muteLocalAudio() {
+    let localStream = this.localStream;
+    localStream.muteAudio();
+  }
+  unmuteLocalAudio() {
+    let localStream = this.localStream;
+    localStream.unmuteAudio();
+  }
+  muteLocalVideo() {
+    let localStream = this.localStream;
+    localStream.muteVideo();
+  }
+  unmuteLocalVideo() {
+    let localStream = this.localStream;
+    localStream.unmuteVideo();
+  }
   getIndexByFid(fileListInfo, fid) {
     let result;
     fileListInfo.find((item, index) => {
@@ -320,8 +336,8 @@ export class LiveBroadcastService {
         await this.initMicrophonesDeviceList();
         const localStream = TRTC.createStream({
           userId,
-          audio: true,
-          video: true
+          audio: store.state.localStream.localAudioStatus,
+          video: store.state.localStream.localVideoStatus
         });
         localStream
           .initialize()

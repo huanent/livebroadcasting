@@ -14,36 +14,16 @@ const state = {
 };
 
 const getters = {
-  activeBoardIndex: state => {
-    return state.activeBoardIndex;
-  },
-  boardProfiles: state => {
-    return state.boardProfiles;
-  },
-  boardTotalPage: state => {
-    return state.boardTotalPage;
-  },
-  boardNumber: state => {
-    return state.boardNumber;
-  },
-  boardScale: state => {
-    return state.boardScale;
-  },
-  cameraDeviceList: state => {
-    return state.cameraDeviceList;
-  },
-  microphonesDeviceList: state => {
-    return state.microphonesDeviceList;
-  },
-  activeCamera: state => {
-    return state.activeCamera;
-  },
-  activeMicrophones: state => {
-    return state.activeMicrophones;
-  },
-  remoteStreamList: state => {
-    return state.remoteStreamList;
-  }
+  activeBoardIndex: state => state.activeBoardIndex,
+  boardProfiles: state => state.boardProfiles,
+  boardTotalPage: state => state.boardTotalPage,
+  boardNumber: state => state.boardNumber,
+  boardScale: state => state.boardScale,
+  cameraDeviceList: state => state.cameraDeviceList,
+  microphonesDeviceList: state => state.microphonesDeviceList,
+  activeCamera: state => state.activeCamera,
+  activeMicrophones: state => state.activeMicrophones,
+  remoteStreamList: state => state.remoteStreamList
 };
 
 const mutations = {

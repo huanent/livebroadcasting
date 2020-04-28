@@ -23,22 +23,11 @@ const state = {
 };
 
 const getters = {
-  // 获取画笔颜色
-  brushColor: state => {
-    return state.brushColor;
-  },
-  brushThin: state => {
-    return state.brushThin;
-  },
-  toolType: state => {
-    return state.toolType;
-  },
-  textColor: state => {
-    return state.textColor;
-  },
-  textSize: state => {
-    return state.textSize;
-  }
+  brushColor: state => state.brushColor,
+  brushThin: state => state.brushThin,
+  toolType: state => state.toolType,
+  textColor: state => state.textColor,
+  textSize: state => state.textSize
 };
 
 const mutations = {

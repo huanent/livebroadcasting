@@ -8,9 +8,7 @@ const state = {
 };
 
 const getters = {
-  tx_userSig: state => {
-    return state.userSig;
-  }
+  tx_userSig: state => state.userSig
 };
 
 const mutations = {

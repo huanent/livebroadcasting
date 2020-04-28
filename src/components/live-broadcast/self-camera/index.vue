@@ -77,13 +77,12 @@
 
 <script>
 import VoiceIntensity from "./voice-intensity";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "SelfCamera",
   data() {
     return {
-      isMicroOpen: true,
-      isVideoOpen: true,
       visibility: false,
       dialogVisible: false,
       activeCameraDevice: {},
@@ -93,32 +92,29 @@ export default {
   components: {
     VoiceIntensity
   },
+  created() {
+    this.activeMicrophonesDevice = this.$store.state.workplace.activeMicrophones;
+    this.activeCameraDevice = this.$store.state.workplace.activeCamera;
+  },
   computed: {
+    ...mapGetters("localStream", ["localAudioStatus", "localVideoStatus"]),
+    ...mapGetters("workplace", ["microphonesDeviceList", "cameraDeviceList"]),
     microIcon() {
-      return this.isMicroOpen ? "microphone" : "microphone-slash";
+      return this.localAudioStatus ? "microphone" : "microphone-slash";
     },
     videoIcon() {
-      return this.isVideoOpen ? "video" : "video-slash";
-    },
-    cameraDeviceList() {
-      return this.$store.state.workplace.cameraDeviceList;
-    },
-    microphonesDeviceList() {
-      return this.$store.state.workplace.microphonesDeviceList;
-    },
-    activeCamera() {
-      this.activeCameraDevice = this.$store.state.workplace.activeCamera;
-      return this.$store.state.workplace.activeCamera;
-    },
-    activeMicrophones() {
-      this.activeMicrophonesDevice = this.$store.state.workplace.activeMicrophones;
-      return this.activeMicrophonesDevice;
+      return this.localVideoStatus ? "video" : "video-slash";
     }
   },
   mounted() {
     this.observerVideoInit();
   },
   methods: {
+    ...mapMutations("workplace", ["ACTIVE_CAMERA", "ACTIVE_MICROPHONES"]),
+    ...mapMutations("localStream", [
+      "SET_LOCALSTREAM_AUDIO",
+      "SET_LOCALSTREAM_VIDEO"
+    ]),
     observerVideoInit() {
       if (!this.$refs.video) return;
       let targetNode = this.$refs.video;
@@ -142,11 +138,10 @@ export default {
       observer.observe(targetNode, config);
     },
     onMicroStateChange() {
-      // state must stored in vuex
-      this.isMicroOpen = !this.isMicroOpen;
+      this.SET_LOCALSTREAM_AUDIO(!this.localAudioStatus);
     },
     onVideoStateChange() {
-      this.isVideoOpen = !this.isVideoOpen;
+      this.SET_LOCALSTREAM_VIDEO(!this.localVideoStatus);
     },
     onOpenSetting() {
       this.dialogVisible = true;
@@ -156,13 +151,10 @@ export default {
     },
     onDialogSave() {
       if (this.activeCameraDevice) {
-        this.$store.commit("workplace/ACTIVE_CAMERA", this.activeCameraDevice);
+        this.ACTIVE_CAMERA(this.activeCameraDevice);
       }
       if (this.activeMicrophonesDevice) {
-        this.$store.commit(
-          "workplace/ACTIVE_MICROPHONES",
-          this.activeMicrophonesDevice
-        );
+        this.ACTIVE_MICROPHONES(this.activeMicrophonesDevice);
       }
       this.dialogVisible = false;
     }
