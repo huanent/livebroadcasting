@@ -8,7 +8,7 @@
       class="workplace-content"
     >
       <div class="board-wrapper">
-        <div id="board_el" class="roll-scroll" @></div>
+        <div id="board-el" class="roll-scroll"></div>
       </div>
     </BoardTabs>
     <div class="workplace-footer">
@@ -71,9 +71,9 @@ export default {
 .workplace-content {
   height: calc(100% - 2rem);
 }
-#board_el {
+#board-el {
   position: absolute;
-  z-index: 99;
+  z-index: 1;
   width: 100%;
   height: 100%;
   overflow: hidden;
