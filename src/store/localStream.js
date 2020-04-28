@@ -34,7 +34,6 @@ const mutations = {
   SET_AUDIOLEVEL(state) {
     if (!liveBroadcastService) return;
     let level = liveBroadcastService.getAudioLevel();
-    console.log(level);
     state.audioLevel = level;
   }
 };

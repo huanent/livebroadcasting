@@ -86,6 +86,40 @@ export class LiveBroadcastService {
       stream.play(id, elementID);
     }
   }
+  hasRemoteAudio(id) {
+    return this.remoteStreamList[id]
+      ? this.remoteStreamList[id].hasAudio()
+      : false;
+  }
+  hasRemoteVideo(id) {
+    return this.remoteStreamList[id]
+      ? this.remoteStreamList[id].hasVideo()
+      : false;
+  }
+  muteRemoteAudio(id) {
+    let stream = this.remoteStreamList[id];
+    if (stream) {
+      stream.muteAudio();
+    }
+  }
+  unmuteRemoteAudio(id) {
+    let stream = this.remoteStreamList[id];
+    if (stream) {
+      stream.unmuteAudio();
+    }
+  }
+  muteRemoteVideo(id) {
+    let stream = this.remoteStreamList[id];
+    if (stream) {
+      stream.muteVideo();
+    }
+  }
+  unmuteRemoteVideo(id) {
+    let stream = this.remoteStreamList[id];
+    if (stream) {
+      stream.muteVideo();
+    }
+  }
   resetBoard(activeBoard) {
     activeBoard.reset();
   }
@@ -304,7 +338,10 @@ export class LiveBroadcastService {
     localStream.unmuteVideo();
   }
   getAudioLevel() {
-    return this.localStream.getAudioLevel();
+    if (this.localStream) {
+      return this.localStream.getAudioLevel();
+    }
+    return 0.0;
   }
   getIndexByFid(fileListInfo, fid) {
     let result;
@@ -322,6 +359,20 @@ export class LiveBroadcastService {
   deleteBoardFile(fid) {
     this.getActiveBoard().deleteFile(fid);
     this.getBoardFiles();
+  }
+  getStreamProfile() {
+    let temp = [];
+    let keys = Object.keys(this.remoteStreamList);
+    var self = this;
+    keys.forEach(item => {
+      temp.push({
+        userId: self.remoteStreamList[item].userId_,
+        id: self.remoteStreamList[item].id_,
+        hasAudio: self.remoteStreamList[item].hasAudio(),
+        hasVideo: self.remoteStreamList[item].hasVideo()
+      });
+    });
+    return temp;
   }
   async joinroom() {
     let token = this.TokenList["default"];
@@ -375,21 +426,16 @@ export class LiveBroadcastService {
       //订阅远端流
       client.subscribe(remoteStream);
     });
+
     client.on("stream-subscribed", event => {
       const remoteStream = event.stream;
       console.log("远端流订阅成功：" + remoteStream.id_);
-      let profile = {
-        userId: remoteStream.userId_,
-        id: remoteStream.id_
-      };
       self.remoteStreamList[remoteStream.id_] = remoteStream;
-      self.remoteStreamListProfile[remoteStream.id_] = profile;
-      let temp = [];
-      let keys = Object.keys(self.remoteStreamListProfile);
-      keys.forEach(item => {
-        temp.push(self.remoteStreamListProfile[item]);
-      });
-      store.commit("workplace/SET_REMOTE_STREAM_LIST", temp);
+      self.remoteStreamListProfile = this.getStreamProfile();
+      store.commit(
+        "remoteStream/SET_REMOTE_STREAM_LIST",
+        self.remoteStreamListProfile
+      );
     });
     // 监听‘stream-updated’事件
     client.on("stream-updated", event => {
@@ -408,15 +454,11 @@ export class LiveBroadcastService {
       if (self.remoteStreamList[remoteStream.id_]) {
         delete self.remoteStreamList[remoteStream.id_];
       }
-      if (self.remoteStreamListProfile[remoteStream.id_]) {
-        delete self.remoteStreamListProfile[remoteStream.id_];
-      }
-      let temp = [];
-      let keys = Object.keys(self.remoteStreamListProfile);
-      keys.forEach(item => {
-        temp.push(self.remoteStreamListProfile[item]);
-      });
-      store.commit("workplace/SET_REMOTE_STREAM_LIST", temp);
+      self.remoteStreamListProfile = this.getStreamProfile();
+      store.commit(
+        "remoteStream/SET_REMOTE_STREAM_LIST",
+        self.remoteStreamListProfile
+      );
     });
   }
 }

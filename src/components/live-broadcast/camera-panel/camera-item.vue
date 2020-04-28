@@ -15,9 +15,6 @@
           :size="20"
         />
       </div>
-      <!--      <a @click.stop="onOpenSetting()">
-              <icon name="settings" size="16" class="camera-setting"></icon>
-              </a>-->
     </div>
     <div :id="streamId" ref="video" class="remote-video-view"></div>
     <div class="self-camera-footer">
@@ -29,54 +26,11 @@
         {{ userName }}
       </span>
     </div>
-    <!--    <el-dialog
-          title="设置"
-          :visible.sync="dialogVisible"
-          width="40%"
-          :before-close="onDialogClose"
-          :append-to-body="true"
-        >
-          <div>
-            <div>
-              <el-select
-                v-model="activeCameraDevice"
-                placeholder="请选择视频输入设备"
-              >
-                <el-option
-                  v-for="item in cameraDeviceList"
-                  :key="item.deviceId"
-                  :label="item.label"
-                  :value="item"
-                >
-                </el-option>
-              </el-select>
-            </div>
-            <div>
-              <el-select
-                v-model="activeMicrophonesDevice"
-                placeholder="请选择音频输入设备"
-              >
-                <el-option
-                  v-for="item in microphonesDeviceList"
-                  :key="item.deviceId"
-                  :label="item.label"
-                  :value="item"
-                >
-                </el-option>
-              </el-select>
-            </div>
-    
-            <div>
-              <el-button @click="onDialogClose()">取 消</el-button>
-              <el-button type="primary" @click="onDialogSave()">确 定</el-button>
-            </div>
-          </div>
-        </el-dialog>-->
   </div>
 </template>
 
 <script>
-import VoiceIntensity from "../../live-broadcast/self-camera/voice-intensity";
+import VoiceIntensity from "@c/live-broadcast/self-camera/voice-intensity";
 export default {
   name: "CameraItem",
   props: {

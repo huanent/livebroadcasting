@@ -16,6 +16,7 @@
       >
         <div
           v-for="(item, index) in remoteStreamList"
+          :key="index"
           :style="{
             height: perColumnHeight + 'px',
             width: perColumnWidth + 'px'
@@ -46,7 +47,7 @@
 
 <script>
 import CameraItem from "./camera-item";
-
+import { mapGetters, mapMutations } from "vuex";
 import { Emitter } from "../../../core/emit";
 
 export default {
@@ -73,12 +74,10 @@ export default {
     });
   },
   computed: {
+    ...mapGetters("remoteStream", ["remoteStreamList"]),
     width() {
       let temp = this.remoteStreamList.length / this.slidesPerColumn;
       return Math.ceil(temp) * this.perColumnWidth;
-    },
-    remoteStreamList() {
-      return this.$store.state.workplace.remoteStreamList;
     }
   },
   watch: {
@@ -95,6 +94,13 @@ export default {
   getSlidesPerColumn() {},
 
   methods: {
+    ...mapMutations("remoteStream", [
+      "REMOTE_STREAM_PLAY",
+      "HASAUDIO",
+      "HASVIDEO",
+      "INIT_AUDIO",
+      "INIT_VIDEO"
+    ]),
     render() {
       let el = this.$refs.swiper;
       if (!el) return;
@@ -117,7 +123,7 @@ export default {
       this.translateX = translateX;
     },
     play(e) {
-      this.$store.commit("workplace/REMOTE_STREAM_PLAY", e, e);
+      this.REMOTE_STREAM_PLAY(e, e);
     }
   }
 };

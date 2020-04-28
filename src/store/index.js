@@ -4,6 +4,7 @@ import account from "./account";
 import board from "./board";
 import workplace from "./workplace";
 import localStream from "./localStream";
+import remoteStream from "./remoteStream";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -11,6 +12,7 @@ export default new Vuex.Store({
     account,
     board,
     workplace,
-    localStream
+    localStream,
+    remoteStream
   }
 });
