@@ -111,7 +111,7 @@ export default {
     this.observerVideoInit();
     const audioLevelTimer = setInterval(() => {
       this.SET_AUDIOLEVEL();
-    }, 100);
+    }, 200);
     this.$once("hook:beforeDestroy", () => {
       clearInterval(audioLevelTimer);
     });

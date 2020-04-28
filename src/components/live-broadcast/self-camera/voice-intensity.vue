@@ -26,12 +26,12 @@ export default {
   },
   computed: {
     activeIndex() {
-      if (this.intensity >= 1) {
+      if (this.intensity >= 0.4) {
         return this.lines;
       } else if (this.intensity <= 0) {
         return 0;
       } else {
-        return Math.ceil(this.intensity * this.lines);
+        return Math.ceil(this.intensity * 2.5 * this.lines);
       }
     }
   }
@@ -40,6 +40,7 @@ export default {
 
 <style lang="scss" scoped>
 .camera-voice-intensity {
+  transition: all 0.02s ease;
   color: #0a818c;
   height: 16px;
   display: inline-block;
