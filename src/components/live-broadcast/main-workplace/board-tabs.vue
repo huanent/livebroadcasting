@@ -21,8 +21,7 @@
           :options="options"
           :preselect-first="true"
           :allow-empty="false"
-          @close="onSelectClose"
-          @open="onSelectOpen"
+          @select="onSelect"
         >
           <template slot="singleLabel" slot-scope="props"
             ><div class="select-header">
@@ -70,16 +69,16 @@ export default {
       caretIconName: "settings",
       options: [
         {
-          title: "Space Pirate"
+          title: "White board",
+          type: "board"
         },
         {
-          title: "Merchant"
+          title: "Share screen",
+          type: "screen"
         },
         {
-          title: "Explorer"
-        },
-        {
-          title: "Miner"
+          title: "Push camera",
+          type: "camera"
         }
       ]
     };
@@ -113,6 +112,7 @@ export default {
     toggle() {
       this.$refs.select.isOpen = !this.$refs.select.isOpen;
     },
+    onSelect() {},
     init() {
       let temp = [];
       this.$children.forEach(item => {
