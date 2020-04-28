@@ -2,12 +2,14 @@ import { liveBroadcastService } from "@/main";
 
 const state = {
   localAudioStatus: true,
-  localVideoStatus: true
+  localVideoStatus: true,
+  audioLevel: 0.0
 };
 
 const getters = {
   localAudioStatus: state => state.localAudioStatus,
-  localVideoStatus: state => state.localVideoStatus
+  localVideoStatus: state => state.localVideoStatus,
+  audioLevel: state => state.audioLevel
 };
 
 const mutations = {
@@ -28,6 +30,12 @@ const mutations = {
     } else {
       liveBroadcastService.localStream.muteVideo();
     }
+  },
+  SET_AUDIOLEVEL(state) {
+    if (!liveBroadcastService) return;
+    let level = liveBroadcastService.getAudioLevel();
+    console.log(level);
+    state.audioLevel = level;
   }
 };
 

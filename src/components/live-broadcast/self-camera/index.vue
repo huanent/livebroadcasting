@@ -23,11 +23,8 @@
     <div class="self-camera-footer">
       <div>
         <icon name="microphone" color="#0A818C" :size="18" />
-        <voice-intensity :intensity="0.8" />
+        <voice-intensity :intensity="Number(audioLevel)" />
       </div>
-      <!--      <span>
-        username
-      </span>-->
     </div>
     <el-dialog
       title="设置"
@@ -97,7 +94,11 @@ export default {
     this.activeCameraDevice = this.$store.state.workplace.activeCamera;
   },
   computed: {
-    ...mapGetters("localStream", ["localAudioStatus", "localVideoStatus"]),
+    ...mapGetters("localStream", [
+      "localAudioStatus",
+      "localVideoStatus",
+      "audioLevel"
+    ]),
     ...mapGetters("workplace", ["microphonesDeviceList", "cameraDeviceList"]),
     microIcon() {
       return this.localAudioStatus ? "microphone" : "microphone-slash";
@@ -108,12 +109,19 @@ export default {
   },
   mounted() {
     this.observerVideoInit();
+    const audioLevelTimer = setInterval(() => {
+      this.SET_AUDIOLEVEL();
+    }, 100);
+    this.$once("hook:beforeDestroy", () => {
+      clearInterval(audioLevelTimer);
+    });
   },
   methods: {
     ...mapMutations("workplace", ["ACTIVE_CAMERA", "ACTIVE_MICROPHONES"]),
     ...mapMutations("localStream", [
       "SET_LOCALSTREAM_AUDIO",
-      "SET_LOCALSTREAM_VIDEO"
+      "SET_LOCALSTREAM_VIDEO",
+      "SET_AUDIOLEVEL"
     ]),
     observerVideoInit() {
       if (!this.$refs.video) return;

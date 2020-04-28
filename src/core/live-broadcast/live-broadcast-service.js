@@ -303,6 +303,9 @@ export class LiveBroadcastService {
     let localStream = this.localStream;
     localStream.unmuteVideo();
   }
+  getAudioLevel() {
+    return this.localStream.getAudioLevel();
+  }
   getIndexByFid(fileListInfo, fid) {
     let result;
     fileListInfo.find((item, index) => {
