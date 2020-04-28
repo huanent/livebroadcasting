@@ -5,10 +5,20 @@
       @on-close="onTabsClose"
       :active-index.sync="index"
       @index-change="indexChange($event)"
+      @type-change="onChange"
       class="workplace-content"
     >
-      <div class="board-wrapper">
+      <div class="board-wrapper" v-show="panelType === 'board'">
         <div id="board-el" class="roll-scroll"></div>
+      </div>
+      <div class="board-wrapper" v-show="panelType === 'screen'">
+        <div style="height: 100%;width: 100%;background-color: #0a818c"></div>
+      </div>
+      <div class="board-wrapper" v-show="panelType === 'camera'">
+        <div
+          id="workplace-camera"
+          style="height: 100%;width: 100%;background-color: #8c4651"
+        ></div>
       </div>
     </BoardTabs>
     <div class="workplace-footer">
@@ -28,6 +38,11 @@ import { mapMutations } from "vuex";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, WorkplaceFooter },
+  data() {
+    return {
+      panelType: "screen"
+    };
+  },
   methods: {
     ...mapMutations("workplace", ["SET_BOARD_PROFILES"]),
     onTabsClose(item, index) {
@@ -35,6 +50,11 @@ export default {
     },
     indexChange(index) {
       this.$store.commit("workplace/BOARD_INDEX", index);
+    },
+    onChange(type) {
+      this.panelType = type;
+      if (this.panelType === "camera") {
+      }
     }
   },
   mounted() {

@@ -51,11 +51,8 @@ export default {
     onVideoStateChange() {}
   },
   mounted() {
-    console.log("=============");
-    console.log(this.$refs.video);
-    console.log(this.streamId);
     if (this.$refs.video) {
-      this.$emit("on-ready", this.streamId);
+      this.$emit("on-ready", this.streamId, this.$refs.video);
     }
   },
   computed: {

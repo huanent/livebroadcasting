@@ -80,10 +80,15 @@ export class LiveBroadcastService {
   setActiveBoard(activeBoard) {
     this.activeBoard = activeBoard;
   }
-  remoteStreamPlay(id, elementID) {
+  remoteStreamPlay(id, elmentOrId) {
     let stream = this.remoteStreamList[id];
     if (stream) {
-      stream.play(id, elementID);
+      stream.play(id, elmentOrId);
+    }
+  }
+  localStreamPlay(elmentOrId) {
+    if (this.localStream && this.localStream.play) {
+      this.localStream.play(elmentOrId);
     }
   }
   hasRemoteAudio(id) {
@@ -413,9 +418,7 @@ export class LiveBroadcastService {
                 console.error("本地流发布失败 " + error);
               })
               .then(() => {
-                console.log(localStream);
-                let el = document.getElementById("local_video");
-                localStream.play(el);
+                store.commit("localStream/IS_INIT");
               });
           });
       });

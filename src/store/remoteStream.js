@@ -15,8 +15,8 @@ const mutations = {
   ADD_REMOTE_STREAM(state, remoteStreamList) {
     state.remoteStreamList.push(remoteStreamList);
   },
-  REMOTE_STREAM_PLAY(state, id, elemetId) {
-    liveBroadcastService.remoteStreamPlay(id, elemetId);
+  REMOTE_STREAM_PLAY(state, remote) {
+    liveBroadcastService.remoteStreamPlay(remote.id, remote.element);
   },
   MUTE_REMOTE_AUDIO(state, id) {
     state.remoteStreamList[id].hasAudio = true;

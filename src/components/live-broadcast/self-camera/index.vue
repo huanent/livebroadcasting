@@ -19,7 +19,7 @@
         <icon name="settings" size="16" class="camera-setting"></icon>
       </a>
     </div>
-    <div id="local_video" ref="video"></div>
+    <div class="local_video" ref="video"></div>
     <div class="self-camera-footer">
       <div>
         <icon name="microphone" color="#0A818C" :size="18" />
@@ -97,7 +97,8 @@ export default {
     ...mapGetters("localStream", [
       "localAudioStatus",
       "localVideoStatus",
-      "audioLevel"
+      "audioLevel",
+      "isInit"
     ]),
     ...mapGetters("workplace", ["microphonesDeviceList", "cameraDeviceList"]),
     microIcon() {
@@ -105,6 +106,13 @@ export default {
     },
     videoIcon() {
       return this.localVideoStatus ? "video" : "video-slash";
+    }
+  },
+  watch: {
+    isInit(value) {
+      if (value && this.$refs.video) {
+        this.LOCAL_STREAM_PLAY(this.$refs.video);
+      }
     }
   },
   mounted() {
@@ -121,7 +129,8 @@ export default {
     ...mapMutations("localStream", [
       "SET_LOCALSTREAM_AUDIO",
       "SET_LOCALSTREAM_VIDEO",
-      "SET_AUDIOLEVEL"
+      "SET_AUDIOLEVEL",
+      "LOCAL_STREAM_PLAY"
     ]),
     observerVideoInit() {
       if (!this.$refs.video) return;
@@ -240,9 +249,8 @@ export default {
 .hide {
   visibility: hidden;
 }
-#local_video {
+.local_video {
   height: 100%;
-
   width: 100%;
 }
 .camera-setting {

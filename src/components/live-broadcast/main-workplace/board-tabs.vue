@@ -112,7 +112,9 @@ export default {
     toggle() {
       this.$refs.select.isOpen = !this.$refs.select.isOpen;
     },
-    onSelect() {},
+    onSelect(item) {
+      this.$emit("type-change", item.type);
+    },
     init() {
       let temp = [];
       this.$children.forEach(item => {

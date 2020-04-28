@@ -122,8 +122,8 @@ export default {
       }
       this.translateX = translateX;
     },
-    play(e) {
-      this.REMOTE_STREAM_PLAY(e, e);
+    play(id, elment) {
+      this.REMOTE_STREAM_PLAY({ id, elment });
     }
   }
 };

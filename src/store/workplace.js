@@ -86,6 +86,9 @@ const mutations = {
     liveBroadcastService.setMicrophonesDevice(device.deviceId);
     state.activeMicrophones = device;
   },
+  REMOTE_STREAM_PLAY(state, remote) {
+    liveBroadcastService.remoteStreamPlay(remote.id, remote.element);
+  },
   async SEND_MESSAGE(state, msg) {
     await liveBroadcastService.sendMessage(msg);
   }
