@@ -52,8 +52,11 @@ export class LiveBroadcastService {
     if (this.TokenList[key] && !this.TokenList[key].isExpired) {
       return this.TokenList[key];
     } else {
-      let res = await enterRoom(this.userId, this.roomId);
-
+      let id = this.userId;
+      if (key !== "default") {
+        id = this.userId + "_" + key;
+      }
+      let res = await enterRoom(id, this.roomId);
       let token = Object.assign({ isExpired: false }, res.data);
       this.TokenList[key] = token;
       return token;
@@ -62,6 +65,32 @@ export class LiveBroadcastService {
 
   getActiveBoard() {
     return this.activeBoard;
+  }
+  async createShareClient() {
+    const sdkAppId = this.sdkAppId;
+    let token = await this.getUserSig("share_screen");
+    let userId = token.id;
+    let userSig = token.userSig;
+    const shareClient = TRTC.createClient({
+      mode: "live",
+      sdkAppId,
+      userId,
+      userSig
+    });
+    // 指明该 shareClient 默认不接收任何远端流 （它只负责发送屏幕分享流）
+    shareClient.setDefaultMuteRemoteStreams(true);
+
+    shareClient.join({ roomId: this.roomId }).then(() => {
+      console.log("shareClient join success");
+      // 创建屏幕分享流
+      const shareStream = TRTC.createStream({ audio: false, screen: true });
+      shareStream.initialize().then(() => {
+        // screencast stream init success
+        shareClient.publish(shareStream).then(() => {
+          console.log("screen casting");
+        });
+      });
+    });
   }
   switchFile(fid) {
     let activeBoard = this.getActiveBoard();
@@ -384,6 +413,8 @@ export class LiveBroadcastService {
     let client = this.clientList["default"];
     let userId = token.id;
     var self = this;
+
+    await this.createShareClient();
     client
       .join({ roomId: this.roomId })
       .catch(error => {
