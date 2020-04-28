@@ -40,7 +40,7 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "98894785075365";
   activeBoard = null;
-  userId = "jinrui";
+  userId = "jongwong";
   tim;
   localStream;
   remoteStreamList = {};
@@ -142,7 +142,7 @@ export class LiveBroadcastService {
     let userId = token.id;
     let userSig = token.userSig;
 
-    let elId = "board_el";
+    let elId = "board-el";
     let initParams = {
       id: elId,
       classId: roomId,

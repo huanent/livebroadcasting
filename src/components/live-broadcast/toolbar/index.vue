@@ -303,7 +303,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .toolbar {
-  z-index: 999;
+  z-index: 99;
   width: 2rem;
   color: #eee;
   background-color: rgba(48, 49, 51, 0.79);

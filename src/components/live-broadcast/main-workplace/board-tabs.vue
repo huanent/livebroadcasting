@@ -13,6 +13,34 @@
           <icon class="board-tab-icon" name="times" :size="12"></icon>
         </span>
       </div>
+      <div class="workplace-settings">
+        <multiselect
+          v-model="selected"
+          ref="select"
+          :searchable="false"
+          :options="options"
+          :preselect-first="true"
+          :allow-empty="false"
+          @close="onSelectClose"
+          @open="onSelectOpen"
+        >
+          <template slot="singleLabel" slot-scope="props"
+            ><div class="select-header">
+              {{ props.option.title }}
+            </div>
+          </template>
+          <template slot="option" slot-scope="props">
+            <div class="select-option">
+              {{ props.option.title }}
+            </div>
+          </template>
+          <template slot="caret">
+            <div @mousedown.prevent.stop="toggle()" class="multiselect__select">
+              <icon :name="caretIconName" size="14"></icon>
+            </div>
+          </template>
+        </multiselect>
+      </div>
     </div>
     <div class="tab-body">
       <slot></slot>
@@ -21,6 +49,7 @@
 </template>
 
 <script>
+import { Multiselect } from "vue-multiselect";
 export default {
   name: "BoardTabs",
   props: {
@@ -30,10 +59,29 @@ export default {
       default: 0
     }
   },
+  components: {
+    Multiselect
+  },
   data() {
     return {
       tabItemList: [],
-      d_activeIndex: this.activeIndex
+      d_activeIndex: this.activeIndex,
+      selected: undefined,
+      caretIconName: "settings",
+      options: [
+        {
+          title: "Space Pirate"
+        },
+        {
+          title: "Merchant"
+        },
+        {
+          title: "Explorer"
+        },
+        {
+          title: "Miner"
+        }
+      ]
     };
   },
   mounted() {
@@ -62,6 +110,9 @@ export default {
       this.datas.splice(i, 1);
       this.$emit("on-close", item, i);
     },
+    toggle() {
+      this.$refs.select.isOpen = !this.$refs.select.isOpen;
+    },
     init() {
       let temp = [];
       this.$children.forEach(item => {
@@ -85,6 +136,7 @@ export default {
   font-size: small;
   user-select: none;
 }
+
 .tab-body {
   height: calc(100% - 1.8rem);
 }
@@ -120,5 +172,50 @@ export default {
 }
 .tab-item-active {
   background-color: #1a1b1d;
+}
+
+.workplace-settings {
+  text-align: center;
+  float: right;
+  justify-content: center;
+  min-width: 100px;
+  margin-right: 2rem;
+  .select-header,
+  .select-option {
+    text-align: left;
+    z-index: 100;
+    padding: 5px 10px 5px 5px;
+    color: #bfbfbf;
+    background-color: #212224;
+  }
+  .select-option:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #e8f1ff;
+    /* border: 1px solid #0a818c;*/
+  }
+}
+
+/deep/ .svg-icon {
+  fill: #bfbfbf;
+}
+/deep/ .svg-icon:hover {
+  fill: #ffffff;
+}
+
+/*
+cover component Multiselect style
+*/
+/deep/ .multiselect:focus {
+  outline: none;
+}
+/deep/ .multiselect__content-wrapper {
+  position: absolute;
+  z-index: 999;
+  border-radius: 10px;
+  box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.32);
+}
+/deep/ .multiselect__select {
+  display: inline-block;
+  float: right;
 }
 </style>
