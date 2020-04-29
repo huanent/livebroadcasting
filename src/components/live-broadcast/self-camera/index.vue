@@ -98,7 +98,8 @@ export default {
       "localAudioStatus",
       "localVideoStatus",
       "audioLevel",
-      "isInit"
+      "isInit",
+      "selfCameraStatus"
     ]),
     ...mapGetters("workplace", ["microphonesDeviceList", "cameraDeviceList"]),
     microIcon() {
@@ -112,11 +113,16 @@ export default {
     isInit(value) {
       if (value && this.$refs.video) {
         this.LOCAL_STREAM_PLAY(this.$refs.video);
+        this.visibility = true;
+      }
+    },
+    selfCameraStatus(value) {
+      if (value) {
+        this.LOCAL_STREAM_PLAY(this.$refs.video);
       }
     }
   },
   mounted() {
-    this.observerVideoInit();
     const audioLevelTimer = setInterval(() => {
       this.SET_AUDIOLEVEL();
     }, 200);
@@ -132,28 +138,6 @@ export default {
       "SET_AUDIOLEVEL",
       "LOCAL_STREAM_PLAY"
     ]),
-    observerVideoInit() {
-      if (!this.$refs.video) return;
-      let targetNode = this.$refs.video;
-      let config = {
-        childList: true,
-        subtree: true
-      };
-      let observer;
-      const mutationCallback = mutationsList => {
-        for (let mutation of mutationsList) {
-          let type = mutation.type;
-          if (type === "childList") {
-            this.visibility = true;
-            if (observer) {
-              observer.disconnect();
-            }
-          }
-        }
-      };
-      observer = new MutationObserver(mutationCallback);
-      observer.observe(targetNode, config);
-    },
     onMicroStateChange() {
       this.SET_LOCALSTREAM_AUDIO(!this.localAudioStatus);
     },
