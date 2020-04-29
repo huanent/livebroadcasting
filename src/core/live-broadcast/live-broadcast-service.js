@@ -40,7 +40,7 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "98894785075365";
   activeBoard = null;
-  userId = "jongwong";
+  userId = "jinrui";
   tim;
   localStream;
   remoteStreamList = {};
@@ -158,15 +158,16 @@ export class LiveBroadcastService {
     activeBoard.reset();
   }
   async sendSystemMsg(type, userID, ...flag) {
+    var data = JSON.stringify({
+      type: type,
+      userID: userID,
+      flag: flag
+    });
     let message = this.tim.createCustomMessage({
       to: this.roomId,
       conversationType: TIM.TYPES.CONV_GROUP,
       payload: {
-        data: {
-          type: type,
-          userID: userID,
-          flag: flag
-        },
+        data: data,
         description: "",
         extension: "SYSTEM_COMMAND"
       }
@@ -174,7 +175,7 @@ export class LiveBroadcastService {
     this.tim
       .sendMessage(message)
       .then(res => {
-        console.log(res);
+        console.log(res.data.message.payload);
       })
       .catch(err => {
         console.warn("sendMessage error:", err);
@@ -257,11 +258,11 @@ export class LiveBroadcastService {
       if (self.tim) {
         self.tim
           .sendMessage(message)
-          .then(() => {
-            return true;
+          .then(res => {
+            console.log(res.data.message.payload);
           })
           .catch(err => {
-            console.error(err);
+            console.warn(err);
           });
       }
     });
@@ -280,12 +281,15 @@ export class LiveBroadcastService {
     });
     self.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
       e.data.forEach(item => {
-        let data = item.payload.data;
-        console.log(">>>>>>>>>>>>>>>", data);
-        if (data && item.payload.extension === "TXWhiteBoardExt") {
+        const type = item.payload.extension;
+        const data = item.payload.data;
+        console.log(">>>>>>>>>>", type, data);
+        // SYSTEM_COMMAND || TXWhiteBoardExt || TIM_TEXT
+
+        if (type === "TXWhiteBoardExt") {
           self.getActiveBoard().addSyncData(data);
-        } else if (data && item.payload.extension === "SYSTEM_COMMAND") {
-          console.log(data);
+        } else if (type === "SYSTEM_COMMAND") {
+          console.log("SYSTEM_COMMAND");
         } else {
           Emitter.emit("TIM_CUSTOM_MESSAGE", item);
         }
