@@ -145,7 +145,10 @@ export default {
   grid-template-rows: 2rem auto;*/
 }
 .workplace-header {
-  background: #34363b;
+  @include themeify {
+    background: themed("background_color1");
+  }
+
   width: 100%;
   height: 2rem;
   overflow: hidden;
