@@ -127,7 +127,10 @@ export default {
 .workplace-footer {
   height: 2rem;
   color: #737882;
-  background-color: #171717;
+  @include themeify {
+    background: themed("background_color3");
+  }
+  border-top: rgba(30, 33, 37, 0.19) 1px solid;
 }
 .workplace-content {
   height: calc(100% - 2rem);

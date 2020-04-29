@@ -17,7 +17,7 @@ export default {
   name: "ChatroomFooter",
   data() {
     return {
-      message: "",
+      message: ""
     };
   },
   methods: {
@@ -27,8 +27,8 @@ export default {
       }
       this.$emit("send", this.message);
       this.message = "";
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -43,7 +43,13 @@ export default {
   align-items: center;
   padding: 0 15px;
   height: 60px;
+  /*
+  @include themeify {
+    background: themed("background_color1");
+  }
   background: #292b2e;
+*/
+
   border-top: 1px solid #34363b;
   /deep/ .el-input__inner {
     background-color: #38393f;
