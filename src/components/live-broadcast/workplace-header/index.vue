@@ -122,7 +122,7 @@ export default {
       transcodeProgress: 0,
       showProgressDialog: false,
       userId: "jongwong",
-      switchStatus: false,
+      switchStatus: true,
       activeColor: "#7e7e7e",
       inactiveColor: "#bbc3cf"
     };
@@ -266,7 +266,6 @@ export default {
 .workplace-header-component {
   height: 100%;
   width: 100%;
-  color: #eee;
   position: relative;
 }
 .menu-operation {

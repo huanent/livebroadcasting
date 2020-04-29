@@ -298,5 +298,8 @@ export default {
   min-width: 240px;
   height: 100%;
   position: relative;
+  @include themeify {
+    background: themed("background_color3");
+  }
 }
 </style>

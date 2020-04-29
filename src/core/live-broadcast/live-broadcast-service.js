@@ -322,7 +322,6 @@ export class LiveBroadcastService {
       this.createClient("default", token.id, token.userSig);
       await this.joinroom();
       await this.initTim();
-      this.initBoard();
     } else {
       console.error(res.data.messages);
     }
@@ -522,6 +521,16 @@ export class LiveBroadcastService {
         "remoteStream/SET_REMOTE_STREAM_LIST",
         self.remoteStreamListProfile
       );
+    });
+    client.on("peer-join", event => {
+      console.log("peer-join===================");
+      const userId = event.userId;
+      console.log(userId);
+    });
+    client.on("peer-leave", event => {
+      console.log("peer-leave===================");
+      const userId = event.userId;
+      console.log(userId);
     });
   }
 }
