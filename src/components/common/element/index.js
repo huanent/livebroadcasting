@@ -16,10 +16,11 @@ import {
   Table,
   TableColumn,
   Pagination,
-  Progress
+  Progress,
+  DatePicker,
 } from "element-ui";
 const element = {
-  install: function(Vue) {
+  install: function (Vue) {
     Vue.prototype.$message = Message;
     Vue.use(Form);
     Vue.use(FormItem);
@@ -37,6 +38,7 @@ const element = {
     Vue.use(TableColumn);
     Vue.use(Pagination);
     Vue.use(Progress);
+    Vue.use(DatePicker);
     Vue.prototype.$confirm = MessageBox.confirm;
   }
 };

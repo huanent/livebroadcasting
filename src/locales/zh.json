@@ -39,5 +39,12 @@
   "toolbar.clear": "清空",
   "toolbar.add": "新建",
   "toolbar.move": "移动",
-  "toolbar.hand": "拖动"
+  "toolbar.hand": "拖动",
+
+  "classformm.submit": "提交",
+  "classform.pic": "课堂图片",
+  "classform.title": "课堂标题",
+  "classform.description": "课堂描述",
+  "classform.startTime": "开始时间",
+  "classform.endTime": "结束时间"
 }
