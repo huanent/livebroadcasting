@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import { LiveBroadcastService } from "../../core/live-broadcast/live-broadcast-service";
 export default {
   name: "Signup",
   data() {
@@ -107,10 +108,14 @@ export default {
     };
 
     return {
+      // userId: "",
+      // roomId: "",
       dialogImageUrl: "",
       dialogVisible: false,
       avatar: "",
       classForm: {
+        userId: "",
+        roomId: "",
         avatar: "",
         title: "",
         description: "",
@@ -149,7 +154,11 @@ export default {
       }
     };
   },
-  created() {},
+  created() {
+    this._data.classForm.userId = window.liveBroadcastService.userId;
+    this._data.classForm.roomId = window.liveBroadcastService.roomId;
+    console.log(this);
+  },
   methods: {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
