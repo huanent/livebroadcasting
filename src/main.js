@@ -9,6 +9,7 @@ import element from "@c/common/element";
 import "@style/normalize.css";
 import "./assets/style/element-variable.scss";
 import "@style/custom.scss";
+
 import { LiveBroadcastService } from "./core/live-broadcast/live-broadcast-service";
 
 Vue.use(element);
@@ -27,3 +28,9 @@ export const liveBroadcastService = new LiveBroadcastService();
 if (process.env.NODE_ENV === "development") {
   window["liveBroadcastService"] = liveBroadcastService;
 }
+window["test"] = function() {
+  import("./assets/style/variable.scss").then(_ => {
+    // chunk-name : style
+    alert("Change bg-color of html");
+  });
+};
