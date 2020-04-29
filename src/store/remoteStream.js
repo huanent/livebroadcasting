@@ -21,14 +21,14 @@ const mutations = {
   SET_REMOTE_AUDIO(state, data) {
     liveBroadcastService.sendSystemMsg(
       "SET_REMOTE_AUDIO",
-      data.id,
+      data.userId,
       data.status
     );
   },
   SET_REMOTE_VIDEO(state, data) {
     liveBroadcastService.sendSystemMsg(
       "SET_REMOTE_VIDEO",
-      data.id,
+      data.userId,
       data.status
     );
   }

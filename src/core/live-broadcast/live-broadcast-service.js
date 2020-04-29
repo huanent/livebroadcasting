@@ -284,11 +284,9 @@ export class LiveBroadcastService {
         const type = item.payload.extension;
         const data = item.payload.data;
         // SYSTEM_COMMAND || TXWhiteBoardExt || TIM_TEXT
-
         if (type === "TXWhiteBoardExt") {
           self.getActiveBoard().addSyncData(data);
         } else if (type === "SYSTEM_COMMAND") {
-          debugger;
           const info = JSON.parse(data);
           if ((info.userId = this.userId)) {
             Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));

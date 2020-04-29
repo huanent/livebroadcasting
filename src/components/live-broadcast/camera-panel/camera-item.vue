@@ -50,13 +50,13 @@ export default {
     ...mapMutations("remoteStream", ["SET_REMOTE_AUDIO", "SET_REMOTE_VIDEO"]),
     onMicroStateChange() {
       this.SET_REMOTE_AUDIO({
-        id: this.item.id,
+        userId: this.item.userId,
         status: !this.item.hasAudio
       });
     },
     onVideoStateChange() {
       this.SET_REMOTE_VIDEO({
-        id: this.item.userId,
+        userId: this.item.userId,
         status: !this.item.hasVideo
       });
     }
