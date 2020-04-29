@@ -16,55 +16,64 @@
         />
       </div>
     </div>
-    <div :id="streamId" ref="video" class="remote-video-view"></div>
+    <div :id="item.id" ref="video" class="remote-video-view"></div>
     <div class="self-camera-footer">
       <div>
-        <icon name="microphone" color="#0A818C" :size="18" />
-        <voice-intensity :intensity="0.8" />
+        <!-- <icon name="microphone" color="#0A818C" :size="18" />
+        <voice-intensity :intensity="0.8" /> -->
       </div>
       <span>
-        {{ userName }}
+        {{ item.userId }}
       </span>
     </div>
   </div>
 </template>
 
 <script>
-import VoiceIntensity from "@c/live-broadcast/self-camera/voice-intensity";
+import { mapMutations } from "vuex";
 export default {
   name: "CameraItem",
   props: {
-    userName: {},
-    streamId: {
-      require: true
+    item: {
+      type: Object,
+      default: () => {
+        return { hasAudio: false, hasVideo: false, id: "", userId: "" };
+      }
     }
   },
   data() {
     return {
-      visibility: true,
-      isMicroOpen: true,
-      isVideoOpen: true
+      visibility: true
     };
   },
   methods: {
-    onMicroStateChange() {},
-    onVideoStateChange() {}
+    ...mapMutations("remoteStream", ["SET_REMOTE_AUDIO", "SET_REMOTE_VIDEO"]),
+    onMicroStateChange() {
+      this.SET_REMOTE_AUDIO({
+        id: this.item.id,
+        status: !this.item.hasAudio
+      });
+    },
+    onVideoStateChange() {
+      this.SET_REMOTE_VIDEO({
+        id: this.item.id,
+        status: !this.item.hasVideo
+      });
+    }
   },
   mounted() {
     if (this.$refs.video) {
-      this.$emit("on-ready", this.streamId, this.$refs.video);
+      this.$emit("on-ready", this.item.id, this.$refs.video);
     }
+    console.log(this.item);
   },
   computed: {
     microIcon() {
-      return this.isMicroOpen ? "microphone" : "microphone-slash";
+      return this.item.hasAudio ? "microphone" : "microphone-slash";
     },
     videoIcon() {
-      return this.isVideoOpen ? "video" : "video-slash";
+      return this.item.hasVideo ? "video" : "video-slash";
     }
-  },
-  components: {
-    VoiceIntensity
   }
 };
 </script>

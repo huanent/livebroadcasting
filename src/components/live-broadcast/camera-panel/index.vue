@@ -27,11 +27,7 @@
             :style="{ height: perColumnHeight + 'px' }"
             style="color: white;display: inline-block;width: 100%"
           >
-            <CameraItem
-              :user-name="item.userId"
-              :stream-id="item.id"
-              @on-ready="play"
-            ></CameraItem>
+            <CameraItem :item="item" @on-ready="play"></CameraItem>
           </div>
         </div>
       </div>

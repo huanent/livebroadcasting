@@ -130,32 +130,31 @@ export class LiveBroadcastService {
       ? this.remoteStreamList[id].hasVideo()
       : false;
   }
-  muteRemoteAudio(id) {
-    let stream = this.remoteStreamList[id];
-    if (stream) {
-      stream.muteAudio();
-    }
-  }
-  unmuteRemoteAudio(id) {
-    let stream = this.remoteStreamList[id];
-    if (stream) {
-      stream.unmuteAudio();
-    }
-  }
-  muteRemoteVideo(id) {
-    let stream = this.remoteStreamList[id];
-    if (stream) {
-      stream.muteVideo();
-    }
-  }
-  unmuteRemoteVideo(id) {
-    let stream = this.remoteStreamList[id];
-    if (stream) {
-      stream.muteVideo();
-    }
-  }
   resetBoard(activeBoard) {
     activeBoard.reset();
+  }
+  async sendSystemMsg(type, userID, ...flag) {
+    let message = this.tim.createCustomMessage({
+      to: this.roomId,
+      conversationType: TIM.TYPES.CONV_GROUP,
+      payload: {
+        data: {
+          type: type,
+          userID: userID,
+          flag: flag
+        },
+        description: "",
+        extension: "SYSTEM_COMMAND"
+      }
+    });
+    this.tim
+      .sendMessage(message)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.warn("sendMessage error:", err);
+      });
   }
   async sendMessage(msg) {
     let message = this.tim.createCustomMessage({
@@ -167,14 +166,14 @@ export class LiveBroadcastService {
         extension: "TIM_TEXT"
       }
     });
-    this.tim.sendMessage(message).then(
-      () => {
+    this.tim
+      .sendMessage(message)
+      .then(() => {
         return true;
-      },
-      () => {
-        // 同步失败
-      }
-    );
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
   async initTim() {
     let options = {
@@ -232,18 +231,17 @@ export class LiveBroadcastService {
         }
       });
       if (self.tim) {
-        self.tim.sendMessage(message).then(
-          () => {
+        self.tim
+          .sendMessage(message)
+          .then(() => {
             return true;
-          },
-          () => {
-            // 同步失败
-          }
-        );
+          })
+          .catch(err => {
+            console.error(err);
+          });
       }
     });
     this.activeBoard = teduBoard;
-
     teduBoard.on(TEduBoard.EVENT.TEB_INIT, () => {
       setTimeout(function() {
         let fileListInfo = teduBoard.getFileInfoList();
@@ -261,6 +259,8 @@ export class LiveBroadcastService {
         let data = item.payload.data;
         if (data && item.payload.extension === "TXWhiteBoardExt") {
           self.getActiveBoard().addSyncData(data);
+        } else if (data && item.payload.extension === "SYSTEM_COMMAND") {
+          Emitter.emit("TIM_SYSTEM_COMMAND", item);
         } else {
           Emitter.emit("TIM_CUSTOM_MESSAGE", item);
         }
