@@ -157,10 +157,10 @@ export class LiveBroadcastService {
   resetBoard(activeBoard) {
     activeBoard.reset();
   }
-  async sendSystemMsg(type, userID, ...flag) {
+  async sendSystemMsg(type, userId, ...flag) {
     var data = JSON.stringify({
       type: type,
-      userID: userID,
+      userId: userId,
       flag: flag
     });
     let message = this.tim.createCustomMessage({
@@ -279,16 +279,20 @@ export class LiveBroadcastService {
       store.commit("workplace/BOARD_INDEX", lastindex);
     });
     self.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
+      let self = this;
       e.data.forEach(item => {
         const type = item.payload.extension;
         const data = item.payload.data;
-        console.log(">>>>>>>>>>", type, data);
         // SYSTEM_COMMAND || TXWhiteBoardExt || TIM_TEXT
 
         if (type === "TXWhiteBoardExt") {
           self.getActiveBoard().addSyncData(data);
         } else if (type === "SYSTEM_COMMAND") {
-          console.log("SYSTEM_COMMAND");
+          debugger;
+          const info = JSON.parse(data);
+          if ((info.userId = this.userId)) {
+            Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
+          }
         } else {
           Emitter.emit("TIM_CUSTOM_MESSAGE", item);
         }

@@ -56,7 +56,7 @@ export default {
     },
     onVideoStateChange() {
       this.SET_REMOTE_VIDEO({
-        id: this.item.id,
+        id: this.item.userId,
         status: !this.item.hasVideo
       });
     }

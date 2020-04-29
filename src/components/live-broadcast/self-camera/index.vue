@@ -124,6 +124,9 @@ export default {
     }
   },
   mounted() {
+    Emitter.on("CONTROL_LOCAL_STREAM", data => {
+      console.log("^^^^^^^^^^^^^^^^", data);
+    });
     const audioLevelTimer = setInterval(() => {
       this.SET_AUDIOLEVEL();
     }, 200);
