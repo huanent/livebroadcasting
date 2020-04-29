@@ -125,7 +125,12 @@ export default {
   },
   mounted() {
     Emitter.on("CONTROL_LOCAL_STREAM", data => {
-      console.log("^^^^^^^^^^^^^^^^", data);
+      if (data.type === "SET_REMOTE_AUDIO") {
+        this.SET_LOCALSTREAM_AUDIO(data.flag[0]);
+      }
+      if (data.type === "SET_REMOTE_VIDEO") {
+        this.SET_LOCALSTREAM_VIDEO(data.flag[0]);
+      }
     });
     const audioLevelTimer = setInterval(() => {
       this.SET_AUDIOLEVEL();

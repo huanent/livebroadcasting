@@ -40,7 +40,7 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "98894785075365";
   activeBoard = null;
-  userId = "jinrui";
+  userId = "jinrui1";
   tim;
   localStream;
   remoteStreamList = {};
@@ -279,7 +279,6 @@ export class LiveBroadcastService {
       store.commit("workplace/BOARD_INDEX", lastindex);
     });
     self.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
-      let self = this;
       e.data.forEach(item => {
         const type = item.payload.extension;
         const data = item.payload.data;
@@ -288,8 +287,8 @@ export class LiveBroadcastService {
           self.getActiveBoard().addSyncData(data);
         } else if (type === "SYSTEM_COMMAND") {
           const info = JSON.parse(data);
-          if ((info.userId = this.userId)) {
-            Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
+          if ((info.userId = self.userId)) {
+            Emitter.emit("CONTROL_LOCAL_STREAM", info);
           }
         } else {
           Emitter.emit("TIM_CUSTOM_MESSAGE", item);
