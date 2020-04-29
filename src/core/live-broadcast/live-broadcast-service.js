@@ -216,7 +216,6 @@ export class LiveBroadcastService {
       .login({ userID: userId, userSig: userSig })
       .then(async res => {
         console.log("tim 登录成功");
-        await self.initRoom();
         this.initBoard();
         this.initBoardOptions();
       })
