@@ -5,6 +5,7 @@ import board from "./board";
 import workplace from "./workplace";
 import localStream from "./localStream";
 import remoteStream from "./remoteStream";
+import localShareScreenStream from "./localShareScreenStream";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -13,6 +14,7 @@ export default new Vuex.Store({
     board,
     workplace,
     localStream,
-    remoteStream
+    remoteStream,
+    localShareScreenStream
   }
 });

@@ -7,24 +7,26 @@
       @index-change="indexChange($event)"
       @type-change="onChange"
       class="workplace-content"
+      :show-lable="panelType === 'board'"
     >
       <div class="board-wrapper" v-show="panelType === 'board'">
         <div id="board-el" class="roll-scroll"></div>
       </div>
       <div class="board-wrapper" v-show="panelType === 'screen'">
-        <div style="height: 100%;width: 100%;background-color: #0a818c"></div>
+        <div ref="screen" style="height: 100%;width: 100%;"></div>
       </div>
       <div class="board-wrapper" v-show="panelType === 'camera'">
         <div
+          ref="camera"
           id="workplace-camera"
-          style="height: 100%;width: 100%;background-color: #8c4651"
+          style="height: 100%;width: 100%"
         ></div>
       </div>
     </BoardTabs>
     <div class="workplace-footer">
-      <workplace-footer />
+      <workplace-footer v-show="panelType === 'board'" />
     </div>
-    <Toolbar></Toolbar>
+    <Toolbar v-show="panelType === 'board'"></Toolbar>
   </div>
 </template>
 
@@ -33,7 +35,7 @@ import Toolbar from "../toolbar/index";
 import BoardTabs from "./board-tabs";
 import WorkplaceFooter from "../workplace-footer";
 import { liveBroadcastService } from "../../../main";
-import { mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "MainWorkplace",
@@ -44,17 +46,54 @@ export default {
     };
   },
   methods: {
-    ...mapMutations("workplace", ["SET_BOARD_PROFILES"]),
+    ...mapMutations("workplace", [
+      "SET_BOARD_PROFILES",
+      "DELETE_BOARD_FILE",
+      "BOARD_INDEX"
+    ]),
+    ...mapMutations("localStream", [
+      "LOCAL_STREAM_PLAY",
+      "LOCAL_STREAM_STOP_PLAY",
+      "SELF_CAMERA_STATUS"
+    ]),
+    ...mapMutations("localShareScreenStream", [
+      "LOCAL_SHARE_SCREEN_PLAY",
+      "LOCAL_SHARE_SCREEN_STOP_PLAY"
+    ]),
     onTabsClose(item, index) {
-      this.$store.commit("workplace/DELETE_BOARD_FILE", item.fid);
+      if (item.fid) {
+        this.DELETE_BOARD_FILE(item.fid);
+      }
     },
     indexChange(index) {
-      this.$store.commit("workplace/BOARD_INDEX", index);
+      this.BOARD_INDEX(index);
     },
     onChange(type) {
+      let self = this;
       this.panelType = type;
-      if (this.panelType === "camera") {
-        console.log("yes");
+      if (type === "camera") {
+        let el = this.$refs.camera;
+        if (el) {
+          self.SELF_CAMERA_STATUS(false);
+          this.LOCAL_STREAM_STOP_PLAY();
+          setTimeout(() => {
+            self.LOCAL_STREAM_PLAY(el);
+          }, 300);
+        }
+      } else {
+        if (!this.selfCameraStatus) {
+          this.LOCAL_STREAM_STOP_PLAY();
+          setTimeout(() => {
+            self.SELF_CAMERA_STATUS(true);
+          }, 300);
+        }
+        if (type === "screen") {
+          if (this.$refs.screen) {
+            this.LOCAL_SHARE_SCREEN_PLAY(this.$refs.screen);
+          } else {
+            this.LOCAL_SHARE_SCREEN_STOP_PLAY();
+          }
+        }
       }
     }
   },
@@ -62,6 +101,7 @@ export default {
     liveBroadcastService.init();
   },
   computed: {
+    ...mapGetters("localStream", ["selfCameraStatus"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
     },

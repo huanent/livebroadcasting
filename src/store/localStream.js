@@ -4,14 +4,16 @@ const state = {
   localAudioStatus: true,
   localVideoStatus: true,
   audioLevel: 0.0,
-  isInit: false
+  isInit: false,
+  selfCameraStatus: true
 };
 
 const getters = {
   localAudioStatus: state => state.localAudioStatus,
   localVideoStatus: state => state.localVideoStatus,
   audioLevel: state => state.audioLevel,
-  isInit: state => state.isInit
+  isInit: state => state.isInit,
+  selfCameraStatus: state => state.selfCameraStatus
 };
 
 const mutations = {
@@ -41,8 +43,14 @@ const mutations = {
   LOCAL_STREAM_PLAY(state, elemntOrId) {
     liveBroadcastService.localStreamPlay(elemntOrId);
   },
+  LOCAL_STREAM_STOP_PLAY(state) {
+    liveBroadcastService.localStreamStopPlay();
+  },
   IS_INIT(state) {
     state.isInit = true;
+  },
+  SELF_CAMERA_STATUS(state, status) {
+    state.selfCameraStatus = status;
   }
 };
 

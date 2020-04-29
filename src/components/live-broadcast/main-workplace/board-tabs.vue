@@ -7,6 +7,7 @@
         :key="i"
         @click="switchTab(i, item)"
         :class="{ 'tab-item-active': d_activeIndex === i }"
+        v-show="showLable"
       >
         <span class="board-tab-title-container">{{ item.title }}</span>
         <span @click="onClose(item, i)" class="board-tab-icon-container">
@@ -56,7 +57,8 @@ export default {
     activeIndex: {
       type: Number,
       default: 0
-    }
+    },
+    showLable: {}
   },
   components: {
     Multiselect

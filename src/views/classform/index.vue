@@ -9,7 +9,7 @@
       >
         <el-form-item :label="$t('classform.pic')">
           <el-upload
-            action="/api/test"
+            action="/api/liveRoom/create"
             :class="[
               {
                 'class-upload': avatar.length > 0
@@ -108,11 +108,10 @@ export default {
     };
 
     return {
-      // userId: "",
-      // roomId: "",
       dialogImageUrl: "",
       dialogVisible: false,
       avatar: "",
+      fullClassImg: "",
       classForm: {
         userId: "",
         roomId: "",
@@ -157,7 +156,6 @@ export default {
   created() {
     this._data.classForm.userId = window.liveBroadcastService.userId;
     this._data.classForm.roomId = window.liveBroadcastService.roomId;
-    console.log(this);
   },
   methods: {
     handlePictureCardPreview(file) {
@@ -170,12 +168,12 @@ export default {
     },
     onSubmit(formName) {
       // this.classForm.avatar = `classTitle\\${this.classForm.title}\\img`;
-      this.classForm.avatar = `userid\\classTitle\\${this.classForm.title}`;
+      this.classForm.avatar = `userId\\${this.classForm.userId}\\classTitle\\${this.classForm.title}\\${this.fullClassImg}`;
       console.log(this.classForm.avatar);
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.axios
-            .post("/test", this.classForm)
+            .post("/liveRoom/create", this.classForm)
             .then(res => {
               if (res.data.success) {
                 this.$refs.upload.submit();
@@ -220,6 +218,7 @@ export default {
         reader.addEventListener(
           "load",
           () => {
+            this.fullClassImg = file.name;
             this.avatar = reader.result;
           },
           false

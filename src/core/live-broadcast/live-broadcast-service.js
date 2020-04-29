@@ -45,6 +45,9 @@ export class LiveBroadcastService {
   localStream;
   remoteStreamList = {};
   remoteStreamListProfile = {};
+  shareScreenRemoteStream;
+  localShareScreenStream;
+  shareScreenClient;
   async getUserSig(key) {
     if (!key) {
       key = "default";
@@ -79,18 +82,8 @@ export class LiveBroadcastService {
     });
     // 指明该 shareClient 默认不接收任何远端流 （它只负责发送屏幕分享流）
     shareClient.setDefaultMuteRemoteStreams(true);
-
-    shareClient.join({ roomId: this.roomId }).then(() => {
-      console.log("shareClient join success");
-      // 创建屏幕分享流
-      const shareStream = TRTC.createStream({ audio: false, screen: true });
-      shareStream.initialize().then(() => {
-        // screencast stream init success
-        shareClient.publish(shareStream).then(() => {
-          console.log("screen casting");
-        });
-      });
-    });
+    await shareClient.join({ roomId: this.roomId });
+    return shareClient;
   }
   switchFile(fid) {
     let activeBoard = this.getActiveBoard();
@@ -118,6 +111,37 @@ export class LiveBroadcastService {
   localStreamPlay(elmentOrId) {
     if (this.localStream && this.localStream.play) {
       this.localStream.play(elmentOrId);
+    }
+  }
+  async localShareScreenStreamPlay(elementOrId) {
+    if (this.localShareScreenStream && this.localShareScreenStream.play) {
+      this.localShareScreenStream.play(elementOrId);
+    } else {
+      this.shareScreenClient = await liveBroadcastService.createShareClient();
+      this.localShareScreenStream = TRTC.createStream({
+        audio: false,
+        screen: true
+      });
+      this.localShareScreenStream.setScreenProfile("1080p");
+      await this.localShareScreenStream.initialize();
+      this.shareScreenClient
+        .publish(this.localShareScreenStream)
+        .then(() => {});
+      this.localShareScreenStreamPlay(elementOrId);
+    }
+  }
+  async localShareScreenStreamStopPlay() {
+    if (this.localShareScreenStream && this.localShareScreenStream.stop) {
+      this.localShareScreenStream.stop();
+    }
+    if (this.shareScreenClient) {
+      await this.shareScreenClient.leave();
+      this.shareScreenClient = undefined;
+    }
+  }
+  localStreamStopPlay() {
+    if (this.localStream && this.localStream.play) {
+      this.localStream.stop();
     }
   }
   hasRemoteAudio(id) {
@@ -399,12 +423,19 @@ export class LiveBroadcastService {
     let keys = Object.keys(this.remoteStreamList);
     var self = this;
     keys.forEach(item => {
-      temp.push({
-        userId: self.remoteStreamList[item].userId_,
-        id: self.remoteStreamList[item].id_,
-        hasAudio: self.remoteStreamList[item].hasAudio(),
-        hasVideo: self.remoteStreamList[item].hasVideo()
-      });
+      let regex = /.*(share_screen)$/;
+      let con = regex.test(self.remoteStreamList[item].userId_);
+
+      if (con) {
+        this.shareScreenRemoteStream = self.remoteStreamList[item];
+      } else {
+        temp.push({
+          userId: self.remoteStreamList[item].userId_,
+          id: self.remoteStreamList[item].id_,
+          hasAudio: self.remoteStreamList[item].hasAudio(),
+          hasVideo: self.remoteStreamList[item].hasVideo()
+        });
+      }
     });
     return temp;
   }
@@ -413,8 +444,6 @@ export class LiveBroadcastService {
     let client = this.clientList["default"];
     let userId = token.id;
     var self = this;
-
-    await this.createShareClient();
     client
       .join({ roomId: this.roomId })
       .catch(error => {
@@ -436,12 +465,7 @@ export class LiveBroadcastService {
           })
           .then(() => {
             console.log("初始化本地流成功");
-            localStream.setVideoProfile({
-              width: 720, // 视频宽度
-              height: 560, // 视频高度
-              frameRate: 10, // 帧率
-              bitrate: 400 // 比特率 kbpsy
-            });
+            localStream.setVideoProfile("1080p");
             this.localStream = localStream;
             client
               .publish(localStream)
