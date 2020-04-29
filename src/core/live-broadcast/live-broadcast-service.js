@@ -281,10 +281,11 @@ export class LiveBroadcastService {
     self.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
       e.data.forEach(item => {
         let data = item.payload.data;
+        console.log(">>>>>>>>>>>>>>>", data);
         if (data && item.payload.extension === "TXWhiteBoardExt") {
           self.getActiveBoard().addSyncData(data);
         } else if (data && item.payload.extension === "SYSTEM_COMMAND") {
-          Emitter.emit("TIM_SYSTEM_COMMAND", item);
+          console.log(data);
         } else {
           Emitter.emit("TIM_CUSTOM_MESSAGE", item);
         }

@@ -75,6 +75,7 @@
 <script>
 import VoiceIntensity from "./voice-intensity";
 import { mapGetters, mapMutations } from "vuex";
+import { Emitter } from "../../../core/emit";
 
 export default {
   name: "SelfCamera",
