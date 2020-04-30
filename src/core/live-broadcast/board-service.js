@@ -5,7 +5,13 @@ let TEduBoard = window["TEduBoard"];
 export class BoardService {
   activeBoard = null;
   tim;
-  constructor() {}
+  boardInitParams = {
+    brushColor: store.state.board.brushColor,
+    brushThin: store.state.board.brushThin,
+    textColor: store.state.board.textColor,
+    textSize: store.state.board.textSize,
+    toolType: store.state.board.toolType
+  };
   init(sdkAppId, roomId, token, tim) {
     this.tim = tim;
     let userId = token.id;
@@ -19,8 +25,9 @@ export class BoardService {
       userSig: userSig
     };
 
-    let teduBoard = new TEduBoard(initParams);
-    let self = this;
+    let teduBoard = new TEduBoard(
+      Object.assign({}, initParams, this.boardInitParams)
+    );
     teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
       let message = this.tim.createCustomMessage({
         to: roomId,
@@ -31,8 +38,8 @@ export class BoardService {
           extension: "TXWhiteBoardExt"
         }
       });
-      if (self.tim) {
-        self.tim
+      if (this.tim) {
+        this.tim
           .sendMessage(message)
           .then(res => {
             console.log(res.data.message.payload);
@@ -51,10 +58,6 @@ export class BoardService {
         store.commit("workplace/BOARD_INDEX", lastindex);
       }, 3000);
     });
-    /*    teduBoard.on(TEduBoard.EVENT.TEB_INIT, res => {
-      let lastindex = store.state.workplace.boardProfiles.length - 1;
-      store.commit("workplace/BOARD_INDEX", lastindex);
-    });*/
     self.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
       e.data.forEach(item => {
         const type = item.payload.extension;
@@ -96,26 +99,6 @@ export class BoardService {
   resetBoard(activeBoard) {
     activeBoard.reset();
   }
-
-  initBoardOptions() {
-    // this.activeBoard.reset();
-    // 初始化画笔颜色
-    const brushColor = store.state.board.brushColor;
-    // 初始化画笔粗细
-    const brushThin = store.state.board.brushThin;
-    // 初始化文本颜色
-    const textColor = store.state.board.textColor;
-    // 初始化文本大小
-    const textSize = store.state.board.textSize;
-    //初始化使用的工具
-    const toolType = store.state.board.toolType;
-    this.activeBoard.setBrushColor(brushColor);
-    this.activeBoard.setBrushThin(brushThin);
-    this.activeBoard.setTextSize(textSize);
-    this.activeBoard.setTextColor(textColor);
-    this.activeBoard.setToolType(toolType);
-  }
-
   async addBoardFiles(resultUrl, title, pages, resolution) {
     this.getActiveBoard().addTranscodeFile({
       url: resultUrl,

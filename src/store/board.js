@@ -41,7 +41,10 @@ const mutations = {
     liveBroadcastService.boardService.activeBoard.setBrushThin(num);
   },
   SET_TOOL_PEN(state) {
-    if (!liveBroadcastService || !liveBroadcastService.boardService.activeBoard) {
+    if (
+      !liveBroadcastService ||
+      !liveBroadcastService.boardService.activeBoard
+    ) {
       return;
     }
     state.toolType = 1;

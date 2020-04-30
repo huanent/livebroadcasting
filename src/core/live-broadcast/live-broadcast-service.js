@@ -1,10 +1,5 @@
 import TRTC from "trtc-js-sdk";
-import {
-  createRoom,
-  enterRoom,
-  getClassByRoomID,
-  getSdkAppId
-} from "../data/data-service";
+import { createRoom, enterRoom } from "../data/data-service";
 
 import TIM from "tim-js-sdk";
 
@@ -36,12 +31,12 @@ const toUserId = "7";
 
 export class LiveBroadcastService {
   config;
-  sdkAppId = getSdkAppId();
+  sdkAppId = "1400360542";
   mode = "live";
   TokenList = {};
   roomId = "104236258082126";
   activeBoard = null;
-  userId = "jongwong-test1233974238";
+  userId = "jinrui123";
   tim;
   trtcService;
   timService;
@@ -71,16 +66,9 @@ export class LiveBroadcastService {
   async init() {
     let res = await createRoom(this.userId);
     if (res && res.data.success) {
-      /*   this.roomId = res.data.model.roomId;*/
       let token = await this.getUserSig("default");
       this.timService.init(this.sdkAppId, token).then(tim => {
-        /*    this.initBoard();
-        this.initBoardOptions();*/
-
-        /*  sdkAppId, roomId, token*/
-
         this.boardService.init(this.sdkAppId, this.roomId, token, tim);
-        this.boardService.initBoardOptions();
       });
       this.trtcService.init(this.roomId, token, this.sdkAppId);
     } else {
