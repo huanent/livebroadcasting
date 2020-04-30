@@ -10,8 +10,7 @@ export class TrtcService {
   shareScreenClient;
   roomId;
   constructor() {}
-  async init(roomId, token, sdkAppId) {
-    this.sdkAppId = sdkAppId;
+  async init(roomId, token) {
     this.roomId = roomId;
     let userId = token.id;
     let client = this.createClient("default", token.id, token.userSig);
@@ -64,7 +63,7 @@ export class TrtcService {
   createClient(key, userId, userSig) {
     this.clientList[key] = TRTC.createClient({
       mode: "live",
-      sdkAppId: this.sdkAppId,
+      sdkAppId: store.state.account.sdkAppId,
       userId: userId,
       userSig: userSig
     });
@@ -207,13 +206,12 @@ export class TrtcService {
     });
   }
   async createShareClient() {
-    const sdkAppId = this.sdkAppId;
     let token = await this.getUserSig("share_screen");
     let userId = token.id;
     let userSig = token.userSig;
     const shareClient = TRTC.createClient({
       mode: "live",
-      sdkAppId,
+      sdkAppId: store.state.account.sdkAppId,
       userId,
       userSig
     });

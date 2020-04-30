@@ -31,7 +31,6 @@ const toUserId = "7";
 
 export class LiveBroadcastService {
   config;
-  sdkAppId = "1400360542";
   mode = "live";
   TokenList = {};
   roomId = "104236258082126";
@@ -67,10 +66,10 @@ export class LiveBroadcastService {
     let res = await createRoom(this.userId);
     if (res && res.data.success) {
       let token = await this.getUserSig("default");
-      this.timService.init(this.sdkAppId, token).then(tim => {
-        this.boardService.init(this.sdkAppId, this.roomId, token, tim);
+      this.timService.init(token).then(tim => {
+        this.boardService.init(this.roomId, token, tim);
       });
-      this.trtcService.init(this.roomId, token, this.sdkAppId);
+      this.trtcService.init(this.roomId, token);
     } else {
       console.error(res.data.messages);
     }

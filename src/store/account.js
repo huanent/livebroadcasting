@@ -1,4 +1,5 @@
 const state = {
+  sdkAppId: "1400360542",
   lb_token: "",
   tx_userId: "",
   tx_userSig: localStorage.getItem("tx_userSig")

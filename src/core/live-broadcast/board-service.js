@@ -12,7 +12,7 @@ export class BoardService {
     textSize: store.state.board.textSize,
     toolType: store.state.board.toolType
   };
-  init(sdkAppId, roomId, token, tim) {
+  init(roomId, token, tim) {
     this.tim = tim;
     let userId = token.id;
     let userSig = token.userSig;
@@ -20,7 +20,7 @@ export class BoardService {
     let initParams = {
       id: elId,
       classId: roomId,
-      sdkAppId: sdkAppId,
+      sdkAppId: store.state.account.sdkAppId,
       userId: userId,
       userSig: userSig
     };
