@@ -16,7 +16,7 @@ const mutations = {
     state.remoteStreamList.push(remoteStreamList);
   },
   REMOTE_STREAM_PLAY(state, remote) {
-    liveBroadcastService.remoteStreamPlay(remote.id, remote.element);
+    liveBroadcastService.trtcService.remoteStreamPlay(remote.id, remote.element);
   },
   SET_REMOTE_AUDIO(state, data) {
     liveBroadcastService.sendSystemMsg(
