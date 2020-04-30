@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="main-workplace-container"
-    ref="workContainer"
-    :style="{ height: containerheight, width: containerwidth }"
-  >
+  <div class="main-workplace-container">
     <BoardTabs
       :datas="boardProfiles"
       @on-close="onTabsClose"
@@ -20,17 +16,13 @@
         <div ref="screen" style="height: 100%;width: 100%;"></div>
       </div>
       <div class="board-wrapper" v-show="panelType === 'camera'">
-        <div
-          ref="camera"
-          id="workplace-camera"
-          :style="{ height: cameraheight, width: camerawidth }"
-        ></div>
+        <div ref="camera" id="workplace-camera"></div>
       </div>
     </BoardTabs>
     <div class="workplace-footer">
       <workplace-footer v-show="panelType === 'board'" />
     </div>
-    <Toolbar v-show="panelType === 'board'"></Toolbar>
+    <Toolbar v-if="showToolbar && panelType === 'board'"></Toolbar>
   </div>
 </template>
 
@@ -47,10 +39,7 @@ export default {
   data() {
     return {
       panelType: "screen",
-      containerheight: "",
-      containerwidth: "",
-      cameraheight: "100%",
-      camerawidth: "100%"
+      showToolbar: false
     };
   },
   methods: {
@@ -81,38 +70,7 @@ export default {
       this.panelType = type;
       if (type === "camera") {
         let el = this.$refs.camera;
-        ////////////////////////////////////////////////////////////
-        let targetNode = this.$refs.camera;
-        let config = {
-          childList: true,
-          subtree: true
-        };
-        let observer;
-        const mutationCallback = mutationsList => {
-          for (let mutation of mutationsList) {
-            // this.$refs.screen.clientWidth = this.$refs.workContainer.clientWidth;
-            console.log("监听dom");
-            console.log("cameraheight变化前： " + this.cameraheight);
-            this.cameraheight = this.$refs.workContainer.clientHeight + "px";
-            this.camerawidth = this.$refs.workContainer.clientWidth + "px";
-            console.log("cameraheight变化后： " + this.cameraheight);
-            console.log(targetNode.style.height);
-            console.log(targetNode.style.width);
-            if (observer) {
-              console.log("监听dom");
-              console.log("cameraheight变化前： " + this.cameraheight);
-              this.cameraheight = this.$refs.workContainer.clientHeight + "px";
-              this.camerawidth = this.$refs.workContainer.clientWidth + "px";
-              console.log("cameraheight变化后： " + this.cameraheight);
-              console.log(targetNode.style.height);
-              console.log(targetNode.style.width);
-              observer.disconnect();
-            }
-          }
-        };
-        observer = new MutationObserver(mutationCallback);
-        observer.observe(targetNode, config);
-        /////////////////////////////////////////////////////////////////////////
+
         if (el) {
           self.SELF_CAMERA_STATUS(false);
           this.LOCAL_STREAM_STOP_PLAY();
@@ -137,19 +95,9 @@ export default {
       }
     }
   },
-  mounted() {
-    liveBroadcastService.init();
-    console.log(
-      "==================================mounted========================================================================"
-    );
-    this.containerheight = this.$refs.workContainer.clientHeight;
-    this.containerwidth = this.$refs.workContainer.clientWidth;
-    console.log(this.$refs.workContainer);
-    console.log(this.$refs.workContainer.clientWidth);
-    console.log(this.$refs.workContainer.clientHeight);
-    console.log(this.$refs.screen);
-    console.log(this.$refs.screen.clientWidth);
-    console.log(this.$refs.screen.clientHeight);
+  async mounted() {
+    await liveBroadcastService.init();
+    this.showToolbar = true;
   },
   computed: {
     ...mapGetters("localStream", ["selfCameraStatus"]),

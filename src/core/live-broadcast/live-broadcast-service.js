@@ -51,10 +51,10 @@ export class LiveBroadcastService {
     let res = await createRoom(this.userId);
     if (res && res.data.success) {
       let token = await this.getUserSig("default");
-      this.timService.init(token).then(tim => {
-        this.boardService.init(this.roomId, token, tim);
-      });
+      let tim = await this.timService.init(token);
       this.trtcService.init(this.roomId, token);
+      await this.boardService.init(this.roomId, token, tim);
+      return true;
     } else {
       console.error(res.data.messages);
     }

@@ -13,7 +13,7 @@ export class BoardService {
     textSize: store.state.board.textSize,
     toolType: store.state.board.toolType
   };
-  init(roomId, token, tim) {
+  async init(roomId, token, tim) {
     this.tim = tim;
     let initParams = {
       id: "board-el",
@@ -56,7 +56,7 @@ export class BoardService {
         store.commit("workplace/BOARD_INDEX", lastindex);
       }, 3000);
     });
-    self.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
+    this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
       e.data.forEach(item => {
         const type = item.payload.extension;
         const data = item.payload.data;
@@ -73,6 +73,7 @@ export class BoardService {
         }
       });
     });
+    return teduBoard;
   }
   getActiveBoard() {
     return this.activeBoard;
