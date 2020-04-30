@@ -55,6 +55,10 @@ export default {
     background-color: #38393f;
     border-color: #38393f;
     color: #dcebeb;
+    @include themeify {
+      background: themed("background_color3");
+      color: themed("color_opposite");
+    }
   }
 }
 </style>

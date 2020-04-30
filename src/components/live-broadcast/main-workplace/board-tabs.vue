@@ -151,6 +151,10 @@ export default {
   cursor: pointer;
 }
 .tab-item:hover {
+  @include themeify {
+    background: themed("background_color4");
+    color: themed("color_opposite");
+  }
   background-color: #141414;
 }
 .tab-item > span:hover {
@@ -178,6 +182,10 @@ export default {
   padding: 0 0.5rem;
 }
 .tab-item-active {
+  @include themeify {
+    background: themed("background_color4");
+    color: themed("color_opposite");
+  }
   background-color: #1a1b1d;
 }
 
@@ -193,6 +201,10 @@ export default {
     z-index: 100;
     padding: 5px 10px 5px 5px;
     color: #bfbfbf;
+    @include themeify {
+      background: themed("background_color4");
+      color: themed("color_opposite");
+    }
     background-color: #212224;
   }
   .select-option:hover {
