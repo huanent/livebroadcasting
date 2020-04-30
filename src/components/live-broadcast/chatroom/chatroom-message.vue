@@ -97,6 +97,9 @@ export default {
           color: #212224;
           padding: 10px;
           line-height: normal;
+          @include themeify {
+            background: themed("background_color4");
+          }
           background: #8a9099;
           text-align: left;
           border-radius: 4px;
@@ -135,13 +138,13 @@ export default {
     .chatroom-msg-body {
       .chatroom-msg__detail {
         &:before {
-          border-bottom-color: #0a818c;
+          border-bottom-color: #0a818c !important;
           left: auto;
           right: 0;
           transform: translateX(-100%);
         }
         .chatroom-msg__inner {
-          background-color: #0a818c;
+          background-color: #0a818c !important;
           color: #dcebeb;
         }
       }
