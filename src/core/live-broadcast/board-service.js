@@ -2,6 +2,7 @@ import TIM from "tim-js-sdk";
 import { Emitter } from "../emit";
 import store from "@/store";
 let TEduBoard = window["TEduBoard"];
+import { liveBroadcastService } from "@/main";
 export class BoardService {
   activeBoard = null;
   tim;
@@ -14,15 +15,12 @@ export class BoardService {
   };
   init(roomId, token, tim) {
     this.tim = tim;
-    let userId = token.id;
-    let userSig = token.userSig;
-    let elId = "board-el";
     let initParams = {
-      id: elId,
+      id: "board-el",
       classId: roomId,
       sdkAppId: store.state.account.sdkAppId,
-      userId: userId,
-      userSig: userSig
+      userId: token.id,
+      userSig: token.userSig
     };
 
     let teduBoard = new TEduBoard(

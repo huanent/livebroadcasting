@@ -1,33 +1,18 @@
-import TRTC from "trtc-js-sdk";
 import { createRoom, enterRoom } from "../data/data-service";
-
-import TIM from "tim-js-sdk";
 
 import COS from "cos-js-sdk-v5";
 window["COS"] = COS;
 
 import { liveBroadcastService } from "../../main";
 
-// let resizeTimer = null;
-
-import store from "@/store";
 import { Emitter } from "../emit";
-import router from "../../router";
 import { TrtcService } from "./trtc-service";
 import { TimService } from "./tim-service";
 import { BoardService } from "./board-service";
 
 Emitter.on("split-change", () => {
-  // if (resizeTimer) {
-  //   return;
-  // }
-  // resizeTimer = setTimeout(() => {
   liveBroadcastService.activeBoard.resize();
-  //   resizeTimer = null;
-  // }, 100);
 });
-
-const toUserId = "7";
 
 export class LiveBroadcastService {
   config;

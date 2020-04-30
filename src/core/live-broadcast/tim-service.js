@@ -48,7 +48,7 @@ export class TimService {
   async init(token) {
     let tim = TIM.create({
       SDKAppID: store.state.account.sdkAppId
-    }); // SDK 实例通常用 tim 表示
+    });
 
     tim.setLogLevel(1); // 普通级别，日志量较多，接入时建议使用
     // 注册 COS SDK 插件
