@@ -116,10 +116,17 @@ export default {
   // left: -170px;
   // top: 0;
   width: 9.4rem;
+  @include themeify {
+    background-color: themed("background_color3");
+    border: 1px solid themed("background_color5");
+  }
   background-color: rgba(48, 49, 51, 0.79);
   .shape-select {
     text-align: center;
     & :hover {
+      @include themeify {
+        background-color: themed("background_color3");
+      }
       background-color: black;
     }
     li {
@@ -153,6 +160,9 @@ export default {
 .active {
   background-color: black;
   box-shadow: 0 0 0px 1px #888888;
+  @include themeify {
+    background-color: themed("background_color5");
+  }
   svg {
     fill: rgb(255, 255, 255) !important;
   }

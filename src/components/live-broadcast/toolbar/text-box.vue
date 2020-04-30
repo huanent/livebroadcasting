@@ -53,6 +53,10 @@ export default {
   // left: -170px;
   // top: 30px;
   width: 9.4rem;
+  @include themeify {
+    background-color: themed("background_color3");
+    border: 1px solid themed("background_color5");
+  }
   background-color: rgba(33, 35, 37, 0.79);
   /deep/.el-color-picker__trigger {
     border: none;

@@ -46,5 +46,9 @@
   "classform.title": "课堂标题",
   "classform.description": "课堂描述",
   "classform.startTime": "开始时间",
-  "classform.endTime": "结束时间"
+  "classform.endTime": "结束时间",
+  "classform.titletips": "请填写标题",
+  "classform.descriptiontips": "请填写描述",
+  "classform.startTimetips": "请选择开始时间",
+  "classform.endTimetips": "请选择结束时间"
 }

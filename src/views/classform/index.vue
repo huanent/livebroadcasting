@@ -45,6 +45,8 @@
               type="datetime"
               placeholder="选择开始时间"
               :editable="false"
+              value-format="timestamp"
+              :change="selectDate()"
             >
             </el-date-picker>
           </div>
@@ -56,6 +58,8 @@
               type="datetime"
               placeholder="选择结束时间"
               :editable="false"
+              value-format="timestamp"
+              :change="selectDate()"
             >
             </el-date-picker>
           </div>
@@ -125,28 +129,28 @@ export default {
         title: [
           {
             required: true,
-            message: this.$t("signup.usernameTips"),
+            message: this.$t("classform.titletips"),
             trigger: "change"
           }
         ],
         description: [
           {
             required: true,
-            message: this.$t("signup.nicknameTips"),
+            message: this.$t("classform.descriptiontips"),
             trigger: "change"
           }
         ],
         startTime: [
           {
             required: true,
-            message: this.$t("signup.telTips"),
+            message: this.$t("classform.startTimetips"),
             trigger: "change"
           }
         ],
         endTime: [
           {
             required: true,
-            message: this.$t("signup.telTips"),
+            message: this.$t("classform.endTimetips"),
             trigger: "change"
           }
         ]
@@ -158,6 +162,14 @@ export default {
     this._data.classForm.roomId = window.liveBroadcastService.roomId;
   },
   methods: {
+    selectDate() {
+      if (this.classForm.startTime && this.classForm.endTime) {
+        if (this.classForm.startTime >= this.classForm.endTime) {
+          this.$message.error("结束时间不得早于开始时间");
+          this.classForm.endTime = "";
+        }
+      }
+    },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
@@ -169,16 +181,26 @@ export default {
     onSubmit(formName) {
       // this.classForm.avatar = `classTitle\\${this.classForm.title}\\img`;
       this.classForm.avatar = `userId\\${this.classForm.userId}\\classTitle\\${this.classForm.title}\\${this.fullClassImg}`;
-      console.log(this.classForm.avatar);
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.classForm.endTime = new Date(
+            parseInt(this.classForm.endTime)
+          ).toLocaleString();
+          this.classForm.startTime = new Date(
+            parseInt(this.classForm.startTime)
+          ).toLocaleString();
           this.axios
             .post("/liveRoom/create", this.classForm)
             .then(res => {
               if (res.data.success) {
-                this.$refs.upload.submit();
                 this.$message.success(res.data.message);
-                this.$router.push({ path: "/login" });
+                // this.$router.push({ path: "/login" });
+                this.$notify({
+                  title: "success",
+                  message: res.data.message,
+                  type: "success"
+                });
+                this.$refs.upload.submit();
               } else {
                 this.$refs.upload.clearFiles();
                 this.$refs[formName].resetFields();

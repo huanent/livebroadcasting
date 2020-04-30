@@ -308,7 +308,7 @@ export default {
   color: #eee;
   @include themeify {
     background-color: themed("background_color1");
-    border: 1px solid themed("background_color4");
+    border: 1px solid themed("background_color5");
   }
   background-color: rgba(48, 49, 51, 0.79);
   position: absolute;
@@ -317,7 +317,10 @@ export default {
 }
 /deep/ .svg-icon {
   padding: 0.4rem;
-  fill: #eee;
+  // fill: #eee;
+  @include themeify {
+    fill: themed("background_color4");
+  }
 }
 .toolbar-item {
   display: inline-block;
@@ -325,14 +328,14 @@ export default {
   width: 100%;
 }
 .toolbar-item:hover {
-  @include themeify {
-    background: themed("background_color4");
-  }
   background-color: rgba(0, 0, 0, 0.43);
+  @include themeify {
+    background-color: themed("background_color5");
+  }
 }
 .toolbar-item-active {
   @include themeify {
-    background-color: themed("background_color4");
+    background-color: themed("background_color5");
   }
   background-color: rgba(0, 0, 0, 0.43);
 }
