@@ -18,12 +18,12 @@ const getters = {
 
 const mutations = {
   SET_LOCALSTREAM_AUDIO(state, status) {
-    if (!liveBroadcastService.localStream) return;
+    if (!liveBroadcastService.trtcService.localStream) return;
     state.localAudioStatus = status;
     if (status) {
-      liveBroadcastService.localStream.unmuteAudio();
+      liveBroadcastService.trtcService.localStream.unmuteAudio();
     } else {
-      liveBroadcastService.localStream.muteAudio();
+      liveBroadcastService.trtcService.localStream.muteAudio();
     }
   },
   SET_LOCALSTREAM_VIDEO(state, status) {
@@ -37,14 +37,14 @@ const mutations = {
   },
   SET_AUDIOLEVEL(state) {
     if (!liveBroadcastService) return;
-    let level = liveBroadcastService.getAudioLevel();
+    let level = liveBroadcastService.trtcService.getAudioLevel();
     state.audioLevel = level;
   },
   LOCAL_STREAM_PLAY(state, elemntOrId) {
-    liveBroadcastService.localStreamPlay(elemntOrId);
+    liveBroadcastService.trtcService.localStreamPlay(elemntOrId);
   },
   LOCAL_STREAM_STOP_PLAY(state) {
-    liveBroadcastService.localStreamStopPlay();
+    liveBroadcastService.trtcService.localStreamStopPlay();
   },
   IS_INIT(state) {
     state.isInit = true;
