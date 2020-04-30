@@ -157,7 +157,10 @@ export default {
   color: #0a818c;
 }
 .board-tabs-header {
-  background-color: #212224;
+  @include themeify {
+    background: themed("background_color2");
+  }
+  border-bottom: rgba(30, 33, 37, 0.19) 1px solid;
   width: 100%;
   height: 1.8rem;
 }

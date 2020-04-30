@@ -1,6 +1,15 @@
 <template>
   <div class="workplace-header-component">
     <div class="menu-operation">
+      <span style="padding: 0 20px">
+        <el-switch
+          v-model="switchStatus"
+          :active-color="activeColor"
+          :inactive-color="inactiveColor"
+        >
+        </el-switch>
+      </span>
+
       <a @click="onCoursewareOpen"
         ><icon name="import_contacts" class="pannel-icon" :size="20"></icon
       ></a>
@@ -112,13 +121,31 @@ export default {
       courseFileList: [],
       transcodeProgress: 0,
       showProgressDialog: false,
-      userId: "jongwong"
+      userId: "jongwong",
+      switchStatus: true,
+      activeColor: "#7e7e7e",
+      inactiveColor: "#bbc3cf"
     };
+  },
+  watch: {
+    switchStatus(value) {
+      this.handlerTheme();
+    }
+  },
+  mounted() {
+    this.handlerTheme();
   },
   methods: {
     pageChange(index) {
       this.pageNum = index;
       this.getCourseData(this.pageNum, this.pageSize, this.userId);
+    },
+    handlerTheme() {
+      if (this.switchStatus) {
+        document.body.setAttribute("data-theme", "light");
+      } else {
+        document.body.setAttribute("data-theme", "dark");
+      }
     },
     getCourseData(pageNum, pageSize, userId) {
       getCourseData(pageNum, pageSize, userId).then(res => {
@@ -239,7 +266,6 @@ export default {
 .workplace-header-component {
   height: 100%;
   width: 100%;
-  color: #eee;
   position: relative;
 }
 .menu-operation {

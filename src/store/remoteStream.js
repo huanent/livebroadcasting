@@ -18,21 +18,19 @@ const mutations = {
   REMOTE_STREAM_PLAY(state, remote) {
     liveBroadcastService.remoteStreamPlay(remote.id, remote.element);
   },
-  MUTE_REMOTE_AUDIO(state, id) {
-    state.remoteStreamList[id].hasAudio = true;
-    liveBroadcastService.muteRemoteAudio(id);
+  SET_REMOTE_AUDIO(state, data) {
+    liveBroadcastService.sendSystemMsg(
+      "SET_REMOTE_AUDIO",
+      data.userId,
+      data.status
+    );
   },
-  UNMUTE_REMOTE_AUDIO(state, id) {
-    state.remoteStreamList[id].hasAudio = false;
-    liveBroadcastService.unmuteRemoteAudio(id);
-  },
-  MUTE_REMOTE_VIDEO(state, id) {
-    state.remoteStreamList[id].hasVideo = true;
-    liveBroadcastService.muteRemoteVideo(id);
-  },
-  UNMUTE_REMOTE_VIDEO(state, id) {
-    state.remoteStreamList[id].hasVideo = false;
-    liveBroadcastService.unmuteRemoteVideo(id);
+  SET_REMOTE_VIDEO(state, data) {
+    liveBroadcastService.sendSystemMsg(
+      "SET_REMOTE_VIDEO",
+      data.userId,
+      data.status
+    );
   }
 };
 export default {

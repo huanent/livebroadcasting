@@ -141,14 +141,21 @@ export default {
   height: 100vh;
   margin: 0;
   padding: 0;
+  @include themeify {
+    background: themedOpacity("background_color1", 0.8);
+  }
   /*  display: grid;
   grid-template-rows: 2rem auto;*/
 }
 .workplace-header {
-  background: #34363b;
+  @include themeify {
+    background: themed("background_color2");
+  }
   width: 100%;
   height: 2rem;
+  margin-bottom: 2px;
   overflow: hidden;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.44);
   & > * {
     overflow: hidden;
   }
@@ -156,12 +163,11 @@ export default {
 .workplace-panel-content {
   display: grid;
   width: 100%;
-  grid-template-columns: 79.5% 0.5% 20%;
+  grid-template-columns: 79.9% 0.1% 20%;
   height: 100%;
   overflow: hidden;
 }
 #workplace-panel-left {
-  background: #1a1b1d;
   display: grid;
   grid-template-rows: 23.5% 0.5% 76%;
   height: calc(100vh - 2rem);
@@ -175,9 +181,8 @@ export default {
   }
 }
 #workplace-panel-right {
-  background: #212224;
   display: grid;
-  grid-template-rows: 23.5% 0.5% 75%;
+  grid-template-rows: 23.5% 0.5% 76%;
   height: calc(100vh - 2rem);
   width: 100%;
   overflow: hidden;
@@ -187,10 +192,14 @@ export default {
 }
 
 #gutter {
-  background-color: #292929;
+  @include themeify {
+    background: themedOpacity("border_color1", 1);
+  }
 }
 #gutter1-1 {
-  background-color: #292929;
+  @include themeify {
+    background: themedOpacity("border_color1", 1);
+  }
 }
 .gutter-row {
   cursor: row-resize;
@@ -199,11 +208,15 @@ export default {
   cursor: col-resize;
 }
 .camera-panel {
-  background: #212224;
+  @include themeify {
+    background: themed("background_color1");
+  }
   position: relative;
 }
 .main-workplace-panel {
-  background: #1a1b1d;
+  @include themeify {
+    background: themed("background_color1");
+  }
 }
 .workplace-panel-left-hide {
   grid-template-rows: 0 3px 1fr !important;

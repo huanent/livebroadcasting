@@ -40,7 +40,7 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "98894785075365";
   activeBoard = null;
-  userId = "jongwong";
+  userId = "jinrui1";
   tim;
   localStream;
   remoteStreamList = {};
@@ -154,32 +154,32 @@ export class LiveBroadcastService {
       ? this.remoteStreamList[id].hasVideo()
       : false;
   }
-  muteRemoteAudio(id) {
-    let stream = this.remoteStreamList[id];
-    if (stream) {
-      stream.muteAudio();
-    }
-  }
-  unmuteRemoteAudio(id) {
-    let stream = this.remoteStreamList[id];
-    if (stream) {
-      stream.unmuteAudio();
-    }
-  }
-  muteRemoteVideo(id) {
-    let stream = this.remoteStreamList[id];
-    if (stream) {
-      stream.muteVideo();
-    }
-  }
-  unmuteRemoteVideo(id) {
-    let stream = this.remoteStreamList[id];
-    if (stream) {
-      stream.muteVideo();
-    }
-  }
   resetBoard(activeBoard) {
     activeBoard.reset();
+  }
+  async sendSystemMsg(type, userId, ...flag) {
+    var data = JSON.stringify({
+      type: type,
+      userId: userId,
+      flag: flag
+    });
+    let message = this.tim.createCustomMessage({
+      to: this.roomId,
+      conversationType: TIM.TYPES.CONV_GROUP,
+      payload: {
+        data: data,
+        description: "",
+        extension: "SYSTEM_COMMAND"
+      }
+    });
+    this.tim
+      .sendMessage(message)
+      .then(res => {
+        console.log(res.data.message.payload);
+      })
+      .catch(err => {
+        console.warn("sendMessage error:", err);
+      });
   }
   async sendMessage(msg) {
     let message = this.tim.createCustomMessage({
@@ -191,14 +191,14 @@ export class LiveBroadcastService {
         extension: "TIM_TEXT"
       }
     });
-    this.tim.sendMessage(message).then(
-      () => {
+    this.tim
+      .sendMessage(message)
+      .then(() => {
         return true;
-      },
-      () => {
-        // 同步失败
-      }
-    );
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
   async initTim() {
     let options = {
@@ -217,7 +217,6 @@ export class LiveBroadcastService {
       .login({ userID: userId, userSig: userSig })
       .then(async res => {
         console.log("tim 登录成功");
-        await self.initRoom();
         this.initBoard();
         this.initBoardOptions();
       })
@@ -256,18 +255,17 @@ export class LiveBroadcastService {
         }
       });
       if (self.tim) {
-        self.tim.sendMessage(message).then(
-          () => {
-            return true;
-          },
-          () => {
-            // 同步失败
-          }
-        );
+        self.tim
+          .sendMessage(message)
+          .then(res => {
+            console.log(res.data.message.payload);
+          })
+          .catch(err => {
+            console.warn(err);
+          });
       }
     });
     this.activeBoard = teduBoard;
-
     teduBoard.on(TEduBoard.EVENT.TEB_INIT, () => {
       setTimeout(function() {
         let fileListInfo = teduBoard.getFileInfoList();
@@ -282,9 +280,16 @@ export class LiveBroadcastService {
     });
     self.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
       e.data.forEach(item => {
-        let data = item.payload.data;
-        if (data && item.payload.extension === "TXWhiteBoardExt") {
+        const type = item.payload.extension;
+        const data = item.payload.data;
+        // SYSTEM_COMMAND || TXWhiteBoardExt || TIM_TEXT
+        if (type === "TXWhiteBoardExt") {
           self.getActiveBoard().addSyncData(data);
+        } else if (type === "SYSTEM_COMMAND") {
+          const info = JSON.parse(data);
+          if ((info.userId = self.userId)) {
+            Emitter.emit("CONTROL_LOCAL_STREAM", info);
+          }
         } else {
           Emitter.emit("TIM_CUSTOM_MESSAGE", item);
         }
@@ -317,7 +322,6 @@ export class LiveBroadcastService {
       this.createClient("default", token.id, token.userSig);
       await this.joinroom();
       await this.initTim();
-      this.initBoard();
     } else {
       console.error(res.data.messages);
     }
@@ -517,6 +521,16 @@ export class LiveBroadcastService {
         "remoteStream/SET_REMOTE_STREAM_LIST",
         self.remoteStreamListProfile
       );
+    });
+    client.on("peer-join", event => {
+      console.log("peer-join===================");
+      const userId = event.userId;
+      console.log(userId);
+    });
+    client.on("peer-leave", event => {
+      console.log("peer-leave===================");
+      const userId = event.userId;
+      console.log(userId);
     });
   }
 }
