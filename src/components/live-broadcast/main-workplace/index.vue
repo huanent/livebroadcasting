@@ -12,7 +12,11 @@
       <div class="board-wrapper" v-show="panelType === 'board'">
         <div id="board-el" class="roll-scroll"></div>
       </div>
-      <div class="board-wrapper" v-show="panelType === 'screen'">
+      <div
+        ref="screenParent"
+        class="board-wrapper"
+        v-show="panelType === 'screen'"
+      >
         <div ref="screen" style="height: 100%;width: 100%;"></div>
       </div>
       <div class="board-wrapper" v-show="panelType === 'camera'">
@@ -89,16 +93,45 @@ export default {
         }
         if (type === "screen") {
           if (this.$refs.screen) {
+            console.log(
+              "=========================================================================================================="
+            );
+            // console.log(this.$refs.screenParent.children.children);
+            console.log(this.$refs.screen);
             this.LOCAL_SHARE_SCREEN_PLAY(this.$refs.screen);
           } else {
             this.LOCAL_SHARE_SCREEN_STOP_PLAY();
           }
         }
       }
+      // if (!this.$refs.screen) return;
+      // let targetNode = this.$refs.screen;
+      // let config = {
+      //   childList: true,
+      //   subtree: true
+      // };
+      // let observer;
+      // const mutationCallback = mutationsList => {
+      //   for (let mutation of mutationsList) {
+      //     let type = mutation.type;
+      //     if (type === "childList") {
+      //       this.visibility = true;
+      //       if (observer) {
+      //         observer.disconnect();
+      //       }
+      //     }
+      //   }
+      // };
+      // observer = new MutationObserver(mutationCallback);
+      // observer.observe(targetNode, config);
     }
   },
   mounted() {
     liveBroadcastService.init();
+    // console.log(
+    //   "=========================================================================================================="
+    // );
+    // console.log(this.$refs.screenParent.children);
   },
   computed: {
     ...mapGetters("localStream", ["selfCameraStatus"]),
@@ -113,6 +146,11 @@ export default {
     index(value) {
       let fileInfo = this.boardProfiles[value];
       liveBroadcastService.switchFile(fileInfo.fid);
+    },
+    "this.$refs.children": function() {
+      console.log(
+        "---------------------------------------------------------------------------------------------------------------------------"
+      );
     }
   }
 };
@@ -141,8 +179,17 @@ export default {
 }
 .board-wrapper {
   position: relative;
+  //原始
   height: calc(100% - 4rem);
   width: calc(100% - 10rem);
   margin: 2rem 5rem;
+  //分享窗口
+  // height: calc(80% - -2rem);
+  // width: calc(80% - -8rem);
+  // margin: 2rem 4rem;
+  //分享屏幕
+  // height: calc(80% - -8rem);
+  // width: calc(80% - -7rem);
+  // margin: 2rem 5rem;
 }
 </style>
