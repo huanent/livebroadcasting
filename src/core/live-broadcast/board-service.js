@@ -4,8 +4,10 @@ import store from "@/store";
 let TEduBoard = window["TEduBoard"];
 export class BoardService {
   activeBoard = null;
+  tim;
   constructor() {}
-  init(sdkAppId, roomId, token) {
+  init(sdkAppId, roomId, token, tim) {
+    this.tim = tim;
     let userId = token.id;
     let userSig = token.userSig;
     let elId = "board-el";
@@ -49,12 +51,11 @@ export class BoardService {
         store.commit("workplace/BOARD_INDEX", lastindex);
       }, 3000);
     });
-    teduBoard.on(TEduBoard.EVENT.TEB_INIT, res => {
+    /*    teduBoard.on(TEduBoard.EVENT.TEB_INIT, res => {
       let lastindex = store.state.workplace.boardProfiles.length - 1;
       store.commit("workplace/BOARD_INDEX", lastindex);
-    });
-    /*  self.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
-      let self = this;
+    });*/
+    self.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
       e.data.forEach(item => {
         const type = item.payload.extension;
         const data = item.payload.data;
@@ -70,7 +71,7 @@ export class BoardService {
           Emitter.emit("TIM_CUSTOM_MESSAGE", item);
         }
       });
-    });*/
+    });
   }
   getActiveBoard() {
     return this.activeBoard;
@@ -123,6 +124,10 @@ export class BoardService {
       resolution: resolution
     });
     this.getBoardFiles();
+  }
+  addBoard() {
+    liveBroadcastService.activeBoard.addBoard();
+    store.commit("workplace/BOARD_INDEX", 0);
   }
   getBoardFiles() {
     let self = this;

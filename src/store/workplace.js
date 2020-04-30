@@ -30,7 +30,7 @@ const mutations = {
     state.boardProfiles = boardProfiles;
   },
   async ADD_BOARD_FILE(state, file) {
-    await liveBroadcastService.addBoardFiles(
+    await liveBroadcastService.boardService.addBoardFiles(
       file.resultUrl,
       file.title,
       file.pages,
@@ -38,7 +38,7 @@ const mutations = {
     );
   },
   DELETE_BOARD_FILE(state, fid) {
-    liveBroadcastService.deleteBoardFile(fid);
+    liveBroadcastService.boardService.deleteBoardFile(fid);
   },
   BOARD_INDEX(state, index) {
     state.activeBoardIndex = index;
@@ -51,26 +51,32 @@ const mutations = {
   },
   BOARD_NUMBER_INCREASE(state, boardNumber) {
     state.boardNumber++;
-    liveBroadcastService.getActiveBoard().nextBoard();
+    liveBroadcastService.boardService.getActiveBoard().nextBoard();
   },
   BOARD_NUMBER_DECREASE(state, boardNumber) {
     state.boardNumber--;
-    liveBroadcastService.getActiveBoard().prevBoard();
+    liveBroadcastService.boardService.getActiveBoard().prevBoard();
   },
   BOARD_SCALE(state, boardScale) {
     state.boardScale = boardScale;
-    /*    liveBroadcastService.getActiveBoard().setBoardScale(state.boardScale);
-    liveBroadcastService.getActiveBoard().reset();*/
+    liveBroadcastService.boardService
+      .getActiveBoard()
+      .setBoardScale(state.boardScale);
+    liveBroadcastService.boardService.getActiveBoard().reset();
   },
   BOARD_SCALE_INCREASE(state, stepScale) {
     state.boardScale = state.boardScale + stepScale;
-    liveBroadcastService.getActiveBoard().setBoardScale(state.boardScale);
-    liveBroadcastService.getActiveBoard().resize();
+    liveBroadcastService.boardService
+      .getActiveBoard()
+      .setBoardScale(state.boardScale);
+    liveBroadcastService.boardService.getActiveBoard().resize();
   },
   BOARD_SCALE_DECREASE(state, stepScale) {
     state.boardScale = state.boardScale - stepScale;
-    liveBroadcastService.getActiveBoard().setBoardScale(state.boardScale);
-    liveBroadcastService.getActiveBoard().resize();
+    liveBroadcastService.boardService
+      .getActiveBoard()
+      .setBoardScale(state.boardScale);
+    liveBroadcastService.boardService.getActiveBoard().resize();
   },
   CAMERA_DEVICE_LIST(state, list) {
     state.cameraDeviceList = list;
@@ -79,18 +85,21 @@ const mutations = {
     state.microphonesDeviceList = list;
   },
   ACTIVE_CAMERA(state, device) {
-    liveBroadcastService.setCamerasDevice(device.deviceId);
+    liveBroadcastService.trtcService.setCamerasDevice(device.deviceId);
     state.activeCamera = device;
   },
   ACTIVE_MICROPHONES(state, device) {
-    liveBroadcastService.setMicrophonesDevice(device.deviceId);
+    liveBroadcastService.trtcService.setMicrophonesDevice(device.deviceId);
     state.activeMicrophones = device;
   },
   REMOTE_STREAM_PLAY(state, remote) {
-    liveBroadcastService.remoteStreamPlay(remote.id, remote.element);
+    liveBroadcastService.trtcService.remoteStreamPlay(
+      remote.id,
+      remote.element
+    );
   },
   async SEND_MESSAGE(state, msg) {
-    await liveBroadcastService.sendMessage(msg);
+    await liveBroadcastService.timService.sendMessage(msg);
   }
 };
 export default {

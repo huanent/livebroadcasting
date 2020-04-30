@@ -16,17 +16,20 @@ const mutations = {
     state.remoteStreamList.push(remoteStreamList);
   },
   REMOTE_STREAM_PLAY(state, remote) {
-    liveBroadcastService.trtcService.remoteStreamPlay(remote.id, remote.element);
+    liveBroadcastService.trtcService.remoteStreamPlay(
+      remote.id,
+      remote.element
+    );
   },
   SET_REMOTE_AUDIO(state, data) {
-    liveBroadcastService.sendSystemMsg(
+    liveBroadcastService.timService.sendSystemMsg(
       "SET_REMOTE_AUDIO",
       data.userId,
       data.status
     );
   },
   SET_REMOTE_VIDEO(state, data) {
-    liveBroadcastService.sendSystemMsg(
+    liveBroadcastService.timService.sendSystemMsg(
       "SET_REMOTE_VIDEO",
       data.userId,
       data.status

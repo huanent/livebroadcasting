@@ -60,7 +60,7 @@ export class TimService {
     return new Promise(resolve => {
       tim
         .login({ userID: userId, userSig: userSig })
-        .then(async resolve => {
+        .then(() => {
           resolve(tim);
         })
         .catch(imError => {

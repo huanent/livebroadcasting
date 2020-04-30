@@ -10,7 +10,8 @@ export class TrtcService {
   shareScreenClient;
   roomId;
   constructor() {}
-  async init(roomId, token) {
+  async init(roomId, token, sdkAppId) {
+    this.sdkAppId = sdkAppId;
     this.roomId = roomId;
     let userId = token.id;
     let client = this.createClient("default", token.id, token.userSig);
@@ -53,6 +54,12 @@ export class TrtcService {
     if (this.localStream && this.localStream.play) {
       this.localStream.play(elmentOrId);
     }
+  }
+  getAudioLevel() {
+    if (this.localStream) {
+      return this.localStream.getAudioLevel();
+    }
+    return 0.0;
   }
   createClient(key, userId, userSig) {
     this.clientList[key] = TRTC.createClient({
@@ -155,6 +162,7 @@ export class TrtcService {
     });
 
     client.on("stream-subscribed", event => {
+      var self = this;
       const remoteStream = event.stream;
       console.log("远端流订阅成功：" + remoteStream.id_);
       self.remoteStreamList[remoteStream.id_] = remoteStream;

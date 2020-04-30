@@ -39,9 +39,9 @@ export class LiveBroadcastService {
   sdkAppId = getSdkAppId();
   mode = "live";
   TokenList = {};
-  roomId = "98894785075365";
+  roomId = "104236258082126";
   activeBoard = null;
-  userId = "jongwong";
+  userId = "jongwong-test1233974238";
   tim;
   trtcService;
   timService;
@@ -78,10 +78,11 @@ export class LiveBroadcastService {
         this.initBoardOptions();*/
 
         /*  sdkAppId, roomId, token*/
-        this.boardService.init(this.sdkAppId, this.roomId, token);
+
+        this.boardService.init(this.sdkAppId, this.roomId, token, tim);
         this.boardService.initBoardOptions();
       });
-      this.trtcService.init(this.roomId, token);
+      this.trtcService.init(this.roomId, token, this.sdkAppId);
     } else {
       console.error(res.data.messages);
     }

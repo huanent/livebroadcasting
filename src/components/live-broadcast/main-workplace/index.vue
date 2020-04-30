@@ -163,7 +163,7 @@ export default {
   watch: {
     index(value) {
       let fileInfo = this.boardProfiles[value];
-      liveBroadcastService.switchFile(fileInfo.fid);
+      liveBroadcastService.boardService.switchFile(fileInfo.fid);
     },
     containerheight: function() {
       console.log("containerheight变化了");

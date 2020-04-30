@@ -6,10 +6,10 @@ const getters = {};
 
 const mutations = {
   async LOCAL_SHARE_SCREEN_PLAY(state, elemntOrId) {
-    liveBroadcastService.localShareScreenStreamPlay(elemntOrId);
+    liveBroadcastService.trtcService.localShareScreenStreamPlay(elemntOrId);
   },
   LOCAL_SHARE_SCREEN_STOP_PLAY(state) {
-    liveBroadcastService.localShareScreenStreamStopPlay();
+    liveBroadcastService.trtcService.localShareScreenStreamStopPlay();
   }
 };
 
