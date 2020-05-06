@@ -1,14 +1,50 @@
 import { liveBroadcastService } from "@/main";
+const axios = window["axios"];
 
-const state = {};
+const state = {
+  pagedModel: {}
+};
 
-const getters = {};
+const getters = {
+  pagedModel: state => {
+    var pagedModel = {
+      model: {}
+    };
+    if (state.pagedModel.list) {
+      pagedModel.list = state.pagedModel.list.map(item => {
+        return {
+          summary: item.title.replace(/<[^>]*>/g, ""),
+          ...item
+        };
+      });
+    }
+    pagedModel.total = state.pagedModel.total || 0;
+    return pagedModel;
+  }
+};
 
-const mutations = {};
+const mutations = {
+  SET_Paged_List(state, payload) {
+    state.pagedModel = payload;
+  }
+};
+const actions = {
+  async getList({ commit }, { pageNum, pageSize }) {
+    const result = await axios.get(
+      `/question/list?pageNum=${pageNum}&pageSize=${pageSize}`
+    );
+    commit("SET_Paged_List", result.data);
+  },
+  async remove({}, id) {
+    const result = await axios.post(`/question/remove/${id}`);
+    return result;
+  }
+};
 
 export default {
   namespaced: true,
   state,
   getters,
-  mutations
+  mutations,
+  actions
 };
