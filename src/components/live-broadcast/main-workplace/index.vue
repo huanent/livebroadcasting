@@ -38,7 +38,6 @@ export default {
   components: { Toolbar, BoardTabs, WorkplaceFooter },
   data() {
     return {
-      panelType: "screen",
       showToolbar: false
     };
   },
@@ -46,7 +45,8 @@ export default {
     ...mapMutations("workplace", [
       "SET_BOARD_PROFILES",
       "DELETE_BOARD_FILE",
-      "BOARD_INDEX"
+      "BOARD_INDEX",
+      "SET_PANEL_TYPE"
     ]),
     ...mapMutations("localStream", [
       "LOCAL_STREAM_PLAY",
@@ -67,7 +67,7 @@ export default {
     },
     onChange(type) {
       let self = this;
-      this.panelType = type;
+      this.SET_PANEL_TYPE(type);
       if (type === "camera") {
         let el = this.$refs.camera;
         if (el) {
@@ -141,7 +141,9 @@ export default {
     this.showToolbar = true;
   },
   computed: {
+    panelType: "screen",
     ...mapGetters("localStream", ["selfCameraStatus"]),
+    ...mapGetters("workplace", ["panelType"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
     },
