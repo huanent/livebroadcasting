@@ -18,7 +18,7 @@ export class LiveBroadcastService {
   config;
   mode = "live";
   TokenList = {};
-  roomId = "104236258082126";
+  roomId = "109264896101959";
   activeBoard = null;
   userId = "jinrui123";
   tim;
