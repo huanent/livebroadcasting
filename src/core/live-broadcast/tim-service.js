@@ -29,14 +29,17 @@ export class TimService {
         console.warn("sendMessage error:", err);
       });
   }
-  async sendMessage(msg) {
+  async sendMessage(msg, type) {
+    if (!type) {
+      type = "TIM_TEXT";
+    }
     let message = this.tim.createCustomMessage({
       to: this.roomId,
       conversationType: TIM.TYPES.CONV_GROUP,
       payload: {
         data: msg,
         description: "",
-        extension: "TIM_TEXT"
+        extension: type
       }
     });
     this.tim
@@ -72,23 +75,50 @@ export class TimService {
         });
     });
   }
+  handleExamination(e) {}
+  async sendExaminationMsg(msg) {
+    let message = this.tim.createCustomMessage({
+      to: this.roomId,
+      conversationType: TIM.TYPES.CONV_GROUP,
+      payload: {
+        data: msg,
+        description: "",
+        extension: "EXMAMINATION_SEND"
+      }
+    });
+    this.tim
+      .sendMessage(message)
+      .then(res => {
+        console.log(res.data.message.payload);
+      })
+      .catch(err => {
+        console.warn("sendMessage error:", err);
+      });
+  }
   listenHandler() {
+    let self = this;
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
       e.data.forEach(item => {
         const type = item.payload.extension;
         const data = item.payload.data;
         // SYSTEM_COMMAND || TXWhiteBoardExt || TIM_TEXT
-        if (type === "TXWhiteBoardExt") {
-          self.liveBroadcastService.boardService
-            .getActiveBoard()
-            .addSyncData(data);
-        } else if (type === "SYSTEM_COMMAND") {
-          const info = JSON.parse(data);
-          if ((info.userId = this.userId)) {
-            Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
-          }
-        } else {
-          Emitter.emit("TIM_CUSTOM_MESSAGE", item);
+        switch (type) {
+          case "TXWhiteBoardExt":
+            self.liveBroadcastService.boardService
+              .getActiveBoard()
+              .addSyncData(data);
+            break;
+          case "SYSTEM_COMMAND":
+            const info = JSON.parse(data);
+            if ((info.userId = this.userId)) {
+              Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
+            }
+            break;
+          case "EXMAMINATION_RECEIVE":
+            self.handleExamination(e);
+            break;
+          default:
+            Emitter.emit("TIM_CUSTOM_MESSAGE", item);
         }
       });
     });
