@@ -98,9 +98,12 @@ export class TimService {
         console.warn("sendMessage error:", err);
       });
   }
-  handSystemComand() {
+  handSystemComand(data) {
     const info = JSON.parse(data);
-    if (info.userIds instanceof Array && info.userIds.includes(this.userId)) {
+    if (
+      info.userIds instanceof Array &&
+      info.userIds.includes(this.liveBroadcastService.userId)
+    ) {
       Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
     } else if (info.userIds instanceof String && info.userIds === "all") {
       console.log(info);
@@ -112,7 +115,6 @@ export class TimService {
   listenHandler() {
     let self = this;
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
-      console.log(e);
       e.data.forEach(item => {
         const type = item.payload.extension;
         const data = item.payload.data;
