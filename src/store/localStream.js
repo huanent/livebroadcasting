@@ -27,12 +27,12 @@ const mutations = {
     }
   },
   SET_LOCALSTREAM_VIDEO(state, status) {
-    if (!liveBroadcastService.localStream) return;
+    if (!liveBroadcastService.trtcService.localStream) return;
     state.localVideoStatus = status;
     if (status) {
-      liveBroadcastService.localStream.unmuteVideo();
+      liveBroadcastService.trtcService.localStream.unmuteVideo();
     } else {
-      liveBroadcastService.localStream.muteVideo();
+      liveBroadcastService.trtcService.localStream.muteVideo();
     }
   },
   SET_AUDIOLEVEL(state) {

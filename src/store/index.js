@@ -6,6 +6,7 @@ import workplace from "./workplace";
 import localStream from "./localStream";
 import remoteStream from "./remoteStream";
 import localShareScreenStream from "./localShareScreenStream";
+import examination from "./examination";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     workplace,
     localStream,
     remoteStream,
-    localShareScreenStream
+    localShareScreenStream,
+    examination
   }
 });
