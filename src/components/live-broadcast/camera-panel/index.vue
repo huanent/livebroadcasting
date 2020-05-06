@@ -90,13 +90,7 @@ export default {
   getSlidesPerColumn() {},
 
   methods: {
-    ...mapMutations("remoteStream", [
-      "REMOTE_STREAM_PLAY",
-      "HASAUDIO",
-      "HASVIDEO",
-      "INIT_AUDIO",
-      "INIT_VIDEO"
-    ]),
+    ...mapMutations("remoteStream", ["REMOTE_STREAM_PLAY"]),
     render() {
       let el = this.$refs.swiper;
       if (!el) return;

@@ -22,18 +22,28 @@ const mutations = {
     );
   },
   SET_REMOTE_AUDIO(state, data) {
-    liveBroadcastService.timService.sendSystemMsg(
-      "SET_REMOTE_AUDIO",
-      [data.userId],
-      data.status
-    );
+    liveBroadcastService.timService
+      .sendSystemMsg("SET_REMOTE_AUDIO", [data.userId], data.status)
+      .then(() => {
+        const list = state.remoteStreamList;
+        list.forEach(element => {
+          if (element.userId === data.userId) {
+            element.hasAudio = data.status;
+          }
+        });
+      });
   },
   SET_REMOTE_VIDEO(state, data) {
-    liveBroadcastService.timService.sendSystemMsg(
-      "SET_REMOTE_VIDEO",
-      [data.userId],
-      data.status
-    );
+    liveBroadcastService.timService
+      .sendSystemMsg("SET_REMOTE_VIDEO", [data.userId], data.status)
+      .then(() => {
+        const list = state.remoteStreamList;
+        list.forEach(element => {
+          if (element.userId === data.userId) {
+            element.hasVideo = data.status;
+          }
+        });
+      });
   }
 };
 export default {
