@@ -321,6 +321,7 @@ export default {
     fill: themed("test");
   }
 }
+
 .toolbar-item {
   display: inline-block;
   margin: 0 auto;
