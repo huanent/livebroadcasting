@@ -38,7 +38,6 @@ export default {
   components: { Toolbar, BoardTabs, WorkplaceFooter },
   data() {
     return {
-      panelType: "screen",
       showToolbar: false
     };
   },
@@ -46,16 +45,17 @@ export default {
     ...mapMutations("workplace", [
       "SET_BOARD_PROFILES",
       "DELETE_BOARD_FILE",
-      "BOARD_INDEX"
+      "BOARD_INDEX",
+      "SET_PANEL_TYPE"
     ]),
     ...mapMutations("localStream", [
       "LOCAL_STREAM_PLAY",
       "LOCAL_STREAM_STOP_PLAY",
       "SELF_CAMERA_STATUS"
     ]),
-    ...mapMutations("localShareScreenStream", [
-      "LOCAL_SHARE_SCREEN_PLAY",
-      "LOCAL_SHARE_SCREEN_STOP_PLAY"
+    ...mapMutations("shareScreenStream", [
+      "SHARE_SCREEN_PLAY",
+      "SHARE_SCREEN_STOP_PLAY"
     ]),
     onTabsClose(item, index) {
       if (item.fid) {
@@ -67,7 +67,7 @@ export default {
     },
     onChange(type) {
       let self = this;
-      this.panelType = type;
+      this.SET_PANEL_TYPE(type);
       if (type === "camera") {
         let el = this.$refs.camera;
         if (el) {
@@ -107,7 +107,7 @@ export default {
         }
         if (type === "screen") {
           if (this.$refs.screen) {
-            this.LOCAL_SHARE_SCREEN_PLAY(this.$refs.screen);
+            this.SHARE_SCREEN_PLAY(this.$refs.screen);
             /////////////////////////////////////////////////////////////////////////
             /////////////////////////////////////////////////////////////////////////
             let targetNode = this.$refs.screen;
@@ -130,7 +130,7 @@ export default {
             /////////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////////
           } else {
-            this.LOCAL_SHARE_SCREEN_STOP_PLAY();
+            this.SHARE_SCREEN_STOP_PLAY();
           }
         }
       }
@@ -141,7 +141,9 @@ export default {
     this.showToolbar = true;
   },
   computed: {
+    panelType: "screen",
     ...mapGetters("localStream", ["selfCameraStatus"]),
+    ...mapGetters("workplace", ["panelType"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
     },

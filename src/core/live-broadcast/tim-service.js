@@ -5,17 +5,18 @@ import { Emitter } from "../emit";
 export class TimService {
   liveBroadcastService;
   tim;
-  async sendSystemMsg(type, userId, ...flag) {
-    var data = JSON.stringify({
+  roomId;
+  async sendSystemMsg(type, userIds, data) {
+    let datas = JSON.stringify({
       type: type,
-      userId: userId,
-      flag: flag
+      userIds: userIds,
+      data: data
     });
     let message = this.tim.createCustomMessage({
       to: this.roomId,
       conversationType: TIM.TYPES.CONV_GROUP,
       payload: {
-        data: data,
+        data: datas,
         description: "",
         extension: "SYSTEM_COMMAND"
       }
@@ -53,6 +54,7 @@ export class TimService {
   }
   async init(liveBroadcastService) {
     this.liveBroadcastService = liveBroadcastService;
+    this.roomId = liveBroadcastService.roomId;
     let token = await liveBroadcastService.getUserSig("default");
     let tim = TIM.create({
       SDKAppID: store.state.account.sdkAppId
@@ -95,6 +97,22 @@ export class TimService {
         console.warn("sendMessage error:", err);
       });
   }
+  handSystemComand(data) {
+    const info = JSON.parse(data);
+    if (
+      info.userIds instanceof Array &&
+      info.userIds.includes("kblive_" + this.liveBroadcastService.userId)
+    ) {
+      Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
+    } else if (typeof info.userIds === "string" && info.userIds === "all") {
+      if (info.type === "CONTROL_WORKPLACE_TYPE") {
+        store.commit("workplace/SET_PANEL_TYPE", info.data);
+      }
+    }
+  }
+  async switchWorkplaceType(panelType) {
+    await this.sendSystemMsg("CONTROL_WORKPLACE_TYPE", "all", panelType);
+  }
   listenHandler() {
     let self = this;
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
@@ -109,10 +127,7 @@ export class TimService {
               .addSyncData(data);
             break;
           case "SYSTEM_COMMAND":
-            const info = JSON.parse(data);
-            if ((info.userId = this.userId)) {
-              Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
-            }
+            self.handSystemComand(data);
             break;
           case "EXMAMINATION_RECEIVE":
             self.handleExamination(e);

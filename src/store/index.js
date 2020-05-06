@@ -5,18 +5,26 @@ import board from "./board";
 import workplace from "./workplace";
 import localStream from "./localStream";
 import remoteStream from "./remoteStream";
-import localShareScreenStream from "./localShareScreenStream";
+import shareScreenStream from "./shareScreenStream";
 import examination from "./examination";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  state: {
+    onElectronClient: false
+  },
   modules: {
     account,
     board,
     workplace,
     localStream,
     remoteStream,
-    localShareScreenStream,
+    shareScreenStream,
     examination
+  },
+  mutations: {
+    rtcAvailabled(state) {
+      state.onElectronClient = true;
+    }
   }
 });

@@ -98,7 +98,7 @@ export default {
           padding: 10px;
           line-height: normal;
           @include themeify {
-            background: themed("background_color4");
+            background: themed("active_icon");
           }
           background: #8a9099;
           text-align: left;

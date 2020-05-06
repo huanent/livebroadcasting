@@ -123,26 +123,20 @@ export default {
   background-color: rgba(48, 49, 51, 0.79);
   .shape-select {
     text-align: center;
-    & :hover {
-      @include themeify {
-        background-color: themed("background_color3");
-      }
-      background-color: black;
-    }
     li {
       text-align: center;
       float: left;
       width: 1.1rem;
       height: 1.1rem;
       line-height: 1.1rem;
-      // padding: 3px 4px 5px 4px;
       padding: 0.2rem 0.25rem 0.25rem 0.25rem;
-      /* margin-bottom: 5px; */
       margin-top: 0.1rem;
       margin-left: 0.15rem;
       margin-right: 0.15rem;
       &:hover svg {
-        fill: rgb(255, 255, 255) !important;
+        @include themeify {
+          fill: themed("toolbar_icon") !important;
+        }
       }
     }
   }
@@ -158,13 +152,19 @@ export default {
   }
 }
 .active {
-  background-color: black;
-  box-shadow: 0 0 0px 1px #888888;
+  // background-color: black;
   @include themeify {
-    background-color: themed("background_color5");
+    box-shadow: 0 0 0px 1px themed("toolbar_icon");
   }
+  // box-shadow: 0 0 0px 1px #888888;
+  // @include themeify {
+  //   background-color: themed("background_color5");
+  // }
   svg {
-    fill: rgb(255, 255, 255) !important;
+    // fill: rgb(255, 255, 255) !important;
+    @include themeify {
+      fill: themed("toolbar_icon") !important;
+    }
   }
 }
 </style>

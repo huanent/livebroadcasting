@@ -10,6 +10,14 @@
         </el-switch>
       </span>
 
+      <a @click="onRecord" v-if="onElectronClient"
+        ><icon
+          :name="recorder ? 'video-slash' : 'video'"
+          class="pannel-icon"
+          :size="20"
+        ></icon
+      ></a>
+
       <a @click="onCoursewareOpen"
         ><icon name="import_contacts" class="pannel-icon" :size="20"></icon
       ></a>
@@ -101,6 +109,7 @@
 
 <script>
 import { liveBroadcastService } from "../../../main";
+import { mapState } from "vuex";
 
 import {
   getCourseData,
@@ -127,9 +136,10 @@ export default {
       transcodeProgress: 0,
       showProgressDialog: false,
       userId: "jongwong",
-      switchStatus: true,
+      switchStatus: false,
       activeColor: "#7e7e7e",
-      inactiveColor: "#bbc3cf"
+      inactiveColor: "#bbc3cf",
+      recorder: null
     };
   },
   watch: {
@@ -139,6 +149,9 @@ export default {
   },
   mounted() {
     this.handlerTheme();
+  },
+  computed: {
+    ...mapState(["onElectronClient"])
   },
   methods: {
     pageChange(index) {
@@ -265,6 +278,18 @@ export default {
         pages: file.pages,
         resolution: file.resolution
       });
+    },
+    async onRecord() {
+      if (this.recorder) {
+        this.recorder.stop();
+        this.recorder = null;
+      } else {
+        const stream = await rtcService.getStream("screen:0:0");
+        this.recorder = await rtcService.record(
+          stream,
+          new Date().getTime() + ".webm"
+        );
+      }
     }
   },
   components: {
