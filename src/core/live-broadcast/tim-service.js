@@ -1,7 +1,10 @@
 import TIM from "tim-js-sdk";
 import COS from "cos-js-sdk-v5";
 import store from "@/store";
+import { Emitter } from "../emit";
 export class TimService {
+  liveBroadcastService;
+  tim;
   async sendSystemMsg(type, userId, ...flag) {
     var data = JSON.stringify({
       type: type,
@@ -45,7 +48,9 @@ export class TimService {
         console.error(err);
       });
   }
-  async init(token) {
+  async init(liveBroadcastService) {
+    this.liveBroadcastService = liveBroadcastService;
+    let token = await liveBroadcastService.getUserSig("default");
     let tim = TIM.create({
       SDKAppID: store.state.account.sdkAppId
     });
@@ -65,6 +70,27 @@ export class TimService {
         .catch(imError => {
           console.warn("login error:", imError); // 登录失败的相关信息
         });
+    });
+  }
+  listenHandler() {
+    this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
+      e.data.forEach(item => {
+        const type = item.payload.extension;
+        const data = item.payload.data;
+        // SYSTEM_COMMAND || TXWhiteBoardExt || TIM_TEXT
+        if (type === "TXWhiteBoardExt") {
+          self.liveBroadcastService.boardService
+            .getActiveBoard()
+            .addSyncData(data);
+        } else if (type === "SYSTEM_COMMAND") {
+          const info = JSON.parse(data);
+          if ((info.userId = this.userId)) {
+            Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
+          }
+        } else {
+          Emitter.emit("TIM_CUSTOM_MESSAGE", item);
+        }
+      });
     });
   }
 }

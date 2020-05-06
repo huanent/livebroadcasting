@@ -156,6 +156,7 @@ export class TrtcService {
       });
   }
   listenHandler(client) {
+    let self = this;
     client.on("stream-added", event => {
       const remoteStream = event.stream;
       console.log("远端流增加: " + remoteStream.id_);
