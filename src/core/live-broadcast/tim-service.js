@@ -99,10 +99,9 @@ export class TimService {
   }
   handSystemComand(data) {
     const info = JSON.parse(data);
-    console.log("*****************", info);
     if (
       info.userIds instanceof Array &&
-      info.userIds.includes(this.liveBroadcastService.userId)
+      info.userIds.includes("kblive_" + this.liveBroadcastService.userId)
     ) {
       Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
     } else if (typeof info.userIds === "string" && info.userIds === "all") {
