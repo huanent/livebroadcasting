@@ -50,6 +50,7 @@
 
 <script>
 import { Multiselect } from "vue-multiselect";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "BoardTabs",
   props: {
@@ -67,8 +68,8 @@ export default {
     return {
       tabItemList: [],
       d_activeIndex: this.activeIndex,
-      selected: undefined,
       caretIconName: "settings",
+      selected: undefined,
       options: [
         {
           title: "White board",
@@ -101,9 +102,16 @@ export default {
       }
       this.$emit("index-change", newVal);
       this.$emit("active-index", newVal);
+    },
+    panelType(value) {
+      this.$emit("type-change", value);
     }
   },
+  computed: {
+    ...mapGetters("workplace", ["panelType"])
+  },
   methods: {
+    ...mapMutations("workplace", ["SET_PANEL_TYPE"]),
     switchTab(index) {
       this.d_activeIndex = index;
     },
@@ -115,7 +123,7 @@ export default {
       this.$refs.select.isOpen = !this.$refs.select.isOpen;
     },
     onSelect(item) {
-      this.$emit("type-change", item.type);
+      this.SET_PANEL_TYPE(item.type);
     },
     init() {
       let temp = [];

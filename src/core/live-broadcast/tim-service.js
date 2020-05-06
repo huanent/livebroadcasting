@@ -14,7 +14,7 @@ export class TimService {
       flag: flag
     });
     let message = this.tim.createCustomMessage({
-      to: liveBroadcastService.roomId,
+      to: this.roomId,
       conversationType: TIM.TYPES.CONV_GROUP,
       payload: {
         data: datas,
@@ -105,8 +105,10 @@ export class TimService {
       info.userIds.includes(this.liveBroadcastService.userId)
     ) {
       Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
-    } else if (info.userIds instanceof String && info.userIds === "all") {
-      console.log(info);
+    } else if (typeof info.userIds === "string" && info.userIds === "all") {
+      if (info.type === "CONTROL_WORKPLACE_TYPE") {
+        store.commit("workplace/SET_PANEL_TYPE", info.data);
+      }
     }
   }
   async switchWorkplaceType(panelType) {
@@ -115,13 +117,10 @@ export class TimService {
   listenHandler() {
     let self = this;
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
-      console.log(e);
       e.data.forEach(item => {
         const type = item.payload.extension;
         const data = item.payload.data;
-
         // SYSTEM_COMMAND || TXWhiteBoardExt || TIM_TEXT
-        console.log(type);
         switch (type) {
           case "TXWhiteBoardExt":
             self.liveBroadcastService.boardService
