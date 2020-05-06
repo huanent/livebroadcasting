@@ -24,14 +24,14 @@ const mutations = {
   SET_REMOTE_AUDIO(state, data) {
     liveBroadcastService.timService.sendSystemMsg(
       "SET_REMOTE_AUDIO",
-      data.userId,
+      [data.userId],
       data.status
     );
   },
   SET_REMOTE_VIDEO(state, data) {
     liveBroadcastService.timService.sendSystemMsg(
       "SET_REMOTE_VIDEO",
-      data.userId,
+      [data.userId],
       data.status
     );
   }

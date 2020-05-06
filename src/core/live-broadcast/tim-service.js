@@ -115,11 +115,13 @@ export class TimService {
   listenHandler() {
     let self = this;
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+      console.log(e);
       e.data.forEach(item => {
         const type = item.payload.extension;
         const data = item.payload.data;
+
         // SYSTEM_COMMAND || TXWhiteBoardExt || TIM_TEXT
+        console.log(type);
         switch (type) {
           case "TXWhiteBoardExt":
             self.liveBroadcastService.boardService
@@ -127,15 +129,7 @@ export class TimService {
               .addSyncData(data);
             break;
           case "SYSTEM_COMMAND":
-<<<<<<< HEAD
-            const info = JSON.parse(data);
-            console.log("^^^^^^", info);
-            if ((info.userId = self.liveBroadcastService.userId)) {
-              Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
-            }
-=======
             self.handSystemComand(data);
->>>>>>> 712f0dd1e81f9ccf954e4e0fecd6a5ba1da38c41
             break;
           case "EXMAMINATION_RECEIVE":
             self.handleExamination(e);
