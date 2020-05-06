@@ -14,6 +14,7 @@ import ChatroomBody from "./chatroom-body";
 import ChatroomFooter from "./chatroom-footer";
 
 import { Emitter } from "../../../core/emit";
+import { mapMutations } from "vuex";
 
 export default {
   name: "Chatroom",
@@ -255,6 +256,7 @@ export default {
     });
   },
   methods: {
+    ...mapMutations("workplace", ["SEND_MESSAGE"]),
     loadMore() {
       const currentScrollHeight = this.$refs["chatroom-body"].$refs[
         "message-list"
@@ -264,7 +266,7 @@ export default {
       this.$refs["chatroom-body"].scrollToBottom();
     },
     async sendMessage(msg) {
-      await this.$store.commit("workplace/SEND_MESSAGE", msg);
+      await this.SEND_MESSAGE(msg);
       this.msgList.push({
         ID: Math.ceil(Math.random() * 10000),
         type: "TIM.TYPES.MSG_TEXT",
