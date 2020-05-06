@@ -10,6 +10,9 @@ import examination from "./examination";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  state: {
+    onElectronClient: false
+  },
   modules: {
     account,
     board,
@@ -18,5 +21,10 @@ export default new Vuex.Store({
     remoteStream,
     localShareScreenStream,
     examination
+  },
+  mutations: {
+    rtcAvailabled(state) {
+      state.onElectronClient = true;
+    }
   }
 });
