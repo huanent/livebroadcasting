@@ -126,9 +126,11 @@ export default {
   mounted() {
     Emitter.on("CONTROL_LOCAL_STREAM", data => {
       if (data.type === "SET_REMOTE_AUDIO") {
+        console.log(flag[0]);
         this.SET_LOCALSTREAM_AUDIO(data.flag[0]);
       }
       if (data.type === "SET_REMOTE_VIDEO") {
+        console.log(flag[0]);
         this.SET_LOCALSTREAM_VIDEO(data.flag[0]);
       }
     });

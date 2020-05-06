@@ -12,7 +12,7 @@ export class TimService {
       flag: flag
     });
     let message = this.tim.createCustomMessage({
-      to: this.roomId,
+      to: liveBroadcastService.roomId,
       conversationType: TIM.TYPES.CONV_GROUP,
       payload: {
         data: data,
@@ -98,6 +98,7 @@ export class TimService {
   listenHandler() {
     let self = this;
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
+      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
       e.data.forEach(item => {
         const type = item.payload.extension;
         const data = item.payload.data;
@@ -110,7 +111,8 @@ export class TimService {
             break;
           case "SYSTEM_COMMAND":
             const info = JSON.parse(data);
-            if ((info.userId = this.userId)) {
+            console.log("^^^^^^", info);
+            if ((info.userId = self.liveBroadcastService.userId)) {
               Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
             }
             break;
