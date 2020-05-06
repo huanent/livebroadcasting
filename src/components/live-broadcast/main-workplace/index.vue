@@ -53,9 +53,9 @@ export default {
       "LOCAL_STREAM_STOP_PLAY",
       "SELF_CAMERA_STATUS"
     ]),
-    ...mapMutations("localShareScreenStream", [
-      "LOCAL_SHARE_SCREEN_PLAY",
-      "LOCAL_SHARE_SCREEN_STOP_PLAY"
+    ...mapMutations("shareScreenStream", [
+      "SHARE_SCREEN_PLAY",
+      "SHARE_SCREEN_STOP_PLAY"
     ]),
     onTabsClose(item, index) {
       if (item.fid) {
@@ -107,7 +107,7 @@ export default {
         }
         if (type === "screen") {
           if (this.$refs.screen) {
-            this.LOCAL_SHARE_SCREEN_PLAY(this.$refs.screen);
+            this.SHARE_SCREEN_PLAY(this.$refs.screen);
             /////////////////////////////////////////////////////////////////////////
             /////////////////////////////////////////////////////////////////////////
             let targetNode = this.$refs.screen;
@@ -130,7 +130,7 @@ export default {
             /////////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////////
           } else {
-            this.LOCAL_SHARE_SCREEN_STOP_PLAY();
+            this.SHARE_SCREEN_STOP_PLAY();
           }
         }
       }

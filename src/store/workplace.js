@@ -1,5 +1,5 @@
 import { liveBroadcastService } from "@/main";
-
+import account from "./account";
 const state = {
   activeBoardIndex: 0,
   boardProfiles: [],
@@ -10,7 +10,6 @@ const state = {
   microphonesDeviceList: [],
   activeCamera: {},
   activeMicrophones: {},
-  role: "student",
   panelType: "board"
 };
 
@@ -107,7 +106,9 @@ const mutations = {
   },
   async SET_PANEL_TYPE(state, panelType) {
     state.panelType = panelType;
-    await liveBroadcastService.timService.switchWorkplaceType(panelType);
+    if (account.state.role !== "student") {
+      await liveBroadcastService.timService.switchWorkplaceType(panelType);
+    }
   }
 };
 export default {

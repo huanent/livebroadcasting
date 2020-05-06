@@ -5,7 +5,8 @@ const state = {
   tx_userSig: localStorage.getItem("tx_userSig")
     ? localStorage.getItem("tx_userSig")
     : "",
-  tx_privateMapKey: ""
+  tx_privateMapKey: "",
+  role: "student"
 };
 
 const getters = {
