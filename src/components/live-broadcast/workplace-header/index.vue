@@ -14,7 +14,7 @@
         ><icon name="import_contacts" class="pannel-icon" :size="20"></icon
       ></a>
       <a><icon name="person_outline" class="pannel-icon" :size="20"></icon></a>
-      <a><icon name="widgets" class="pannel-icon" :size="20"></icon></a>
+      <a @click="onWidgetsOpen"><icon name="widgets" class="pannel-icon" :size="20"></icon></a>
       <a><icon name="settings" class="pannel-icon" :size="20"></icon></a>
       <a><icon name="exit_to_app" class="pannel-icon" :size="20"></icon></a>
       <a><icon name="info_outline" class="pannel-icon" :size="20"></icon></a>
@@ -95,6 +95,7 @@
         <el-button type="primary" @click="onCoursewareClose">确 定</el-button>
       </span>
     </el-dialog>
+    <widgets :visible.sync="widegtsVisible"></widgets>
   </div>
 </template>
 
@@ -108,12 +109,16 @@ import {
   transcodeDescribe,
   setCourseFile
 } from "../../../core/data/data-service";
+
+import Widgets from "../widgets";
+
 export default {
   name: "WorkplaceHeader",
   data() {
     return {
       dialogVisible: false,
       addFileVisible: false,
+      widegtsVisible: true,
       fileList: [],
       pageSize: 6,
       pageNum: 1,
@@ -159,6 +164,9 @@ export default {
     onCoursewareOpen() {
       this.dialogVisible = true;
       this.getCourseData(this.pageNum, this.pageSize, this.userId);
+    },
+    onWidgetsOpen() {
+      this.widegtsVisible = true;
     },
     handleExceed(file) {
       console.log("文件超出");
@@ -258,6 +266,9 @@ export default {
         resolution: file.resolution
       });
     }
+  },
+  components: {
+    Widgets
   }
 };
 </script>
