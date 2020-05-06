@@ -42,6 +42,15 @@ body {
   background: rgba(0, 0, 0, 0);
 }
 
+/deep/ .toolbar .svg-icon {
+  padding: 0.4rem;
+  fill: #eee;
+
+  @include themeify {
+    fill: themed("color_opposite");
+  }
+}
+
 #workplace-camera {
   div {
     background-color: transparent !important;

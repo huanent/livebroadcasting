@@ -317,7 +317,7 @@ export default {
 }
 /deep/ .svg-icon {
   padding: 0.4rem;
-  // fill: #eee;
+  fill: #eee;
   @include themeify {
     fill: themed("background_color4");
   }

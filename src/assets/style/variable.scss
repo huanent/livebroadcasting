@@ -1,6 +1,4 @@
-$themes: (
-  light: (
-    font_color1: rgb(196, 193, 193),
+$themes: (light: (font_color1: rgb(196, 193, 193),
     font_color2: rgb(110, 109, 109),
     background_color1: rgb(255, 255, 255),
     background_color2: rgb(255, 255, 255),
@@ -10,10 +8,8 @@ $themes: (
     border_color1: rgb(251, 251, 251),
     border_color2: rgb(9, 255, 0),
     color_like: rgb(212, 212, 212),
-    color_opposite: rgb(0, 0, 0)
-  ),
-  dark: (
-    font_color1: rgb(226, 222, 222),
+    color_opposite: rgb(0, 0, 0)),
+  dark: (font_color1: rgb(226, 222, 222),
     font_color2: rgb(255, 255, 255),
     background_color1: #1a1b1d,
     background_color2: #1e2125,
@@ -23,13 +19,14 @@ $themes: (
     border_color1: rgb(44, 44, 44),
     border_color2: rgb(231, 181, 181),
     color_like: rgb(44, 44, 44),
-    color_opposite: rgb(255, 255, 255)
-  )
-);
+    color_opposite: rgb(255, 255, 255)));
 
 @mixin themeify {
-  @each $theme-name, $theme-map in $themes {
+
+  @each $theme-name,
+  $theme-map in $themes {
     $theme-map: $theme-map !global;
+
     body[data-theme="#{$theme-name}"] & {
       @content;
     }
@@ -40,6 +37,7 @@ $themes: (
   $color: map-get($theme-map, $key);
   @return $color;
 }
+
 @function themedOpacity($key, $opacity) {
   $color: map-get($theme-map, $key);
   @return opacify($color, $opacity);
