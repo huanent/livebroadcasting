@@ -41,3 +41,18 @@ body {
   border-radius: inherit;
   background: rgba(0, 0, 0, 0);
 }
+
+#workplace-camera {
+  div {
+    background-color: transparent !important;
+
+    div {
+      background-color: transparent !important;
+    }
+  }
+
+  /deep/ video {
+    width: auto !important !important;
+    object-fit: contain;
+  }
+}
