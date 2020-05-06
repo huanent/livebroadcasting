@@ -6,12 +6,11 @@ export class TimService {
   liveBroadcastService;
   tim;
   roomId;
-  async sendSystemMsg(type, userIds, data, ...flag) {
+  async sendSystemMsg(type, userIds, data) {
     let datas = JSON.stringify({
       type: type,
       userIds: userIds,
-      data: data,
-      flag: flag
+      data: data
     });
     let message = this.tim.createCustomMessage({
       to: liveBroadcastService.roomId,
@@ -100,6 +99,7 @@ export class TimService {
   }
   handSystemComand(data) {
     const info = JSON.parse(data);
+    console.log("*****************", info);
     if (
       info.userIds instanceof Array &&
       info.userIds.includes(this.liveBroadcastService.userId)
