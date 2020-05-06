@@ -70,8 +70,28 @@ export default {
       this.panelType = type;
       if (type === "camera") {
         let el = this.$refs.camera;
-
         if (el) {
+          /////////////////////////////////////////////////////////////////////////
+          /////////////////////////////////////////////////////////////////////////
+          let targetNode = this.$refs.camera;
+          let config = {
+            childList: true,
+            subtree: true
+            // attributes: true,
+            // attributeFilter: ["style"]
+          };
+          let observer;
+          const mutationCallback = mutationsList => {
+            console.log("监听dom");
+            if (this.$refs.camera.children[0].children[0]) {
+              this.$refs.camera.children[0].children[0].style.objectFit =
+                "contain";
+            }
+          };
+          observer = new MutationObserver(mutationCallback);
+          observer.observe(targetNode, config);
+          /////////////////////////////////////////////////////////////////////////
+          ////////////////////////////////////////////////////////////////////////
           self.SELF_CAMERA_STATUS(false);
           this.LOCAL_STREAM_STOP_PLAY();
           setTimeout(() => {
@@ -88,6 +108,25 @@ export default {
         if (type === "screen") {
           if (this.$refs.screen) {
             this.LOCAL_SHARE_SCREEN_PLAY(this.$refs.screen);
+            /////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////
+            let targetNode = this.$refs.camera;
+            let config = {
+              childList: true,
+              subtree: true
+            };
+            let observer;
+            const mutationCallback = mutationsList => {
+              console.log("监听dom");
+              if (this.$refs.screen.children[0].children[0]) {
+                this.$refs.screen.children[0].children[0].style.objectFit =
+                  "contain";
+              }
+            };
+            observer = new MutationObserver(mutationCallback);
+            observer.observe(targetNode, config);
+            /////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////
           } else {
             this.LOCAL_SHARE_SCREEN_STOP_PLAY();
           }
