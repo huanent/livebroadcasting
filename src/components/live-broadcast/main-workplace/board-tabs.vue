@@ -202,7 +202,7 @@ export default {
     padding: 5px 10px 5px 5px;
     color: #bfbfbf;
     @include themeify {
-      background: themed("background_color4");
+      background: themed("background_color6");
       color: themed("color_opposite");
     }
     background-color: #212224;
@@ -232,6 +232,7 @@ cover component Multiselect style
   z-index: 999;
   border-radius: 10px;
   box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.32);
+  background-color: red;
 }
 /deep/ .multiselect__select {
   display: inline-block;

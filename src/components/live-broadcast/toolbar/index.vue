@@ -318,10 +318,9 @@ export default {
 .svg-icon {
   padding: 0.4rem;
   @include themeify {
-    fill: themed("test");
+    fill: themed("toolbar_icon");
   }
 }
-
 .toolbar-item {
   display: inline-block;
   margin: 0 auto;
@@ -332,10 +331,20 @@ export default {
   @include themeify {
     background-color: themed("background_color5");
   }
+  .svg-icon {
+    @include themeify {
+      fill: themed("active_icon");
+    }
+  }
 }
 .toolbar-item-active {
   @include themeify {
-    background-color: themed("background_color5");
+    background-color: themed("toolbar_active");
+  }
+  .svg-icon {
+    @include themeify {
+      fill: themed("active_icon");
+    }
   }
   background-color: rgba(0, 0, 0, 0.43);
 }

@@ -9,7 +9,9 @@ const state = {
   cameraDeviceList: [],
   microphonesDeviceList: [],
   activeCamera: {},
-  activeMicrophones: {}
+  activeMicrophones: {},
+  role: "student",
+  panelType: "board"
 };
 
 const getters = {
@@ -21,7 +23,9 @@ const getters = {
   cameraDeviceList: state => state.cameraDeviceList,
   microphonesDeviceList: state => state.microphonesDeviceList,
   activeCamera: state => state.activeCamera,
-  activeMicrophones: state => state.activeMicrophones
+  activeMicrophones: state => state.activeMicrophones,
+  role: state => state.role,
+  panelType: state => state.panelType
 };
 
 const mutations = {
@@ -100,6 +104,10 @@ const mutations = {
   },
   async SEND_MESSAGE(state, msg) {
     await liveBroadcastService.timService.sendMessage(msg);
+  },
+  async SET_PANEL_TYPE(state, panelType) {
+    state.panelType = panelType;
+    await liveBroadcastService.timService.switchWorkplaceType(panelType);
   }
 };
 export default {

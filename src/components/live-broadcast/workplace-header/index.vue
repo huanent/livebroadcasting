@@ -122,7 +122,7 @@ export default {
       transcodeProgress: 0,
       showProgressDialog: false,
       userId: "jongwong",
-      switchStatus: true,
+      switchStatus: false,
       activeColor: "#7e7e7e",
       inactiveColor: "#bbc3cf"
     };
