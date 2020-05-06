@@ -83,7 +83,7 @@ export default {
           let observer;
           const mutationCallback = mutationsList => {
             console.log("监听dom");
-            if (this.$refs.camera.children[0].children[0]) {
+            if (this.$refs.camera.children[0].children[0].tagName === "VIDEO") {
               this.$refs.camera.children[0].children[0].style.objectFit =
                 "contain";
             }
@@ -110,7 +110,7 @@ export default {
             this.LOCAL_SHARE_SCREEN_PLAY(this.$refs.screen);
             /////////////////////////////////////////////////////////////////////////
             /////////////////////////////////////////////////////////////////////////
-            let targetNode = this.$refs.camera;
+            let targetNode = this.$refs.screen;
             let config = {
               childList: true,
               subtree: true
@@ -118,7 +118,9 @@ export default {
             let observer;
             const mutationCallback = mutationsList => {
               console.log("监听dom");
-              if (this.$refs.screen.children[0].children[0]) {
+              if (
+                this.$refs.screen.children[0].children[0].tagName === "VIDEO"
+              ) {
                 this.$refs.screen.children[0].children[0].style.objectFit =
                   "contain";
               }
