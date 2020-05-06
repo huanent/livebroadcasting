@@ -53,9 +53,6 @@ export default {
       selects: []
     };
   },
-  mounted() {
-    this.refreshList();
-  },
   methods: {
     ...mapActions("examination", ["getList", "remove"]),
     refreshList() {
@@ -98,6 +95,14 @@ export default {
     },
     canSend() {
       return this.selects.length > 0;
+    }
+  },
+  watch: {
+    questionVisible: {
+      handler(val) {
+        val && this.refreshList();
+      },
+      immediate: true
     }
   }
 };
