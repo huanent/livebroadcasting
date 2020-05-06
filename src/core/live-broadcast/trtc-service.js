@@ -9,9 +9,12 @@ export class TrtcService {
   localShareScreenStream;
   shareScreenClient;
   roomId;
+  liveBroadcastService;
   constructor() {}
-  async init(roomId, token) {
+  async init(roomId, liveBroadcastService) {
+    this.liveBroadcastService = liveBroadcastService;
     this.roomId = roomId;
+    let token = await liveBroadcastService.getUserSig("default");
     let userId = token.id;
     let client = this.createClient("default", token.id, token.userSig);
     await this.joinroom();
@@ -206,7 +209,7 @@ export class TrtcService {
     });
   }
   async createShareClient() {
-    let token = await this.getUserSig("share_screen");
+    let token = await liveBroadcastService.getUserSig("share_screen");
     let userId = token.id;
     let userSig = token.userSig;
     const shareClient = TRTC.createClient({
