@@ -188,5 +188,9 @@ export default {
   height: calc(100% - 4rem);
   width: calc(100% - 10rem);
   margin: 2rem 5rem;
+  > div {
+    height: 100%;
+    width: 100%;
+  }
 }
 </style>
