@@ -52,7 +52,7 @@ export class LiveBroadcastService {
     if (res && res.data.success) {
       let token = await this.getUserSig("default");
       let tim = await this.timService.init(token);
-      this.trtcService.init(this.roomId, token);
+      this.trtcService.init(this.roomId, this);
       await this.boardService.init(this.roomId, token, tim);
       return true;
     } else {
