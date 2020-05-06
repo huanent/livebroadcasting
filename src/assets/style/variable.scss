@@ -1,4 +1,6 @@
-$themes: (light: (font_color1: rgb(196, 193, 193),
+$themes: (
+  light: (
+    font_color1: rgb(196, 193, 193),
     font_color2: rgb(110, 109, 109),
     background_color1: rgb(255, 255, 255),
     background_color2: rgb(255, 255, 255),
@@ -7,13 +9,16 @@ $themes: (light: (font_color1: rgb(196, 193, 193),
     background_color5: rgb(10, 129, 140),
     background_color6: rgb(224, 224, 224),
     toolbar_icon: rgb(10, 129, 140),
-    toolbar_active:rgb(10, 129, 140),
-    active_icon:rgb(224, 224, 224),
+    toolbar_active: rgb(10, 129, 140),
+    active_icon: rgb(224, 224, 224),
     border_color1: rgb(251, 251, 251),
     border_color2: rgb(9, 255, 0),
     color_like: rgb(212, 212, 212),
-    color_opposite: rgb(0, 0, 0)),
-  dark: (font_color1: rgb(226, 222, 222),
+    color_opposite: rgb(0, 0, 0),
+    test: rgb(238, 238, 238)
+  ),
+  dark: (
+    font_color1: rgb(226, 222, 222),
     font_color2: rgb(255, 255, 255),
     background_color1: #1a1b1d,
     background_color2: #1e2125,
@@ -22,17 +27,18 @@ $themes: (light: (font_color1: rgb(196, 193, 193),
     background_color5: rgb(48, 49, 51),
     background_color6: rgb(30, 33, 37),
     toolbar_icon: rgb(255, 255, 255),
-    toolbar_active:rgb(48, 49, 51),
-    active_icon:rgb(224, 224, 224),
+    toolbar_active: rgb(48, 49, 51),
+    active_icon: rgb(224, 224, 224),
     border_color1: rgb(44, 44, 44),
     border_color2: rgb(231, 181, 181),
     color_like: rgb(44, 44, 44),
-    color_opposite: rgb(255, 255, 255)));
+    color_opposite: rgb(255, 255, 255),
+    test: rgb(238, 238, 238)
+  )
+);
 
 @mixin themeify {
-
-  @each $theme-name,
-  $theme-map in $themes {
+  @each $theme-name, $theme-map in $themes {
     $theme-map: $theme-map !global;
 
     body[data-theme="#{$theme-name}"] & {

@@ -22,7 +22,7 @@
     <div class="local_video" ref="video"></div>
     <div class="self-camera-footer">
       <div>
-        <icon name="microphone" color="#0A818C" :size="18" />
+        <icon :name="microIcon" color="#0A818C" :size="18" />
         <voice-intensity :intensity="Number(audioLevel)" />
       </div>
     </div>

@@ -5,7 +5,7 @@ let TEduBoard = window["TEduBoard"];
 import { liveBroadcastService } from "@/main";
 export class BoardService {
   activeBoard = null;
-  tim;
+  liveBroadcastService;
   boardInitParams = {
     brushColor: store.state.board.brushColor,
     brushThin: store.state.board.brushThin,
@@ -13,8 +13,10 @@ export class BoardService {
     textSize: store.state.board.textSize,
     toolType: store.state.board.toolType
   };
-  async init(roomId, token, tim) {
-    this.tim = tim;
+  async init(roomId, liveBroadcastService) {
+    this.liveBroadcastService = liveBroadcastService;
+    let tim = this.liveBroadcastService.timService.tim;
+    let token = await liveBroadcastService.getUserSig("default");
     let initParams = {
       id: "board-el",
       classId: roomId,
@@ -27,7 +29,7 @@ export class BoardService {
       Object.assign({}, initParams, this.boardInitParams)
     );
     teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
-      let message = this.tim.createCustomMessage({
+      let message = tim.createCustomMessage({
         to: roomId,
         conversationType: TIM.TYPES.CONV_GROUP,
         payload: {
@@ -36,8 +38,9 @@ export class BoardService {
           extension: "TXWhiteBoardExt"
         }
       });
-      if (this.tim) {
-        this.tim
+
+      if (tim) {
+        tim
           .sendMessage(message)
           .then(res => {
             console.log(res.data.message.payload);
@@ -55,23 +58,6 @@ export class BoardService {
         let lastindex = fileListInfo.length - 1;
         store.commit("workplace/BOARD_INDEX", lastindex);
       }, 3000);
-    });
-    this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
-      e.data.forEach(item => {
-        const type = item.payload.extension;
-        const data = item.payload.data;
-        // SYSTEM_COMMAND || TXWhiteBoardExt || TIM_TEXT
-        if (type === "TXWhiteBoardExt") {
-          self.getActiveBoard().addSyncData(data);
-        } else if (type === "SYSTEM_COMMAND") {
-          const info = JSON.parse(data);
-          if ((info.userId = this.userId)) {
-            Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
-          }
-        } else {
-          Emitter.emit("TIM_CUSTOM_MESSAGE", item);
-        }
-      });
     });
     return teduBoard;
   }

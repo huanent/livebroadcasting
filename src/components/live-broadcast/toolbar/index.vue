@@ -127,7 +127,6 @@ export default {
     TextBox
   },
   mounted() {
-    console.log(this);
     this.activeTool = this.toolslist[0];
     this.lastActiveSwitchTool = this.activeTool;
     this.initToolBarPosition();
