@@ -315,11 +315,10 @@ export default {
   padding: 0.3rem 0;
   text-align: center;
 }
-/deep/ .svg-icon {
+.svg-icon {
   padding: 0.4rem;
-  // fill: #eee;
   @include themeify {
-    fill: themed("background_color4");
+    fill: themed("test");
   }
 }
 .toolbar-item {
