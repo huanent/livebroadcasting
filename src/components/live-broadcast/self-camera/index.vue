@@ -122,7 +122,9 @@ export default {
     },
     panelType(value) {
       if (value !== "camera") {
-        this.LOCAL_STREAM_STOP_PLAY();
+        if (this.role !== "student") {
+          this.LOCAL_STREAM_STOP_PLAY();
+        }
         console.log("stop camera start self");
         setTimeout(() => {
           this.LOCAL_STREAM_PLAY(this.$refs.video);
@@ -150,6 +152,7 @@ export default {
     });
   },
   methods: {
+    ...mapMutations("account", ["role"]),
     ...mapMutations("workplace", ["ACTIVE_CAMERA", "ACTIVE_MICROPHONES"]),
     ...mapMutations("localStream", [
       "SET_LOCALSTREAM_AUDIO",
