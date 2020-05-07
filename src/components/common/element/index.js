@@ -18,7 +18,9 @@ import {
   Pagination,
   Progress,
   DatePicker,
-  Switch
+  Switch,
+  Badge,
+  Notification
 } from "element-ui";
 const element = {
   install: function(Vue) {
@@ -42,6 +44,8 @@ const element = {
     Vue.use(DatePicker);
     Vue.use(Switch);
     Vue.prototype.$confirm = MessageBox.confirm;
+    Vue.use(Badge);
+    Vue.prototype.$notify = Notification;
   }
 };
 export default element;
