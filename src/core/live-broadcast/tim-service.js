@@ -126,24 +126,34 @@ export class TimService {
   listenHandler() {
     let self = this;
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
-      e.data.forEach(item => {
-        const type = item.payload.extension;
-        const data = item.payload.data;
-        // SYSTEM_COMMAND || TXWhiteBoardExt || TIM_TEXT
-        switch (type) {
-          case "TXWhiteBoardExt":
-            self.liveBroadcastService.boardService
-              .getActiveBoard()
-              .addSyncData(data);
-            break;
-          case "SYSTEM_COMMAND":
-            self.handSystemComand(data);
-            break;
-          case "EXMAMINATION_RECEIVE":
-            self.handleExamination(e);
-            break;
-          default:
-            Emitter.emit("TIM_CUSTOM_MESSAGE", item);
+      let messages = e.data;
+      messages.forEach(message => {
+        if (message.to === self.roomId) {
+          let elements = message.getElements();
+          if (elements.length) {
+            elements.forEach(item => {
+              const type = item.payload.extension;
+              const data = item.payload.data;
+              // SYSTEM_COMMAND || TXWhiteBoardExt || TIM_TEXT
+              switch (type) {
+                case "TXWhiteBoardExt":
+                  self.liveBroadcastService.boardService
+                    .getActiveBoard()
+                    .addSyncData(data);
+                  break;
+                case "SYSTEM_COMMAND":
+                  self.handSystemComand(data);
+                  break;
+                case "EXMAMINATION_RECEIVE":
+                  self.handleExamination(e);
+                  break;
+                default:
+                  Emitter.emit("TIM_CUSTOM_MESSAGE", item);
+              }
+            });
+          }
+        } else {
+          // 其他群组消息忽略
         }
       });
     });
