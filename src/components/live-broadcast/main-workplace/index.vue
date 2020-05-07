@@ -6,6 +6,7 @@
       :active-index.sync="index"
       @index-change="indexChange($event)"
       @type-change="onChange"
+      :panel-type="panelType"
       class="workplace-content"
       :show-lable="panelType === 'board'"
     >
@@ -38,7 +39,8 @@ export default {
   components: { Toolbar, BoardTabs, WorkplaceFooter },
   data() {
     return {
-      showToolbar: false
+      showToolbar: false,
+      lastPanelType: undefined
     };
   },
   methods: {
@@ -46,12 +48,15 @@ export default {
       "SET_BOARD_PROFILES",
       "DELETE_BOARD_FILE",
       "BOARD_INDEX",
-      "SET_PANEL_TYPE"
+      "SET_PANEL_TYPE",
+      "SEND_PANEL_TYPE"
     ]),
     ...mapMutations("localStream", [
       "LOCAL_STREAM_PLAY",
       "LOCAL_STREAM_STOP_PLAY",
-      "SELF_CAMERA_STATUS"
+      "SELF_CAMERA_STATUS",
+      "TEACHER_REMOTE_STREAM_PLAY",
+      "TEACHER_REMOTE_STREAM_STOP_PLAY"
     ]),
     ...mapMutations("shareScreenStream", [
       "SHARE_SCREEN_PLAY",
@@ -65,75 +70,25 @@ export default {
     indexChange(index) {
       this.BOARD_INDEX(index);
     },
+    observerVideo(targetNode) {
+      let config = {
+        childList: true,
+        subtree: true
+        // attributes: true,
+        // attributeFilter: ["style"]
+      };
+      let observer;
+      const mutationCallback = mutationsList => {
+        console.log("监听dom");
+        if (this.$refs.camera.children[0].children[0].tagName === "VIDEO") {
+          this.$refs.camera.children[0].children[0].style.objectFit = "contain";
+        }
+      };
+      observer = new MutationObserver(mutationCallback);
+      observer.observe(targetNode, config);
+    },
     onChange(type) {
-      let self = this;
       this.SET_PANEL_TYPE(type);
-      if (type === "camera") {
-        let el = this.$refs.camera;
-        if (el) {
-          /////////////////////////////////////////////////////////////////////////
-          /////////////////////////////////////////////////////////////////////////
-          let targetNode = this.$refs.camera;
-          let config = {
-            childList: true,
-            subtree: true
-            // attributes: true,
-            // attributeFilter: ["style"]
-          };
-          let observer;
-          const mutationCallback = mutationsList => {
-            console.log("监听dom");
-            if (this.$refs.camera.children[0].children[0].tagName === "VIDEO") {
-              this.$refs.camera.children[0].children[0].style.objectFit =
-                "contain";
-            }
-          };
-          observer = new MutationObserver(mutationCallback);
-          observer.observe(targetNode, config);
-          /////////////////////////////////////////////////////////////////////////
-          ////////////////////////////////////////////////////////////////////////
-          self.SELF_CAMERA_STATUS(false);
-          this.LOCAL_STREAM_STOP_PLAY();
-          setTimeout(() => {
-            self.LOCAL_STREAM_PLAY(el);
-          }, 300);
-        }
-      } else {
-        if (!this.selfCameraStatus) {
-          this.LOCAL_STREAM_STOP_PLAY();
-          setTimeout(() => {
-            self.SELF_CAMERA_STATUS(true);
-          }, 300);
-        }
-        if (type === "screen") {
-          if (this.$refs.screen) {
-            this.SHARE_SCREEN_PLAY(this.$refs.screen);
-            /////////////////////////////////////////////////////////////////////////
-            /////////////////////////////////////////////////////////////////////////
-            let targetNode = this.$refs.screen;
-            let config = {
-              childList: true,
-              subtree: true
-            };
-            let observer;
-            const mutationCallback = mutationsList => {
-              console.log("监听dom");
-              if (
-                this.$refs.screen.children[0].children[0].tagName === "VIDEO"
-              ) {
-                this.$refs.screen.children[0].children[0].style.objectFit =
-                  "contain";
-              }
-            };
-            observer = new MutationObserver(mutationCallback);
-            observer.observe(targetNode, config);
-            /////////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////////
-          } else {
-            this.SHARE_SCREEN_STOP_PLAY();
-          }
-        }
-      }
     }
   },
   async mounted() {
@@ -141,9 +96,9 @@ export default {
     this.showToolbar = true;
   },
   computed: {
-    panelType: "screen",
-    ...mapGetters("localStream", ["selfCameraStatus"]),
+    ...mapGetters("localStream", []),
     ...mapGetters("workplace", ["panelType"]),
+    ...mapGetters("account", ["role"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
     },
@@ -154,10 +109,53 @@ export default {
   watch: {
     index(value) {
       let fileInfo = this.boardProfiles[value];
+
       liveBroadcastService.boardService.switchFile(fileInfo.fid);
     },
-    containerheight: function() {
-      console.log("containerheight变化了");
+    panelType: async function(type, oldType) {
+      let cameraEl = this.$refs.camera;
+      let screenEl = this.$refs.screen;
+      if (oldType === "screen") {
+        this.SHARE_SCREEN_STOP_PLAY();
+      }
+
+      if (this.role !== "student") {
+        switch (type) {
+          case "camera":
+            this.observerVideo(cameraEl);
+            this.LOCAL_STREAM_STOP_PLAY();
+            setTimeout(() => {
+              this.LOCAL_STREAM_PLAY(cameraEl);
+              this.SEND_PANEL_TYPE();
+            }, 300);
+            break;
+          case "screen":
+            this.observerVideo(screenEl);
+            this.SHARE_SCREEN_PLAY(screenEl);
+            this.SEND_PANEL_TYPE();
+            break;
+          default:
+            this.SEND_PANEL_TYPE();
+        }
+      } else {
+        switch (type) {
+          case "camera":
+            this.observerVideo(cameraEl);
+            this.LOCAL_STREAM_STOP_PLAY();
+            setTimeout(() => {
+              this.LOCAL_STREAM_PLAY(cameraEl);
+              this.SEND_PANEL_TYPE();
+            }, 300);
+            break;
+          case "screen":
+            this.observerVideo(screenEl);
+            await this.SHARE_SCREEN_PLAY(screenEl);
+            this.SEND_PANEL_TYPE();
+            break;
+          default:
+            this.SEND_PANEL_TYPE();
+        }
+      }
     }
   }
 };

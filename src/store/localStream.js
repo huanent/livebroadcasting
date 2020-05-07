@@ -4,8 +4,7 @@ const state = {
   localAudioStatus: true,
   localVideoStatus: true,
   audioLevel: 0.0,
-  isInit: false,
-  selfCameraStatus: true
+  isInit: false
 };
 
 const getters = {
@@ -46,11 +45,14 @@ const mutations = {
   LOCAL_STREAM_STOP_PLAY(state) {
     liveBroadcastService.trtcService.localStreamStopPlay();
   },
+  TEACHER_REMOTE_STREAM_PLAY(state, elemntOrId) {
+    liveBroadcastService.trtcService.teacherStreamPlay(elemntOrId);
+  },
+  TEACHER_REMOTE_STREAM_STOP_PLAY(state) {
+    liveBroadcastService.trtcService.teacherStreamStopPlay();
+  },
   IS_INIT(state) {
     state.isInit = true;
-  },
-  SELF_CAMERA_STATUS(state, status) {
-    state.selfCameraStatus = status;
   }
 };
 

@@ -104,10 +104,14 @@ const mutations = {
   async SEND_MESSAGE(state, msg) {
     await liveBroadcastService.timService.sendMessage(msg);
   },
-  async SET_PANEL_TYPE(state, panelType) {
+  SET_PANEL_TYPE(state, panelType) {
     state.panelType = panelType;
+  },
+  async SEND_PANEL_TYPE(state) {
     if (account.state.role !== "student") {
-      await liveBroadcastService.timService.switchWorkplaceType(panelType);
+      await liveBroadcastService.timService.switchWorkplaceType(
+        state.panelType
+      );
     }
   }
 };
