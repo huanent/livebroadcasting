@@ -4,6 +4,7 @@
       name="chevron-circle-left"
       color="#737882"
       :size="14"
+      :class="{ 'no-drop': role === 'student' }"
       @click.native.stop="handleMinus"
     />
     <span
@@ -13,16 +14,20 @@
       name="chevron-circle-right"
       color="#737882"
       :size="14"
+      :class="{ 'no-drop': role === 'student' }"
       @click.native.stop="handleAdd"
     />
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "PageController",
   props: {},
   computed: {
+    ...mapGetters("account", ["role"]),
     pageTotal() {
       return this.$store.state.workplace.boardTotalPage;
     },
@@ -71,6 +76,12 @@ export default {
   > svg {
     &:hover {
       fill: #dcebeb !important;
+    }
+  }
+  > svg.no-drop {
+    cursor: no-drop !important;
+    &:hover {
+      fill: rgb(115, 120, 130) !important;
     }
   }
 }

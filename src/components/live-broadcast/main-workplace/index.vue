@@ -23,7 +23,7 @@
     <div class="workplace-footer">
       <workplace-footer v-show="panelType === 'board'" />
     </div>
-    <Toolbar v-if="showToolbar && panelType === 'board'"></Toolbar>
+    <Toolbar v-if="isToolBarShow"></Toolbar>
   </div>
 </template>
 
@@ -105,6 +105,13 @@ export default {
     ...mapGetters("account", ["role"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
+    },
+    isToolBarShow() {
+      return (
+        this.showToolbar &&
+        this.panelType === "board" &&
+        this.role === "teacher"
+      );
     },
     index() {
       return this.$store.state.workplace.activeBoardIndex;
