@@ -35,8 +35,12 @@ const actions = {
     );
     commit("SET_Paged_List", result.data);
   },
-  async remove({}, id) {
+  async remove({ commit }, id) {
     const result = await axios.post(`/question/remove/${id}`);
+    return result;
+  },
+  async save({ commit }, payload) {
+    const result = await axios.post("/question/save", payload);
     return result;
   }
 };
