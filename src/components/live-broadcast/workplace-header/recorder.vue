@@ -5,7 +5,11 @@
       class="pannel-icon"
       :size="20"
     ></icon>
-    <stream-source-dialog :visible.sync="showSources" @selected="startRecord" />
+    <stream-source-dialog
+      :visible.sync="showSources"
+      @selected="startRecord"
+      ok-text="开始录制"
+    />
   </a>
 </template>
 <script>
