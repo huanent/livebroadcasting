@@ -5,24 +5,12 @@
       class="pannel-icon"
       :size="20"
     ></icon>
-    <el-dialog :visible="showSources" :show-close="false" destroy-on-close>
-      <stream-source :selected.sync="selected"></stream-source>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click.stop="showSources = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click.stop="startRecord"
-          :disabled="!selected"
-        >
-          开始录制
-        </el-button>
-      </span>
-    </el-dialog>
+    <stream-source-dialog :visible.sync="showSources" @selected="startRecord" />
   </a>
 </template>
 <script>
 import { mapState } from "vuex";
-import StreamSource from "@c/common/stream-source/index.vue";
+import StreamSourceDialog from "@c/common/stream-source-dialog/index.vue";
 export default {
   data() {
     return {
@@ -43,9 +31,7 @@ export default {
         this.showSources = true;
       }
     },
-    async startRecord() {
-      this.showSources = false;
-      const stream = await rtcService.getStream(this.selected.id);
+    async startRecord(stream) {
       this.recorder = await rtcService.record(
         stream,
         new Date().getTime() + ".webm"
@@ -53,7 +39,7 @@ export default {
     }
   },
   components: {
-    StreamSource
+    StreamSourceDialog
   }
 };
 </script>
