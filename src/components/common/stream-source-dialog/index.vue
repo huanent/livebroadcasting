@@ -10,13 +10,15 @@
       </li>
     </ul>
     <span slot="footer" class="dialog-footer">
-      <el-button @click.stop="$emit('update:visible', false)">取 消</el-button>
+      <el-button @click.stop="$emit('update:visible', false)">{{
+        cancelText
+      }}</el-button>
       <el-button
         type="primary"
         @click.stop="streamSelected"
         :disabled="!selected"
       >
-        开始录制
+        {{ okText }}
       </el-button>
     </span>
   </el-dialog>
@@ -24,7 +26,17 @@
 <script>
 import Item from "./item.vue";
 export default {
-  props: ["visible"],
+  props: {
+    visible: {
+      default: false
+    },
+    okText: {
+      default: "确 定"
+    },
+    cancelText: {
+      default: "取 消"
+    }
+  },
   data() {
     return {
       sources: [],
