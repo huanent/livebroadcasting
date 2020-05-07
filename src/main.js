@@ -16,6 +16,12 @@ Vue.use(element);
 
 Vue.config.productionTip = false;
 
+if (window.rtcService) {
+  store.commit("rtcAvailabled");
+} else {
+  window.onRtcAvailable = () => store.commit("rtcAvailabled");
+}
+
 new Vue({
   router,
   store,

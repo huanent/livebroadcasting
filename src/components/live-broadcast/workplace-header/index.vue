@@ -10,11 +10,19 @@
         </el-switch>
       </span>
 
+      <a @click="onRecord" v-if="onElectronClient"
+        ><icon
+          :name="recorder ? 'video-slash' : 'video'"
+          class="pannel-icon"
+          :size="20"
+        ></icon
+      ></a>
+
       <a @click="onCoursewareOpen"
         ><icon name="import_contacts" class="pannel-icon" :size="20"></icon
       ></a>
       <a><icon name="person_outline" class="pannel-icon" :size="20"></icon></a>
-      <a><icon name="widgets" class="pannel-icon" :size="20"></icon></a>
+      <a @click="onWidgetsOpen"><icon name="widgets" class="pannel-icon" :size="20"></icon></a>
       <a><icon name="settings" class="pannel-icon" :size="20"></icon></a>
       <a><icon name="exit_to_app" class="pannel-icon" :size="20"></icon></a>
       <a><icon name="info_outline" class="pannel-icon" :size="20"></icon></a>
@@ -95,11 +103,13 @@
         <el-button type="primary" @click="onCoursewareClose">确 定</el-button>
       </span>
     </el-dialog>
+    <widgets :visible.sync="widegtsVisible"></widgets>
   </div>
 </template>
 
 <script>
 import { liveBroadcastService } from "../../../main";
+import { mapState } from "vuex";
 
 import {
   getCourseData,
@@ -108,12 +118,16 @@ import {
   transcodeDescribe,
   setCourseFile
 } from "../../../core/data/data-service";
+
+import Widgets from "../widgets";
+
 export default {
   name: "WorkplaceHeader",
   data() {
     return {
       dialogVisible: false,
       addFileVisible: false,
+      widegtsVisible: false,
       fileList: [],
       pageSize: 6,
       pageNum: 1,
@@ -122,9 +136,10 @@ export default {
       transcodeProgress: 0,
       showProgressDialog: false,
       userId: "jongwong",
-      switchStatus: true,
+      switchStatus: false,
       activeColor: "#7e7e7e",
-      inactiveColor: "#bbc3cf"
+      inactiveColor: "#bbc3cf",
+      recorder: null
     };
   },
   watch: {
@@ -134,6 +149,9 @@ export default {
   },
   mounted() {
     this.handlerTheme();
+  },
+  computed: {
+    ...mapState(["onElectronClient"])
   },
   methods: {
     pageChange(index) {
@@ -159,6 +177,9 @@ export default {
     onCoursewareOpen() {
       this.dialogVisible = true;
       this.getCourseData(this.pageNum, this.pageSize, this.userId);
+    },
+    onWidgetsOpen() {
+      this.widegtsVisible = true;
     },
     handleExceed(file) {
       console.log("文件超出");
@@ -257,7 +278,22 @@ export default {
         pages: file.pages,
         resolution: file.resolution
       });
+    },
+    async onRecord() {
+      if (this.recorder) {
+        this.recorder.stop();
+        this.recorder = null;
+      } else {
+        const stream = await rtcService.getStream("screen:0:0");
+        this.recorder = await rtcService.record(
+          stream,
+          new Date().getTime() + ".webm"
+        );
+      }
     }
+  },
+  components: {
+    Widgets
   }
 };
 </script>

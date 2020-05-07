@@ -5,8 +5,8 @@ export class TrtcService {
   remoteStreamList = {};
   remoteStreamListProfile = {};
   clientList = {};
-  shareScreenRemoteStream;
   localShareScreenStream;
+  remoteShareScreenStream;
   shareScreenClient;
   roomId;
   liveBroadcastService;
@@ -84,30 +84,45 @@ export class TrtcService {
     }
   }
 
-  async localShareScreenStreamPlay(elementOrId) {
-    if (this.localShareScreenStream && this.localShareScreenStream.play) {
-      this.localShareScreenStream.play(elementOrId);
+  async shareScreenStreamPlay(elementOrId, role) {
+    let shareScreenStream;
+    if (role && role === "student") {
+      shareScreenStream = this.remoteShareScreenStream;
+      if (shareScreenStream && shareScreenStream.play) {
+        shareScreenStream.play(elementOrId);
+      }
     } else {
-      this.shareScreenClient = await this.createShareClient();
-      this.localShareScreenStream = TRTC.createStream({
-        audio: false,
-        screen: true
-      });
-      this.localShareScreenStream.setScreenProfile("1080p");
-      await this.localShareScreenStream.initialize();
-      this.shareScreenClient
-        .publish(this.localShareScreenStream)
-        .then(() => {});
-      this.localShareScreenStreamPlay(elementOrId);
+      shareScreenStream = this.localShareScreenStream;
+      if (shareScreenStream && shareScreenStream.play) {
+        shareScreenStream.play(elementOrId);
+      } else {
+        this.shareScreenClient = await this.createShareClient();
+        this.localShareScreenStream = TRTC.createStream({
+          audio: false,
+          screen: true
+        });
+        this.localShareScreenStream.setScreenProfile("1080p");
+        await this.localShareScreenStream.initialize();
+        this.shareScreenClient
+          .publish(this.localShareScreenStream)
+          .then(() => {});
+        this.shareScreenStreamPlay(elementOrId, role);
+      }
     }
   }
-  async localShareScreenStreamStopPlay() {
-    if (this.localShareScreenStream && this.localShareScreenStream.stop) {
-      this.localShareScreenStream.stop();
-    }
-    if (this.shareScreenClient) {
-      await this.shareScreenClient.leave();
-      this.shareScreenClient = undefined;
+  async shareScreenStreamStopPlay(role) {
+    if (role && role === "student") {
+      if (this.remoteShareScreenStream && this.remoteShareScreenStream.stop) {
+        this.remoteShareScreenStream.stop();
+      }
+    } else {
+      if (this.localShareScreenStream && this.localShareScreenStream.stop) {
+        this.localShareScreenStream.stop();
+      }
+      if (this.shareScreenClient) {
+        await this.shareScreenClient.leave();
+        this.shareScreenClient = undefined;
+      }
     }
   }
   hasRemoteAudio(id) {
@@ -129,7 +144,7 @@ export class TrtcService {
       let con = regex.test(self.remoteStreamList[item].userId_);
 
       if (con) {
-        this.shareScreenRemoteStream = self.remoteStreamList[item];
+        this.remoteShareScreenStream = self.remoteStreamList[item];
       } else {
         temp.push({
           userId: self.remoteStreamList[item].userId_,

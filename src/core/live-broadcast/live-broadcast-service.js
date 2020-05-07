@@ -20,7 +20,7 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "109264896101959";
   activeBoard = null;
-  userId = "jinrui123121";
+  userId = "jinrui-main";
   tim;
   trtcService;
   timService;
