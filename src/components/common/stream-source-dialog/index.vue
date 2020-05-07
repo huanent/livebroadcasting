@@ -1,8 +1,19 @@
 <template>
   <el-dialog :visible="visible" :show-close="false" width="600px">
+    <h3>屏幕</h3>
     <ul>
       <li
-        v-for="(item, index) in sources"
+        v-for="(item, index) in screenSources"
+        :key="index"
+        :style="{ outlineColor: selected == item ? 'red' : '#ddd' }"
+      >
+        <item :source="item" @selected="selected = $event"></item>
+      </li>
+    </ul>
+    <h3>窗口</h3>
+    <ul>
+      <li
+        v-for="(item, index) in windowSources"
         :key="index"
         :style="{ outlineColor: selected == item ? 'red' : '#ddd' }"
       >
@@ -42,6 +53,40 @@ export default {
       sources: [],
       selected: null
     };
+  },
+  computed: {
+    screenSources() {
+      const result = [];
+
+      this.sources
+        .filter(f => f.id.startsWith("screen"))
+        .forEach((item, index) => {
+          result.push({
+            id: item.id,
+            name: "屏幕 " + index + 1,
+            thumbnail: item.thumbnail,
+            title: item.name
+          });
+        });
+
+      return result;
+    },
+    windowSources() {
+      const result = [];
+
+      this.sources
+        .filter(f => f.id.startsWith("window"))
+        .forEach((item, index) => {
+          result.push({
+            id: item.id,
+            name: "窗口 " + index + 1,
+            thumbnail: item.thumbnail,
+            title: item.name
+          });
+        });
+
+      return result;
+    }
   },
   components: {
     Item

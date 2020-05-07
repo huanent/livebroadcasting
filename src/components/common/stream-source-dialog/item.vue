@@ -1,7 +1,7 @@
 <template>
-  <div class="item" @click="$emit('selected', source)">
+  <div class="item" @click="$emit('selected', source)" :title="source.title">
     <img :src="source.thumbnail.toDataURL()" />
-    {{ source.id }}
+    {{ source.name }}
   </div>
 </template>
 <script>
