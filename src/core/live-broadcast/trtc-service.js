@@ -245,6 +245,39 @@ export class TrtcService {
           remoteStream.hasVideo()
       );
     });
+
+    // 远端用户启用/关闭音频通知
+    client.on("mute-audio", event => {
+      const userId = event.userId;
+      store.commit("remoteStream/MUTE_AUDIO", {
+        userId: userId,
+        status: false
+      });
+    });
+    client.on("unmute-audio", event => {
+      const userId = event.userId;
+      store.commit("remoteStream/MUTE_AUDIO", {
+        userId: userId,
+        status: true
+      });
+    });
+
+    // 远端用户启用/关闭视频通知
+    client.on("mute-video", event => {
+      const userId = event.userId;
+      store.commit("remoteStream/MUTE_VIDEO", {
+        userId: userId,
+        status: false
+      });
+    });
+    client.on("unmute-video", event => {
+      const userId = event.userId;
+      store.commit("remoteStream/MUTE_VIDEO", {
+        userId: userId,
+        status: true
+      });
+    });
+
     client.on("stream-removed", event => {
       const remoteStream = event.stream;
       if (self.remoteStreamList[remoteStream.id_]) {

@@ -21,6 +21,22 @@ const mutations = {
       remote.element
     );
   },
+  MUTE_AUDIO(state, data) {
+    const list = state.remoteStreamList;
+    list.forEach(element => {
+      if (element.userId === data.userId) {
+        element.hasAudio = data.status;
+      }
+    });
+  },
+  MUTE_VIDEO(state, data) {
+    const list = state.remoteStreamList;
+    list.forEach(element => {
+      if (element.userId === data.userId) {
+        element.hasVideo = data.status;
+      }
+    });
+  },
   SET_REMOTE_AUDIO(state, data) {
     liveBroadcastService.timService
       .sendSystemMsg("SET_REMOTE_AUDIO", [data.userId], data.status)
