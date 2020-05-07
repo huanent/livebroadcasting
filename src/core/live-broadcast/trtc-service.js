@@ -10,6 +10,8 @@ export class TrtcService {
   shareScreenClient;
   roomId;
   liveBroadcastService;
+  teacherUserId;
+  localStreamTypeCache;
   constructor() {}
   async init(roomId, liveBroadcastService) {
     this.liveBroadcastService = liveBroadcastService;
@@ -52,11 +54,7 @@ export class TrtcService {
       store.commit("workplace/MICROPHONES_DEVICE_LIST", devices);
     });
   }
-  localStreamPlay(elmentOrId) {
-    if (this.localStream && this.localStream.play) {
-      this.localStream.play(elmentOrId);
-    }
-  }
+
   getAudioLevel() {
     if (this.localStream) {
       return this.localStream.getAudioLevel();
@@ -75,6 +73,37 @@ export class TrtcService {
   localStreamStopPlay() {
     if (this.localStream && this.localStream.play) {
       this.localStream.stop();
+      this.localStreamTypeCache = undefined;
+    }
+  }
+  localStreamPlay(elmentOrId) {
+    if (this.localStream && this.localStream.play) {
+      this.localStream.play(elmentOrId);
+      this.localStreamTypeCache = "local";
+    }
+  }
+
+  teacherStreamPlay(elmentOrId) {
+    let stream = this.getRemoteStreamById(this.teacherStreamId);
+    if (stream && stream.play) {
+      stream.play(elmentOrId);
+    }
+  }
+  teacherStreamStopPlay() {
+    let stream = this.getRemoteStreamById(this.teacherStreamId);
+    if (stream && stream.stop) {
+      stream.stop();
+    }
+  }
+  getRemoteStreamById(id) {
+    let keys = Object.keys(this.remoteStreamList);
+    let findKey = keys.find(key => {
+      let item = this.remoteStreamList[key];
+      if (item.userId_ === id) return true;
+    });
+    let stream = this.remoteStreamList[findKey];
+    if (stream && stream.play) {
+      return stream;
     }
   }
   remoteStreamPlay(id, elmentOrId) {
@@ -96,19 +125,21 @@ export class TrtcService {
       if (shareScreenStream && shareScreenStream.play) {
         shareScreenStream.play(elementOrId);
       } else {
-        this.shareScreenClient = await this.createShareClient();
-        this.localShareScreenStream = TRTC.createStream({
-          audio: false,
-          screen: true
-        });
-        this.localShareScreenStream.setScreenProfile("1080p");
-        await this.localShareScreenStream.initialize();
-        this.shareScreenClient
-          .publish(this.localShareScreenStream)
-          .then(() => {});
+        await this.initShareScreen();
         this.shareScreenStreamPlay(elementOrId, role);
       }
     }
+  }
+  async initShareScreen() {
+    this.shareScreenClient = await this.createShareClient();
+    this.localShareScreenStream = TRTC.createStream({
+      audio: false,
+      screen: true
+    });
+    this.localShareScreenStream.setScreenProfile("1080p");
+    await this.localShareScreenStream.initialize();
+    await this.shareScreenClient.publish(this.localShareScreenStream);
+    return true;
   }
   async shareScreenStreamStopPlay(role) {
     if (role && role === "student") {
@@ -175,8 +206,20 @@ export class TrtcService {
     client.on("stream-added", event => {
       const remoteStream = event.stream;
       console.log("远端流增加: " + remoteStream.id_);
-      //订阅远端流
-      client.subscribe(remoteStream);
+      //role是学生只订阅分享屏幕流和老师端语音视频流
+      if (store.state.account.role === "student") {
+        let regex = /.*(share_screen)$/;
+        let con = regex.test(remoteStream.userId_);
+        if (con) {
+          client.subscribe(remoteStream);
+        }
+        if (remoteStream.userId_ === liveBroadcastService.teachUserId) {
+          client.subscribe(remoteStream);
+        }
+      } else {
+        client.subscribe(remoteStream);
+      }
+      /*client.subscribe(remoteStream);*/
     });
 
     client.on("stream-subscribed", event => {

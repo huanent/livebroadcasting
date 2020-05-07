@@ -6,11 +6,12 @@ const state = {
     ? localStorage.getItem("tx_userSig")
     : "",
   tx_privateMapKey: "",
-  role: "student"
+  role: "teacher"
 };
 
 const getters = {
-  tx_userSig: state => state.userSig
+  tx_userSig: state => state.userSig,
+  role: state => state.role
 };
 
 const mutations = {

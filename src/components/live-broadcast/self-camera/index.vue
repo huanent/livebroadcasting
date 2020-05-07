@@ -99,10 +99,13 @@ export default {
       "localAudioStatus",
       "localVideoStatus",
       "audioLevel",
-      "isInit",
-      "selfCameraStatus"
+      "isInit"
     ]),
-    ...mapGetters("workplace", ["microphonesDeviceList", "cameraDeviceList"]),
+    ...mapGetters("workplace", [
+      "microphonesDeviceList",
+      "cameraDeviceList",
+      "panelType"
+    ]),
     microIcon() {
       return this.localAudioStatus ? "microphone" : "microphone-slash";
     },
@@ -117,9 +120,14 @@ export default {
         this.visibility = true;
       }
     },
-    selfCameraStatus(value) {
-      if (value) {
-        this.LOCAL_STREAM_PLAY(this.$refs.video);
+    panelType(value) {
+      if (value !== "camera") {
+        this.LOCAL_STREAM_STOP_PLAY();
+        console.log("stop camera start self");
+        setTimeout(() => {
+          this.LOCAL_STREAM_PLAY(this.$refs.video);
+          console.log("start self play done");
+        }, 300);
       }
     }
   },
@@ -147,7 +155,8 @@ export default {
       "SET_LOCALSTREAM_AUDIO",
       "SET_LOCALSTREAM_VIDEO",
       "SET_AUDIOLEVEL",
-      "LOCAL_STREAM_PLAY"
+      "LOCAL_STREAM_PLAY",
+      "LOCAL_STREAM_STOP_PLAY"
     ]),
     onMicroStateChange() {
       this.SET_LOCALSTREAM_AUDIO(!this.localAudioStatus);

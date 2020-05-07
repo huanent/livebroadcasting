@@ -20,7 +20,7 @@
             <icon name="outdent" v-else class="panel-icon" :size="18"></icon>
           </div>
         </div>
-        <div id="gutter1-1" class="gutter-row"></div>
+        <div id="gutter1-1" :class="{ 'gutter-row': role !== 'student' }"></div>
         <div class="main-workplace-panel">
           <MainWorkplace></MainWorkplace>
         </div>
@@ -47,6 +47,7 @@ import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { liveBroadcastService } from "../../main";
 import { Emitter } from "../../core/emit";
+import { mapGetters } from "vuex";
 
 export default {
   name: "workplace",
@@ -65,46 +66,53 @@ export default {
     WorkplacePanelHeader,
     CameraPanel
   },
+  computed: {
+    ...mapGetters("account", ["role"])
+  },
   mounted() {
     const vm = this;
-    Split({
-      columnGutters: [
-        // {
-        //   track: 1,
-        //   element: document.querySelector("#gutter")
-        // }
-      ],
-      rowGutters: [
-        {
-          track: 1,
-          element: document.querySelector("#gutter1-1")
-        }
-        // {
-        //   track: 1,
-        //   element: document.querySelector("#gutter2-1")
-        // }
-      ],
-      onDrag: (direction, track, gridTemplateStyle) => {
-        Emitter.emit("split-change");
-      },
-      onDragEnd: () => {
-        let str = document.getElementById("workplace-panel-left").style
-          .gridTemplateRows;
-        if (str) {
-          let list = str.trim().split(" ");
-          if (
-            list[0] &&
-            list[2] &&
-            parseFloat(list[2]) > 0 &&
-            parseFloat(list[0]) / parseFloat(list[2]) < 0.01
-          ) {
-            vm.showCameraPanel = false;
-          } else {
-            vm.showCameraPanel = true;
+    if (this.role !== "student") {
+      Split({
+        columnGutters: [
+          // {
+          //   track: 1,
+          //   element: document.querySelector("#gutter")
+          // }
+        ],
+        rowGutters: [
+          {
+            track: 1,
+            element: document.querySelector("#gutter1-1")
+          }
+          // {
+          //   track: 1,
+          //   element: document.querySelector("#gutter2-1")
+          // }
+        ],
+        onDrag: (direction, track, gridTemplateStyle) => {
+          Emitter.emit("split-change");
+        },
+        onDragEnd: () => {
+          let str = document.getElementById("workplace-panel-left").style
+            .gridTemplateRows;
+          if (str) {
+            let list = str.trim().split(" ");
+            if (
+              list[0] &&
+              list[2] &&
+              parseFloat(list[2]) > 0 &&
+              parseFloat(list[0]) / parseFloat(list[2]) < 0.01
+            ) {
+              vm.showCameraPanel = false;
+            } else {
+              vm.showCameraPanel = true;
+            }
           }
         }
-      }
-    });
+      });
+    } else {
+      this.showCameraPanel = false;
+    }
   },
   methods: {
     toggleCameraPanel() {
