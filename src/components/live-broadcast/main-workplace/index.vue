@@ -79,8 +79,12 @@ export default {
       };
       let observer;
       const mutationCallback = mutationsList => {
-        console.log("监听dom");
-        if (this.$refs.camera.children[0].children[0].tagName === "VIDEO") {
+        if (
+          this.$refs.camera &&
+          this.$refs.camera.children[0] &&
+          this.$refs.camera.children[0].children[0] &&
+          this.$refs.camera.children[0].children[0].tagName === "VIDEO"
+        ) {
           this.$refs.camera.children[0].children[0].style.objectFit = "contain";
         }
       };
@@ -118,6 +122,9 @@ export default {
       if (oldType === "screen") {
         this.SHARE_SCREEN_STOP_PLAY();
       }
+      if (oldType !== "camera") {
+        this.TEACHER_REMOTE_STREAM_STOP_PLAY();
+      }
 
       if (this.role !== "student") {
         switch (type) {
@@ -141,9 +148,9 @@ export default {
         switch (type) {
           case "camera":
             this.observerVideo(cameraEl);
-            this.LOCAL_STREAM_STOP_PLAY();
+            this.TEACHER_REMOTE_STREAM_STOP_PLAY();
             setTimeout(() => {
-              this.LOCAL_STREAM_PLAY(cameraEl);
+              this.TEACHER_REMOTE_STREAM_PLAY(cameraEl);
               this.SEND_PANEL_TYPE();
             }, 300);
             break;

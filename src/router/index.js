@@ -37,23 +37,12 @@ const routes = [
   },
   {
     path: "/classlist",
+    name: "Classlist",
     meta: {
       requireAuth: true
     },
-    component: () => import("@v/classlist"),
-    children: [
-      {
-        path: "/",
-        name: "classlist",
-        component: () => import("@v/classlist/classlist")
-      },
-      {
-        path: "detail",
-        name: "Classdetail",
-        component: () => import("@v/classlist/detail")
-      }
-    ]
-  }
+    component: () => import("@v/classlist")
+  },
 ];
 
 const router = new VueRouter({

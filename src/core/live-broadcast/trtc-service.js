@@ -1,16 +1,16 @@
 import TRTC from "trtc-js-sdk";
 import store from "@/store";
+import { Emitter } from "../emit";
+
 export class TrtcService {
   localStream;
   remoteStreamList = {};
   remoteStreamListProfile = {};
   clientList = {};
   localShareScreenStream;
-  remoteShareScreenStream;
   shareScreenClient;
   roomId;
   liveBroadcastService;
-  teacherUserId;
   localStreamTypeCache;
   constructor() {}
   async init(roomId, liveBroadcastService) {
@@ -84,22 +84,27 @@ export class TrtcService {
   }
 
   teacherStreamPlay(elmentOrId) {
-    let stream = this.getRemoteStreamById(this.teacherStreamId);
+    let stream = this.getRemoteStreamByUserId(
+      liveBroadcastService.teacherStreamUserId
+    );
+    console.log("======================----------", stream);
     if (stream && stream.play) {
       stream.play(elmentOrId);
     }
   }
   teacherStreamStopPlay() {
-    let stream = this.getRemoteStreamById(this.teacherStreamId);
+    let stream = this.getRemoteStreamByUserId(
+      liveBroadcastService.teacherStreamUserId
+    );
     if (stream && stream.stop) {
       stream.stop();
     }
   }
-  getRemoteStreamById(id) {
+  getRemoteStreamByUserId(id) {
     let keys = Object.keys(this.remoteStreamList);
     let findKey = keys.find(key => {
       let item = this.remoteStreamList[key];
-      if (item.userId_ === id) return true;
+      if (item.userId_ === "kblive_" + id) return true;
     });
     let stream = this.remoteStreamList[findKey];
     if (stream && stream.play) {
@@ -116,14 +121,36 @@ export class TrtcService {
   async shareScreenStreamPlay(elementOrId, role) {
     let shareScreenStream;
     if (role && role === "student") {
-      shareScreenStream = this.remoteShareScreenStream;
+      shareScreenStream = this.getShareStream();
       if (shareScreenStream && shareScreenStream.play) {
         shareScreenStream.play(elementOrId);
+      } else {
+        setTimeout(() => {
+          this.shareScreenStreamPlay(elementOrId, role);
+        }, 300);
       }
     } else {
-      await this.initShareScreen();
       shareScreenStream = this.localShareScreenStream;
-      shareScreenStream.play(elementOrId);
+      if (shareScreenStream && shareScreenStream.play) {
+        shareScreenStream.play(elementOrId);
+      } else {
+        await this.initShareScreen();
+        this.shareScreenStreamPlay(elementOrId, role);
+      }
+    }
+  }
+  async shareScreenStreamStopPlay(role) {
+    if (role && role === "student") {
+      let stream = this.getShareStream();
+      if (stream && stream.stop) {
+        stream.stop();
+        this.clearShareStream();
+      }
+    } else {
+      let stream = this.localShareScreenStream;
+      if (stream && stream.stop) {
+        stream.stop();
+      }
     }
   }
   async initShareScreen() {
@@ -136,23 +163,6 @@ export class TrtcService {
     await this.localShareScreenStream.initialize();
     await this.shareScreenClient.publish(this.localShareScreenStream);
     return true;
-  }
-  async shareScreenStreamStopPlay(role) {
-    if (role && role === "student") {
-      if (this.remoteShareScreenStream && this.remoteShareScreenStream.stop) {
-        this.remoteShareScreenStream.stop();
-      }
-    } else {
-      if (this.localShareScreenStream && this.localShareScreenStream.stop) {
-        this.localShareScreenStream.stop();
-      }
-      /*      if (this.shareScreenClient) {
-        await this.shareScreenClient.unpublish(this.localShareScreenStream);
-        await this.localShareScreenStream.close();
-        await this.shareScreenClient.leave();
-        this.shareScreenClient = undefined;
-      }*/
-    }
   }
   hasRemoteAudio(id) {
     return this.remoteStreamList[id]
@@ -185,6 +195,23 @@ export class TrtcService {
     });
     return temp;
   }
+  getShareStream() {
+    let keys = Object.keys(this.remoteStreamList);
+    let findKey = keys.find(key => {
+      if (/.*(share_screen)$/.test(this.remoteStreamList[key].userId_)) {
+        return true;
+      }
+    });
+    return this.remoteStreamList[findKey];
+  }
+  clearShareStream() {
+    let keys = Object.keys(this.remoteStreamList);
+    keys.forEach(key => {
+      if (/.*(share_screen)$/.test(key)) {
+        delete this.remoteStreamList[key];
+      }
+    });
+  }
   async joinroom() {
     let client = this.clientList["default"];
     client
@@ -205,13 +232,17 @@ export class TrtcService {
       const remoteStream = event.stream;
       console.log("远端流增加: " + remoteStream.id_);
       //role是学生只订阅分享屏幕流和老师端语音视频流
+      console.log(remoteStream);
       if (store.state.account.role === "student") {
         let regex = /.*(share_screen)$/;
         let con = regex.test(remoteStream.userId_);
         if (con) {
           client.subscribe(remoteStream);
         }
-        if (remoteStream.userId_ === liveBroadcastService.teachUserId) {
+        if (
+          remoteStream.userId_ ===
+          "kblive_" + liveBroadcastService.teacherStreamUserId
+        ) {
           client.subscribe(remoteStream);
         }
       } else {
@@ -243,39 +274,6 @@ export class TrtcService {
           remoteStream.hasVideo()
       );
     });
-
-    // 远端用户启用/关闭音频通知
-    client.on("mute-audio", event => {
-      const userId = event.userId;
-      store.commit("remoteStream/MUTE_AUDIO", {
-        userId: userId,
-        status: false
-      });
-    });
-    client.on("unmute-audio", event => {
-      const userId = event.userId;
-      store.commit("remoteStream/MUTE_AUDIO", {
-        userId: userId,
-        status: true
-      });
-    });
-
-    // 远端用户启用/关闭视频通知
-    client.on("mute-video", event => {
-      const userId = event.userId;
-      store.commit("remoteStream/MUTE_VIDEO", {
-        userId: userId,
-        status: false
-      });
-    });
-    client.on("unmute-video", event => {
-      const userId = event.userId;
-      store.commit("remoteStream/MUTE_VIDEO", {
-        userId: userId,
-        status: true
-      });
-    });
-
     client.on("stream-removed", event => {
       const remoteStream = event.stream;
       if (self.remoteStreamList[remoteStream.id_]) {
