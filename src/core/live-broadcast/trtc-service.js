@@ -121,13 +121,9 @@ export class TrtcService {
         shareScreenStream.play(elementOrId);
       }
     } else {
+      await this.initShareScreen();
       shareScreenStream = this.localShareScreenStream;
-      if (shareScreenStream && shareScreenStream.play) {
-        shareScreenStream.play(elementOrId);
-      } else {
-        await this.initShareScreen();
-        this.shareScreenStreamPlay(elementOrId, role);
-      }
+      shareScreenStream.play(elementOrId);
     }
   }
   async initShareScreen() {
@@ -150,10 +146,12 @@ export class TrtcService {
       if (this.localShareScreenStream && this.localShareScreenStream.stop) {
         this.localShareScreenStream.stop();
       }
-      if (this.shareScreenClient) {
+      /*      if (this.shareScreenClient) {
+        await this.shareScreenClient.unpublish(this.localShareScreenStream);
+        await this.localShareScreenStream.close();
         await this.shareScreenClient.leave();
         this.shareScreenClient = undefined;
-      }
+      }*/
     }
   }
   hasRemoteAudio(id) {
