@@ -34,7 +34,15 @@ const routes = [
       requireAuth: true
     },
     component: () => import("@v/classform")
-  }
+  },
+  {
+    path: "/classlist",
+    name: "Classlist",
+    meta: {
+      requireAuth: true
+    },
+    component: () => import("@v/classlist")
+  },
 ];
 
 const router = new VueRouter({

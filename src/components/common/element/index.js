@@ -18,10 +18,13 @@ import {
   Pagination,
   Progress,
   DatePicker,
-  Switch
+  Switch,
+  Row,
+  Card,
+  Col
 } from "element-ui";
 const element = {
-  install: function(Vue) {
+  install: function (Vue) {
     Vue.prototype.$message = Message;
     Vue.use(Form);
     Vue.use(FormItem);
@@ -41,6 +44,9 @@ const element = {
     Vue.use(Progress);
     Vue.use(DatePicker);
     Vue.use(Switch);
+    Vue.use(Row);
+    Vue.use(Card);
+    Vue.use(Col);
     Vue.prototype.$confirm = MessageBox.confirm;
   }
 };

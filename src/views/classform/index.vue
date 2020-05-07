@@ -123,7 +123,8 @@ export default {
         title: "",
         description: "",
         startTime: "",
-        endTime: ""
+        endTime: "",
+        file: ""
       },
       rules: {
         title: [
@@ -180,17 +181,35 @@ export default {
     },
     onSubmit(formName) {
       // this.classForm.avatar = `classTitle\\${this.classForm.title}\\img`;
+      // if (this.classForm.startTime == "" || this.classForm.endTime == "") {
+      //   this.$message.error("请选择时间");
+      //   return;
+      // }
       this.classForm.avatar = `userId\\${this.classForm.userId}\\classTitle\\${this.classForm.title}\\${this.fullClassImg}`;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.classForm.endTime = new Date(
-            parseInt(this.classForm.endTime)
-          ).toLocaleString();
-          this.classForm.startTime = new Date(
-            parseInt(this.classForm.startTime)
-          ).toLocaleString();
+          if (this.classForm.startTime >= this.classForm.endTime) {
+            this.$message.error("结束时间不得早于开始时间");
+            this.classForm.endTime = "";
+            return;
+          }
+          var formData = new FormData();
+          formData.append("userId", this.classForm.userId);
+          formData.append("roomId", this.classForm.roomId);
+          formData.append("avatar", this.classForm.avatar);
+          formData.append("title", this.classForm.title);
+          formData.append("description", this.classForm.description);
+          formData.append(
+            "startTime",
+            new Date(parseInt(this.classForm.startTime)).toLocaleString()
+          );
+          formData.append(
+            "endTime",
+            new Date(parseInt(this.classForm.endTime)).toLocaleString()
+          );
+          formData.append("file", this.classForm.file.raw);
           this.axios
-            .post("/liveRoom/create", this.classForm)
+            .post("/liveRoom/create", formData)
             .then(res => {
               if (res.data.success) {
                 this.$message.success(res.data.message);
@@ -203,7 +222,7 @@ export default {
                 this.$refs.upload.submit();
               } else {
                 this.$refs.upload.clearFiles();
-                this.$refs[formName].resetFields();
+                // this.$refs[formName].resetFields();
                 this.avatar = "";
                 this.$message.error(res.data.message);
               }
@@ -234,7 +253,6 @@ export default {
         this.$message.error("上传文件大小不能超过 1MB!");
         return false;
       }
-      // console.log("filelist.length=%s", filelist.length);
       if (file) {
         let reader = new FileReader();
         reader.addEventListener(
@@ -242,6 +260,8 @@ export default {
           () => {
             this.fullClassImg = file.name;
             this.avatar = reader.result;
+            console.log(file);
+            this.classForm.file = file;
           },
           false
         );
