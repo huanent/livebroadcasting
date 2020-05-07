@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      questionVisible: true
+      questionVisible: false
     };
   },
   methods: {

@@ -127,7 +127,7 @@ export default {
     return {
       dialogVisible: false,
       addFileVisible: false,
-      widegtsVisible: true,
+      widegtsVisible: false,
       fileList: [],
       pageSize: 6,
       pageNum: 1,
