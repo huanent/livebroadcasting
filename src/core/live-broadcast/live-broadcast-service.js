@@ -18,9 +18,9 @@ export class LiveBroadcastService {
   config;
   mode = "live";
   TokenList = {};
-  roomId = "110098327629613";
+  roomId = "110306640092539";
   activeBoard = null;
-  userId = "jinrui-main123";
+  userId = "jinrui-123";
   tim;
   trtcService;
   timService;
