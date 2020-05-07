@@ -21,7 +21,9 @@ import {
   Switch,
   Row,
   Card,
-  Col
+  Col,
+  Badge,
+  Notification
 } from "element-ui";
 const element = {
   install: function (Vue) {
@@ -48,6 +50,8 @@ const element = {
     Vue.use(Card);
     Vue.use(Col);
     Vue.prototype.$confirm = MessageBox.confirm;
+    Vue.use(Badge);
+    Vue.prototype.$notify = Notification;
   }
 };
 export default element;

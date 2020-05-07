@@ -42,7 +42,7 @@ const routes = [
       requireAuth: true
     },
     component: () => import("@v/classlist")
-  },
+  }
 ];
 
 const router = new VueRouter({
