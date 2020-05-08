@@ -38,7 +38,7 @@ export default {
     async startRecord(stream) {
       this.recorder = await rtcService.record(
         stream,
-        new Date().getTime() + ".webm"
+        new Date().getTime().toString()
       );
     }
   },
