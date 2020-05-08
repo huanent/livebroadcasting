@@ -167,6 +167,8 @@ export default {
 <style lang="scss" scoped>
 .login-page {
   width: 100%;
+  height: 100%;
+  background-color: #212224;
   .login-form-container {
     position: absolute;
     top: 30%;
@@ -175,15 +177,12 @@ export default {
     padding: 2rem 1.5rem 1rem;
     width: 450px;
     background: $white;
-    border-radius: 2px;
+    border-radius: 4px;
     box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
     @media screen and (max-width: 767px) {
       width: 80%;
       max-width: 450px;
-    }
-    /deep/ .el-input {
-      width: 400px;
     }
   }
 }
