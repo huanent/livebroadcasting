@@ -16,7 +16,7 @@
       </div>
       <div class="workplace-settings">
         <multiselect
-          v-if="role === 'student'"
+          v-if="role !== 'student'"
           v-model="selected"
           ref="select"
           :searchable="false"
@@ -110,6 +110,13 @@ export default {
       }
       this.$emit("index-change", newVal);
       this.$emit("active-index", newVal);
+    },
+    panelType(type) {
+      this.options.forEach(item => {
+        if (item.type === type) {
+          this.selected = item;
+        }
+      });
     }
   },
   methods: {

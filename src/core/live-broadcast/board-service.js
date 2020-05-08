@@ -59,6 +59,7 @@ export class BoardService {
         let lastindex = fileListInfo.length - 1;
         store.commit("workplace/BOARD_INDEX", lastindex);
       }, 3000);
+      Emitter.emit("board-init");
     });
     return teduBoard;
   }

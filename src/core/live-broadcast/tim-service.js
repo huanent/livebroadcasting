@@ -52,6 +52,12 @@ export class TimService {
         console.error(err);
       });
   }
+  async requestTeacherPanelType() {
+    await this.sendSystemMsg("REQUEST_PANEL_TYPE", "teacher", {});
+  }
+  async syncState() {
+    await this.requestTeacherPanelType();
+  }
   async init(liveBroadcastService) {
     this.liveBroadcastService = liveBroadcastService;
     this.roomId = liveBroadcastService.roomId;
@@ -111,6 +117,14 @@ export class TimService {
           this.liveBroadcastService.trtcService.teacherStreamId =
             info.data.userId;
         }
+      }
+    } else if (
+      typeof info.userIds === "string" &&
+      info.userIds === "teacher" &&
+      store.state.account.role === "teacher"
+    ) {
+      if (info.type === "REQUEST_PANEL_TYPE") {
+        store.commit("workplace/SEND_PANEL_TYPE");
       }
     }
   }
