@@ -61,7 +61,6 @@ export default {
       dialogVisible: false,
       avatar: "",
       signUpForm: {
-        avatar: "",
         username: "",
         password: "",
         repeatPassword: ""
@@ -102,14 +101,13 @@ export default {
             .then(res => {
               console.log(res)
               if (res.data.success) {
-                this.$refs.upload.submit();
+                // this.$refs.upload.submit();
                 this.$message.success(res.data.message);
                 // this.$refs[formName].resetFields();
                 this.$router.push({ path: "/login" });
               } else {
                 this.$refs.upload.clearFiles();
                 this.$refs[formName].resetFields();
-                this.avatar = "";
                 this.$message.error(res.data.message);
               }
             })
