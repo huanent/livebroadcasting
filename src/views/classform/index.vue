@@ -21,7 +21,6 @@
             :on-remove="handleRemove"
             :on-change="onFileSelected"
             :on-success="uploadSuccess"
-            :before-upload="beforeUpload"
             accept="image/*"
             :auto-upload="false"
             :data="{ username: classForm.username }"
@@ -199,14 +198,16 @@ export default {
           formData.append("avatar", this.classForm.avatar);
           formData.append("title", this.classForm.title);
           formData.append("description", this.classForm.description);
-          formData.append(
-            "startTime",
-            new Date(parseInt(this.classForm.startTime)).toLocaleString()
-          );
-          formData.append(
-            "endTime",
-            new Date(parseInt(this.classForm.endTime)).toLocaleString()
-          );
+          // formData.append(
+          //   "startTime",
+          //   new Date(parseInt(this.classForm.startTime)).toLocaleString()
+          // );
+          //           formData.append(
+          //   "endTime",
+          //   new Date(parseInt(this.classForm.endTime)).toLocaleString()
+          // );
+          formData.append("startTime", this.classForm.startTime);
+          formData.append("endTime", this.classForm.endTime);
           formData.append("file", this.classForm.file.raw);
           this.axios
             .post("/liveRoom/create", formData)
@@ -214,11 +215,6 @@ export default {
               if (res.data.success) {
                 this.$message.success(res.data.message);
                 // this.$router.push({ path: "/login" });
-                this.$notify({
-                  title: "success",
-                  message: res.data.message,
-                  type: "success"
-                });
                 this.$refs.upload.submit();
               } else {
                 this.$refs.upload.clearFiles();
@@ -262,14 +258,12 @@ export default {
             this.avatar = reader.result;
             console.log(file);
             this.classForm.file = file;
+            console.log(this.$refs.upload);
           },
           false
         );
         reader.readAsDataURL(file.raw);
       }
-    },
-    beforeUpload(file) {
-      console.log("上传前");
     }
   }
 };

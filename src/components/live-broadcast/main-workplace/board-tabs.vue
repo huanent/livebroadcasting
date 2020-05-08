@@ -16,6 +16,7 @@
       </div>
       <div class="workplace-settings">
         <multiselect
+          v-if="role === 'student'"
           v-model="selected"
           ref="select"
           :searchable="false"
@@ -39,6 +40,9 @@
             </div>
           </template>
         </multiselect>
+        <div v-else class="type-text">
+          {{ selected.title }}
+        </div>
       </div>
     </div>
     <div class="tab-body">
@@ -85,6 +89,9 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    ...mapGetters("account", ["role"])
   },
   mounted() {
     this.init();
@@ -204,17 +211,20 @@ export default {
   justify-content: center;
   min-width: 100px;
   margin-right: 2rem;
+  .type-text {
+    line-height: 1.8rem;
+    color: #ffffff;
+    font-size: 14px;
+  }
   .select-header,
   .select-option {
     text-align: left;
     z-index: 100;
-    padding: 5px 10px 5px 5px;
-    color: #bfbfbf;
+    line-height: 1.8rem;
     @include themeify {
       background: themed("background_color6");
       color: themed("color_opposite");
     }
-    background-color: #212224;
   }
   .select-option:hover {
     background-color: rgba(0, 0, 0, 0.8);
@@ -244,7 +254,7 @@ cover component Multiselect style
   background-color: red;
 }
 /deep/ .multiselect__select {
-  display: inline-block;
   float: right;
+  line-height: 1.8rem;
 }
 </style>
