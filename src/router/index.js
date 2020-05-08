@@ -10,6 +10,11 @@ const routes = [
     redirect: "/workplace"
   },
   {
+    path: "/my",
+    name: "MyClass",
+    component: () => import("@v/myclass")
+  },
+  {
     path: "/login",
     name: "Login",
     component: () => import("@v/login.vue")
