@@ -126,10 +126,15 @@ export default {
     border-radius: 4px;
     box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: 768px) {
       width: 80%;
       max-width: 450px;
+      /deep/ .el-form-item__label{
+        margin-left: 81px;
+        text-align: justify;
+      }
     }
+    
   }
 }
 </style>
