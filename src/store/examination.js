@@ -13,7 +13,7 @@ const getters = {
     if (state.pagedModel.list) {
       pagedModel.list = state.pagedModel.list.map(item => {
         return {
-          summary: item.title.replace(/<[^>]*>/g, ""),
+          summary: item.title.replace(/<[^>]*>/g, "") || "[点击查看详情]",
           ...item
         };
       });

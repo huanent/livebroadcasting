@@ -15,7 +15,8 @@
             stripe
             style="width: 100%"
             empty-text="No data"
-            @selection-change="handleSelectionChange"
+            @select="handleSelect"
+            @select-all="handleSelectAll"
             ref="questionTable"
           >
             <el-table-column type="selection" width="55"></el-table-column>
@@ -27,12 +28,16 @@
             ></el-table-column>
             <el-table-column fixed="right" label="操作" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" @click="handleEdit(scope.row)"
+                <el-button
+                  size="mini"
+                  @click="handleEdit(scope.row)"
+                  :disabled="isSelected(scope.row._id)"
                   >编辑</el-button
                 >
                 <el-button
                   size="mini"
                   type="danger"
+                  :disabled="isSelected(scope.row._id)"
                   @click="handleDelete(scope.row)"
                   >删除</el-button
                 >
@@ -69,7 +74,13 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import QuestionEdit from "./edit";
-
+const mapRowToSelect = row => {
+  return {
+    _id: row._id,
+    title: row.title,
+    options: row.options
+  };
+};
 export default {
   name: "Question",
   props: {
@@ -88,18 +99,46 @@ export default {
   },
   methods: {
     ...mapActions("examination", ["getList", "remove"]),
-    refreshList() {
-      this.getList({
+    isSelected(_id) {
+      return this.selects.some(item => item._id == _id);
+    },
+    async refreshList() {
+      await this.getList({
         pageNum: this.pageNum,
         pageSize: this.pageSize
       });
+      // prev selected
+      if (this.pagedModel.list && this.selects.length) {
+        this.pagedModel.list.forEach(row => {
+          if (this.isSelected(row._id)) {
+            this.$refs.questionTable.selection.push(mapRowToSelect(row));
+          }
+        });
+      }
     },
-    async handlePageChange(index) {
+    handlePageChange(index) {
       this.pageNum = index;
       this.refreshList();
     },
-    handleSelectionChange(val) {
-      this.selects = val;
+    handleSelect(selection, row) {
+      if (this.isSelected(row._id)) {
+        this.selects = this.selects.filter(x => x._id !== row._id);
+      } else {
+        this.selects.push(mapRowToSelect(row));
+      }
+    },
+    handleSelectAll(selection) {
+      this.pagedModel.list.forEach(row => {
+        if (selection.length) {
+          // checked this page
+          if (!this.isSelected(row._id)) {
+            this.selects.push(mapRowToSelect(row));
+          }
+        } else {
+          // unchecked this page
+          this.selects = this.selects.filter(x => x._id !== row._id);
+        }
+      });
     },
     handleSend() {
       console.log(this.selects);
@@ -108,6 +147,7 @@ export default {
       this.$emit("update:visible", false);
     },
     handleReset() {
+      this.selects = [];
       this.$refs.questionTable.clearSelection();
     },
     handleEdit(item) {
@@ -166,6 +206,13 @@ export default {
 .dialog-footer {
   /deep/ .el-badge {
     margin: -5px 5px 0 15px;
+  }
+}
+/deep/ {
+  .el-table_1_column_2 {
+    > .cell {
+      white-space: nowrap;
+    }
   }
 }
 </style>

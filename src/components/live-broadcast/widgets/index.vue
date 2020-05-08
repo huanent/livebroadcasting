@@ -1,6 +1,10 @@
 <template>
   <div class="widgets">
-    <el-dialog title="应用中心" :visible.sync="widgetVisible" :append-to-body="true">
+    <el-dialog
+      title="应用中心"
+      :visible.sync="widgetVisible"
+      :append-to-body="true"
+    >
       <ul class="widgets-content">
         <li>
           <a @click="onOpenQuestion">答题器</a>
@@ -20,7 +24,7 @@ export default {
   },
   data() {
     return {
-      questionVisible: false
+      questionVisible: true
     };
   },
   methods: {
