@@ -64,7 +64,7 @@ export default {
   },
   created() {},
   methods: {
-    ...mapMutations("account", ["setLBToken"]),
+    ...mapMutations("account", ["SET_LB_TOKEN", "SET_LB_EXPIRES"]),
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -76,9 +76,11 @@ export default {
             .then(res => {
               if (res.data.success) {
                 this.$message.success(this.$t("login.successTips"));
-                const token = res.data.token;
-                if (token) {
-                  this.setLBToken(token);
+                const token = res.data.model.token;
+                const expires = res.data.model.expires;
+                if (token && expires) {
+                  this.SET_LB_TOKEN(token);
+                  this.SET_LB_EXPIRES(expires);
                   this.$router.push({ name: "MyClass" });
                 }
               } else {
