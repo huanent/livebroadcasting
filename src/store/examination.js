@@ -42,6 +42,12 @@ const actions = {
   async save({ commit }, payload) {
     const result = await axios.post("/question/save", payload);
     return result;
+  },
+  async sendExamination({ commit }, payload) {
+    const result = await liveBroadcastService.timService.sendExaminationMsg(
+      payload
+    );
+    return result;
   }
 };
 

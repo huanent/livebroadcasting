@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      title="答题器"
+      title="题库"
       :visible.sync="questionVisible"
       :append-to-body="true"
     >
@@ -45,6 +45,7 @@
             </el-table-column>
           </el-table>
           <el-pagination
+            background
             small
             :page-size="pageSize"
             :current-page="pageNum"
@@ -98,7 +99,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("examination", ["getList", "remove"]),
+    ...mapActions("examination", ["getList", "remove", "sendExamination"]),
     isSelected(_id) {
       return this.selects.some(item => item._id == _id);
     },
@@ -111,7 +112,7 @@ export default {
       if (this.pagedModel.list && this.selects.length) {
         this.pagedModel.list.forEach(row => {
           if (this.isSelected(row._id)) {
-            this.$refs.questionTable.selection.push(mapRowToSelect(row));
+            this.$refs.questionTable.selection.push(row);
           }
         });
       }
@@ -140,8 +141,10 @@ export default {
         }
       });
     },
-    handleSend() {
+    async handleSend() {
       console.log(this.selects);
+      await this.sendExamination(this.selects);
+      this.handleReset();
     },
     handleClose() {
       this.$emit("update:visible", false);
@@ -213,6 +216,9 @@ export default {
     > .cell {
       white-space: nowrap;
     }
+  }
+  .el-pagination {
+    margin-top: 10px;
   }
 }
 </style>

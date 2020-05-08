@@ -23,10 +23,11 @@ import {
   Card,
   Col,
   Badge,
-  Notification
+  Notification,
+  Checkbox
 } from "element-ui";
 const element = {
-  install: function (Vue) {
+  install: function(Vue) {
     Vue.prototype.$message = Message;
     Vue.use(Form);
     Vue.use(FormItem);
@@ -52,6 +53,7 @@ const element = {
     Vue.prototype.$confirm = MessageBox.confirm;
     Vue.use(Badge);
     Vue.prototype.$notify = Notification;
+    Vue.use(Checkbox);
   }
 };
 export default element;

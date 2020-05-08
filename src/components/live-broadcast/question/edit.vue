@@ -53,7 +53,8 @@
 <script>
 import Tinymce from "../../common/tinymce";
 import { mapActions, mapGetters } from "vuex";
-const indexToLetter = index => String.fromCharCode("A".charCodeAt(0) + index);
+import { indexToLetter } from "../../../core/utils";
+
 const emptyOption = {
   value: "",
   correctAnswer: false
