@@ -1,7 +1,7 @@
 <template>
   <div class="classlist-page">
     <div class="classlist">
-      <el-row
+      <el-row type="flex"
         ><el-col :span="24"
           ><div class="page-title">classList</div></el-col
         ></el-row
@@ -22,50 +22,48 @@
               <el-col :span="16">
                 <div class="class-content">
                   <div class="filed">
-                    <label>课堂标题：</label><span>{{ item.title }}</span>
+                    <div>课堂标题：</div>
+                    <div class="title-content">{{ item.title }}</div>
                   </div>
                   <div class="filed">
-                    <label>开始时间：</label><span>{{ item.startTime }}</span>
+                    <div>开始时间：</div>
+                    <div>{{ item.startTime }}</div>
                   </div>
                   <div class="filed">
-                    <label>结束时间：</label><span>{{ item.endTime }}</span>
+                    <div>结束时间：</div>
+                    <div>{{ item.endTime }}</div>
                   </div>
                   <div class="filed">
-                    <label>创建日期：</label><span>{{ item.createDate }}</span>
-                  </div>
-                  <div class="filed">
-                    <label>课堂描述：</label>
-                    <span>{{ item.description }}</span>
+                    <div>创建日期：</div>
+                    <div>{{ item.createDate }}</div>
                   </div>
                   <div class="buttons bottom clearfix">
                     <el-row>
-                      <el-col :span="8"
+                      <el-col :span="12"
                         ><el-button
                           type="text"
-                          class="button"
+                          class="button btnMr"
                           @click="updateDialog(item.classId)"
                           >编辑</el-button
                         ></el-col
                       >
-                      <el-col :span="8"
+                      <el-col :span="12"
                         ><el-button
                           type="text"
-                          class="button"
+                          class="button btnMr"
                           @click="getDetail(item.classId)"
                           >详情</el-button
-                        ></el-col
-                      >
-                      <el-col :span="8"
-                        ><el-button
-                          @click="deleteclass(item.classId)"
-                          type="text"
-                          class="button"
-                          >删除</el-button
                         ></el-col
                       >
                     </el-row>
                   </div>
                 </div>
+                <el-button
+                  @click="deleteclass(item.classId)"
+                  type="text"
+                  class="button deleteBtn"
+                  ><i class="el-icon-close"></i
+                ></el-button>
               </el-col>
             </el-row>
           </el-card>
@@ -84,10 +82,8 @@
             ]"
             list-type="picture-card"
             ref="upload"
-            :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
             :on-change="onFileSelected"
-            :on-success="uploadSuccess"
             accept="image/*"
             :auto-upload="false"
             :file-list="fileList"
@@ -95,9 +91,6 @@
           >
             <icon name="add" :size="20" color="#0a818c"></icon>
           </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="" />
-          </el-dialog>
         </el-form-item>
         <el-form-item prop="title" :label="$t('classform.title')">
           <el-input v-model="classForm.title"></el-input>
@@ -136,9 +129,10 @@
             filterable
             remote
             reserve-keyword
-            placeholder="请输入关键词"
+            placeholder="请输入用户名"
             :remote-method="remoteMethod"
             :loading="loading"
+            no-data-text="暂无此用户"
           >
             <el-option
               v-for="item in options"
@@ -154,17 +148,23 @@
         <el-button type="primary" @click="updateClass">修改</el-button>
       </div>
     </el-dialog>
+    <!-- <el-dialog title="修改课堂信息" :visible.sync="dialogFormVisible">
+      <ClassUpdate></ClassUpdate>
+    </el-dialog> -->
   </div>
 </template>
 
 <script>
 import { LiveBroadcastService } from "../../core/live-broadcast/live-broadcast-service";
 import { removeClassImg } from "../../core/data/data-service";
+// import ClassUpdate from "./update";
 export default {
   name: "Classlist",
+  // components: {
+  //   ClassUpdate
+  // },
   data() {
     return {
-      userId: "",
       classList: [],
       dialogFormVisible: false,
       classForm: {
@@ -176,7 +176,6 @@ export default {
         endTime: "",
         file: ""
       },
-      formLabelWidth: "120px",
       avatar: "",
       fileList: [
         {
@@ -184,19 +183,15 @@ export default {
           url: ""
         }
       ],
-      fullClassImg: "",
-      dialogVisible: false,
-      dialogImageUrl: "",
 
       options: [],
       selectedStudents: [],
       studentsList: [],
       loading: false,
-      allStudents: ["Alabama", "Alaska", "Arizona", "Arkansas"]
+      allStudents: []
     };
   },
   created() {
-    this.userId = window.liveBroadcastService.userId;
     this.dataInit();
     this.getStudents();
   },
@@ -221,7 +216,7 @@ export default {
     },
     dataInit() {
       this.axios
-        .get("/classform/list?createUser=" + this.userId)
+        .get("/classform/list?createUser=" + window.liveBroadcastService.userId)
         .then(res => {
           if (res.data.success) {
             this.classList = res.data.data;
@@ -234,6 +229,9 @@ export default {
               ).toLocaleString();
               element.endTime = new Date(
                 parseInt(element.endTime)
+              ).toLocaleString();
+              element.createDate = new Date(
+                parseInt(element.createDate)
               ).toLocaleString();
             });
           } else {
@@ -291,7 +289,6 @@ export default {
         .get("/classform/list?classId=" + classId)
         .then(res => {
           if (res.data.success) {
-            // console.log(this.$refs.upload._data.uploadFiles);
             this.classForm = res.data.data[0];
             this.fileList[0].name = res.data.data[0].classImg;
             this.fileList[0].url =
@@ -307,10 +304,9 @@ export default {
         });
     },
     updateClass() {
-      // const studentArr = this.value.map(item => item.value);
-      // console.log(studentArr);
-      console.log(this.selectedStudents);
-      this.classForm.avatar = `userId\\${window.liveBroadcastService.userId}\\classTitle\\${this.classForm.title}\\${this.fullClassImg}`;
+      this.classForm.avatar = `userId\\${
+        window.liveBroadcastService.userId
+      }\\date\\${parseInt(new Date().getTime())}\\${this.fullClassImg}`;
       var formData = new FormData();
       formData.append("avatar", this.classForm.avatar);
       formData.append("_id", this.classForm._id);
@@ -321,13 +317,14 @@ export default {
       if (this.classForm.file) {
         formData.append("file", this.classForm.file.raw);
       }
-      formData.append("students", this.selectedStudents);
+      if (this.selectedStudents) {
+        formData.append("students", this.selectedStudents);
+      }
       this.axios
         .post("/classform/update", formData)
         .then(res => {
           if (res.data.success) {
             this.$message.success(res.data.message);
-            // this.$refs.upload.submit();
             this.dialogFormVisible = false;
             this.avatar = "";
             this.dataInit();
@@ -340,20 +337,9 @@ export default {
           console.log(err);
         });
     },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
-    uploadSuccess(response, file, fileList) {
-      console.log(response);
-      this.classForm.avatar = response.model.fullFilename;
-    },
     handleRemove(file, fileList) {
       this.avatar = "";
       this.fileList = [];
-    },
-    resetForm: function(formName) {
-      this.$refs[formName].resetFields();
     },
     onFileSelected(file, filelist) {
       const isIMAGE =
@@ -374,7 +360,6 @@ export default {
           () => {
             this.fullClassImg = file.name;
             this.avatar = reader.result;
-            console.log(file);
             this.classForm.file = file;
           },
           false
@@ -403,7 +388,7 @@ export default {
 .classlist-page {
   width: 100%;
   .classlist {
-    height: 600px;
+    height: 700px;
     overflow: auto;
     position: absolute;
     top: 10%;
@@ -416,52 +401,61 @@ export default {
     border: 1px solid #e7eaed;
     box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
+    .el-card {
+      width: 100%;
+    }
+    .page-title {
+      font-size: 5rem;
+      text-align: center;
+    }
+    .class-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 0.5rem;
+      .card-row {
+        align-items: center;
+        .deleteBtn {
+          position: absolute;
+          top: 0;
+          right: 0.3rem;
+        }
+        .btnMr {
+          margin: 0 0 0 0.3rem;
+        }
+        .class-img {
+          margin: 1rem;
+          width: 100%;
+          img {
+            width: 100%;
+          }
+        }
+        .class-content {
+          font-size: 0.7rem;
+          height: 100%;
+          margin: 1rem;
+          .buttons {
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: flex-end;
+          }
+          .filed {
+            padding: 0 0.5rem;
+            margin: 0.5rem 0;
+            .title-content {
+              height: 2rem;
+              word-wrap: break-word;
+              overflow: hidden;
+            }
+          }
+        }
+      }
+    }
     @media screen and (max-width: 767px) {
       width: 80%;
       max-width: 450px;
     }
   }
-}
-.class-container {
-  margin: 0.5rem;
-}
-.page-title {
-  font-size: 5rem;
-  text-align: center;
-}
-.card-row {
-  align-items: center;
-}
-.class-content {
-  font-size: 0.7rem;
-  height: 100%;
-  margin: 1rem;
-  .buttons {
-    font-size: 0.7rem;
-    position: absolute;
-    bottom: 0;
-    right: 1rem;
-  }
-  .filed {
-    padding: 0 0.5rem;
-    margin: 0.5rem 0;
-  }
-}
-.class-img {
-  margin: 1rem;
-  img {
-    width: 100%;
-  }
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-
-.clearfix:after {
-  clear: both;
 }
 
 /deep/ .el-upload-list__item {

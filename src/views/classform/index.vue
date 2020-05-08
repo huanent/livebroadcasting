@@ -176,15 +176,13 @@ export default {
     },
     uploadSuccess(response, file, fileList) {
       console.log(response);
-      this.classForm.avatar = response.model.fullFilename;
+      // this.classForm.avatar = response.model.fullFilename;
     },
     onSubmit(formName) {
-      // this.classForm.avatar = `classTitle\\${this.classForm.title}\\img`;
-      // if (this.classForm.startTime == "" || this.classForm.endTime == "") {
-      //   this.$message.error("请选择时间");
-      //   return;
-      // }
-      this.classForm.avatar = `userId\\${this.classForm.userId}\\classTitle\\${this.classForm.title}\\${this.fullClassImg}`;
+      // this.classForm.avatar = `userId\\${this.classForm.userId}\\classTitle\\${this.classForm.title}\\${this.fullClassImg}`;
+      this.classForm.avatar = `userId\\${
+        this.classForm.userId
+      }\\date\\${parseInt(new Date().getTime())}\\${this.fullClassImg}`;
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.classForm.startTime >= this.classForm.endTime) {
@@ -198,14 +196,6 @@ export default {
           formData.append("avatar", this.classForm.avatar);
           formData.append("title", this.classForm.title);
           formData.append("description", this.classForm.description);
-          // formData.append(
-          //   "startTime",
-          //   new Date(parseInt(this.classForm.startTime)).toLocaleString()
-          // );
-          //           formData.append(
-          //   "endTime",
-          //   new Date(parseInt(this.classForm.endTime)).toLocaleString()
-          // );
           formData.append("startTime", this.classForm.startTime);
           formData.append("endTime", this.classForm.endTime);
           formData.append("file", this.classForm.file.raw);
@@ -214,7 +204,7 @@ export default {
             .then(res => {
               if (res.data.success) {
                 this.$message.success(res.data.message);
-                // this.$router.push({ path: "/login" });
+                this.$router.push({ path: "/classlist" });
                 this.$refs.upload.submit();
               } else {
                 this.$refs.upload.clearFiles();
