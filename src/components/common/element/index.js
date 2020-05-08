@@ -23,10 +23,12 @@ import {
   Card,
   Col,
   Badge,
-  Notification
+  Notification,
+  Tabs,
+  TabPane
 } from "element-ui";
 const element = {
-  install: function (Vue) {
+  install: function(Vue) {
     Vue.prototype.$message = Message;
     Vue.use(Form);
     Vue.use(FormItem);
@@ -48,6 +50,8 @@ const element = {
     Vue.use(Switch);
     Vue.use(Row);
     Vue.use(Card);
+    Vue.use(Tabs);
+    Vue.use(TabPane);
     Vue.use(Col);
     Vue.prototype.$confirm = MessageBox.confirm;
     Vue.use(Badge);
