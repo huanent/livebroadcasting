@@ -1,18 +1,27 @@
 <template>
   <div class="widgets">
-    <el-dialog title="应用中心" :visible.sync="widgetVisible" :append-to-body="true">
+    <el-dialog
+      title="应用中心"
+      :visible.sync="widgetVisible"
+      :append-to-body="true"
+    >
       <ul class="widgets-content">
         <li>
-          <a @click="onOpenQuestion">答题器</a>
+          <a @click="onOpenQuestion">题库</a>
+        </li>
+        <li>
+          <a @click="onOpenQuestionView">答题器</a>
         </li>
       </ul>
     </el-dialog>
     <question :visible.sync="questionVisible"></question>
+    <question-view :visible.sync="questionViewVisible"></question-view>
   </div>
 </template>
 
 <script>
 import Question from "../question";
+import QuestionView from "../question/view";
 export default {
   name: "Widgets",
   props: {
@@ -20,12 +29,17 @@ export default {
   },
   data() {
     return {
-      questionVisible: false
+      questionVisible: false,
+      questionViewVisible: false
     };
   },
   methods: {
     onOpenQuestion() {
       this.questionVisible = true;
+      this.closeWidgets();
+    },
+    onOpenQuestionView() {
+      this.questionViewVisible = true;
       this.closeWidgets();
     },
     closeWidgets() {
@@ -43,7 +57,8 @@ export default {
     }
   },
   components: {
-    Question
+    Question,
+    QuestionView
   }
 };
 </script>

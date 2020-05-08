@@ -25,7 +25,8 @@ import {
   Badge,
   Notification,
   Tabs,
-  TabPane
+  TabPane,
+  Checkbox
 } from "element-ui";
 const element = {
   install: function(Vue) {
@@ -56,6 +57,7 @@ const element = {
     Vue.prototype.$confirm = MessageBox.confirm;
     Vue.use(Badge);
     Vue.prototype.$notify = Notification;
+    Vue.use(Checkbox);
   }
 };
 export default element;
