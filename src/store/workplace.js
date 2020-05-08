@@ -10,7 +10,9 @@ const state = {
   microphonesDeviceList: [],
   activeCamera: {},
   activeMicrophones: {},
-  panelType: "board"
+  panelType: "board",
+  workplaceVisibity: false,
+  cameraPanelVisibity: true
 };
 
 const getters = {
@@ -24,7 +26,9 @@ const getters = {
   activeCamera: state => state.activeCamera,
   activeMicrophones: state => state.activeMicrophones,
   role: state => state.role,
-  panelType: state => state.panelType
+  panelType: state => state.panelType,
+  workplaceVisibity: state => state.workplaceVisibity,
+  cameraPanelVisibity: state => state.cameraPanelVisibity
 };
 
 const mutations = {
@@ -113,6 +117,15 @@ const mutations = {
         state.panelType
       );
     }
+  },
+  async SYNC_STATE(state) {
+    await liveBroadcastService.timService.syncState();
+  },
+  SET_WORKPLACE_VISIBILITY(state, status) {
+    state.workplaceVisibity = status;
+  },
+  SET_CAMERA_PANEL__VISIBILITY(state, status) {
+    state.cameraPanelVisibity = status;
   }
 };
 export default {

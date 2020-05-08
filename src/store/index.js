@@ -7,12 +7,10 @@ import localStream from "./localStream";
 import remoteStream from "./remoteStream";
 import shareScreenStream from "./shareScreenStream";
 import examination from "./examination";
+import electron from "./electron";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-    onElectronClient: false
-  },
   modules: {
     account,
     board,
@@ -20,11 +18,7 @@ export default new Vuex.Store({
     localStream,
     remoteStream,
     shareScreenStream,
-    examination
-  },
-  mutations: {
-    rtcAvailabled(state) {
-      state.onElectronClient = true;
-    }
+    examination,
+    electron
   }
 });

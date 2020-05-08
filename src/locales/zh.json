@@ -25,6 +25,8 @@
   "signup.passwordTips": "请填写密码",
   "signup.RepeatPasswordTips": "请再次填写密码",
   "signup.sameTips": "两次密码不一致",
+  "signup.passwordLength":"密码长度至少为八位",
+  "signup.signupedTip":"已注册 直接登录",
 
   "button.send": "发送",
 

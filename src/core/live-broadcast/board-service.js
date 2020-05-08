@@ -1,8 +1,10 @@
 import TIM from "tim-js-sdk";
-import { Emitter } from "../emit";
+
 import store from "@/store";
 let TEduBoard = window["TEduBoard"];
 import { liveBroadcastService } from "@/main";
+import { Emitter } from "../emit";
+
 export class BoardService {
   activeBoard = null;
   liveBroadcastService;
@@ -59,6 +61,10 @@ export class BoardService {
         let lastindex = fileListInfo.length - 1;
         store.commit("workplace/BOARD_INDEX", lastindex);
       }, 3000);
+      Emitter.emit("board-init");
+    });
+    Emitter.on("split-change", () => {
+      this.getActiveBoard().resize();
     });
     return teduBoard;
   }
