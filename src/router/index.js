@@ -55,9 +55,14 @@ const router = new VueRouter({
 });
 
 // const hasToken = () => Boolean(localStorage.getItem("lb_token"));
+// const isExpired = () => {
+//   const timestamp = new Date().getTime()
+//   const expires = Number(localStorage.getItem("lb_expires"))
+//   return timestamp > expires
+// };
 // router.beforeEach((to, from, next) => {
 //   if (to.matched.some(item => item.meta.requireAuth)) {
-//     if (!hasToken()) {
+//     if (!hasToken() || isExpired) {
 //       next({
 //         path: "/login",
 //         replace: true
@@ -70,4 +75,4 @@ const router = new VueRouter({
 //   }
 // });
 
-export default router;
+// export default router;
