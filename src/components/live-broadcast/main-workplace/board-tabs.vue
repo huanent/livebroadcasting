@@ -110,6 +110,13 @@ export default {
       }
       this.$emit("index-change", newVal);
       this.$emit("active-index", newVal);
+    },
+    panelType(type) {
+      this.options.forEach(item => {
+        if (item.type === type) {
+          this.selected = item;
+        }
+      });
     }
   },
   methods: {

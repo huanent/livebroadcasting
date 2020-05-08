@@ -1,29 +1,32 @@
 <template>
   <div class="main-workplace-container">
-    <BoardTabs
-      :datas="boardProfiles"
-      @on-close="onTabsClose"
-      :active-index.sync="index"
-      @index-change="indexChange($event)"
-      @type-change="onChange"
-      :panel-type="panelType"
-      class="workplace-content"
-      :show-lable="panelType === 'board'"
-    >
-      <div class="board-wrapper" v-show="panelType === 'board'">
-        <div id="board-el" class="roll-scroll"></div>
+    <div style="height: 100%" :class="{ hide: !workplaceVisibity }">
+      <BoardTabs
+        :datas="boardProfiles"
+        @on-close="onTabsClose"
+        :active-index.sync="index"
+        @index-change="indexChange($event)"
+        @type-change="onChange"
+        :panel-type="panelType"
+        class="workplace-content"
+        :show-lable="panelType === 'board'"
+      >
+        <div class="board-wrapper" v-show="panelType === 'board'">
+          <div id="board-el" class="roll-scroll"></div>
+        </div>
+        <div class="board-wrapper" v-show="panelType === 'screen'">
+          <div ref="screen" style="height: 100%;width: 100%;"></div>
+        </div>
+        <div class="board-wrapper" v-show="panelType === 'camera'">
+          <div ref="camera" id="workplace-camera"></div>
+        </div>
+      </BoardTabs>
+      <div class="workplace-footer">
+        <workplace-footer v-show="panelType === 'board'" />
       </div>
-      <div class="board-wrapper" v-show="panelType === 'screen'">
-        <div ref="screen" style="height: 100%;width: 100%;"></div>
-      </div>
-      <div class="board-wrapper" v-show="panelType === 'camera'">
-        <div ref="camera" id="workplace-camera"></div>
-      </div>
-    </BoardTabs>
-    <div class="workplace-footer">
-      <workplace-footer v-show="panelType === 'board'" />
+      <Toolbar v-if="isToolBarShow"></Toolbar>
     </div>
-    <Toolbar v-if="isToolBarShow"></Toolbar>
+    <div style="height: 100%" :class="{ hide: workplaceVisibity }"></div>
   </div>
 </template>
 
@@ -33,15 +36,28 @@ import BoardTabs from "./board-tabs";
 import WorkplaceFooter from "../workplace-footer";
 import { liveBroadcastService } from "../../../main";
 import { mapGetters, mapMutations } from "vuex";
-
+import { Emitter } from "../../../core/emit";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, WorkplaceFooter },
   data() {
     return {
-      showToolbar: false,
-      lastPanelType: undefined
+      showToolbar: false
     };
+  },
+
+  async mounted() {
+    await liveBroadcastService.init();
+    this.SET_WORKPLACE_VISIBILITY(true);
+    if (this.role === "student") {
+      Emitter.on("board-init", () => {
+        setTimeout(async () => {
+          await this.SYNC_STATE();
+        }, 1000);
+      });
+    } else {
+      this.SET_WORKPLACE_VISIBILITY(true);
+    }
   },
   methods: {
     ...mapMutations("workplace", [
@@ -49,7 +65,9 @@ export default {
       "DELETE_BOARD_FILE",
       "BOARD_INDEX",
       "SET_PANEL_TYPE",
-      "SEND_PANEL_TYPE"
+      "SEND_PANEL_TYPE",
+      "SYNC_STATE",
+      "SET_WORKPLACE_VISIBILITY"
     ]),
     ...mapMutations("localStream", [
       "LOCAL_STREAM_PLAY",
@@ -95,13 +113,9 @@ export default {
       this.SET_PANEL_TYPE(type);
     }
   },
-  async mounted() {
-    await liveBroadcastService.init();
-    this.showToolbar = true;
-  },
   computed: {
     ...mapGetters("localStream", []),
-    ...mapGetters("workplace", ["panelType"]),
+    ...mapGetters("workplace", ["panelType", "workplaceVisibity"]),
     ...mapGetters("account", ["role"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
@@ -158,16 +172,13 @@ export default {
             this.TEACHER_REMOTE_STREAM_STOP_PLAY();
             setTimeout(() => {
               this.TEACHER_REMOTE_STREAM_PLAY(cameraEl);
-              this.SEND_PANEL_TYPE();
             }, 300);
             break;
           case "screen":
             this.observerVideo(screenEl);
             await this.SHARE_SCREEN_PLAY(screenEl);
-            this.SEND_PANEL_TYPE();
             break;
           default:
-            this.SEND_PANEL_TYPE();
         }
       }
     }
@@ -208,5 +219,8 @@ export default {
     height: 100%;
     width: 100%;
   }
+}
+.hide {
+  visibility: hidden;
 }
 </style>
