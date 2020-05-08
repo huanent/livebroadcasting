@@ -11,7 +11,11 @@
         class="workplace-content"
         :show-lable="panelType === 'board'"
       >
-        <div class="board-wrapper" v-show="panelType === 'board'">
+        <div
+          class="board-wrapper"
+          v-show="panelType === 'board'"
+          @click="boardClick"
+        >
           <div id="board-el" class="roll-scroll"></div>
         </div>
         <div class="board-wrapper" v-show="panelType === 'screen'">
@@ -42,7 +46,7 @@ export default {
   components: { Toolbar, BoardTabs, WorkplaceFooter },
   data() {
     return {
-      showToolbar: false
+      showToolbar: true
     };
   },
 
@@ -67,7 +71,8 @@ export default {
       "SET_PANEL_TYPE",
       "SEND_PANEL_TYPE",
       "SYNC_STATE",
-      "SET_WORKPLACE_VISIBILITY"
+      "SET_WORKPLACE_VISIBILITY",
+      "SET_CAMERA_PANEL__VISIBILITY"
     ]),
     ...mapMutations("localStream", [
       "LOCAL_STREAM_PLAY",
@@ -84,6 +89,9 @@ export default {
       if (item.fid) {
         this.DELETE_BOARD_FILE(item.fid);
       }
+    },
+    boardClick() {
+      /* this.SET_CAMERA_PANEL__VISIBILITY(false);*/
     },
     indexChange(index) {
       this.BOARD_INDEX(index);
@@ -117,6 +125,7 @@ export default {
     ...mapGetters("localStream", []),
     ...mapGetters("workplace", ["panelType", "workplaceVisibity"]),
     ...mapGetters("account", ["role"]),
+    ...mapGetters(["onElectronClient"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
     },

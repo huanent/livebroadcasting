@@ -125,10 +125,8 @@ export default {
         if (this.role !== "student") {
           this.LOCAL_STREAM_STOP_PLAY();
         }
-        console.log("stop camera start self");
         setTimeout(() => {
           this.LOCAL_STREAM_PLAY(this.$refs.video);
-          console.log("start self play done");
         }, 300);
       }
     }
