@@ -1,6 +1,6 @@
 <template>
   <div class="my-class-nav">
-    <div class="my-class-wrap">
+    <div class="nav-wrap">
       <div class="logo-wrap">Live broadcast</div>
       <div class="serach-wrap">
         <el-input v-model="value" suffix-icon="el-icon-search"></el-input>
@@ -34,7 +34,7 @@ export default {
   color: $white;
   font-size: 14px;
   background-color: #2e333f;
-  .my-class-wrap {
+  .nav-wrap {
     width: 1205px;
     height: 100%;
     margin: 0 auto;
@@ -46,6 +46,12 @@ export default {
     }
     .serach-wrap {
       width: 320px;
+      /deep/ .el-input__inner {
+        border-radius: 20px;
+        background-color: #444444;
+        border-color: #444444;
+        color: #f5f5f5;
+      }
     }
     .userinfo-wrap {
       display: flex;

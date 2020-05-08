@@ -11,7 +11,8 @@ const state = {
   activeCamera: {},
   activeMicrophones: {},
   panelType: "board",
-  workplaceVisibity: false
+  workplaceVisibity: false,
+  cameraPanelVisibity: true
 };
 
 const getters = {
@@ -26,7 +27,8 @@ const getters = {
   activeMicrophones: state => state.activeMicrophones,
   role: state => state.role,
   panelType: state => state.panelType,
-  workplaceVisibity: state => state.workplaceVisibity
+  workplaceVisibity: state => state.workplaceVisibity,
+  cameraPanelVisibity: state => state.cameraPanelVisibity
 };
 
 const mutations = {
@@ -121,6 +123,9 @@ const mutations = {
   },
   SET_WORKPLACE_VISIBILITY(state, status) {
     state.workplaceVisibity = status;
+  },
+  SET_CAMERA_PANEL__VISIBILITY(state, status) {
+    state.cameraPanelVisibity = status;
   }
 };
 export default {
