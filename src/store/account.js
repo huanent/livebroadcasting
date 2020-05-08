@@ -10,7 +10,8 @@ const state = {
 };
 
 const getters = {
-  tx_userSig: state => state.userSig
+  tx_userSig: state => state.userSig,
+  role: state => state.role
 };
 
 const mutations = {

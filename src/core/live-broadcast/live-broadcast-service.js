@@ -18,10 +18,11 @@ export class LiveBroadcastService {
   config;
   mode = "live";
   TokenList = {};
-  roomId = "109264896101959";
+  roomId = "110098327629613";
   activeBoard = null;
-  userId = "wenjie-test"; // jinrui-main
+  userId = "jongwong";
   tim;
+  teacherStreamUserId = "jongwong-test";
   trtcService;
   timService;
   boardService;

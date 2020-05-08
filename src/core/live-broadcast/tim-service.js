@@ -106,12 +106,22 @@ export class TimService {
       Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
     } else if (typeof info.userIds === "string" && info.userIds === "all") {
       if (info.type === "CONTROL_WORKPLACE_TYPE") {
-        store.commit("workplace/SET_PANEL_TYPE", info.data);
+        store.commit("workplace/SET_PANEL_TYPE", info.data.panelType);
+        if (info.data.userId) {
+          this.liveBroadcastService.trtcService.teacherStreamId =
+            info.data.userId;
+        }
       }
     }
   }
-  async switchWorkplaceType(panelType) {
-    await this.sendSystemMsg("CONTROL_WORKPLACE_TYPE", "all", panelType);
+  async switchWorkplaceType(panelType, streamId) {
+    let data = {
+      panelType
+    };
+    if (streamId) {
+      Object.assign(data, { streamId });
+    }
+    await this.sendSystemMsg("CONTROL_WORKPLACE_TYPE", "all", data);
   }
   listenHandler() {
     let self = this;

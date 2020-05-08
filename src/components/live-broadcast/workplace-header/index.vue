@@ -22,7 +22,9 @@
         ><icon name="import_contacts" class="pannel-icon" :size="20"></icon
       ></a>
       <a><icon name="person_outline" class="pannel-icon" :size="20"></icon></a>
-      <a @click="onWidgetsOpen"><icon name="widgets" class="pannel-icon" :size="20"></icon></a>
+      <a @click="onWidgetsOpen"
+        ><icon name="widgets" class="pannel-icon" :size="20"></icon
+      ></a>
       <a><icon name="settings" class="pannel-icon" :size="20"></icon></a>
       <a><icon name="exit_to_app" class="pannel-icon" :size="20"></icon></a>
       <a><icon name="info_outline" class="pannel-icon" :size="20"></icon></a>
@@ -127,7 +129,7 @@ export default {
     return {
       dialogVisible: false,
       addFileVisible: false,
-      widegtsVisible: true,
+      widegtsVisible: false,
       fileList: [],
       pageSize: 6,
       pageNum: 1,
