@@ -1,33 +1,21 @@
 <template>
   <div class="signup-page">
     <div class="signup-form">
-      <el-form
-        ref="signUpForm"
-        :model="signUpForm"
-        :rules="rules"
-        label-width="80px"
-      >
+      <el-form ref="signUpForm" :model="signUpForm" :rules="rules" label-width="80px">
         <el-form-item prop="username" :label="$t('signup.username')">
           <el-input v-model="signUpForm.username"></el-input>
         </el-form-item>
         <el-form-item prop="password" :label="$t('signup.password')">
           <el-input v-model="signUpForm.password" show-password></el-input>
         </el-form-item>
-        <el-form-item
-          prop="repeatPassword"
-          :label="$t('signup.repeatPassword')"
-        >
-          <el-input
-            v-model="signUpForm.repeatPassword"
-            show-password
-          ></el-input>
+        <el-form-item prop="repeatPassword" :label="$t('signup.repeatPassword')">
+          <el-input v-model="signUpForm.repeatPassword" show-password></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit('signUpForm')">
-            {{ $t("signup") }}
-          </el-button>
+          <el-button type="primary" @click="onSubmit('signUpForm')">{{ $t("signup") }}</el-button>
         </el-form-item>
       </el-form>
+      <span class="signuped-tip" @click="toLoginPage">{{ $t("signup.signupedTip") }}</span>
     </div>
   </div>
 </template>
@@ -39,7 +27,7 @@ export default {
     var validatePassword = (rule, value, callback) => {
       if (value === "") {
         callback(this.$t("signup.passwordTips"));
-      } else if(value.length < 8){
+      } else if (value.length < 8) {
         callback(this.$t("signup.passwordLength"));
       } else {
         if (this.signUpForm.repeatPassword !== "") {
@@ -120,6 +108,9 @@ export default {
     },
     resetForm: function(formName) {
       this.$refs[formName].resetFields();
+    },
+    toLoginPage(){
+      this.$router.push({ path: "/login" });
     }
   }
 };
@@ -145,6 +136,14 @@ export default {
     @media screen and (max-width: 767px) {
       width: 80%;
       max-width: 450px;
+    }
+    .signuped-tip {
+      position: absolute;
+      top: 80%;
+      left: 77%;
+      font-size: 12px;
+      color:rgb(175, 173, 173);
+      cursor: pointer;
     }
   }
 }
