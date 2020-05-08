@@ -101,7 +101,7 @@ export default {
           this.axios
             .post("/user/signup", this.signUpForm)
             .then(res => {
-              console.log(res)
+              console.log(res);
               if (res.data.success) {
                 // this.$refs.upload.submit();
                 this.$message.success(res.data.message);
@@ -128,9 +128,11 @@ export default {
 <style lang="scss" scoped>
 .signup-page {
   width: 100%;
+  height: 100%;
+  background-color: #212224;
   .signup-form {
     position: absolute;
-    top: 10%;
+    top: 30%;
     left: 50%;
     transform: translateX(-50%);
     padding: 2rem 1.5rem 1rem;
