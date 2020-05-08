@@ -29,6 +29,7 @@ export class BoardService {
       Object.assign({}, initParams, this.boardInitParams)
     );
     teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
+      console.log(roomId);
       let message = tim.createCustomMessage({
         to: roomId,
         conversationType: TIM.TYPES.CONV_GROUP,
