@@ -7,36 +7,8 @@
         :rules="rules"
         label-width="80px"
       >
-        <el-form-item :label="$t('signup.avatar')">
-          <el-upload
-            action="/api/headImage/upload"
-            :class="[
-              {
-                'head-upload': avatar.length > 0
-              }
-            ]"
-            list-type="picture-card"
-            ref="upload"
-            :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove"
-            :on-change="onFileSelected"
-            :on-success="uploadSuccess"
-            :before-upload="beforeUpload"
-            accept="image/*"
-            :auto-upload="false"
-            :data="{ username: signUpForm.username }"
-          >
-            <icon name="add" :size="20" color="#0a818c"></icon>
-          </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="" />
-          </el-dialog>
-        </el-form-item>
         <el-form-item prop="username" :label="$t('signup.username')">
           <el-input v-model="signUpForm.username"></el-input>
-        </el-form-item>
-        <el-form-item prop="nickname" :label="$t('signup.nickname')">
-          <el-input v-model="signUpForm.nickname"></el-input>
         </el-form-item>
         <el-form-item prop="password" :label="$t('signup.password')">
           <el-input v-model="signUpForm.password" show-password></el-input>
@@ -49,12 +21,6 @@
             v-model="signUpForm.repeatPassword"
             show-password
           ></el-input>
-        </el-form-item>
-        <el-form-item prop="tel" :label="$t('signup.tel')">
-          <el-input v-model="signUpForm.tel"></el-input>
-        </el-form-item>
-        <el-form-item prop="email" :label="$t('signup.email')">
-          <el-input v-model="signUpForm.email"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit('signUpForm')">
@@ -70,18 +36,6 @@
 export default {
   name: "Signup",
   data() {
-    var validateEmail = (rule, value, callback) => {
-      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
-      if (!value) {
-        return callback(this.$t("signup.emailTips"));
-      }
-
-      if (mailReg.test(value)) {
-        callback();
-      } else {
-        callback(this.$t("signup.emailRightTips"));
-      }
-    };
     var validatePassword = (rule, value, callback) => {
       if (value === "") {
         callback(this.$t("signup.passwordTips"));
@@ -109,24 +63,14 @@ export default {
       signUpForm: {
         avatar: "",
         username: "",
-        nickname: "",
         password: "",
-        repeatPassword: "",
-        tel: "",
-        email: ""
+        repeatPassword: ""
       },
       rules: {
         username: [
           {
             required: true,
             message: this.$t("signup.usernameTips"),
-            trigger: "change"
-          }
-        ],
-        nickname: [
-          {
-            required: true,
-            message: this.$t("signup.nicknameTips"),
             trigger: "change"
           }
         ],
@@ -143,48 +87,20 @@ export default {
             validator: validateRepeatPassword,
             trigger: "change"
           }
-        ],
-        tel: [
-          {
-            required: true,
-            message: this.$t("signup.telTips"),
-            trigger: "change"
-          }
-        ],
-        email: [
-          {
-            required: true,
-            validator: validateEmail,
-            trigger: "change"
-          }
         ]
       }
     };
   },
   created() {},
   methods: {
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
-    uploadSuccess(response, file, fileList) {
-      console.log(response);
-      this.signUpForm.avatar = response.model.fullFilename;
-    },
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          // let formData = new FormData();
-          // formData.append("username", this.signUpForm.username);
-          // formData.append("nickname", this.signUpForm.nickname);
-          // formData.append("password", this.signUpForm.password);
-          // formData.append("tel", this.signUpForm.tel);
-          // formData.append("email", this.signUpForm.email);
-          // formData.append("avatar", this.signUpForm.avatar);
-          // console.log(this.signUpForm);
+          console.log(this.signUpForm);
           this.axios
             .post("/user/signup", this.signUpForm)
             .then(res => {
+              console.log(res)
               if (res.data.success) {
                 this.$refs.upload.submit();
                 this.$message.success(res.data.message);
@@ -203,44 +119,8 @@ export default {
         }
       });
     },
-    handleRemove(file, fileList) {
-      this.avatar = "";
-    },
     resetForm: function(formName) {
       this.$refs[formName].resetFields();
-    },
-    onFileSelected(file, filelist) {
-      console.log("选择图片");
-      this.signUpForm.avatar = `user\\${this.signUpForm.username}\\avatar\\${file.name}`;
-      console.log(this.signUpForm.avatar);
-      const isIMAGE =
-        file.raw.type === "image/jpeg" || file.raw.type === "image/png";
-      const isLt1M = file.size / 1024 / 1024 < 1;
-      if (!isIMAGE) {
-        this.$message.error("只能上传jpg/png图片!");
-        return false;
-      }
-      if (!isLt1M) {
-        this.$message.error("上传文件大小不能超过 1MB!");
-        return false;
-      }
-      console.log("filelist.length=%s", filelist.length);
-      if (file) {
-        let reader = new FileReader();
-        reader.addEventListener(
-          "load",
-          () => {
-            this.avatar = reader.result;
-          },
-          false
-        );
-        reader.readAsDataURL(file.raw);
-      }
-    },
-    beforeUpload(file) {
-      console.log("上传前");
-      this.signUpForm.avatar = `user\\${this.signUpForm.username}\\avatar\\${file.name}`;
-      console.log(this.signUpForm.avatar);
     }
   }
 };
