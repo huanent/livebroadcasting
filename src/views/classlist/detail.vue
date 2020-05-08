@@ -58,6 +58,12 @@ export default {
             this.classList.classImg =
               "http://livebroadcasting.jinrui.kooboo.site/__kb/kfile/" +
               this.classList.classImg;
+            this.classList.startTime = new Date(
+              parseInt(this.classList.startTime)
+            ).toLocaleString();
+            this.classList.endTime = new Date(
+              parseInt(this.classList.endTime)
+            ).toLocaleString();
           } else {
             this.$message.error(res.data.message);
           }
