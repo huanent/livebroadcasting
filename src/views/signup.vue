@@ -39,6 +39,8 @@ export default {
     var validatePassword = (rule, value, callback) => {
       if (value === "") {
         callback(this.$t("signup.passwordTips"));
+      } else if(value.length < 8){
+        callback(this.$t("signup.passwordLength"));
       } else {
         if (this.signUpForm.repeatPassword !== "") {
           this.$refs.signUpForm.validateField("validateRepeatPassword");
@@ -106,7 +108,6 @@ export default {
                 // this.$refs[formName].resetFields();
                 this.$router.push({ path: "/login" });
               } else {
-                this.$refs.upload.clearFiles();
                 this.$refs[formName].resetFields();
                 this.$message.error(res.data.message);
               }
