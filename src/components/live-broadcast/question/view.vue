@@ -57,6 +57,7 @@
 </template>
 <script>
 import { indexToLetter } from "../../../core/utils";
+import { mapActions } from "vuex";
 
 export default {
   name: "QuestionView",
@@ -65,13 +66,15 @@ export default {
   },
   data() {
     return {
+      // questions测试用，需要从teacher websocket发送的题目中得到
       questions: [
         {
           options: ["<p>test</p>", "<p>test</p>"],
           title:
             "<p>Progress 组件设置percentage属性即可，表示进度条对应的百分比，必填，必须在 0-100。通过 format 属性来指定进度条文字内容。</p>",
           _id: "402b8b2e-c242-4d28-806a-46ed65f99db9",
-          answer: ""
+          answer: "",
+          correctAnswer: "A"
         },
         {
           options: [
@@ -82,7 +85,8 @@ export default {
           ],
           title: '"<p class="custom-block-title">Yes</p>"',
           _id: "b8cdc4a6-3633-4d62-876e-5e9fe874b218",
-          answer: ""
+          answer: "",
+          correctAnswer: "C"
         }
       ],
       currentIndex: 0,
@@ -90,6 +94,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions("examination", ["sendExamAnsers"]),
     indexToLetter(index) {
       return indexToLetter(index);
     },
@@ -112,7 +117,18 @@ export default {
     async handleSubmit() {
       this.submiting = true;
       console.log(this.questions);
+      await this.sendExamAnsers(this.questions);
       this.submiting = false;
+      this.$notify({
+        title: "提示",
+        message: "提交成功",
+        type: "success"
+      });
+      this.questions = [];
+      this.close();
+    },
+    close() {
+      this.$emit("update:visible", false);
     }
   },
   computed: {

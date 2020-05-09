@@ -53,7 +53,9 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="close">关闭</el-button>
-      <el-button type="primary" @click="submitForm">保存</el-button>
+      <el-button type="primary" @click="submitForm" :loading="submiting"
+        >保存</el-button
+      >
     </span>
   </el-dialog>
 </template>
@@ -78,7 +80,8 @@ export default {
         title: "",
         options: []
       },
-      isEdited: false
+      isEdited: false,
+      submiting: false
     };
   },
   methods: {
@@ -89,6 +92,7 @@ export default {
     submitForm() {
       this.$refs.editForm.validate(async valid => {
         if (valid) {
+          this.submiting = true;
           const options = [],
             answers = [];
           this.editForm.options.forEach((item, index) => {
@@ -99,7 +103,6 @@ export default {
           });
           const result = await this.save({
             _id: this.currentEdit._id,
-            userId: "test",
             title: this.editForm.title,
             options: options,
             answers: answers
@@ -119,6 +122,7 @@ export default {
               message: "保存失败"
             });
           }
+          this.submiting = false;
         } else {
           return false;
         }

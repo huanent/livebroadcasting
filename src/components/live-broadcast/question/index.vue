@@ -22,6 +22,7 @@
           >
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="summary" label="title"></el-table-column>
+             <!-- <el-table-column prop="answer" label="answer"></el-table-column> -->
             <el-table-column
               prop="createAt"
               label="createAt"
@@ -88,7 +89,8 @@ const mapRowToSelect = row => {
   return {
     _id: row._id,
     title: row.title,
-    options: row.options
+    options: row.options,
+    correctAnswer: row.answer
   };
 };
 export default {
