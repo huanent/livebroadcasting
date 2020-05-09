@@ -29,12 +29,7 @@ const routes = [
   {
     path: "/setting",
     name: "Setting",
-    component: () => import("@c/my-class//userinfo/setting")
-  },
-  {
-    path: "/loginout",
-    name: "LoginOut",
-    component: () => import("@c/my-class/userinfo/loginout")
+    component: () => import("@c/my-class/my-setting")
   },
   {
     path: "/login",

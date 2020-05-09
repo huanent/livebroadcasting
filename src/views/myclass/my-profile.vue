@@ -12,7 +12,7 @@
       >
         <ul class="menu">
           <router-link :to="{ name: 'Setting' }" tag="li">设置</router-link>
-          <router-link :to="{ name: 'LoginOut' }" tag="li" class="u-menu-bottom"
+          <router-link :to="{ name: 'Login' }" tag="li" class="u-menu-bottom"
             >退出</router-link
           >
         </ul>

@@ -6,7 +6,7 @@
         <el-input v-model="value" suffix-icon="el-icon-search"></el-input>
       </div>
       <div class="profile-wrap">
-        <user-info />
+        <my-profile />
       </div>
     </div>
   </div>
