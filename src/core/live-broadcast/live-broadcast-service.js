@@ -15,7 +15,7 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "110098327629613";
   activeBoard = null;
-  userId = "jongwong";
+  userId = "lgs";
   tim;
   teacherStreamUserId = "jongwong";
   trtcService;

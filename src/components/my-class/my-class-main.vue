@@ -7,7 +7,7 @@
       </el-tabs>
     </div>
     <div class="main-area">
-      <router-view></router-view>
+      <class-list />
     </div>
   </div>
 </template>

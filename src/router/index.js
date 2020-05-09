@@ -15,15 +15,15 @@ const routes = [
     component: () => import("@v/myclass"),
     children: [
       {
-        path: '/',
+        path: "/",
         name: "Classlist",
-        component: () => import("@c/my-class/classlist/classlist")
+        component: () => import("@c/my-class")
       },
       {
-        path: 'detail',
+        path: "detail",
         name: "Classdetail",
         component: () => import("@c/my-class/classlist/detail")
-      },
+      }
     ]
   },
   {

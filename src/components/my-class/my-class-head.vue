@@ -33,8 +33,6 @@ export default {
 
 <style lang="scss" scoped>
 .my-class-head {
-  // background: $white url(../../assets/images/head.png) no-repeat;
-  // background-position: center;
   background-image: linear-gradient(45deg, #6bd5c7, #dcecb1);
   height: 190px;
   max-width: 1920px;
