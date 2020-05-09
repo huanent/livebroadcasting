@@ -27,7 +27,7 @@
       <el-form-item label="常用邮箱" prop="email">
         <el-input v-model="infoForm.email" class="w-320"></el-input>
       </el-form-item>
-      <el-form-item label="手机号码">
+      <el-form-item label="手机号码" prop="tel">
         <el-input v-model="infoForm.tel" class="w-320"></el-input>
       </el-form-item>
       <el-form-item>
@@ -63,12 +63,12 @@ export default {
     };
     var checkTel = (rule, value, callback) => {
       var telReg = /^1[3,4,5,7,8]\d{9}$/g;
-      console.log(1);
       if (!value) {
         return callback(new Error("手机号码不能为空"));
-      } else if (!telReg.test(value)) {
-        return callback(new Error("手机号码格式错误"));
       } else {
+        if (!telReg.test(value)) {
+          return callback(new Error("手机号码格式错误"));
+        }
         callback();
       }
     };
@@ -94,7 +94,7 @@ export default {
           {
             required: true,
             trigger: "change",
-            validator: checkEmail,
+            validator: checkEmail
           }
         ],
         tel: [
