@@ -1,15 +1,12 @@
 <template>
   <div class="my-class">
-    <my-class-nav />
-    <my-class-head />
-    <my-class-main />
+    <my-nav />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import MyClassNav from "@c/my-class/my-class-nav";
-import MyClassHead from "@c/my-class/my-class-head";
-import MyClassMain from "@c/my-class/my-class-main";
+import MyNav from "./my-nav";
 
 export default {
   name: "MyClass",
@@ -17,9 +14,7 @@ export default {
     return {};
   },
   components: {
-    MyClassNav,
-    MyClassHead,
-    MyClassMain
+    MyNav
   }
 };
 </script>

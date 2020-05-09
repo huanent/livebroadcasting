@@ -1,12 +1,11 @@
 <template>
-  <div class="my-class-nav">
+  <div class="my-nav">
     <div class="nav-wrap">
       <div class="logo-wrap">Live broadcast</div>
       <div class="serach-wrap">
         <el-input v-model="value" suffix-icon="el-icon-search"></el-input>
       </div>
-      <div class="userinfo-wrap">
-        <!-- <div class="my-classroom">我的课堂</div> -->
+      <div class="profile-wrap">
         <user-info />
       </div>
     </div>
@@ -14,22 +13,22 @@
 </template>
 
 <script>
-import userInfo from "./my-class-userinfo";
+import MyProfile from "./my-profile";
 export default {
-  name: "MyClassNav",
+  name: "MyNav",
   data() {
     return {
       value: ""
     };
   },
   components: {
-    userInfo
+    MyProfile
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.my-class-nav {
+.my-nav {
   height: 60px;
   color: $white;
   font-size: 14px;
@@ -53,7 +52,7 @@ export default {
         color: #f5f5f5;
       }
     }
-    .userinfo-wrap {
+    .profile-wrap {
       display: flex;
       line-height: 60px;
       .my-classroom {

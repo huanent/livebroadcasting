@@ -7,13 +7,13 @@
       </el-tabs>
     </div>
     <div class="main-area">
-      <router-view></router-view>
+      <class-list />
     </div>
   </div>
 </template>
 
 <script>
-import ClassList from "./classlist/classlist";
+import ClassList from "./class-list";
 export default {
   name: "MyClassMian",
   data() {
