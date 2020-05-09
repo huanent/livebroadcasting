@@ -58,18 +58,23 @@ body {
 }
 
 .userinfo-popover {
-  // position: absolute;
-  // right: -3px;
-  // top: 40px;
   .menu {
     padding: 8px;
-    text-align: left;
     background-color: #fff;
     border: 1px solid #ddd;
     li {
-      text-align: center;
-      margin-top: 5px;
+      text-align: left;
       font-size: 12px;
+      cursor: pointer;
+      color: rgb(121, 119, 119);
+      padding: 8px;
+      box-sizing: border-box;
+      &.u-menu-bottom {
+        border-top: 1px solid #eaeaea;
+      }
+      &:hover {
+        background-color: rgba(192, 191, 191,.2);
+      }
     }
   }
 }
