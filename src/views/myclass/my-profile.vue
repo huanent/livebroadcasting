@@ -1,14 +1,13 @@
 <template>
   <div class="profile-wrap">
     <div class="profile-username">ykt22537555661078570</div>
-
     <div class="profile-avatar">
       <el-popover
         trigger="hover"
-        placement="bottom-end"
+        placement="bottom"
+        :offset="-7"
         v-model="visible"
         popper-class="profile-popover"
-        :offset="-7"
       >
         <ul class="menu">
           <router-link :to="{ name: 'Setting' }" tag="li">设置</router-link>
@@ -16,10 +15,7 @@
             >退出</router-link
           >
         </ul>
-        <img
-          slot="reference"
-          src="//s.stu.126.net/res/images/headImg/small.jpg"
-        />
+        <img slot="reference" src="../../assets/images/avatar.jpg" />
       </el-popover>
     </div>
   </div>
@@ -38,28 +34,33 @@ export default {
 
 <style lang="scss" scoped>
 .profile-wrap {
+  display: flex;
+  line-height: 60px;
+  align-items: center;
   position: relative;
   cursor: pointer;
   .profile-username {
-    padding-right: 15px;
+    margin-right: 17px;
+    min-width: 40px;
     max-width: 102px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-align: center;
+    // box-sizing: border-box;
+    &:hover{
+      color: #6dbcc2;
+      // color: #10ae58;
+    }
   }
   .profile-avatar {
-    position: absolute;
-    top: 22%;
-    right: -20%;
     color: #999;
     text-align: right;
-    margin: 0 0 0 4px;
+    margin-left: 4px;
     width: 32px;
     height: 32px;
     line-height: 30px;
-    // border: 1px solid red;
     box-sizing: border-box;
-    border-radius: 50%;
 
     img {
       width: 100%;

@@ -23,13 +23,13 @@ const routes = [
         path: "detail",
         name: "Classdetail",
         component: () => import("@c/my-class/class-detail")
+      },
+      {
+        path: "/setting",
+        name: "Setting",
+        component: () => import("@c/my-class/my-setting")
       }
     ]
-  },
-  {
-    path: "/setting",
-    name: "Setting",
-    component: () => import("@c/my-class/my-setting")
   },
   {
     path: "/login",
