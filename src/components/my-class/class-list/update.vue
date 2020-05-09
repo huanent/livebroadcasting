@@ -118,7 +118,6 @@ export default {
   created() {
     this.userId = window.liveBroadcastService.userId;
     this.getStudents();
-    console.log(this._props.classId);
     (this.classForm = {
       _id: "",
       avatar: "",
@@ -142,10 +141,10 @@ export default {
         .get("/classform/list?classId=" + this._props.classId)
         .then(res => {
           if (res.data.success) {
-            if (res.data.data[0].students == "暂无学生") {
-              this.selectedStudents = [];
-            } else {
+            if (res.data.data[0].students.length > 0) {
               this.selectedStudents = JSON.parse(res.data.data[0].students);
+            } else {
+              this.selectedStudents = [];
             }
             this.classForm = res.data.data[0];
             this.fileList[0].name = res.data.data[0].classImg;

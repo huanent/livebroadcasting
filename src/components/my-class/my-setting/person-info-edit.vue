@@ -13,7 +13,7 @@
       </el-form-item>
       <el-form-item label="头像" class="img-upload-wrap">
         <el-upload
-          action=""
+          action
           :class="[
             {
               'class-upload': fileList.length > 0
@@ -33,11 +33,11 @@
       <el-form-item label="常用邮箱" prop="email">
         <el-input v-model="infoForm.email" class="w-320"></el-input>
       </el-form-item>
-      <el-form-item label="手机号码">
+      <el-form-item label="手机号码" prop="tel">
         <el-input v-model="infoForm.tel" class="w-320"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">保存</el-button>
+        <el-button type="primary" @click="onSubmit('infoForm')">保存</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -48,6 +48,37 @@ import Axios from "axios";
 export default {
   name: "PersonInfoEdit",
   data() {
+    var checkNickName = (rule, value, callback) => {
+      var nicknameReg = /^[\u4E00-\u9FA5A-Za-z0-9]+$/g;
+      if (!value) {
+        return callback(new Error("昵称不能为空"));
+      } else if (!nicknameReg.test(value)) {
+        return callback(new Error("昵称只能包含汉字、字母或数字"));
+      } else {
+        callback();
+      }
+    };
+    var checkEmail = (rule, value, callback) => {
+      var emailReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,3})$/g;
+      if (!value) {
+        return callback(new Error("邮箱不能为空"));
+      } else if (!emailReg.test(value)) {
+        return callback(new Error("邮箱格式错误"));
+      } else {
+        callback();
+      }
+    };
+    var checkTel = (rule, value, callback) => {
+      var telReg = /^1[3,4,5,7,8]\d{9}$/g;
+      if (!value) {
+        return callback(new Error("手机号码不能为空"));
+      } else {
+        if (!telReg.test(value)) {
+          return callback(new Error("手机号码格式错误"));
+        }
+        callback();
+      }
+    };
     return {
       infoForm: {
         nickname: "",
@@ -57,9 +88,22 @@ export default {
       fileList: [],
       rules: {
         nickname: [
-          { required: true, message: "require field", trigger: "change" }
+          { required: true, validator: checkNickName, trigger: "change" }
         ],
-        email: [{ required: true, message: "require field", trigger: "change" }]
+        email: [
+          {
+            required: true,
+            trigger: "change",
+            validator: checkEmail
+          }
+        ],
+        tel: [
+          {
+            required: true,
+            validator: checkTel,
+            trigger: "change"
+          }
+        ]
       }
     };
   },

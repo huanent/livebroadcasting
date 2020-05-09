@@ -48,8 +48,8 @@ export default {
     white-space: nowrap;
     text-align: center;
     // box-sizing: border-box;
-    &:hover {
-      color: #65b5bb;
+    &:hover{
+      color: #6dbcc2;
       // color: #10ae58;
     }
   }
