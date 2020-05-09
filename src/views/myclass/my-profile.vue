@@ -1,7 +1,6 @@
 <template>
   <div class="profile-wrap">
     <div class="profile-username">ykt22537555661078570</div>
-
     <div class="profile-avatar">
       <el-popover
         trigger="hover"
@@ -38,6 +37,8 @@ export default {
 
 <style lang="scss" scoped>
 .profile-wrap {
+  display: flex;
+  line-height: 60px;
   position: relative;
   cursor: pointer;
   .profile-username {
