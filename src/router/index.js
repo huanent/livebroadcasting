@@ -12,7 +12,19 @@ const routes = [
   {
     path: "/my",
     name: "MyClass",
-    component: () => import("@v/myclass")
+    component: () => import("@v/myclass"),
+    children: [
+      {
+        path: '/',
+        name: "Classlist",
+        component: () => import("@c/my-class/classlist/classlist")
+      },
+      {
+        path: 'detail',
+        name: "Classdetail",
+        component: () => import("@c/my-class/classlist/detail")
+      },
+    ]
   },
   {
     path: "/setting",
@@ -49,14 +61,6 @@ const routes = [
       requireAuth: true
     },
     component: () => import("@v/classform")
-  },
-  {
-    path: "/classlist",
-    name: "Classlist",
-    meta: {
-      requireAuth: true
-    },
-    component: () => import("@v/classlist")
   }
 ];
 

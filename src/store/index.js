@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import account from "./account";
 import board from "./board";
+import device from "./device";
 import workplace from "./workplace";
 import localStream from "./localStream";
 import remoteStream from "./remoteStream";
@@ -14,6 +15,7 @@ export default new Vuex.Store({
   modules: {
     account,
     board,
+    device,
     workplace,
     localStream,
     remoteStream,

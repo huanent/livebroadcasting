@@ -7,12 +7,13 @@
       </el-tabs>
     </div>
     <div class="main-area">
-      hello
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
+import ClassList from "./classlist/classlist";
 export default {
   name: "MyClassMian",
   data() {
@@ -20,6 +21,9 @@ export default {
       value: "",
       activeName: "student"
     };
+  },
+  components: {
+    ClassList
   },
   methods: {
     handleClick(tab, event) {
