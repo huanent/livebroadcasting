@@ -80,19 +80,7 @@ export default {
 .classlist-page {
   width: 100%;
   .classlist {
-    height: 800px;
-    overflow: auto;
-    position: absolute;
-    top: 5%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 2rem 1.5rem 1rem;
-    width: 80%;
-    background: $white;
-    border-radius: 2px;
-    border: 1px solid #e7eaed;
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
+    width: 100%;
     @media screen and (max-width: 767px) {
       width: 80%;
       max-width: 450px;

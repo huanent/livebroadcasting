@@ -11,10 +11,8 @@
           ]"
           list-type="picture-card"
           ref="upload"
-          :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
           :on-change="onFileSelected"
-          :on-success="uploadSuccess"
           accept="image/*"
           :auto-upload="false"
           :file-list="fileList"
@@ -22,9 +20,6 @@
         >
           <icon name="add" :size="20" color="#0a818c"></icon>
         </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="" />
-        </el-dialog>
       </el-form-item>
       <el-form-item prop="title" :label="$t('classform.title')">
         <el-input v-model="classForm.title"></el-input>
@@ -84,15 +79,10 @@
 </template>
 
 <script>
-import { LiveBroadcastService } from "../../core/live-broadcast/live-broadcast-service";
-import { removeClassImg } from "../../core/data/data-service";
 export default {
   name: "ClassUpdate",
   data() {
     return {
-      userId: "",
-      classList: [],
-      dialogFormVisible: false,
       classForm: {
         _id: "",
         avatar: "",
@@ -102,7 +92,6 @@ export default {
         endTime: "",
         file: ""
       },
-      formLabelWidth: "120px",
       avatar: "",
       fileList: [
         {
@@ -111,9 +100,6 @@ export default {
         }
       ],
       fullClassImg: "",
-      dialogVisible: false,
-      dialogImageUrl: "",
-
       options: [],
       selectedStudents: [],
       studentsList: [],
@@ -121,46 +107,51 @@ export default {
       allStudents: ["Alabama", "Alaska", "Arizona", "Arkansas"]
     };
   },
+  props: {
+    classId: Number
+  },
+  watch: {
+    classId(newValue) {
+      this.dataInit();
+    }
+  },
   created() {
-    console.log("created");
-    this.dataInit();
+    this.userId = window.liveBroadcastService.userId;
     this.getStudents();
+    console.log(this._props.classId);
+    (this.classForm = {
+      _id: "",
+      avatar: "",
+      title: "",
+      description: "",
+      startTime: "",
+      endTime: "",
+      file: ""
+    }),
+      (this.fileList = [
+        {
+          name: "",
+          url: ""
+        }
+      ]);
+    this.dataInit();
   },
   methods: {
-    deleteclass(index) {
-      removeClassImg(index).then(res => {
-        this.$confirm("此操作将删除该课堂, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
-          if (res.data.success) {
-            this.dataInit();
-            this.$message({
-              type: "success",
-              message: "删除成功!"
-            });
-          }
-        });
-      });
-    },
     dataInit() {
       this.axios
-        .get("/classform/list?createUser=" + this.userId)
+        .get("/classform/list?classId=" + this._props.classId)
         .then(res => {
           if (res.data.success) {
-            this.classList = res.data.data;
-            this.classList.forEach(element => {
-              element.classImg =
-                "http://livebroadcasting.jinrui.kooboo.site/__kb/kfile/" +
-                element.classImg;
-              element.startTime = new Date(
-                parseInt(element.startTime)
-              ).toLocaleString();
-              element.endTime = new Date(
-                parseInt(element.endTime)
-              ).toLocaleString();
-            });
+            if (res.data.data[0].students == "暂无学生") {
+              this.selectedStudents = [];
+            } else {
+              this.selectedStudents = res.data.data[0].students.split(",");
+            }
+            this.classForm = res.data.data[0];
+            this.fileList[0].name = res.data.data[0].classImg;
+            this.fileList[0].url =
+              "http://livebroadcasting.jinrui.kooboo.site/__kb/kfile/" +
+              res.data.data[0].classImg;
           } else {
             this.$message.error(res.data.message);
           }
@@ -186,55 +177,7 @@ export default {
           console.log(err);
         });
     },
-    getDetail(classId) {
-      this.$router.push({
-        name: "Classdetail",
-        params: {
-          classId: classId
-        }
-      });
-    },
-    updateDialog(classId) {
-      this.dialogFormVisible = true;
-      (this.classForm = {
-        _id: "",
-        avatar: "",
-        title: "",
-        description: "",
-        startTime: "",
-        endTime: "",
-        file: ""
-      }),
-        (this.fileList = [
-          {
-            name: "",
-            url: ""
-          }
-        ]);
-      this.selectedStudents = [];
-      this.axios
-        .get("/classform/list?classId=" + classId)
-        .then(res => {
-          if (res.data.success) {
-            // console.log(this.$refs.upload._data.uploadFiles);
-            this.classForm = res.data.data[0];
-            this.fileList[0].name = res.data.data[0].classImg;
-            this.fileList[0].url =
-              "http://livebroadcasting.jinrui.kooboo.site/__kb/kfile/" +
-              res.data.data[0].classImg;
-            this.selectedStudents = res.data.data[0].students.split(",");
-          } else {
-            this.$message.error(res.data.message);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
     updateClass() {
-      // const studentArr = this.value.map(item => item.value);
-      // console.log(studentArr);
-      console.log(this.selectedStudents);
       this.classForm.avatar = `userId\\${window.liveBroadcastService.userId}\\classTitle\\${this.classForm.title}\\${this.fullClassImg}`;
       var formData = new FormData();
       formData.append("avatar", this.classForm.avatar);
@@ -246,18 +189,16 @@ export default {
       if (this.classForm.file) {
         formData.append("file", this.classForm.file.raw);
       }
-      formData.append("students", this.selectedStudents);
+      if (this.selectedStudents) {
+        formData.append("students", this.selectedStudents);
+      }
       this.axios
         .post("/classform/update", formData)
         .then(res => {
           if (res.data.success) {
+            this.$emit("setActivityBtn", false);
             this.$message.success(res.data.message);
-            // this.$refs.upload.submit();
-            this.dialogFormVisible = false;
-            this.avatar = "";
-            this.dataInit();
           } else {
-            this.avatar = "";
             this.$message.error(res.data.message);
           }
         })
@@ -265,20 +206,9 @@ export default {
           console.log(err);
         });
     },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
-    uploadSuccess(response, file, fileList) {
-      console.log(response);
-      this.classForm.avatar = response.model.fullFilename;
-    },
     handleRemove(file, fileList) {
       this.avatar = "";
       this.fileList = [];
-    },
-    resetForm: function(formName) {
-      this.$refs[formName].resetFields();
     },
     onFileSelected(file, filelist) {
       const isIMAGE =
@@ -324,79 +254,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.classlist-page {
-  width: 100%;
-  .classlist {
-    height: 700px;
-    overflow: auto;
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 2rem 1.5rem 1rem;
-    width: 80%;
-    background: $white;
-    border-radius: 2px;
-    border: 1px solid #e7eaed;
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
-    .el-card {
-      width: 100%;
-    }
-    .page-title {
-      font-size: 5rem;
-      text-align: center;
-    }
-    .class-container {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin: 0.5rem;
-      .card-row {
-        align-items: center;
-        .deleteBtn {
-          position: absolute;
-          top: 0;
-          right: 0.3rem;
-        }
-        .btnMr {
-          margin: 0 0 0 0.3rem;
-        }
-        .class-img {
-          margin: 1rem;
-          width: 100%;
-          img {
-            width: 100%;
-          }
-        }
-        .class-content {
-          font-size: 0.7rem;
-          height: 100%;
-          margin: 1rem;
-          .buttons {
-            font-size: 0.7rem;
-            display: flex;
-            justify-content: flex-end;
-          }
-          .filed {
-            padding: 0 0.5rem;
-            margin: 0.5rem 0;
-            .title-content {
-              height: 2rem;
-              word-wrap: break-word;
-              overflow: hidden;
-            }
-          }
-        }
-      }
-    }
-    @media screen and (max-width: 767px) {
-      width: 80%;
-      max-width: 450px;
-    }
-  }
-}
-
 /deep/ .el-upload-list__item {
   display: none;
 }
