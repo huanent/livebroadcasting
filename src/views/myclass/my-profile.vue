@@ -37,16 +37,23 @@ export default {
   position: relative;
   cursor: pointer;
   .profile-username {
-    padding-right: 15px;
+    margin-right: 17px;
+    min-width: 40px;
     max-width: 102px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-align: center;
+    // box-sizing: border-box;
+    &:hover{
+      color: #65b5bb;
+      // color: #10ae58;
+    }
   }
   .profile-avatar {
     position: absolute;
     top: 22%;
-    right: -20%;
+    right: -30%;
     color: #999;
     text-align: right;
     margin: 0 0 0 4px;
