@@ -1,7 +1,13 @@
 <template>
-  <div>
-    <h2>基本信息</h2>
-    <el-form ref="infoForm" :model="infoForm" label-width="80px" :rules="rules">
+  <div class="person-info-wrap">
+    <p>完善个人资料是让别人认识你的第一步</p>
+    <el-form
+      ref="infoForm"
+      :model="infoForm"
+      label-width="100px"
+      :rules="rules"
+      class="mt20"
+    >
       <el-form-item label="昵称" prop="nickname">
         <el-input v-model="infoForm.nickname" class="w-200"></el-input>
       </el-form-item>
@@ -10,7 +16,7 @@
           action
           :class="[
             {
-              'class-upload': avatar.length > 0 || fileList.length > 0
+              'class-upload': fileList.length > 0
             }
           ]"
           list-type="picture-card"
@@ -38,6 +44,7 @@
 </template>
 
 <script>
+import Axios from "axios";
 export default {
   name: "PersonInfoEdit",
   data() {
@@ -75,17 +82,10 @@ export default {
     return {
       infoForm: {
         nickname: "",
-        file: "",
         email: "",
         tel: ""
       },
-      avatar: "",
-      fileList: [
-        {
-          name: "",
-          url: ""
-        }
-      ],
+      fileList: [],
       rules: {
         nickname: [
           { required: true, validator: checkNickName, trigger: "change" }
@@ -108,20 +108,34 @@ export default {
     };
   },
   methods: {
-    onSubmit(formName) {
-      this.$refs[formName].validate(valid => {
+    onSubmit() {
+      this.$refs["infoForm"].validate(valid => {
         if (valid) {
+          let formData = new FormData();
           console.log(this.infoForm);
-          console.log("submit!");
+          formData.append("nickname", this.infoForm.nickname);
+          formData.append("tel", this.infoForm.tel);
+          formData.append("email", this.infoForm.email);
+          console.log(this.fileList);
+          if (this.fileList[0]) {
+            formData.append(
+              "files",
+              this.fileList[0].raw,
+              this.fileList[0].name
+            );
+          }
+          this.axios.post("/user/update", formData).then(res => {
+            if (res.success) {
+              console.log(res);
+            }
+          });
         }
       });
-      // console.log("submit!");
     },
     handleRemove(file, fileList) {
-      this.avatar = "";
       this.fileList = [];
     },
-    onFileSelected(file, filelist) {
+    onFileSelected(file, fileList) {
       const isIMAGE =
         file.raw.type === "image/jpeg" || file.raw.type === "image/png";
       const isLt1M = file.size / 1024 / 1024 < 1;
@@ -133,21 +147,18 @@ export default {
         this.$message.error("上传文件大小不能超过 1MB!");
         return false;
       }
-      if (file) {
-        let reader = new FileReader();
-        reader.addEventListener(
-          "load",
-          () => {
-            this.fullClassImg = file.name;
-            this.avatar = reader.result;
-            console.log(file);
-            this.infoForm.file = file;
-          },
-          false
-        );
-        reader.readAsDataURL(file.raw);
-      }
+      this.fileList.push(file);
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.person-info-wrap p {
+  line-height: 40px;
+  margin-left: 6px;
+  font-size: 12px;
+  font-family: "宋体";
+  color: #ccc;
+}
+</style>

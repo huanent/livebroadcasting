@@ -1,7 +1,7 @@
 <template>
   <div class="my-nav">
     <div class="nav-wrap">
-      <div class="logo-wrap">Live broadcast</div>
+      <h1 class="logo-wrap">Live broadcast</h1>
       <div class="serach-wrap">
         <el-input v-model="value" suffix-icon="el-icon-search"></el-input>
       </div>
@@ -28,7 +28,7 @@ export default {
 <style lang="scss" scoped>
 .my-nav {
   height: 60px;
-  color: $white;
+  color: #ffffff;
   font-size: 14px;
   background-color: #2e333f;
   .nav-wrap {
@@ -38,7 +38,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .logo-wrap {
+    h1 {
       font-size: 32px;
     }
     .serach-wrap {
