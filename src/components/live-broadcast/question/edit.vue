@@ -11,7 +11,11 @@
           label="题目"
           :rules="{ required: true, message: '请输入题目' }"
         >
-          <tinymce ref="editor" v-model="editForm.title" :height="40"></tinymce>
+          <tinymce
+            ref="editor"
+            v-model="editForm.title"
+            :height="100"
+          ></tinymce>
         </el-form-item>
 
         <el-form-item
@@ -21,7 +25,7 @@
           :prop="'options.' + index + '.value'"
           :rules="{ required: true, message: '请输入选项' }"
         >
-          <tinymce v-model="option.value" :height="40"></tinymce>
+          <tinymce v-model="option.value" :height="50"></tinymce>
           <div class="edit-tools">
             <el-switch
               v-model="option.correctAnswer"
@@ -49,7 +53,8 @@
 <script>
 import Tinymce from "../../common/tinymce";
 import { mapActions, mapGetters } from "vuex";
-const indexToLetter = index => String.fromCharCode("A".charCodeAt(0) + index);
+import { indexToLetter } from "../../../core/utils";
+
 const emptyOption = {
   value: "",
   correctAnswer: false

@@ -56,3 +56,20 @@ body {
     object-fit: contain;
   }
 }
+
+.userinfo-popover {
+  // position: absolute;
+  // right: -3px;
+  // top: 40px;
+  .menu {
+    padding: 8px;
+    text-align: left;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    li {
+      text-align: center;
+      margin-top: 5px;
+      font-size: 12px;
+    }
+  }
+}

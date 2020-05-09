@@ -5,18 +5,25 @@
       <div class="serach-wrap">
         <el-input v-model="value" suffix-icon="el-icon-search"></el-input>
       </div>
-      <div>我的课堂</div>
+      <div class="userinfo-wrap">
+        <!-- <div class="my-classroom">我的课堂</div> -->
+        <user-info />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import userInfo from "./my-class-userinfo";
 export default {
   name: "MyClassNav",
   data() {
     return {
       value: ""
     };
+  },
+  components: {
+    userInfo
   }
 };
 </script>
@@ -44,6 +51,13 @@ export default {
         background-color: #444444;
         border-color: #444444;
         color: #f5f5f5;
+      }
+    }
+    .userinfo-wrap {
+      display: flex;
+      line-height: 60px;
+      .my-classroom {
+        margin-right: 35px;
       }
     }
   }
