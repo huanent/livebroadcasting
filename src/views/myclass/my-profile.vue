@@ -11,9 +11,11 @@
       >
         <ul class="menu">
           <router-link :to="{ name: 'Setting' }" tag="li">设置</router-link>
-          <router-link :to="{ name: 'Login' }" tag="li" class="u-menu-bottom">退出</router-link>
+          <router-link :to="{ name: 'Login' }" tag="li" class="u-menu-bottom"
+            >退出</router-link
+          >
         </ul>
-        <img slot="reference" src="//s.stu.126.net/res/images/headImg/small.jpg" />
+        <img slot="reference" src="../../assets/images/avatar.jpg" />
       </el-popover>
     </div>
   </div>
@@ -34,6 +36,7 @@ export default {
 .profile-wrap {
   display: flex;
   line-height: 60px;
+  align-items: center;
   position: relative;
   cursor: pointer;
   .profile-username {
@@ -51,18 +54,13 @@ export default {
     }
   }
   .profile-avatar {
-    position: absolute;
-    top: 22%;
-    right: -30%;
     color: #999;
     text-align: right;
-    margin: 0 0 0 4px;
+    margin-left: 4px;
     width: 32px;
     height: 32px;
     line-height: 30px;
-    // border: 1px solid red;
     box-sizing: border-box;
-    border-radius: 50%;
 
     img {
       width: 100%;
