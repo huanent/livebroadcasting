@@ -1,37 +1,27 @@
 <template>
-  <div class="classlist-page">
-    <div class="classlist">
-      <el-row type="flex"
-        ><el-col :span="24">
-          <div class="detail-image">
-            <img :src="classList.classImg" alt="" />
-          </div> </el-col
-      ></el-row>
-      <el-row type="flex"
-        ><el-col :span="24" class="filed">
+  <div class="classlist">
+    <el-row type="flex">
+      <div class="detail-image">
+        <img :src="classList.classImg" alt="" />
+      </div>
+      <div class="detail-content">
+        <div>
           <label>课堂标题：</label><span>{{ classList.title }}</span>
-        </el-col></el-row
-      >
-      <el-row type="flex"
-        ><el-col :span="24" class="filed">
+        </div>
+        <div>
           <label>开始时间：</label><span>{{ classList.startTime }}</span>
-        </el-col></el-row
-      >
-      <el-row type="flex"
-        ><el-col :span="24" class="filed">
+        </div>
+        <div>
           <label>结束时间：</label><span>{{ classList.endTime }}</span>
-        </el-col></el-row
-      >
-      <el-row type="flex"
-        ><el-col :span="24" class="filed">
+        </div>
+
+        <div>
           <label>创建日期：</label><span>{{ classList.createDate }}</span>
-        </el-col></el-row
-      >
-      <el-row type="flex"
-        ><el-col :span="24" class="filed">
-          <label>课堂描述：</label><span>{{ classList.description }}</span>
-        </el-col></el-row
-      >
+        </div>
+      </div>
+    </el-row>
+    <div class="class-desc">
+      <label>课堂描述：</label><span>{{ classList.description }}</span>
     </div>
   </div>
 </template>
@@ -55,6 +45,7 @@ export default {
         .then(res => {
           if (res.data.success) {
             this.classList = res.data.data[0];
+            console.log(this.classList);
             this.classList.classImg =
               "http://livebroadcasting.jinrui.kooboo.site/__kb/kfile/" +
               this.classList.classImg;
@@ -63,6 +54,9 @@ export default {
             ).toLocaleString();
             this.classList.endTime = new Date(
               parseInt(this.classList.endTime)
+            ).toLocaleString();
+            this.classList.createDate = new Date(
+              parseInt(this.classList.createDate)
             ).toLocaleString();
           } else {
             this.$message.error(res.data.message);
@@ -77,24 +71,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.classlist-page {
+.classlist {
   width: 100%;
-  .classlist {
-    width: 100%;
-    @media screen and (max-width: 767px) {
-      width: 80%;
-      max-width: 450px;
+  .detail-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 1.5rem;
+  }
+  .detail-image {
+    margin: 2rem;
+    width: 30%;
+    img {
+      height: 200px;
+      width: 100%;
+      object-fit: cover;
     }
   }
-}
-.detail-image {
-  margin: 2rem;
-  img {
-    height: 200px;
+  .class-desc {
+    font-size: 1.3rem;
   }
-}
-.filed {
-  margin: 0 2rem 2rem 2rem;
-  font-size: 1.5rem;
 }
 </style>
