@@ -122,6 +122,7 @@ export class TrtcService {
 
   async shareScreenStreamPlay(elementOrId, role) {
     let shareScreenStream;
+    elementOrId.innerHTML = "";
     if (role && role === "student") {
       shareScreenStream = this.getShareStream();
       if (shareScreenStream && shareScreenStream.play) {
@@ -160,6 +161,11 @@ export class TrtcService {
       let stream = this.localShareScreenStream;
       if (stream && stream.stop) {
         stream.stop();
+        this.shareScreenClient.unpublish(stream);
+        stream.close();
+        this.shareScreenClient.leave();
+        this.localShareScreenStream = undefined;
+        this.shareScreenClient = undefined;
       }
     }
   }
