@@ -73,6 +73,23 @@
             <label>创建日期：</label><span>{{ item.createDate }}</span>
           </div>
         </div>
+        <div class="buttons">
+          <el-button
+            v-if="activeName == 'teacher'"
+            type="text"
+            @click="updateDialog(item.classId, item)"
+            >编辑</el-button
+          >
+          <el-button type="text" @click="getDetail(item.classId)"
+            >详情</el-button
+          >
+        </div>
+        <el-button
+          @click="deleteclass(item.classId)"
+          type="text"
+          class="deleteBtn"
+          ><i class="el-icon-close"></i
+        ></el-button>
       </div>
     </el-row>
     <div v-else class="nodata">您还没有创建课堂</div>
