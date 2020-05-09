@@ -5,9 +5,7 @@
       <div class="serach-wrap">
         <el-input v-model="value" suffix-icon="el-icon-search"></el-input>
       </div>
-      <div class="profile-wrap">
-        <my-profile />
-      </div>
+      <my-profile />
     </div>
   </div>
 </template>
@@ -50,13 +48,6 @@ export default {
         background-color: #444444;
         border-color: #444444;
         color: #f5f5f5;
-      }
-    }
-    .profile-wrap {
-      display: flex;
-      line-height: 60px;
-      .my-classroom {
-        margin-right: 35px;
       }
     }
   }

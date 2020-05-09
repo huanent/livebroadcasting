@@ -145,7 +145,7 @@ export default {
             if (res.data.data[0].students == "暂无学生") {
               this.selectedStudents = [];
             } else {
-              this.selectedStudents = res.data.data[0].students.split(",");
+              this.selectedStudents = JSON.parse(res.data.data[0].students);
             }
             this.classForm = res.data.data[0];
             this.fileList[0].name = res.data.data[0].classImg;
