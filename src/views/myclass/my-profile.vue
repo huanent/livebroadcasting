@@ -46,7 +46,7 @@ export default {
     text-align: center;
     // box-sizing: border-box;
     &:hover{
-      color: #65b5bb;
+      color: #6dbcc2;
       // color: #10ae58;
     }
   }
