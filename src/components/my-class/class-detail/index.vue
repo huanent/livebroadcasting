@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  name: "Classdetail",
+  name: "ClassDetail",
   data() {
     return {
       classList: ""

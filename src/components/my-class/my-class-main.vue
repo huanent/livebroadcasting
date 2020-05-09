@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import ClassList from "./classlist/classlist";
+import ClassList from "./class-list";
 export default {
   name: "MyClassMian",
   data() {

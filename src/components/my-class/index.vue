@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import MyClassHead from "@c/my-class/my-class-head";
-import MyClassMain from "@c/my-class/my-class-main";
+import MyClassHead from "./my-class-head";
+import MyClassMain from "./my-class-main";
 
 export default {
   name: "MyClass",

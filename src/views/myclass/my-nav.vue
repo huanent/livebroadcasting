@@ -5,7 +5,7 @@
       <div class="serach-wrap">
         <el-input v-model="value" suffix-icon="el-icon-search"></el-input>
       </div>
-      <div class="userinfo-wrap">
+      <div class="profile-wrap">
         <user-info />
       </div>
     </div>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import userInfo from "@c/my-class/my-class-userinfo";
+import MyProfile from "./my-profile";
 export default {
   name: "MyNav",
   data() {
@@ -22,7 +22,7 @@ export default {
     };
   },
   components: {
-    userInfo
+    MyProfile
   }
 };
 </script>
@@ -52,7 +52,7 @@ export default {
         color: #f5f5f5;
       }
     }
-    .userinfo-wrap {
+    .profile-wrap {
       display: flex;
       line-height: 60px;
       .my-classroom {
