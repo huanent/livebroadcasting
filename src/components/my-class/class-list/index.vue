@@ -1,12 +1,12 @@
 <template>
   <div class="classlist">
-    <el-row v-if="classList.length > 0">
+    <!-- <el-row v-if="classList.length > 0">
       <el-col
         class="class-container"
         v-for="(item, index) in classList"
         :key="index"
       >
-        <el-card :body-style="{ padding: '0px' }">
+        <el-card>
           <el-row type="flex" class="card-row">
             <el-col :span="8"
               ><div class="class-img">
@@ -30,37 +30,50 @@
                   <div>创建日期：</div>
                   <div>{{ item.createDate }}</div>
                 </div>
-                <div class="buttons bottom clearfix">
-                  <el-row>
-                    <el-col :span="12"
-                      ><el-button
-                        type="text"
-                        class="button btnMr"
-                        @click="updateDialog(item.classId, item)"
-                        >编辑</el-button
-                      ></el-col
-                    >
-                    <el-col :span="12"
-                      ><el-button
-                        type="text"
-                        class="button btnMr"
-                        @click="getDetail(item.classId)"
-                        >详情</el-button
-                      ></el-col
-                    >
-                  </el-row>
-                </div>
+              </div>
+              <div class="buttons">
+                <el-button
+                  v-if="activeName == 'teacher'"
+                  type="text"
+                  @click="updateDialog(item.classId, item)"
+                  >编辑</el-button
+                >
+                <el-button type="text" @click="getDetail(item.classId)"
+                  >详情</el-button
+                >
               </div>
               <el-button
                 @click="deleteclass(item.classId)"
                 type="text"
-                class="button deleteBtn"
+                class="deleteBtn"
                 ><i class="el-icon-close"></i
               ></el-button>
             </el-col>
           </el-row>
         </el-card>
       </el-col>
+    </el-row> -->
+    <el-row type="flex" v-if="classList.length > 0" class="class-container">
+      <div class="class-card" v-for="(item, index) in classList" :key="index">
+        <div class="detail-image">
+          <img :src="item.classImg" alt="" />
+        </div>
+        <div class="detail-content">
+          <div>
+            <label>课堂标题：</label><span>{{ item.title }}</span>
+          </div>
+          <div>
+            <label>开始时间：</label><span>{{ item.startTime }}</span>
+          </div>
+          <div>
+            <label>结束时间：</label><span>{{ item.endTime }}</span>
+          </div>
+
+          <div>
+            <label>创建日期：</label><span>{{ item.createDate }}</span>
+          </div>
+        </div>
+      </div>
     </el-row>
     <div v-else class="nodata">您还没有创建课堂</div>
     <el-dialog title="修改课堂信息" :visible.sync="dialogFormVisible">
@@ -86,13 +99,21 @@ export default {
       dialogFormVisible: false
     };
   },
+  props: {
+    activeName: String
+  },
   created() {
-    this.dataInit();
+    this.dataInit(this.activeName);
+  },
+  watch: {
+    activeName(newActive) {
+      this.dataInit(newActive);
+    }
   },
   methods: {
     setActivityBtn(data) {
       if (data == false) {
-        this.dataInit();
+        this.dataInit(this.activeName);
         this.dialogFormVisible = false;
       }
     },
@@ -113,9 +134,18 @@ export default {
         });
       });
     },
-    dataInit() {
+    dataInit(activeName) {
+      var apiurl = "";
+      if (activeName == "student") {
+        apiurl =
+          "/classform/list?isstudent=" + window.liveBroadcastService.userId;
+      }
+      if (activeName == "teacher") {
+        apiurl =
+          "/classform/list?createUser=" + window.liveBroadcastService.userId;
+      }
       this.axios
-        .get("/classform/list?createUser=" + window.liveBroadcastService.userId)
+        .get(apiurl)
         .then(res => {
           if (res.data.success) {
             this.classList = res.data.data;
@@ -158,73 +188,106 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// .classlist {
+//   overflow: auto;
+//   width: 100%;
+//   display: flex;
+//   flex-wrap: wrap;
+//   .nodata {
+//     font-size: 1.5rem;
+//     text-align: center;
+//     width: 100%;
+//     color: #0a818c;
+//     margin-top: 10%;
+//   }
+//   .el-card {
+//     width: 100%;
+//   }
+//   .class-container {
+//     display: flex;
+//     justify-content: center;
+//     flex-wrap: wrap;
+//     width: 48%;
+//     margin: 1%;
+//     .card-row {
+//       align-items: center;
+//       .deleteBtn {
+//         position: absolute;
+//         top: 0;
+//         right: 1rem;
+//         z-index: 99;
+//       }
+//       .btnMr {
+//         margin: 0 0 0 0.3rem;
+//       }
+//       .buttons {
+//         position: absolute;
+//         right: 0;
+//         bottom: -5%;
+//       }
+//       .class-img {
+//         margin: 1rem;
+//         width: 100%;
+//         height: 200px;
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//         overflow: hidden;
+//         img {
+//           width: 100%;
+//         }
+//       }
+//       .class-content {
+//         font-size: 0.7rem;
+//         height: 100%;
+//         margin: 1rem;
+//         .filed {
+//           padding: 0 0.5rem;
+//           margin: 0.5rem 0;
+//           .title-content {
+//             height: 2rem;
+//             word-wrap: break-word;
+//             overflow: hidden;
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+
 .classlist {
   overflow: auto;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  .nodata {
-    font-size: 1.5rem;
-    text-align: center;
-    width: 100%;
-    color: #0a818c;
-    margin-top: 10%;
-  }
-  .el-card {
-    width: 100%;
-  }
+  justify-content: space-around;
   .class-container {
-    display: flex;
-    justify-content: center;
     flex-wrap: wrap;
-    width: 48%;
-    margin: 1%;
-    .card-row {
+    width: 100%;
+    .class-card {
+      width: 42%;
+      margin: 1%;
+      display: flex;
       align-items: center;
-      .deleteBtn {
-        position: absolute;
-        top: 0;
-        right: 1rem;
-      }
-      .btnMr {
-        margin: 0 0 0 0.3rem;
-      }
-      .class-img {
-        margin: 1rem;
-        width: 100%;
-        height: 200px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      justify-content: space-between;
+      .detail-image {
+        width: 30%;
         img {
           width: 100%;
+          height: 10rem;
         }
       }
-      .class-content {
-        font-size: 0.7rem;
+      .detail-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
         height: 100%;
-        margin: 1rem;
-        .buttons {
-          font-size: 0.7rem;
-          display: flex;
-          justify-content: flex-end;
-        }
-        .filed {
-          padding: 0 0.5rem;
-          margin: 0.5rem 0;
-          .title-content {
-            height: 2rem;
-            word-wrap: break-word;
-            overflow: hidden;
-          }
-        }
+        width: 60%;
       }
     }
   }
-  // @media screen and (max-width: 767px) {
-  //   width: 80%;
-  //   max-width: 450px;
-  // }
 }
 </style>
