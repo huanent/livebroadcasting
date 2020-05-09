@@ -13,7 +13,9 @@ export class BoardService {
     brushThin: store.state.board.brushThin,
     textColor: store.state.board.textColor,
     textSize: store.state.board.textSize,
-    toolType: store.state.board.toolType
+    toolType: store.state.board.toolType,
+
+    drawEnable: store.state.board.drawEnable
   };
   async init(roomId, liveBroadcastService) {
     this.liveBroadcastService = liveBroadcastService;

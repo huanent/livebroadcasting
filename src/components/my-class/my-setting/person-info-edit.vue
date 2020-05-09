@@ -44,7 +44,8 @@
 </template>
 
 <script>
-import Axios from "axios";
+import userApi from "@api/user";
+
 export default {
   name: "PersonInfoEdit",
   data() {
@@ -116,7 +117,6 @@ export default {
           formData.append("nickname", this.infoForm.nickname);
           formData.append("tel", this.infoForm.tel);
           formData.append("email", this.infoForm.email);
-          console.log(this.fileList);
           if (this.fileList[0]) {
             formData.append(
               "files",
@@ -124,8 +124,10 @@ export default {
               this.fileList[0].name
             );
           }
-          this.axios.post("/user/update", formData).then(res => {
-            if (res.success) {
+          userApi.updateInfo(formData).then(res => {
+            // console.log(res,130)
+            if (res.data.success) {
+              // console.log("success");
               console.log(res);
             }
           });

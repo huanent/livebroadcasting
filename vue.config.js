@@ -40,7 +40,8 @@ module.exports = {
       .set("@", resolve("./src"))
       .set("@c", resolve("./src/components"))
       .set("@v", resolve("./src/views"))
-      .set("@style", resolve("./src/assets/style"));
+      .set("@style", resolve("./src/assets/style"))
+      .set("@api", resolve("./src/core/data"));
 
     // svg rule loader
     const svgRule = config.module.rule("svg"); // get svg-loader

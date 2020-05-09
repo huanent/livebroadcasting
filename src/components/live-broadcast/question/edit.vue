@@ -3,6 +3,9 @@
     title="编辑题目"
     :visible.sync="editVisible"
     :append-to-body="true"
+    :close-on-click-modal="false"
+    :before-close="handleBeforeClose"
+    :destroy-on-close="true"
   >
     <div class="edit-content" v-if="editVisible">
       <el-form :model="editForm" ref="editForm" label-width="100px">
@@ -12,9 +15,9 @@
           :rules="{ required: true, message: '请输入题目' }"
         >
           <tinymce
-            ref="editor"
             v-model="editForm.title"
             :height="100"
+            @keyup="handleEdited"
           ></tinymce>
         </el-form-item>
 
@@ -25,8 +28,12 @@
           :prop="'options.' + index + '.value'"
           :rules="{ required: true, message: '请输入选项' }"
         >
-          <tinymce v-model="option.value" :height="50"></tinymce>
-          <div class="edit-tools">
+          <tinymce
+            v-model="option.value"
+            :height="50"
+            @keyup="handleEdited"
+          ></tinymce>
+          <div class="edit-tools" @click="handleEdited">
             <el-switch
               v-model="option.correctAnswer"
               active-text="正确答案"
@@ -46,7 +53,9 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="close">关闭</el-button>
-      <el-button type="primary" @click="submitForm">保存</el-button>
+      <el-button type="primary" @click="submitForm" :loading="submiting"
+        >保存</el-button
+      >
     </span>
   </el-dialog>
 </template>
@@ -70,7 +79,9 @@ export default {
       editForm: {
         title: "",
         options: []
-      }
+      },
+      isEdited: false,
+      submiting: false
     };
   },
   methods: {
@@ -81,6 +92,7 @@ export default {
     submitForm() {
       this.$refs.editForm.validate(async valid => {
         if (valid) {
+          this.submiting = true;
           const options = [],
             answers = [];
           this.editForm.options.forEach((item, index) => {
@@ -91,7 +103,6 @@ export default {
           });
           const result = await this.save({
             _id: this.currentEdit._id,
-            userId: "test",
             title: this.editForm.title,
             options: options,
             answers: answers
@@ -103,6 +114,7 @@ export default {
               type: "success"
             });
             this.$emit("afterSave");
+            this.isEdited = false;
             this.close();
           } else {
             this.$notify.error({
@@ -110,6 +122,7 @@ export default {
               message: "保存失败"
             });
           }
+          this.submiting = false;
         } else {
           return false;
         }
@@ -127,7 +140,26 @@ export default {
       });
     },
     close() {
-      this.$emit("update:visible", false);
+      this.handleBeforeClose(() => {
+        this.$emit("update:visible", false);
+        this.isEdited = false;
+      });
+    },
+    handleBeforeClose(done) {
+      if (this.isEdited) {
+        this.$confirm("编辑的内容尚未保存, 是否确定关闭?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          done();
+        });
+      } else {
+        done();
+      }
+    },
+    handleEdited() {
+      this.isEdited = true;
     }
   },
   computed: {

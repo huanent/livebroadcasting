@@ -1,5 +1,6 @@
 import { liveBroadcastService } from "@/main";
 
+import account from "./account";
 const state = {
   //board(涂鸦)
   // drawEnable: true, //是否可以涂鸦
@@ -19,7 +20,9 @@ const state = {
   // fitMode: 1,
   // ration: "16:9",
   canRedo: 0,
-  canUndo: 0
+  canUndo: 0,
+
+  drawEnable: account.state.role !== "student"
 };
 
 const getters = {

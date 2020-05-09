@@ -18,15 +18,17 @@
             @select="handleSelect"
             @select-all="handleSelectAll"
             ref="questionTable"
+            v-loading="loading"
           >
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="summary" label="title"></el-table-column>
+             <!-- <el-table-column prop="answer" label="answer"></el-table-column> -->
             <el-table-column
               prop="createAt"
               label="createAt"
               width="160"
             ></el-table-column>
-            <el-table-column fixed="right" label="操作" width="150">
+            <el-table-column label="操作" width="150">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -44,6 +46,10 @@
               </template>
             </el-table-column>
           </el-table>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <div>
           <el-pagination
             background
             small
@@ -55,14 +61,18 @@
             :total="pagedModel.total"
           ></el-pagination>
         </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleReset">重 置</el-button>
-        <el-badge :value="selectsLength" :hidden="!canSend">
-          <el-button type="primary" @click="handleSend" :disabled="!canSend"
-            >发 送</el-button
-          >
-        </el-badge>
+        <div>
+          <el-button @click="handleReset" :disabled="!canSend">重 选</el-button>
+          <el-badge :value="selectsLength" :hidden="!canSend">
+            <el-button
+              type="primary"
+              @click="handleSend"
+              :disabled="!canSend"
+              :loading="sending"
+              >发 送</el-button
+            >
+          </el-badge>
+        </div>
       </span>
     </el-dialog>
     <question-edit
@@ -79,7 +89,8 @@ const mapRowToSelect = row => {
   return {
     _id: row._id,
     title: row.title,
-    options: row.options
+    options: row.options,
+    correctAnswer: row.answer
   };
 };
 export default {
@@ -95,7 +106,9 @@ export default {
       editVisible: false,
       currentEdit: {
         key: ""
-      }
+      },
+      loading: true,
+      sending: false
     };
   },
   methods: {
@@ -104,6 +117,7 @@ export default {
       return this.selects.some(item => item._id == _id);
     },
     async refreshList() {
+      this.loading = true;
       await this.getList({
         pageNum: this.pageNum,
         pageSize: this.pageSize
@@ -116,6 +130,7 @@ export default {
           }
         });
       }
+      this.loading = false;
     },
     handlePageChange(index) {
       this.pageNum = index;
@@ -143,8 +158,10 @@ export default {
     },
     async handleSend() {
       console.log(this.selects);
+      this.sending = true;
       await this.sendExamination(this.selects);
       this.handleReset();
+      this.sending = false;
     },
     handleClose() {
       this.$emit("update:visible", false);
@@ -154,12 +171,15 @@ export default {
       this.$refs.questionTable.clearSelection();
     },
     handleEdit(item) {
+      let key = Date.now();
       if (item._id) {
-        this.currentEdit = item;
+        this.currentEdit = {
+          ...item,
+          key
+        };
       } else {
-        this.currentEdit = {};
+        this.currentEdit = { key: key };
       }
-      this.currentEdit.key = Date.now();
       this.editVisible = true;
     },
     handleDelete({ _id }) {
@@ -220,5 +240,9 @@ export default {
   .el-pagination {
     margin-top: 10px;
   }
+}
+.dialog-footer {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
