@@ -86,7 +86,9 @@ export class TimService {
         });
     });
   }
-  handleExamination(e) {}
+  handleExamination(e) {
+    // TODO: popup questions
+  }
   async sendExaminationMsg(msg) {
     let message = this.tim.createCustomMessage({
       to: this.roomId,

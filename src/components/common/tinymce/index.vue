@@ -153,6 +153,9 @@ export default {
             this.hasChange = true;
             this.$emit("input", editor.getContent());
           });
+          editor.on("KeyUp", () => {
+            this.$emit("keyup");
+          });
         },
         setup(editor) {
           editor.on("FullscreenStateChanged", e => {
