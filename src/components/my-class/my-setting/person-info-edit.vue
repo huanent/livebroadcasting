@@ -125,7 +125,9 @@ export default {
             );
           }
           userApi.updateInfo(formData).then(res => {
-            if (res.success) {
+            // console.log(res,130)
+            if (res.data.success) {
+              // console.log("success");
               console.log(res);
             }
           });

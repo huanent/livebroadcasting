@@ -5,7 +5,9 @@ const state = {
   tx_userId: "",
   tx_userSig: "",
   tx_privateMapKey: "",
-  role: "student" // student teacher
+  role: "student", // student teacher
+  username:"",
+  avatar:""
 };
 
 const getters = {
