@@ -1,6 +1,11 @@
 <template>
-  <el-dialog :title="title" :visible.sync="viewVisible" :append-to-body="true">
-    <div class="view-content">
+  <el-dialog
+    :title="title"
+    :visible.sync="viewVisible"
+    :append-to-body="true"
+    :close-on-click-modal="false"
+  >
+    <div v-if="questions.length" class="view-content">
       <div class="view-index">{{ currentIndex + 1 }}.</div>
       <div class="view-main">
         <div class="question-title" v-html="currentQuestion.title"></div>
@@ -8,30 +13,45 @@
           <li
             class="option-item"
             v-for="(opt, index) in currentQuestion.options"
-            :key="index"
+            :key="currentQuestion._id + index"
           >
-            <div class="option-index">
-              <el-checkbox @change="handleAnswer($event, index)"></el-checkbox>
-              <div>{{ indexToLetter(index) }}.</div>
-            </div>
+            <el-checkbox
+              class="option-index"
+              @change="handleAnswer($event, index)"
+              :label="indexToLetter(index) + '.'"
+              :checked="
+                currentQuestion.answer.indexOf(indexToLetter(index)) > -1
+              "
+            ></el-checkbox>
             <div v-html="opt"></div>
           </li>
         </ul>
       </div>
     </div>
+    <div v-else>
+      当前没有题目
+    </div>
     <span slot="footer" class="dialog-footer">
-      <el-pagination
-        :page-size="1"
-        :pager-count="11"
-        background
-        layout="prev, pager, next"
-        :total="questions.length"
-        :hide-on-single-page="true"
-        :current-page="currentIndex + 1"
-        @current-change="handlePageChange"
+      <div>
+        <el-pagination
+          :page-size="1"
+          :pager-count="11"
+          background
+          layout="prev, pager, next"
+          :total="questions.length"
+          :hide-on-single-page="true"
+          :current-page="currentIndex + 1"
+          @current-change="handlePageChange"
+        >
+        </el-pagination>
+      </div>
+      <el-button
+        v-if="questions.length"
+        type="primary"
+        @click="handleSubmit"
+        :loading="submiting"
+        >提交答案</el-button
       >
-      </el-pagination>
-      <el-button type="primary">提交答案</el-button>
     </span>
   </el-dialog>
 </template>
@@ -45,13 +65,13 @@ export default {
   },
   data() {
     return {
-      checkList: [],
       questions: [
         {
           options: ["<p>test</p>", "<p>test</p>"],
           title:
             "<p>Progress 组件设置percentage属性即可，表示进度条对应的百分比，必填，必须在 0-100。通过 format 属性来指定进度条文字内容。</p>",
-          _id: "402b8b2e-c242-4d28-806a-46ed65f99db9"
+          _id: "402b8b2e-c242-4d28-806a-46ed65f99db9",
+          answer: ""
         },
         {
           options: [
@@ -61,10 +81,12 @@ export default {
             "<p>D</p>"
           ],
           title: '"<p class="custom-block-title">Yes</p>"',
-          _id: "b8cdc4a6-3633-4d62-876e-5e9fe874b218"
+          _id: "b8cdc4a6-3633-4d62-876e-5e9fe874b218",
+          answer: ""
         }
       ],
-      currentIndex: 0
+      currentIndex: 0,
+      submiting: false
     };
   },
   methods: {
@@ -86,7 +108,11 @@ export default {
           ""
         );
       }
-      console.log(this.currentQuestion.answer);
+    },
+    async handleSubmit() {
+      this.submiting = true;
+      console.log(this.questions);
+      this.submiting = false;
     }
   },
   computed: {
@@ -95,8 +121,13 @@ export default {
     },
     title() {
       let title = "答题器";
-      if (this.questions.length) {
-        title += ` 共(${this.questions.length})题`;
+      if (this.questions.length > 1) {
+        title += ` 共${this.questions.length}题`;
+        if (this.answerLength === this.questions.length) {
+          title += ` 全部完成`;
+        } else if (this.answerLength) {
+          title += ` 完成${this.answerLength}题`;
+        }
       }
       return title;
     },
@@ -107,12 +138,15 @@ export default {
       set(val) {
         this.$emit("update:visible", val);
       }
+    },
+    answerLength() {
+      return this.questions.filter(item => !!item.answer).length;
     }
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .view-content {
   display: flex;
 }
@@ -137,6 +171,11 @@ export default {
       padding-right: 8px;
       .el-checkbox {
         margin-right: 5px;
+      }
+      /deep/ {
+        .el-checkbox__label {
+          padding-left: 5px;
+        }
       }
     }
   }
