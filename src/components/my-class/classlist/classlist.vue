@@ -1,6 +1,6 @@
 <template>
   <div class="classlist">
-    <el-row>
+    <el-row v-if="classList.length > 0">
       <el-col
         class="class-container"
         v-for="(item, index) in classList"
@@ -62,6 +62,7 @@
         </el-card>
       </el-col>
     </el-row>
+    <div v-else class="nodata">您还没有创建课堂</div>
     <el-dialog title="修改课堂信息" :visible.sync="dialogFormVisible">
       <ClassUpdate
         :classId="classId"
@@ -162,6 +163,13 @@ export default {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  .nodata {
+    font-size: 1.5rem;
+    text-align: center;
+    width: 100%;
+    color: #0a818c;
+    margin-top: 10%;
+  }
   .el-card {
     width: 100%;
   }
@@ -169,7 +177,6 @@ export default {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    // margin: 0.5rem;
     width: 48%;
     margin: 1%;
     .card-row {
