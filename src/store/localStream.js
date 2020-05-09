@@ -1,4 +1,5 @@
 import { liveBroadcastService } from "@/main";
+import { Emitter } from "../core/emit";
 
 const state = {
   localAudioStatus: true,
@@ -53,6 +54,9 @@ const mutations = {
   },
   IS_INIT(state) {
     state.isInit = true;
+  },
+  EMIT_SELECTED_STREAM(state, stream) {
+    Emitter.emit("selected-stream", stream);
   }
 };
 
