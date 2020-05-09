@@ -1,7 +1,7 @@
 <template>
   <div>
-    loginOut
-    <router-view></router-view>
+    设置
+    
   </div>
 </template>
 
