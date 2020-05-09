@@ -34,4 +34,7 @@ export const listenHandler = async function() {
   Emitter.on("SYS_CONTROL_WORKPLACE_TYPE", (info, data, e, type) => {
     store.commit("workplace/SET_PANEL_TYPE", data.panelType);
   });
+  Emitter.on("board-data-change", data => {
+    liveBroadcastService.timService.sendBoardMsg(data);
+  });
 };

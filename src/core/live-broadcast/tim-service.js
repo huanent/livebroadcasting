@@ -3,6 +3,7 @@ import COS from "cos-js-sdk-v5";
 import store from "@/store";
 import { Emitter } from "../emit";
 import { listenHandler } from "./tim-message/listen";
+import { liveBroadcastService } from "../../main";
 export class TimService {
   liveBroadcastService;
   tim;
@@ -77,6 +78,18 @@ export class TimService {
           console.warn("login error:", imError); // 登录失败的相关信息
         });
     });
+  }
+  async sendBoardMsg(data) {
+    let message = this.tim.createCustomMessage({
+      to: this.roomId,
+      conversationType: TIM.TYPES.CONV_GROUP,
+      payload: {
+        data: JSON.stringify(data),
+        description: "",
+        extension: "TXWhiteBoardExt"
+      }
+    });
+    return this.tim.sendMessage(message);
   }
   async listenHandler() {
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {

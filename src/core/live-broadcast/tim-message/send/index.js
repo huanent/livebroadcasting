@@ -50,3 +50,4 @@ export const requestState = async () => {
 export const syncState = async () => {
   await requestTeacherPanelType();
 };
+
