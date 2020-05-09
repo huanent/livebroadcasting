@@ -31,23 +31,34 @@ const mutations = {
 const actions = {
   async getList({ commit }, { pageNum, pageSize }) {
     const result = await axios.get(
-      `/question/list?pageNum=${pageNum}&pageSize=${pageSize}`
+      `/question/list?pageNum=${pageNum}&pageSize=${pageSize}&userId=${liveBroadcastService.userId}`
     );
     commit("SET_Paged_List", result.data);
   },
   async remove({ commit }, id) {
-    const result = await axios.post(`/question/remove/${id}`);
+    const result = await axios.post(
+      `/question/remove/${id}?userId=${liveBroadcastService.userId}`
+    );
     return result;
   },
   async save({ commit }, payload) {
-    const result = await axios.post("/question/save", payload);
-    return result;
-  },
-  async sendExamination({ commit }, payload) {
-    const result = await liveBroadcastService.timService.sendExaminationMsg(
+    const result = await axios.post(
+      `/question/save?userId=${liveBroadcastService.userId}`,
       payload
     );
     return result;
+  },
+  async sendExamination({ commit }, questions) {
+    const result = await liveBroadcastService.timService.sendExaminationMsg(
+      JSON.stringify(questions)
+    );
+    return result;
+  },
+  async sendExamAnsers({ commit }, answers) {
+    // const result = await liveBroadcastService.timService.sendExaminationMsg(
+    //   JSON.stringify(answers)
+    // );
+    // return result;
   }
 };
 
