@@ -6,29 +6,35 @@
     <div class="workplace-panel-content">
       <div
         id="workplace-panel-left"
-        :class="{ 'workplace-panel-left-hide': !showCameraPanel }"
+        ref="left"
+        :class="{ 'workplace-panel-left-hide': !cameraPanelVisibity }"
       >
         <div class="camera-panel">
           <CameraPanel></CameraPanel>
+        </div>
+        <div
+          ref="gutter1"
+          :class="{
+            gutter: true,
+            'gutter-row': role !== 'student',
+            'gutter-not-allowed': !cameraPanelVisibity
+          }"
+        ></div>
+        <div class="main-workplace-panel">
           <div @click="toggleCameraPanel" class="camera-icon-box">
             <icon
-              name="indent"
-              v-if="showCameraPanel"
+              :name="cameraPanelVisibity ? 'indent' : 'outdent'"
               class="panel-icon"
               :size="18"
             ></icon>
-            <icon name="outdent" v-else class="panel-icon" :size="18"></icon>
           </div>
-        </div>
-        <div id="gutter1-1" :class="{ 'gutter-row': role !== 'student' }"></div>
-        <div class="main-workplace-panel">
           <MainWorkplace></MainWorkplace>
         </div>
       </div>
-      <div id="gutter"></div>
+      <div class="gutter"></div>
       <div id="workplace-panel-right">
         <self-camera />
-        <div id="gutter2-1"></div>
+        <div class="gutter"></div>
         <div class="message-panel">
           <chatroom />
         </div>
@@ -47,16 +53,16 @@ import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { liveBroadcastService } from "../../main";
 import { Emitter } from "../../core/emit";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "workplace",
   data: function() {
     return {
       gridStyle: undefined,
-      showCameraPanel: true,
       originPosition: [0, 0],
-      total: 0
+      total: 0,
+      audioLevelTimer: undefined
     };
   },
   components: {
@@ -64,13 +70,20 @@ export default {
     Chatroom,
     SelfCamera,
     WorkplacePanelHeader,
-    CameraPanel
+    CameraPanel,
+    isTimer: false
   },
   computed: {
-    ...mapGetters("account", ["role"])
+    ...mapGetters("account", ["role"]),
+    ...mapGetters("workplace", ["cameraPanelVisibity"])
   },
   mounted() {
-    const vm = this;
+    this.audioLevelTimer = setInterval(() => {
+      this.isTimer = true;
+    }, 200);
+    this.$once("hook:beforeDestroy", () => {
+      clearInterval(this.audioLevelTimer);
+    });
     if (this.role !== "student") {
       Split({
         columnGutters: [
@@ -82,43 +95,48 @@ export default {
         rowGutters: [
           {
             track: 1,
-            element: document.querySelector("#gutter1-1")
+            element: this.$refs.gutter1
           }
           // {
           //   track: 1,
           //   element: document.querySelector("#gutter2-1")
           // }
         ],
+        dragInterval: 10,
         onDrag: (direction, track, gridTemplateStyle) => {
-          Emitter.emit("split-change");
-        },
-        onDragEnd: () => {
-          let str = document.getElementById("workplace-panel-left").style
-            .gridTemplateRows;
+          let str = gridTemplateStyle;
           if (str) {
             let list = str.trim().split(" ");
             if (
               list[0] &&
               list[2] &&
               parseFloat(list[2]) > 0 &&
-              parseFloat(list[0]) / parseFloat(list[2]) < 0.01
+              parseFloat(list[0]) / parseFloat(list[2]) < 0.001
             ) {
-              vm.showCameraPanel = false;
+              this.SET_CAMERA_PANEL__VISIBILITY(false);
             } else {
-              vm.showCameraPanel = true;
+              /* this.SET_CAMERA_PANEL__VISIBILITY(true);*/
             }
+          }
+          Emitter.emit("split-change");
+        },
+        writeStyle: (grid, gridTemplateProp, gridTemplateStyle) => {
+          if (this.cameraPanelVisibity) {
+            console.log(gridTemplateStyle);
+            grid.style[gridTemplateProp] = gridTemplateStyle;
           }
         }
       });
     } else {
-      this.showCameraPanel = false;
+      this.SET_CAMERA_PANEL__VISIBILITY(false);
     }
   },
   methods: {
+    ...mapMutations("workplace", ["SET_CAMERA_PANEL__VISIBILITY"]),
     toggleCameraPanel() {
-      if (!this.showCameraPanel) {
-        let str = document.getElementById("workplace-panel-left").style
-          .gridTemplateRows;
+      if (!this.cameraPanelVisibity) {
+        let el = this.$refs.left;
+        let str = el.style.gridTemplateRows;
         if (str) {
           let list = str.trim().split(" ");
           if (
@@ -129,14 +147,12 @@ export default {
           ) {
             list[0] = "23.5%";
             list[2] = "76%";
-            document.getElementById(
-              "workplace-panel-left"
-            ).style.gridTemplateRows = list.join(" ");
+            el.style.gridTemplateRows = list.join(" ");
           }
         }
       }
-      this.showCameraPanel = !this.showCameraPanel;
-      setTimeout(function() {
+      this.SET_CAMERA_PANEL__VISIBILITY(!this.cameraPanelVisibity);
+      setTimeout(() => {
         Emitter.emit("split-change");
       }, 300);
     }
@@ -198,13 +214,7 @@ export default {
     overflow: hidden;
   }
 }
-
-#gutter {
-  @include themeify {
-    background: themedOpacity("border_color1", 1);
-  }
-}
-#gutter1-1 {
+.gutter {
   @include themeify {
     background: themedOpacity("border_color1", 1);
   }
@@ -215,6 +225,9 @@ export default {
 .gutter-col {
   cursor: col-resize;
 }
+.gutter-not-allowed {
+  cursor: not-allowed;
+}
 .camera-panel {
   @include themeify {
     background: themed("background_color1");
@@ -222,6 +235,7 @@ export default {
   position: relative;
 }
 .main-workplace-panel {
+  position: relative;
   @include themeify {
     background: themed("background_color1");
   }
@@ -233,7 +247,7 @@ export default {
   background: #292b2e;
 }
 .panel-icon {
-  fill: #8a8a8a;
+  fill: #ffffff;
   padding: 5px;
   background-color: rgba(0, 0, 0, 0.59);
   transform: rotate(-90deg);
@@ -242,8 +256,8 @@ export default {
 .camera-icon-box {
   cursor: pointer;
   height: auto !important;
-  z-index: 1000;
+  z-index: 999;
   position: absolute;
-  bottom: calc(-2rem - 28px);
+  top: calc(28px);
 }
 </style>

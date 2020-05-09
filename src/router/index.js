@@ -12,7 +12,24 @@ const routes = [
   {
     path: "/my",
     name: "MyClass",
-    component: () => import("@v/myclass")
+    component: () => import("@v/myclass"),
+    children: [
+      {
+        path: "/",
+        name: "Classlist",
+        component: () => import("@c/my-class")
+      },
+      {
+        path: "detail",
+        name: "Classdetail",
+        component: () => import("@c/my-class/class-detail")
+      }
+    ]
+  },
+  {
+    path: "/setting",
+    name: "Setting",
+    component: () => import("@c/my-class/my-setting")
   },
   {
     path: "/login",
@@ -39,14 +56,6 @@ const routes = [
       requireAuth: true
     },
     component: () => import("@v/classform")
-  },
-  {
-    path: "/classlist",
-    name: "Classlist",
-    meta: {
-      requireAuth: true
-    },
-    component: () => import("@v/classlist")
   }
 ];
 
@@ -55,9 +64,14 @@ const router = new VueRouter({
 });
 
 // const hasToken = () => Boolean(localStorage.getItem("lb_token"));
+// const isExpired = () => {
+//   const timestamp = new Date().getTime()
+//   const expires = Number(localStorage.getItem("lb_expires"))
+//   return timestamp > expires
+// };
 // router.beforeEach((to, from, next) => {
 //   if (to.matched.some(item => item.meta.requireAuth)) {
-//     if (!hasToken()) {
+//     if (!hasToken() || isExpired) {
 //       next({
 //         path: "/login",
 //         replace: true

@@ -5,14 +5,9 @@ window["COS"] = COS;
 
 import { liveBroadcastService } from "../../main";
 
-import { Emitter } from "../emit";
 import { TrtcService } from "./trtc-service";
 import { TimService } from "./tim-service";
 import { BoardService } from "./board-service";
-
-Emitter.on("split-change", () => {
-  liveBroadcastService.activeBoard.resize();
-});
 
 export class LiveBroadcastService {
   config;
@@ -20,9 +15,9 @@ export class LiveBroadcastService {
   TokenList = {};
   roomId = "110098327629613";
   activeBoard = null;
-  userId = "jongwong";
+  userId = "lgs";
   tim;
-  teacherStreamUserId = "jongwong-test";
+  teacherStreamUserId = "jongwong";
   trtcService;
   timService;
   boardService;

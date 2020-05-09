@@ -16,12 +16,6 @@ Vue.use(element);
 
 Vue.config.productionTip = false;
 
-if (window.rtcService) {
-  store.commit("rtcAvailabled");
-} else {
-  window.onRtcAvailable = () => store.commit("rtcAvailabled");
-}
-
 new Vue({
   router,
   store,
@@ -33,4 +27,13 @@ export const liveBroadcastService = new LiveBroadcastService();
 
 if (process.env.NODE_ENV === "development") {
   window["liveBroadcastService"] = liveBroadcastService;
+}
+if (window.rtcService) {
+  console.log(window.rtcService);
+  store.commit("electron/RTC_AVAIABLED");
+} else {
+  window.onRtcAvailable = () => {
+    console.log(window.rtcService);
+    store.commit("electron/RTC_AVAIABLED");
+  };
 }

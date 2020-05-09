@@ -24,6 +24,8 @@ import {
   Col,
   Badge,
   Notification,
+  Tabs,
+  TabPane,
   Checkbox,
   Loading
 } from "element-ui";
@@ -50,6 +52,8 @@ const element = {
     Vue.use(Switch);
     Vue.use(Row);
     Vue.use(Card);
+    Vue.use(Tabs);
+    Vue.use(TabPane);
     Vue.use(Col);
     Vue.prototype.$confirm = MessageBox.confirm;
     Vue.use(Badge);

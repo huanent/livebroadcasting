@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       questionVisible: false,
-      questionViewVisible: true
+      questionViewVisible: false
     };
   },
   methods: {

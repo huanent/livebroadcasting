@@ -55,6 +55,9 @@ export class TimService {
   async requestTeacherPanelType() {
     await this.sendSystemMsg("REQUEST_PANEL_TYPE", "teacher", {});
   }
+  async requestState() {
+    await this.sendSystemMsg("REQUEST_STATE", "teacher", {});
+  }
   async syncState() {
     await this.requestTeacherPanelType();
   }

@@ -1,29 +1,25 @@
 <template>
-  <el-dialog title="修改课堂信息" :visible.sync="dialogFormVisible">
+  <div>
     <el-form :model="classForm">
       <el-form-item :label="$t('classform.pic')">
         <el-upload
           action="/api/classform/update"
           :class="[
             {
-              'class-upload': avatar.length > 0
+              'class-upload': avatar.length > 0 || fileList.length > 0
             }
           ]"
           list-type="picture-card"
           ref="upload"
-          :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
           :on-change="onFileSelected"
-          :on-success="uploadSuccess"
           accept="image/*"
           :auto-upload="false"
+          :file-list="fileList"
           :data="{ username: classForm.username }"
         >
           <icon name="add" :size="20" color="#0a818c"></icon>
         </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="" />
-        </el-dialog>
       </el-form-item>
       <el-form-item prop="title" :label="$t('classform.title')">
         <el-input v-model="classForm.title"></el-input>
@@ -55,23 +51,38 @@
           </el-date-picker>
         </div>
       </el-form-item>
-      <el-form-item prop="title" label="添加学生">
-        <el-input v-model="classForm.title"></el-input>
+      <el-form-item prop="students" label="添加学生">
+        <el-select
+          v-model="selectedStudents"
+          multiple
+          filterable
+          remote
+          reserve-keyword
+          placeholder="请输入关键词"
+          :remote-method="remoteMethod"
+          :loading="loading"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
       <el-button type="primary" @click="updateClass">修改</el-button>
     </div>
-  </el-dialog>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "Classlist",
+  name: "ClassUpdate",
   data() {
     return {
-      dialogFormVisible: false,
       classForm: {
         _id: "",
         avatar: "",
@@ -81,63 +92,67 @@ export default {
         endTime: "",
         file: ""
       },
-      formLabelWidth: "120px",
       avatar: "",
+      fileList: [
+        {
+          name: "",
+          url: ""
+        }
+      ],
       fullClassImg: "",
-      dialogVisible: false,
-      dialogImageUrl: ""
+      options: [],
+      selectedStudents: [],
+      studentsList: [],
+      loading: false,
+      allStudents: ["Alabama", "Alaska", "Arizona", "Arkansas"]
     };
+  },
+  props: {
+    classId: Number
+  },
+  watch: {
+    classId(newValue) {
+      this.dataInit();
+    }
   },
   created() {
     this.userId = window.liveBroadcastService.userId;
+    this.getStudents();
+    console.log(this._props.classId);
+    (this.classForm = {
+      _id: "",
+      avatar: "",
+      title: "",
+      description: "",
+      startTime: "",
+      endTime: "",
+      file: ""
+    }),
+      (this.fileList = [
+        {
+          name: "",
+          url: ""
+        }
+      ]);
+    this.dataInit();
   },
   methods: {
-    updateDialog(classId) {
-      this.dialogFormVisible = true;
-      (this.classForm = {
-        _id: "",
-        avatar: "",
-        title: "",
-        description: "",
-        startTime: "",
-        endTime: "",
-        file: ""
-      }),
-        this.axios
-          .get("/classform/list?classId=" + classId)
-          .then(res => {
-            if (res.data.success) {
-              // console.log(this.$refs.upload._data.uploadFiles);
-              this.classForm = res.data.data[0];
-            } else {
-              this.$message.error(res.data.message);
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          });
-    },
-    updateClass() {
-      var formData = new FormData();
-      formData.append("avatar", this.classForm.avatar);
-      formData.append("_id", this.classForm._id);
-      formData.append("title", this.classForm.title);
-      formData.append("description", this.classForm.description);
-      formData.append("startTime", this.classForm.startTime);
-      formData.append("endTime", this.classForm.endTime);
-      formData.append("file", this.classForm.file.raw);
+    dataInit() {
       this.axios
-        .post("/classform/update", formData)
+        .get("/classform/list?classId=" + this._props.classId)
         .then(res => {
           if (res.data.success) {
-            this.$message.success(res.data.message);
-            // this.$refs.upload.submit();
-            this.dialogFormVisible = false;
-            this.avatar = "";
+            if (res.data.data[0].students == "暂无学生") {
+              this.selectedStudents = [];
+            } else {
+              this.selectedStudents = JSON.parse(res.data.data[0].students);
+            }
+            this.classForm = res.data.data[0];
+            this.fileList[0].name = res.data.data[0].classImg;
+            this.fileList[0].url =
+              "http://livebroadcasting.jinrui.kooboo.site/__kb/kfile/" +
+              res.data.data[0].classImg;
           } else {
-            // this.$refs.upload.clearFiles();
-            // this.$refs[formName].resetFields();
-            this.avatar = "";
             this.$message.error(res.data.message);
           }
         })
@@ -145,19 +160,55 @@ export default {
           console.log(err);
         });
     },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+    getStudents() {
+      this.axios
+        .get("/classform/list?students=true")
+        .then(res => {
+          if (res.data.success) {
+            this.allStudents = res.data.data;
+            this.studentsList = this.allStudents.map(item => {
+              return { value: `${item}` };
+            });
+          } else {
+            this.$message.error(res.data.message);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
-    uploadSuccess(response, file, fileList) {
-      console.log(response);
-      this.classForm.avatar = response.model.fullFilename;
+    updateClass() {
+      this.classForm.avatar = `userId\\${window.liveBroadcastService.userId}\\classTitle\\${this.classForm.title}\\${this.fullClassImg}`;
+      var formData = new FormData();
+      formData.append("avatar", this.classForm.avatar);
+      formData.append("_id", this.classForm._id);
+      formData.append("title", this.classForm.title);
+      formData.append("description", this.classForm.description);
+      formData.append("startTime", this.classForm.startTime);
+      formData.append("endTime", this.classForm.endTime);
+      if (this.classForm.file) {
+        formData.append("file", this.classForm.file.raw);
+      }
+      if (this.selectedStudents) {
+        formData.append("students", this.selectedStudents);
+      }
+      this.axios
+        .post("/classform/update", formData)
+        .then(res => {
+          if (res.data.success) {
+            this.$emit("setActivityBtn", false);
+            this.$message.success(res.data.message);
+          } else {
+            this.$message.error(res.data.message);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     handleRemove(file, fileList) {
       this.avatar = "";
-    },
-    resetForm: function(formName) {
-      this.$refs[formName].resetFields();
+      this.fileList = [];
     },
     onFileSelected(file, filelist) {
       const isIMAGE =
@@ -185,9 +236,49 @@ export default {
         );
         reader.readAsDataURL(file.raw);
       }
+    },
+    remoteMethod(query) {
+      if (query !== "") {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+          this.options = this.studentsList.filter(item => {
+            return item.value.toLowerCase().indexOf(query.toLowerCase()) > -1;
+          });
+        }, 200);
+      } else {
+        this.options = [];
+      }
     }
   }
 };
 </script>
-
-<style></style>
+<style lang="scss" scoped>
+/deep/ .el-upload-list__item {
+  display: none;
+}
+/deep/ .class-upload {
+  height: 60px;
+  /deep/ .el-upload-list__item {
+    display: inline-block !important;
+  }
+  /deep/ .el-upload {
+    display: none;
+  }
+}
+/deep/ .el-upload {
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  padding: 0;
+  svg {
+    position: relative;
+    left: 0px;
+    top: -45px;
+  }
+}
+/deep/ .el-upload-list--picture-card .el-upload-list__item {
+  width: 60px;
+  height: 60px;
+}
+</style>

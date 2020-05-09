@@ -13,7 +13,7 @@
   </a>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 import StreamSourceDialog from "@c/common/stream-source-dialog/index.vue";
 export default {
   data() {
@@ -24,7 +24,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["onElectronClient"])
+    ...mapGetters("electron", ["onElectronClient"])
   },
   methods: {
     async onRecord() {
@@ -38,7 +38,7 @@ export default {
     async startRecord(stream) {
       this.recorder = await rtcService.record(
         stream,
-        new Date().getTime() + ".webm"
+        new Date().getTime().toString()
       );
     }
   },
