@@ -1,5 +1,9 @@
 import { liveBroadcastService } from "@/main";
 import account from "./account";
+import {
+  switchWorkplaceType,
+  syncState
+} from "../core/live-broadcast/tim-message/send";
 const state = {
   activeBoardIndex: 0,
   boardProfiles: [],
@@ -113,13 +117,11 @@ const mutations = {
   },
   async SEND_PANEL_TYPE(state) {
     if (account.state.role !== "student") {
-      await liveBroadcastService.timService.switchWorkplaceType(
-        state.panelType
-      );
+      await switchWorkplaceType(state.panelType);
     }
   },
   async SYNC_STATE(state) {
-    await liveBroadcastService.timService.syncState();
+    await syncState();
   },
   SET_WORKPLACE_VISIBILITY(state, status) {
     state.workplaceVisibity = status;

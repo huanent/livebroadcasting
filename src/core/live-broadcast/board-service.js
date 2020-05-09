@@ -43,17 +43,6 @@ export class BoardService {
           extension: "TXWhiteBoardExt"
         }
       });
-
-      if (tim) {
-        tim
-          .sendMessage(message)
-          .then(res => {
-            console.log(res.data.message.payload);
-          })
-          .catch(err => {
-            console.warn(err);
-          });
-      }
     });
     this.activeBoard = teduBoard;
     teduBoard.on(TEduBoard.EVENT.TEB_INIT, () => {

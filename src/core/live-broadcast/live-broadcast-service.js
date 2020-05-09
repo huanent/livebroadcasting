@@ -3,21 +3,18 @@ import { createRoom, enterRoom } from "../data/data-service";
 import COS from "cos-js-sdk-v5";
 window["COS"] = COS;
 
-import { liveBroadcastService } from "../../main";
-
 import { TrtcService } from "./trtc-service";
 import { TimService } from "./tim-service";
 import { BoardService } from "./board-service";
-
 export class LiveBroadcastService {
   config;
   mode = "live";
   TokenList = {};
-  roomId = "110098327629613";
+  roomId = "111023414679420";
   activeBoard = null;
-  userId = "lgs";
+  userId = "jongwong";
   tim;
-  teacherStreamUserId = "jongwong";
+  teacherStreamUserId = "jongwong-test";
   trtcService;
   timService;
   boardService;
@@ -46,11 +43,11 @@ export class LiveBroadcastService {
   async init() {
     let res = await createRoom(this.userId);
     if (res && res.data.success) {
-      let token = await this.getUserSig("default");
-      let tim = await this.timService.init(this);
+      await this.getUserSig("default");
+      await this.timService.init(this);
       this.trtcService.init(this.roomId, this);
       await this.boardService.init(this.roomId, this);
-      this.timService.listenHandler();
+      await this.timService.listenHandler();
       return true;
     } else {
       console.error(res.data.messages);
