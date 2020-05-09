@@ -192,6 +192,11 @@ export default {
       .class-img {
         margin: 1rem;
         width: 100%;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
         img {
           width: 100%;
         }
