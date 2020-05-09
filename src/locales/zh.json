@@ -25,8 +25,8 @@
   "signup.passwordTips": "请填写密码",
   "signup.RepeatPasswordTips": "请再次填写密码",
   "signup.sameTips": "两次密码不一致",
-  "signup.passwordLength":"密码长度至少为八位",
-  "signup.signupedTip":"已注册 直接登录",
+  "signup.passwordLength": "密码长度至少为八位",
+  "signup.signupedTip": "已注册 直接登录",
 
   "button.send": "发送",
 
@@ -52,5 +52,8 @@
   "classform.titletips": "请填写标题",
   "classform.descriptiontips": "请填写描述",
   "classform.startTimetips": "请选择开始时间",
-  "classform.endTimetips": "请选择结束时间"
+  "classform.endTimetips": "请选择结束时间",
+
+  "setting": "设置",
+  "setting.personInfoEdit": "资料设置"
 }

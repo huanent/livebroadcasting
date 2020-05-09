@@ -4,10 +4,10 @@
     <div class="profile-avatar">
       <el-popover
         trigger="hover"
-        placement="bottom-end"
+        placement="bottom"
+        :offset="-7"
         v-model="visible"
         popper-class="profile-popover"
-        :offset="-7"
       >
         <ul class="menu">
           <router-link :to="{ name: 'Setting' }" tag="li">设置</router-link>
@@ -40,11 +40,18 @@ export default {
   position: relative;
   cursor: pointer;
   .profile-username {
-    padding-right: 15px;
+    margin-right: 17px;
+    min-width: 40px;
     max-width: 102px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-align: center;
+    // box-sizing: border-box;
+    &:hover {
+      color: #65b5bb;
+      // color: #10ae58;
+    }
   }
   .profile-avatar {
     color: #999;

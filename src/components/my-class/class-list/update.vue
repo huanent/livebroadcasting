@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form :model="classForm">
-      <el-form-item :label="$t('classform.pic')">
+      <el-form-item :label="$t('classform.pic')" class="img-upload-wrap">
         <el-upload
           action="/api/classform/update"
           :class="[
@@ -253,32 +253,3 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-/deep/ .el-upload-list__item {
-  display: none;
-}
-/deep/ .class-upload {
-  height: 60px;
-  /deep/ .el-upload-list__item {
-    display: inline-block !important;
-  }
-  /deep/ .el-upload {
-    display: none;
-  }
-}
-/deep/ .el-upload {
-  width: 60px;
-  height: 60px;
-  margin: 0;
-  padding: 0;
-  svg {
-    position: relative;
-    left: 0px;
-    top: -45px;
-  }
-}
-/deep/ .el-upload-list--picture-card .el-upload-list__item {
-  width: 60px;
-  height: 60px;
-}
-</style>
