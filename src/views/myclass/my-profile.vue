@@ -5,21 +5,16 @@
     <div class="profile-avatar">
       <el-popover
         trigger="hover"
-        placement="bottom-end"
+        placement="bottom"
+        :offset="-7"
         v-model="visible"
         popper-class="profile-popover"
-        :offset="-7"
       >
         <ul class="menu">
           <router-link :to="{ name: 'Setting' }" tag="li">设置</router-link>
-          <router-link :to="{ name: 'Login' }" tag="li" class="u-menu-bottom"
-            >退出</router-link
-          >
+          <router-link :to="{ name: 'Login' }" tag="li" class="u-menu-bottom">退出</router-link>
         </ul>
-        <img
-          slot="reference"
-          src="//s.stu.126.net/res/images/headImg/small.jpg"
-        />
+        <img slot="reference" src="//s.stu.126.net/res/images/headImg/small.jpg" />
       </el-popover>
     </div>
   </div>
