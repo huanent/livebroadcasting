@@ -31,6 +31,11 @@
       <Toolbar v-if="isToolBarShow"></Toolbar>
     </div>
     <div style="height: 100%" :class="{ hide: workplaceVisibity }"></div>
+
+    <StreamSourceDialog
+      :visible.sync="showStreamSelectdialog"
+      @selected="onSelected"
+    />
   </div>
 </template>
 
@@ -41,16 +46,19 @@ import WorkplaceFooter from "../workplace-footer";
 import { liveBroadcastService } from "../../../main";
 import { mapGetters, mapMutations } from "vuex";
 import { Emitter } from "../../../core/emit";
+import StreamSourceDialog from "../../common/stream-source-dialog";
 export default {
   name: "MainWorkplace",
-  components: { Toolbar, BoardTabs, WorkplaceFooter },
+  components: { Toolbar, BoardTabs, WorkplaceFooter, StreamSourceDialog },
   data() {
     return {
-      showToolbar: true
+      showToolbar: true,
+      showStreamSelectdialog: false
     };
   },
 
   async mounted() {
+    this.showStreamSelectdialog = this.streamSelectVisibility;
     await liveBroadcastService.init();
     this.SET_WORKPLACE_VISIBILITY(true);
     if (this.role === "student") {
@@ -79,12 +87,14 @@ export default {
       "LOCAL_STREAM_STOP_PLAY",
       "SELF_CAMERA_STATUS",
       "TEACHER_REMOTE_STREAM_PLAY",
-      "TEACHER_REMOTE_STREAM_STOP_PLAY"
+      "TEACHER_REMOTE_STREAM_STOP_PLAY",
+      "EMIT_SELECTED_STREAM"
     ]),
     ...mapMutations("shareScreenStream", [
       "SHARE_SCREEN_PLAY",
       "SHARE_SCREEN_STOP_PLAY"
     ]),
+    ...mapMutations("electron", ["STREAM_SELECT_VISIBILITY"]),
     onTabsClose(item, index) {
       if (item.fid) {
         this.DELETE_BOARD_FILE(item.fid);
@@ -92,6 +102,10 @@ export default {
     },
     boardClick() {
       /* this.SET_CAMERA_PANEL__VISIBILITY(false);*/
+    },
+    onSelected(stream) {
+      this.STREAM_SELECT_VISIBILITY(false);
+      this.EMIT_SELECTED_STREAM(stream);
     },
     indexChange(index) {
       this.BOARD_INDEX(index);
@@ -126,6 +140,7 @@ export default {
     ...mapGetters("workplace", ["panelType", "workplaceVisibity"]),
     ...mapGetters("account", ["role"]),
     ...mapGetters(["onElectronClient"]),
+    ...mapGetters("electron", ["streamSelectVisibility"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
     },
@@ -141,6 +156,9 @@ export default {
     }
   },
   watch: {
+    streamSelectVisibility(val) {
+      this.showStreamSelectdialog = val;
+    },
     index(value) {
       let fileInfo = this.boardProfiles[value];
 

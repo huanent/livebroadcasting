@@ -1,6 +1,7 @@
 import TRTC from "trtc-js-sdk";
 import store from "@/store";
 import { Emitter } from "../emit";
+import electron from "../../store/electron";
 
 export class TrtcService {
   localStream;
@@ -12,6 +13,7 @@ export class TrtcService {
   roomId;
   liveBroadcastService;
   localStreamTypeCache;
+  selectedStreamCache;
   constructor() {}
   async init(roomId, liveBroadcastService) {
     this.liveBroadcastService = liveBroadcastService;
@@ -139,6 +141,14 @@ export class TrtcService {
       }
     }
   }
+  getElectronStream() {
+    return new Promise(resolve => {
+      store.commit("electron/STREAM_SELECT_VISIBILITY", true);
+      Emitter.once("selected-stream", stream => {
+        resolve(stream);
+      });
+    });
+  }
   async shareScreenStreamStopPlay(role) {
     if (role && role === "student") {
       let stream = this.getShareStream();
@@ -155,10 +165,23 @@ export class TrtcService {
   }
   async initShareScreen() {
     this.shareScreenClient = await this.createShareClient();
-    this.localShareScreenStream = TRTC.createStream({
-      audio: false,
-      screen: true
-    });
+    if (!store.state.electron.onElectronClient) {
+      this.localShareScreenStream = TRTC.createStream({
+        audio: false,
+        screen: true
+      });
+    } else {
+      let stream = await this.getElectronStream();
+      const audioTrack = stream.getAudioTracks()[0];
+      const videoTrack = stream.getVideoTracks()[0];
+
+      this.localShareScreenStream = TRTC.createStream({
+        audioSource: audioTrack,
+        videoSource: videoTrack,
+        mirror: false
+      });
+    }
+
     this.localShareScreenStream.setScreenProfile("1080p");
     await this.localShareScreenStream.initialize();
     await this.shareScreenClient.publish(this.localShareScreenStream);
@@ -262,6 +285,7 @@ export class TrtcService {
         self.remoteStreamListProfile
       );
     });
+
     // 监听‘stream-updated’事件
     client.on("stream-updated", event => {
       const remoteStream = event.stream;
@@ -273,6 +297,36 @@ export class TrtcService {
           " hasVideo: " +
           remoteStream.hasVideo()
       );
+    });
+    // 远端用户启用/关闭音频通知
+    client.on("mute-audio", event => {
+      const userId = event.userId;
+      store.commit("remoteStream/MUTE_AUDIO", {
+        userId: userId,
+        status: false
+      });
+    });
+    client.on("unmute-audio", event => {
+      const userId = event.userId;
+      store.commit("remoteStream/MUTE_AUDIO", {
+        userId: userId,
+        status: true
+      });
+    });
+    // 远端用户启用/关闭视频通知
+    client.on("mute-video", event => {
+      const userId = event.userId;
+      store.commit("remoteStream/MUTE_VIDEO", {
+        userId: userId,
+        status: false
+      });
+    });
+    client.on("unmute-video", event => {
+      const userId = event.userId;
+      store.commit("remoteStream/MUTE_VIDEO", {
+        userId: userId,
+        status: true
+      });
     });
     client.on("stream-removed", event => {
       const remoteStream = event.stream;

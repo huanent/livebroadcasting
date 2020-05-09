@@ -41,7 +41,7 @@
           </template>
         </multiselect>
         <div v-else class="type-text">
-          {{ selected.title }}
+          {{ selected && selected.title }}
         </div>
       </div>
     </div>
