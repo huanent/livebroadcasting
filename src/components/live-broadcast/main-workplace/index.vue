@@ -100,8 +100,6 @@ export default {
       let config = {
         childList: true,
         subtree: true
-        // attributes: true,
-        // attributeFilter: ["style"]
       };
       let observer;
       const mutationCallback = mutationsList => {
@@ -112,6 +110,14 @@ export default {
           this.$refs.camera.children[0].children[0].tagName === "VIDEO"
         ) {
           this.$refs.camera.children[0].children[0].style.objectFit = "contain";
+        }
+        if (
+          this.$refs.screen &&
+          this.$refs.screen.children[0] &&
+          this.$refs.screen.children[0].children[0] &&
+          this.$refs.screen.children[0].children[0].tagName === "VIDEO"
+        ) {
+          this.$refs.screen.children[0].children[0].style.objectFit = "contain";
         }
       };
       observer = new MutationObserver(mutationCallback);
