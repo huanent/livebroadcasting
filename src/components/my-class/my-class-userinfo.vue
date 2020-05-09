@@ -3,10 +3,16 @@
     <div class="userinfo-username">ykt22537555661078570</div>
 
     <div class="userinfo-avatar">
-      <el-popover trigger="hover" placement="bottom" v-model="visible" popper-class="userinfo-popover">
+      <el-popover
+        trigger="hover"
+        placement="bottom-end"
+        v-model="visible"
+        popper-class="userinfo-popover"
+        :offset="-7"
+      >
         <ul class="menu">
-          <li>设置</li>
-          <li>退出</li>
+          <router-link :to="{name: 'Setting'}" tag="li">设置</router-link>
+          <router-link :to="{name: 'LoginOut'}" tag="li" class="u-menu-bottom">退出</router-link>
         </ul>
         <img
           slot="reference"
@@ -53,7 +59,7 @@ export default {
     // border: 1px solid red;
     box-sizing: border-box;
     border-radius: 50%;
-    
+
     .userinfo-myimg {
       width: 100%;
       height: 100%;

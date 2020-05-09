@@ -27,6 +27,16 @@ const routes = [
     ]
   },
   {
+    path: "/setting",
+    name: "Setting",
+    component: () => import("@c/my-class//userinfo/my-class-setting")
+  },
+  {
+    path: "/loginout",
+    name: "LoginOut",
+    component: () => import("@c/my-class/userinfo/my-class-loginout")
+  },
+  {
     path: "/login",
     name: "Login",
     component: () => import("@v/login.vue")
