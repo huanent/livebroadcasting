@@ -1,5 +1,5 @@
 <template>
-  <widget-window>
+  <widget-window @close="visible = false" v-if="visible">
     <div class="timer">
       <div class="time">
         <controller value="15" />
@@ -16,6 +16,7 @@ import Controller from "./controller";
 export default {
   data() {
     return {
+      visible: true,
       hours: 15,
       seconds: 0
     };
