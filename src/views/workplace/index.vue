@@ -16,7 +16,7 @@
           ref="gutter1"
           :class="{
             gutter: true,
-            'gutter-row': role !== 'ROLE_STUDENT',
+            'gutter-row': role !== ROLE.STUDENT,
             'gutter-not-allowed': !cameraPanelVisibity
           }"
         ></div>
@@ -54,6 +54,7 @@ import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { liveBroadcastService } from "../../main";
 import { Emitter } from "../../core/emit";
 import { mapGetters, mapMutations } from "vuex";
+import { ROLE } from "../../store/account";
 
 export default {
   name: "workplace",
@@ -84,7 +85,7 @@ export default {
     this.$once("hook:beforeDestroy", () => {
       clearInterval(this.audioLevelTimer);
     });
-    if (this.role !== "ROLE_STUDENT") {
+    if (this.role !== ROLE.STUDENT) {
       Split({
         columnGutters: [
           // {

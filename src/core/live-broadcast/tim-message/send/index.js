@@ -30,7 +30,7 @@ export const switchWorkplaceType = async (panelType, streamId) => {
   }
   await liveBroadcastService.timService.sendSystemMsg(
     "CONTROL_WORKPLACE_TYPE",
-    "all",
+    "ALL",
     data
   );
 };
@@ -51,8 +51,8 @@ export const requestState = async () => {
 };
 export const responseState = async id => {
   let userIds = [id];
-  if (id === "all") {
-    userIds = "all";
+  if (id === "ALL" || id === "ROLE_TEACHER" || id === "ROLE_NOT_TEACHER") {
+    userIds = id;
   }
   let data = {
     boardTotalPage: store.state.workplace.boardTotalPage,

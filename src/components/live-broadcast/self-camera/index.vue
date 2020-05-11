@@ -76,6 +76,7 @@
 import VoiceIntensity from "./voice-intensity";
 import { mapGetters, mapMutations } from "vuex";
 import { Emitter } from "../../../core/emit";
+import { ROLE } from "../../../store/account";
 
 export default {
   name: "SelfCamera",
@@ -122,7 +123,7 @@ export default {
     },
     panelType(value) {
       if (value !== "camera") {
-        if (this.role !== "ROLE_STUDENT") {
+        if (this.role !== ROLE.STUDENT) {
           this.LOCAL_STREAM_STOP_PLAY();
         }
         setTimeout(() => {

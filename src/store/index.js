@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import account from "./account";
+import account, { ROLE } from "./account";
 import board from "./board";
 import device from "./device";
 import workplace from "./workplace";
@@ -10,7 +10,6 @@ import shareScreenStream from "./shareScreenStream";
 import examination from "./examination";
 import electron from "./electron";
 Vue.use(Vuex);
-
 export default new Vuex.Store({
   modules: {
     account,

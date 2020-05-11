@@ -1,5 +1,5 @@
 import { liveBroadcastService } from "@/main";
-import account from "./account";
+import account, { ROLE } from "./account";
 import {
   responseState,
   switchWorkplaceType,
@@ -127,7 +127,7 @@ const mutations = {
     state.panelType = panelType;
   },
   async SEND_PANEL_TYPE(state) {
-    if (account.state.role !== "ROLE_STUDENT") {
+    if (account.state.role !== ROLE.STUDENT) {
       await switchWorkplaceType(state.panelType);
     }
   },

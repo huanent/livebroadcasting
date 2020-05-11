@@ -47,6 +47,7 @@ import { liveBroadcastService } from "../../../main";
 import { mapGetters, mapMutations } from "vuex";
 import { Emitter } from "../../../core/emit";
 import StreamSourceDialog from "../../common/stream-source-dialog";
+import { ROLE } from "../../../store/account";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, WorkplaceFooter, StreamSourceDialog },
@@ -61,7 +62,7 @@ export default {
     this.showStreamSelectdialog = this.streamSelectVisibility;
     await liveBroadcastService.init();
     this.SET_WORKPLACE_VISIBILITY(true);
-    if (this.role === "ROLE_STUDENT") {
+    if (this.role === ROLE.STUDENT) {
       Emitter.on("board-init", () => {
         setTimeout(async () => {
           await this.SYNC_STATE();
@@ -180,7 +181,7 @@ export default {
         this.TEACHER_REMOTE_STREAM_STOP_PLAY();
       }
 
-      if (this.role !== "ROLE_STUDENT") {
+      if (this.role !== ROLE.STUDENT) {
         switch (type) {
           case "camera":
             this.observerVideo(cameraEl);

@@ -1,3 +1,11 @@
+import Vue from "vue";
+
+export const ROLE = {
+  STUDENT: "ROLE_STUDENT",
+  TEACHER: "ROLE_TEACHER"
+};
+Vue.prototype.ROLE = ROLE;
+
 const state = {
   sdkAppId: "1400360542",
   lb_expires: "",
@@ -5,7 +13,7 @@ const state = {
   tx_userId: "",
   tx_userSig: "",
   tx_privateMapKey: "",
-  role: "ROLE_STUDENT", // student teacher
+  role: "ROLE_TEACHER", // student teacher
   nickname: "",
   avatar: ""
 };

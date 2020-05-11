@@ -2,6 +2,7 @@ import TRTC from "trtc-js-sdk";
 import store from "@/store";
 import { Emitter } from "../emit";
 import electron from "../../store/electron";
+import { ROLE } from "../../store/account";
 
 export class TrtcService {
   localStream;
@@ -123,7 +124,7 @@ export class TrtcService {
   async shareScreenStreamPlay(elementOrId, role) {
     let shareScreenStream;
     elementOrId.innerHTML = "";
-    if (role && role === "ROLE_STUDENT") {
+    if (role && role === ROLE.STUDENT) {
       shareScreenStream = this.getShareStream();
       if (shareScreenStream && shareScreenStream.play) {
         shareScreenStream.play(elementOrId);
@@ -151,7 +152,7 @@ export class TrtcService {
     });
   }
   async shareScreenStreamStopPlay(role) {
-    if (role && role === "ROLE_STUDENT") {
+    if (role && role === ROLE.STUDENT) {
       let stream = this.getShareStream();
       if (stream && stream.stop) {
         stream.stop();
@@ -262,7 +263,7 @@ export class TrtcService {
       console.log("远端流增加: " + remoteStream.id_);
       //role是学生只订阅分享屏幕流和老师端语音视频流
       console.log(remoteStream);
-      if (store.state.account.role === "ROLE_STUDENT") {
+      if (store.state.account.role === ROLE.STUDENT) {
         let regex = /.*(share_screen)$/;
         let con = regex.test(remoteStream.userId_);
         if (con) {

@@ -1,5 +1,5 @@
 import { liveBroadcastService } from "@/main";
-import account from "./account";
+import account, { ROLE } from "./account";
 
 const state = {
   remoteStreamList: []
@@ -17,7 +17,7 @@ const mutations = {
     state.remoteStreamList.push(remoteStreamList);
   },
   REMOTE_STREAM_PLAY(state, remote) {
-    if (account.state.role === "ROLE_STUDENT") return;
+    if (account.state.role === ROLE.STUDENT) return;
     liveBroadcastService.trtcService.remoteStreamPlay(
       remote.id,
       remote.element

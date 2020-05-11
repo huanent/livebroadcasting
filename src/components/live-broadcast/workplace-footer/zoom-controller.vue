@@ -4,7 +4,7 @@
       name="minus-circle"
       color="#737882"
       :size="14"
-      :class="{ 'no-drop': role === 'ROLE_STUDENT' }"
+      :class="{ 'no-drop': role === ROLE.STUDENT }"
       @click.native.stop="handleMinus"
     />
     <span>{{ zoomParam | NumToPercent }}</span>
@@ -12,7 +12,7 @@
       name="plus-circle"
       color="#737882"
       :size="14"
-      :class="{ 'no-drop': role === 'ROLE_STUDENT' }"
+      :class="{ 'no-drop': role === ROLE.STUDENT }"
       @click.native.stop="handleAdd"
     />
   </div>
@@ -20,6 +20,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { ROLE } from "../../../store/account";
 
 export default {
   name: "ZoomController",
@@ -48,7 +49,7 @@ export default {
   },
   methods: {
     handleMinus() {
-      if (this.zoomParam <= this.min || this.role === "ROLE_STUDENT") {
+      if (this.zoomParam <= this.min || this.role === ROLE.STUDENT) {
         return;
       }
       this.$store.commit(
@@ -57,7 +58,7 @@ export default {
       );
     },
     handleAdd() {
-      if (this.zoomParam >= this.max || this.role === "ROLE_STUDENT") {
+      if (this.zoomParam >= this.max || this.role === ROLE.STUDENT) {
         return;
       }
       this.$store.commit(
