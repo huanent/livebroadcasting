@@ -1,102 +1,55 @@
 <template>
   <div class="classlist">
-    <!-- <el-row v-if="classList.length > 0">
-      <el-col
-        class="class-container"
-        v-for="(item, index) in classList"
-        :key="index"
-      >
-        <el-card>
-          <el-row type="flex" class="card-row">
-            <el-col :span="8"
-              ><div class="class-img">
-                <img :src="item.classImg" /></div
-            ></el-col>
-            <el-col :span="16">
-              <div class="class-content">
-                <div class="filed">
-                  <div>课堂标题：</div>
-                  <div class="title-content">{{ item.title }}</div>
-                </div>
-                <div class="filed">
-                  <div>开始时间：</div>
-                  <div>{{ item.startTime }}</div>
-                </div>
-                <div class="filed">
-                  <div>结束时间：</div>
-                  <div>{{ item.endTime }}</div>
-                </div>
-                <div class="filed">
-                  <div>创建日期：</div>
-                  <div>{{ item.createDate }}</div>
-                </div>
-              </div>
-              <div class="buttons">
-                <el-button
-                  v-if="activeName == 'teacher'"
-                  type="text"
-                  @click="updateDialog(item.classId, item)"
-                  >编辑</el-button
-                >
-                <el-button type="text" @click="getDetail(item.classId)"
-                  >详情</el-button
-                >
-              </div>
-              <el-button
-                @click="deleteclass(item.classId)"
-                type="text"
-                class="deleteBtn"
-                ><i class="el-icon-close"></i
-              ></el-button>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row> -->
     <el-row type="flex" v-if="classList.length > 0" class="class-container">
       <div class="class-card" v-for="(item, index) in classList" :key="index">
-        <div class="detail-image">
-          <img :src="item.classImg" alt="" />
-        </div>
-        <div class="detail-content">
-          <div>
-            <label>课堂标题：</label><span>{{ item.title }}</span>
+        <el-button
+          v-if="activeName == 'teacher'"
+          @click="deleteclass(item.classId)"
+          type="text"
+          class="delete-btn"
+          ><i class="el-icon-close"></i
+        ></el-button>
+        <div
+          class="card-container"
+          @click="getDetail(item.classId, activeName)"
+        >
+          <div class="detail-image">
+            <img :src="item.classImg" alt="" />
           </div>
-          <div>
-            <label>开始时间：</label><span>{{ item.startTime }}</span>
-          </div>
-          <div>
-            <label>结束时间：</label><span>{{ item.endTime }}</span>
-          </div>
-
-          <div>
-            <label>创建日期：</label><span>{{ item.createDate }}</span>
+          <div class="detail-content">
+            <div class="field">
+              <span>{{ item.title }}</span>
+            </div>
+            <div class="field">
+              <label>开始时间：</label><span>{{ item.startTime }}</span>
+            </div>
+            <div class="field">
+              <label>结束时间：</label><span>{{ item.endTime }}</span>
+            </div>
           </div>
         </div>
       </div>
     </el-row>
     <div v-else class="nodata">您还没有创建课堂</div>
-    <el-dialog title="修改课堂信息" :visible.sync="dialogFormVisible">
-      <ClassUpdate
-        :classId="classId"
-        @setActivityBtn="setActivityBtn"
-      ></ClassUpdate>
-    </el-dialog>
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size="9"
+      :total="pageTotal"
+      @current-change="handleCurrentChange"
+    >
+    </el-pagination>
   </div>
 </template>
 
 <script>
-import ClassUpdate from "./update";
+import { removeClassImg, classListInit, formatDate } from "@api/class";
 export default {
   name: "Classlist",
-  components: {
-    ClassUpdate
-  },
   data() {
     return {
-      classId: "",
       classList: [],
-      dialogFormVisible: false
+      pageTotal: 1
     };
   },
   props: {
@@ -111,21 +64,18 @@ export default {
     }
   },
   methods: {
-    setActivityBtn(data) {
-      if (data == false) {
-        this.dataInit(this.activeName);
-        this.dialogFormVisible = false;
-      }
+    handleCurrentChange(pageNum) {
+      this.dataInit(this.activeName, pageNum);
     },
     deleteclass(index) {
-      removeClassImg(index).then(res => {
-        this.$confirm("此操作将删除该课堂, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
+      this.$confirm("此操作将删除该课堂, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        removeClassImg(index).then(res => {
           if (res.data.success) {
-            this.dataInit();
+            this.dataInit(this.activeName);
             this.$message({
               type: "success",
               message: "删除成功!"
@@ -134,18 +84,8 @@ export default {
         });
       });
     },
-    dataInit(activeName) {
-      var apiurl = "";
-      if (activeName == "student") {
-        apiurl =
-          "/classform/list?isstudent=" + window.liveBroadcastService.userId;
-      }
-      if (activeName == "teacher") {
-        apiurl =
-          "/classform/list?createUser=" + window.liveBroadcastService.userId;
-      }
-      this.axios
-        .get(apiurl)
+    dataInit(activeName, pageNum) {
+      classListInit(activeName, pageNum)
         .then(res => {
           if (res.data.success) {
             this.classList = res.data.data;
@@ -153,16 +93,11 @@ export default {
               element.classImg =
                 "http://livebroadcasting.jinrui.kooboo.site/__kb/kfile/" +
                 element.classImg;
-              element.startTime = new Date(
-                parseInt(element.startTime)
-              ).toLocaleString();
-              element.endTime = new Date(
-                parseInt(element.endTime)
-              ).toLocaleString();
-              element.createDate = new Date(
-                parseInt(element.createDate)
-              ).toLocaleString();
+              element.startTime = formatDate(element.startTime);
+              element.endTime = formatDate(element.endTime);
+              element.createDate = formatDate(element.createDate);
             });
+            this.pageTotal = res.data.total;
           } else {
             this.$message.error(res.data.message);
           }
@@ -175,109 +110,55 @@ export default {
       this.$router.push({
         name: "Classdetail",
         params: {
-          classId: classId
+          classId: classId,
+          activeName: this.activeName
         }
       });
-    },
-    updateDialog(classId) {
-      this.classId = classId;
-      this.dialogFormVisible = true;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-// .classlist {
-//   overflow: auto;
-//   width: 100%;
-//   display: flex;
-//   flex-wrap: wrap;
-//   .nodata {
-//     font-size: 1.5rem;
-//     text-align: center;
-//     width: 100%;
-//     color: #0a818c;
-//     margin-top: 10%;
-//   }
-//   .el-card {
-//     width: 100%;
-//   }
-//   .class-container {
-//     display: flex;
-//     justify-content: center;
-//     flex-wrap: wrap;
-//     width: 48%;
-//     margin: 1%;
-//     .card-row {
-//       align-items: center;
-//       .deleteBtn {
-//         position: absolute;
-//         top: 0;
-//         right: 1rem;
-//         z-index: 99;
-//       }
-//       .btnMr {
-//         margin: 0 0 0 0.3rem;
-//       }
-//       .buttons {
-//         position: absolute;
-//         right: 0;
-//         bottom: -5%;
-//       }
-//       .class-img {
-//         margin: 1rem;
-//         width: 100%;
-//         height: 200px;
-//         display: flex;
-//         justify-content: center;
-//         align-items: center;
-//         overflow: hidden;
-//         img {
-//           width: 100%;
-//         }
-//       }
-//       .class-content {
-//         font-size: 0.7rem;
-//         height: 100%;
-//         margin: 1rem;
-//         .filed {
-//           padding: 0 0.5rem;
-//           margin: 0.5rem 0;
-//           .title-content {
-//             height: 2rem;
-//             word-wrap: break-word;
-//             overflow: hidden;
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
-
 .classlist {
   overflow: auto;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  .el-pagination {
+    position: absolute;
+    bottom: 10%;
+  }
   .class-container {
     flex-wrap: wrap;
     width: 100%;
+    .delete-btn {
+      width: 1rem;
+      height: 1rem;
+      position: absolute;
+      margin-left: 30%;
+      z-index: 99;
+    }
     .class-card {
-      width: 42%;
-      margin: 1%;
-      display: flex;
-      align-items: center;
-      background: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      justify-content: space-between;
+      width: 32%;
+      margin: 0.5%;
+      .card-container {
+        display: flex;
+        align-items: center;
+        background: white;
+        padding: 1rem;
+        justify-content: space-between;
+      }
+      &:hover {
+        cursor: pointer;
+        box-shadow: 0px 0px 5px -1px #888888;
+      }
       .detail-image {
         width: 30%;
         img {
           width: 100%;
-          height: 10rem;
+          max-height: 7rem;
         }
       }
       .detail-content {
@@ -286,6 +167,16 @@ export default {
         justify-content: space-evenly;
         height: 100%;
         width: 60%;
+        .field {
+          margin: 0.5rem;
+        }
+        .field:nth-child(1) {
+          margin: 0.5rem;
+          font-size: 1.5rem;
+          overflow: hidden;
+          height: 2rem;
+          text-overflow: ellipsis;
+        }
       }
     }
   }

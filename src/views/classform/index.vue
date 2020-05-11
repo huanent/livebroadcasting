@@ -9,7 +9,7 @@
       >
         <el-form-item :label="$t('classform.pic')" class="img-upload-wrap">
           <el-upload
-            action="/api/liveRoom/create"
+            action
             :class="[
               {
                 'class-upload': avatar.length > 0
@@ -17,10 +17,8 @@
             ]"
             list-type="picture-card"
             ref="upload"
-            :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
             :on-change="onFileSelected"
-            :on-success="uploadSuccess"
             accept="image/*"
             :auto-upload="false"
             :data="{ username: classForm.username }"
@@ -45,7 +43,6 @@
               placeholder="选择开始时间"
               :editable="false"
               value-format="timestamp"
-              :change="selectDate()"
             >
             </el-date-picker>
           </div>
@@ -58,7 +55,6 @@
               placeholder="选择结束时间"
               :editable="false"
               value-format="timestamp"
-              :change="selectDate()"
             >
             </el-date-picker>
           </div>
@@ -74,7 +70,7 @@
 </template>
 
 <script>
-import { LiveBroadcastService } from "../../core/live-broadcast/live-broadcast-service";
+import { classCreate } from "@api/class";
 export default {
   name: "Signup",
   data() {
@@ -116,8 +112,6 @@ export default {
       avatar: "",
       fullClassImg: "",
       classForm: {
-        userId: "",
-        roomId: "",
         avatar: "",
         title: "",
         description: "",
@@ -157,31 +151,11 @@ export default {
       }
     };
   },
-  created() {
-    this._data.classForm.userId = window.liveBroadcastService.userId;
-    this._data.classForm.roomId = window.liveBroadcastService.roomId;
-  },
+  created() {},
   methods: {
-    selectDate() {
-      if (this.classForm.startTime && this.classForm.endTime) {
-        if (this.classForm.startTime >= this.classForm.endTime) {
-          this.$message.error("结束时间不得早于开始时间");
-          this.classForm.endTime = "";
-        }
-      }
-    },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
-    uploadSuccess(response, file, fileList) {
-      console.log(response);
-      // this.classForm.avatar = response.model.fullFilename;
-    },
     onSubmit(formName) {
-      // this.classForm.avatar = `userId\\${this.classForm.userId}\\classTitle\\${this.classForm.title}\\${this.fullClassImg}`;
       this.classForm.avatar = `userId\\${
-        this.classForm.userId
+        window.liveBroadcastService.userId
       }\\date\\${parseInt(new Date().getTime())}\\${this.fullClassImg}`;
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -191,24 +165,25 @@ export default {
             return;
           }
           var formData = new FormData();
-          formData.append("userId", this.classForm.userId);
-          formData.append("roomId", this.classForm.roomId);
+          formData.append("userId", window.liveBroadcastService.userId);
+          formData.append("roomId", window.liveBroadcastService.roomId);
           formData.append("avatar", this.classForm.avatar);
           formData.append("title", this.classForm.title);
           formData.append("description", this.classForm.description);
           formData.append("startTime", this.classForm.startTime);
           formData.append("endTime", this.classForm.endTime);
-          formData.append("file", this.classForm.file.raw);
-          this.axios
-            .post("/liveRoom/create", formData)
+          formData.append(
+            "file",
+            this.classForm.file.raw,
+            this.classForm.file.name
+          );
+          classCreate(formData)
             .then(res => {
               if (res.data.success) {
                 this.$message.success(res.data.message);
-                this.$router.push({ path: "/classlist" });
-                this.$refs.upload.submit();
+                this.$router.push({ path: "/my" });
               } else {
                 this.$refs.upload.clearFiles();
-                // this.$refs[formName].resetFields();
                 this.avatar = "";
                 this.$message.error(res.data.message);
               }
@@ -226,8 +201,6 @@ export default {
       this.$refs[formName].resetFields();
     },
     onFileSelected(file, filelist) {
-      console.log("选择图片");
-      // this.avatar = `classTitle\\${this.classForm.title}\\img\\${file.name}`;
       const isIMAGE =
         file.raw.type === "image/jpeg" || file.raw.type === "image/png";
       const isLt1M = file.size / 1024 / 1024 < 1;
@@ -246,9 +219,7 @@ export default {
           () => {
             this.fullClassImg = file.name;
             this.avatar = reader.result;
-            console.log(file);
             this.classForm.file = file;
-            console.log(this.$refs.upload);
           },
           false
         );
