@@ -22,7 +22,7 @@
           >
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="summary" label="title"></el-table-column>
-             <!-- <el-table-column prop="answer" label="answer"></el-table-column> -->
+            <!-- <el-table-column prop="answer" label="answer"></el-table-column> -->
             <el-table-column
               prop="createAt"
               label="createAt"
@@ -187,12 +187,14 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      }).then(async () => {
-        const result = await this.remove(_id);
-        if (result.data.success) {
-          this.refreshList();
-        }
-      });
+      })
+        .then(async () => {
+          const result = await this.remove(_id);
+          if (result.data.success) {
+            this.refreshList();
+          }
+        })
+        .catch(() => {});
     }
   },
   computed: {
