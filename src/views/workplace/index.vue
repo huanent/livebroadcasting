@@ -247,9 +247,9 @@ export default {
   background: #292b2e;
 }
 .panel-icon {
-  fill: #ffffff;
+  fill: #f1faf8;
   padding: 5px;
-  background-color: rgba(0, 0, 0, 0.59);
+  background-color: rgba(156, 156, 156, 0.4);
   transform: rotate(-90deg);
 }
 

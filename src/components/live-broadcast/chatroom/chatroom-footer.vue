@@ -50,10 +50,10 @@ export default {
   background: #292b2e;
 */
 
-  border-top: 1px solid #34363b;
+  border-top: 1px solid #6e7b8b;
   /deep/ .el-input__inner {
     background-color: #38393f;
-    border-color: #38393f;
+    border-color: #6e7b8b;
     color: #dcebeb;
     @include themeify {
       background: themed("background_color3");

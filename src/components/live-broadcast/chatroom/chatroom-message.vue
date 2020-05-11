@@ -2,7 +2,7 @@
   <ul class="chatroom-msg-list roll-scroll" ref="messageList">
     <li class="load-more">
       <div @click="$emit('loadMore')">
-        <icon name="clock" color="#dcebeb" size="14" />
+        <icon name="clock" color="rgb(182,208,208)" size="14" />
         <span>{{ $t("chatroom.readMore") }}</span>
       </div>
     </li>
@@ -46,7 +46,7 @@ export default {
 .chatroom-msg-list {
   height: calc(100% - 60px);
   .load-more {
-    color: #dcebeb;
+    color: #839494;
     margin-top: 15px;
     padding: 0 10px 10px;
     > div {

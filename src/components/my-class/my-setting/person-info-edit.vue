@@ -60,7 +60,7 @@ export default {
       }
     };
     var checkEmail = (rule, value, callback) => {
-      var emailReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,3})$/g;
+      var emailReg = /^([a-zA-Z]|[0-9])(\w|-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,3})$/g;
       if (!value) {
         return callback(new Error("邮箱不能为空"));
       } else if (!emailReg.test(value)) {
@@ -127,11 +127,12 @@ export default {
           }
           userApi.updateInfo(formData).then(res => {
             if (res.data.success) {
-              console.log(res);
-              this.SET_NICKNAME(res.data.model.nickname);
-              this.SET_AVATAR_URL(res.data.model.avatar);
+              // console.log(res);
+              const data = res.data.model;
+              this.SET_NICKNAME(data.nickname);
+              this.SET_AVATAR_URL(data.avatar);
               this.$refs["infoForm"].resetFields();
-              // this.$refs.upload.clearFiles();
+              this.fileList = [];
             }
           });
         }
