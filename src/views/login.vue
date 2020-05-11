@@ -87,6 +87,7 @@ export default {
             .post("/login", data)
             .then(res => {
               if (res.data.success) {
+                console.log(res);
                 this.$message.success(this.$t("login.successTips"));
                 const data = res.data.model;
                 this.SET_LB_TOKEN(data.token);

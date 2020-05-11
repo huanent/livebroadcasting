@@ -123,7 +123,7 @@ export class TrtcService {
   async shareScreenStreamPlay(elementOrId, role) {
     let shareScreenStream;
     elementOrId.innerHTML = "";
-    if (role && role === "student") {
+    if (role && role === "ROLE_STUDENT") {
       shareScreenStream = this.getShareStream();
       if (shareScreenStream && shareScreenStream.play) {
         shareScreenStream.play(elementOrId);
@@ -151,7 +151,7 @@ export class TrtcService {
     });
   }
   async shareScreenStreamStopPlay(role) {
-    if (role && role === "student") {
+    if (role && role === "ROLE_STUDENT") {
       let stream = this.getShareStream();
       if (stream && stream.stop) {
         stream.stop();
@@ -262,7 +262,7 @@ export class TrtcService {
       console.log("远端流增加: " + remoteStream.id_);
       //role是学生只订阅分享屏幕流和老师端语音视频流
       console.log(remoteStream);
-      if (store.state.account.role === "student") {
+      if (store.state.account.role === "ROLE_STUDENT") {
         let regex = /.*(share_screen)$/;
         let con = regex.test(remoteStream.userId_);
         if (con) {

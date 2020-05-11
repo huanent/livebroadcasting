@@ -61,7 +61,7 @@ export default {
     this.showStreamSelectdialog = this.streamSelectVisibility;
     await liveBroadcastService.init();
     this.SET_WORKPLACE_VISIBILITY(true);
-    if (this.role === "student") {
+    if (this.role === "ROLE_STUDENT") {
       Emitter.on("board-init", () => {
         setTimeout(async () => {
           await this.SYNC_STATE();
@@ -154,7 +154,7 @@ export default {
       return (
         this.showToolbar &&
         this.panelType === "board" &&
-        this.role === "teacher"
+        this.role === "ROLE_TEACHER"
       );
     },
     index() {
@@ -180,7 +180,7 @@ export default {
         this.TEACHER_REMOTE_STREAM_STOP_PLAY();
       }
 
-      if (this.role !== "student") {
+      if (this.role !== "ROLE_STUDENT") {
         switch (type) {
           case "camera":
             this.observerVideo(cameraEl);

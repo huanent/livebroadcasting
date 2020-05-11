@@ -122,7 +122,7 @@ export default {
     },
     panelType(value) {
       if (value !== "camera") {
-        if (this.role !== "student") {
+        if (this.role !== "ROLE_STUDENT") {
           this.LOCAL_STREAM_STOP_PLAY();
         }
         setTimeout(() => {

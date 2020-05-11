@@ -5,7 +5,7 @@ const state = {
   tx_userId: "",
   tx_userSig: "",
   tx_privateMapKey: "",
-  role: "student", // student teacher
+  role: "ROLE_STUDENT", // student teacher
   nickname: "",
   avatar: ""
 };
@@ -27,9 +27,11 @@ const mutations = {
     localStorage.setItem("lb_expires", lb_expires);
   },
   SET_NICKNAME(state, name) {
+    console.log(name);
     state.nickname = name;
   },
   SET_AVATAR_URL(state, url) {
+    console.log(url);
     state.avatar = "http://livebroadcasting.jinrui.kooboo.site" + url;
   },
   SET_TX_USERID(state, id) {

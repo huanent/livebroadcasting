@@ -45,7 +45,7 @@
 
 <script>
 import userApi from "@api/user";
-
+import { mapMutations } from "vuex";
 export default {
   name: "PersonInfoEdit",
   data() {
@@ -109,6 +109,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations("account", ["SET_NICKNAME", "SET_AVATAR_URL"]),
     onSubmit() {
       this.$refs["infoForm"].validate(valid => {
         if (valid) {
@@ -125,10 +126,12 @@ export default {
             );
           }
           userApi.updateInfo(formData).then(res => {
-            // console.log(res,130)
             if (res.data.success) {
-              // console.log("success");
               console.log(res);
+              this.SET_NICKNAME(res.data.model.nickname);
+              this.SET_AVATAR_URL(res.data.model.avatar);
+              this.$refs["infoForm"].resetFields();
+              // this.$refs.upload.clearFiles();
             }
           });
         }

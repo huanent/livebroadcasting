@@ -10,9 +10,9 @@ export class LiveBroadcastService {
   config;
   mode = "live";
   TokenList = {};
-  roomId = "111023414679420";
+  roomId = "110946144941603";
   activeBoard = null;
-  userId = "jongwong";
+  userId = "jongwong123";
   tim;
   teacherStreamUserId = "jongwong-test";
   trtcService;

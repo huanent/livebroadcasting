@@ -37,21 +37,33 @@ export const switchWorkplaceType = async (panelType, streamId) => {
 export const requestTeacherPanelType = async () => {
   await liveBroadcastService.timService.sendSystemMsg(
     "REQUEST_PANEL_TYPE",
-    "teacher",
+    "ROLE_TEACHER",
     {}
   );
 };
 export const requestState = async () => {
   await liveBroadcastService.timService.sendSystemMsg(
     "REQUEST_STATE",
-    "teacher",
+    "ROLE_TEACHER",
     {}
   );
-  Emitter.on("SYS_REQUEST_STATE_BACK", (info, data, e, type) => {
-    store.commit("workplace/BOARD_TOTAL_PAGE", data.boardTotalPage);
-    store.commit("workplace/BOARD_NUMBER", data.boardNumber);
-    store.commit("workplace/BOARD_SCALE", data.boardScale);
-  });
+  Emitter.on("SYS_REQUEST_STATE_BACK", (info, data, e, type) => {});
+};
+export const responseState = async id => {
+  let userIds = [id];
+  if (id === "all") {
+    userIds = "all";
+  }
+  let data = {
+    boardTotalPage: store.state.workplace.boardTotalPage,
+    boardNumber: store.state.workplace.boardNumber,
+    boardScale: store.state.workplace.boardScale
+  };
+  await liveBroadcastService.timService.sendSystemMsg(
+    "REQUEST_STATE_BACK",
+    userIds,
+    data
+  );
 };
 export const syncState = async () => {
   await requestTeacherPanelType();

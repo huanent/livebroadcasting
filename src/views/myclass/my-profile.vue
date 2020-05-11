@@ -23,7 +23,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-
 export default {
   name: "MyProfile",
   data() {
@@ -36,7 +35,7 @@ export default {
     avatar() {
       return this.avatar_url
         ? this.avatar_url
-        : "../../assets/images/avatar.jpg";
+        : require("../../assets/images/avatar.jpg");
     }
   }
 };

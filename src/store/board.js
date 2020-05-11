@@ -22,7 +22,7 @@ const state = {
   canRedo: 0,
   canUndo: 0,
 
-  drawEnable: account.state.role !== "student"
+  drawEnable: account.state.role !== "ROLE_STUDENT"
 };
 
 const getters = {

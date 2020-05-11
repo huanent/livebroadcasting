@@ -1,6 +1,7 @@
 import { liveBroadcastService } from "@/main";
 import account from "./account";
 import {
+  responseState,
   switchWorkplaceType,
   syncState
 } from "../core/live-broadcast/tim-message/send";
@@ -54,19 +55,26 @@ const mutations = {
   BOARD_INDEX(state, index) {
     state.activeBoardIndex = index;
   },
-  BOARD_TOTAL_PAGE(state, boardTotalPage) {
+  async BOARD_TOTAL_PAGE(state, boardTotalPage) {
     state.boardTotalPage = boardTotalPage;
+    mutations.SEND_BOARD_STATE();
+  },
+  SEND_BOARD_STATE(state) {
+    responseState("ROLE_NOT_TEACHER").then(() => {});
   },
   BOARD_NUMBER(state, boardNumber) {
     state.boardNumber = boardNumber;
+    mutations.SEND_BOARD_STATE();
   },
   BOARD_NUMBER_INCREASE(state, boardNumber) {
     state.boardNumber++;
     liveBroadcastService.boardService.getActiveBoard().nextBoard();
+    mutations.SEND_BOARD_STATE();
   },
   BOARD_NUMBER_DECREASE(state, boardNumber) {
     state.boardNumber--;
     liveBroadcastService.boardService.getActiveBoard().prevBoard();
+    mutations.SEND_BOARD_STATE();
   },
   BOARD_SCALE(state, boardScale) {
     state.boardScale = boardScale;
@@ -74,6 +82,7 @@ const mutations = {
       .getActiveBoard()
       .setBoardScale(state.boardScale);
     liveBroadcastService.boardService.getActiveBoard().reset();
+    mutations.SEND_BOARD_STATE();
   },
   BOARD_SCALE_INCREASE(state, stepScale) {
     state.boardScale = state.boardScale + stepScale;
@@ -81,6 +90,7 @@ const mutations = {
       .getActiveBoard()
       .setBoardScale(state.boardScale);
     liveBroadcastService.boardService.getActiveBoard().resize();
+    mutations.SEND_BOARD_STATE();
   },
   BOARD_SCALE_DECREASE(state, stepScale) {
     state.boardScale = state.boardScale - stepScale;
@@ -88,6 +98,7 @@ const mutations = {
       .getActiveBoard()
       .setBoardScale(state.boardScale);
     liveBroadcastService.boardService.getActiveBoard().resize();
+    mutations.SEND_BOARD_STATE();
   },
   CAMERA_DEVICE_LIST(state, list) {
     state.cameraDeviceList = list;
@@ -116,7 +127,7 @@ const mutations = {
     state.panelType = panelType;
   },
   async SEND_PANEL_TYPE(state) {
-    if (account.state.role !== "student") {
+    if (account.state.role !== "ROLE_STUDENT") {
       await switchWorkplaceType(state.panelType);
     }
   },
