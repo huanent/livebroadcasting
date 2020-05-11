@@ -109,7 +109,6 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(this.signUpForm);
           this.axios
             .post("/user/signup", this.signUpForm)
             .then(res => {

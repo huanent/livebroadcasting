@@ -6,8 +6,8 @@
           <img :src="classList.classImg" alt="" />
         </div>
         <div class="detail-content">
-          <div>
-            <label>课堂标题：</label><span>{{ classList.title }}</span>
+          <div class="detail-title">
+            <span>{{ classList.title }}</span>
           </div>
           <div>
             <label>开始时间：</label><span>{{ classList.startTime }}</span>
@@ -25,41 +25,63 @@
         <label>课堂描述：</label><span>{{ classList.description }}</span>
       </div>
     </div>
+    <el-button
+      v-if="$route.params.activeName == 'teacher'"
+      class="edit-btn"
+      type="primary"
+      @click="updateDialog($route.params.classId)"
+      >编辑</el-button
+    >
+    <el-dialog title="修改课堂信息" :visible.sync="dialogFormVisible">
+      <ClassUpdate
+        :classId="classId"
+        @setActivityBtn="setActivityBtn"
+      ></ClassUpdate>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { detailInit, formatDate } from "@api/class";
+import ClassUpdate from "./update";
 export default {
   name: "ClassDetail",
+  components: {
+    ClassUpdate
+  },
   data() {
     return {
-      classList: ""
+      classList: "",
+      classId: "",
+      dialogFormVisible: false
     };
   },
   created() {
-    console.log(this.$route.params.classId);
     this.dataInit();
+    console.log(this.$route.params.activeName);
   },
   methods: {
+    updateDialog(classId) {
+      this.classId = classId;
+      this.dialogFormVisible = true;
+    },
+    setActivityBtn(data) {
+      if (data == false) {
+        this.dataInit();
+        this.dialogFormVisible = false;
+      }
+    },
     dataInit() {
-      this.axios
-        .get("/classform/list?classId=" + this.$route.params.classId)
+      detailInit(this.$route.params.classId)
         .then(res => {
           if (res.data.success) {
             this.classList = res.data.data[0];
-            console.log(this.classList);
             this.classList.classImg =
               "http://livebroadcasting.jinrui.kooboo.site/__kb/kfile/" +
               this.classList.classImg;
-            this.classList.startTime = new Date(
-              parseInt(this.classList.startTime)
-            ).toLocaleString();
-            this.classList.endTime = new Date(
-              parseInt(this.classList.endTime)
-            ).toLocaleString();
-            this.classList.createDate = new Date(
-              parseInt(this.classList.createDate)
-            ).toLocaleString();
+            this.classList.startTime = formatDate(this.classList.startTime);
+            this.classList.endTime = formatDate(this.classList.endTime);
+            this.classList.createDate = formatDate(this.classList.createDate);
           } else {
             this.$message.error(res.data.message);
           }
@@ -77,14 +99,26 @@ export default {
   background-color: #f4f4f4;
   width: 1205px;
   margin: 0 auto;
+  .edit-btn {
+    position: absolute;
+    right: 10%;
+    top: 10%;
+  }
 }
 .classlist {
   width: 100%;
   .detail-content {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    font-size: 1.5rem;
+    justify-content: space-evenly;
+    font-size: 1.2rem;
+    overflow: hidden;
+  }
+  .detail-title {
+    font-size: 2.5rem;
+    overflow-wrap: break-word;
+    max-height: 6rem;
+    margin-right: 5rem;
   }
   .detail-image {
     margin: 2rem;
@@ -97,6 +131,8 @@ export default {
   }
   .class-desc {
     font-size: 1.3rem;
+    padding: 1rem;
+    overflow-wrap: break-word;
   }
 }
 </style>

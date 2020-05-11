@@ -3,7 +3,7 @@
     <el-form :model="classForm">
       <el-form-item :label="$t('classform.pic')" class="img-upload-wrap">
         <el-upload
-          action="/api/classform/update"
+          action
           :class="[
             {
               'class-upload': avatar.length > 0 || fileList.length > 0
@@ -72,13 +72,13 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">取消</el-button>
       <el-button type="primary" @click="updateClass">修改</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import { updateDataInit, getStudentsList, classUpdate } from "@api/class";
 export default {
   name: "ClassUpdate",
   data() {
@@ -116,7 +116,6 @@ export default {
     }
   },
   created() {
-    this.userId = window.liveBroadcastService.userId;
     this.getStudents();
     (this.classForm = {
       _id: "",
@@ -137,11 +136,10 @@ export default {
   },
   methods: {
     dataInit() {
-      this.axios
-        .get("/classform/list?classId=" + this._props.classId)
+      updateDataInit(this._props.classId)
         .then(res => {
           if (res.data.success) {
-            if (res.data.data[0].students.length > 0) {
+            if (res.data.data[0].students) {
               this.selectedStudents = JSON.parse(res.data.data[0].students);
             } else {
               this.selectedStudents = [];
@@ -160,8 +158,7 @@ export default {
         });
     },
     getStudents() {
-      this.axios
-        .get("/classform/list?students=true")
+      getStudentsList()
         .then(res => {
           if (res.data.success) {
             this.allStudents = res.data.data;
@@ -177,7 +174,9 @@ export default {
         });
     },
     updateClass() {
-      this.classForm.avatar = `userId\\${window.liveBroadcastService.userId}\\classTitle\\${this.classForm.title}\\${this.fullClassImg}`;
+      this.classForm.avatar = `userId\\${
+        window.liveBroadcastService.userId
+      }\\date\\${parseInt(new Date().getTime())}\\${this.fullClassImg}`;
       var formData = new FormData();
       formData.append("avatar", this.classForm.avatar);
       formData.append("_id", this.classForm._id);
@@ -191,8 +190,12 @@ export default {
       if (this.selectedStudents) {
         formData.append("students", this.selectedStudents);
       }
-      this.axios
-        .post("/classform/update", formData)
+      if (this.classForm.startTime >= this.classForm.endTime) {
+        this.$message.error("结束时间不得早于开始时间");
+        this.classForm.endTime = "";
+        return;
+      }
+      classUpdate(formData)
         .then(res => {
           if (res.data.success) {
             this.$emit("setActivityBtn", false);
