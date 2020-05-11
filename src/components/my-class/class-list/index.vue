@@ -4,7 +4,11 @@
       ><router-link to="classform" tag="span">创建课堂</router-link></el-button
     >
     <el-row type="flex" v-if="classList.length > 0" class="class-container">
-      <div class="class-card" v-for="(item, index) in classList" :key="index">
+      <div
+        class="class-card"
+        v-for="(item, index) in classList"
+        :key="item.classId"
+      >
         <el-button
           v-if="activeName == 'teacher'"
           @click="deleteclass(item.classId)"
@@ -132,9 +136,12 @@ export default {
   .addclass-btn {
     margin-left: calc(100% - 8rem);
   }
+  .nodata {
+    font-size: 1.5rem;
+    color: #0a818c;
+  }
   .el-pagination {
-    position: absolute;
-    bottom: 5%;
+    margin-top: 1rem;
   }
   .class-container {
     flex-wrap: wrap;

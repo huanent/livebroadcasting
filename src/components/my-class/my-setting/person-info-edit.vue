@@ -82,11 +82,21 @@ export default {
     };
     return {
       infoForm: {
-        nickname: "",
-        email: "",
-        tel: ""
+        nickname:
+          this.$store.state.account.nickname ||
+          localStorage.getItem("nickname") ||
+          "",
+        email:
+          this.$store.state.account.email ||
+          localStorage.getItem("email") ||
+          "",
+        tel: this.$store.state.account.tel || localStorage.getItem("tel") || ""
       },
-      fileList: [],
+      fileList: [
+        {
+          url: ""
+        }
+      ],
       rules: {
         nickname: [
           { required: true, validator: checkNickName, trigger: "change" }
@@ -108,8 +118,21 @@ export default {
       }
     };
   },
+  created() {
+    console.log(this.$store.state.account.avatar);
+    this.fileList[0].url =
+      this.$store.state.account.avatar ||
+      `http://livebroadcasting.jinrui.kooboo.site${localStorage.getItem(
+        "avatar"
+      )}`;
+  },
   methods: {
-    ...mapMutations("account", ["SET_NICKNAME", "SET_AVATAR_URL"]),
+    ...mapMutations("account", [
+      "SET_NICKNAME",
+      "SET_AVATAR_URL",
+      "SET_EMAIL",
+      "SET_TEL"
+    ]),
     onSubmit() {
       this.$refs["infoForm"].validate(valid => {
         if (valid) {
@@ -131,8 +154,12 @@ export default {
               const data = res.data.model;
               this.SET_NICKNAME(data.nickname);
               this.SET_AVATAR_URL(data.avatar);
-              this.$refs["infoForm"].resetFields();
+              this.SET_EMAIL(data.email);
+              this.SET_TEL(data.tel);
+
               this.fileList = [];
+              this.$message.success("修改成功");
+              this.$refs["infoForm"].resetFields();
             }
           });
         }
@@ -166,5 +193,10 @@ export default {
   font-size: 12px;
   font-family: "宋体";
   color: #ccc;
+}
+/deep/ .el-upload-list__item.is-success {
+  .el-upload-list__item-status-label {
+    display: none;
+  }
 }
 </style>

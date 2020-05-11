@@ -1,3 +1,12 @@
+import Vue from "vue";
+
+export const ROLE = {
+  STUDENT: "ROLE_STUDENT",
+  TEACHER: "ROLE_TEACHER"
+};
+
+Vue.prototype.ROLE = ROLE;
+
 const state = {
   sdkAppId: "1400360542",
   lb_expires: "",
@@ -5,9 +14,11 @@ const state = {
   tx_userId: "",
   tx_userSig: "",
   tx_privateMapKey: "",
-  role: "ROLE_STUDENT", // student teacher
+  role: ROLE.TEACHER, // student teacher
   nickname: "",
-  avatar: ""
+  avatar: "",
+  email: "",
+  tel: ""
 };
 
 const getters = {
@@ -28,6 +39,14 @@ const mutations = {
   },
   SET_NICKNAME(state, name) {
     state.nickname = name;
+  },
+  SET_EMAIL(state, email) {
+    console.log(email);
+    state.email = email;
+  },
+  SET_TEL(state, tel) {
+    console.log(tel);
+    state.tel = tel;
   },
   SET_AVATAR_URL(state, url) {
     state.avatar = "http://livebroadcasting.jinrui.kooboo.site" + url;

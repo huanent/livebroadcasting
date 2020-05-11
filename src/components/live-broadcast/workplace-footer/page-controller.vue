@@ -4,7 +4,7 @@
       name="chevron-circle-left"
       color="#737882"
       :size="14"
-      :class="{ 'no-drop': role === 'ROLE_STUDENT' }"
+      :class="{ 'no-drop': role === ROLE.STUDENT }"
       @click.native.stop="handleMinus"
     />
     <span
@@ -14,7 +14,7 @@
       name="chevron-circle-right"
       color="#737882"
       :size="14"
-      :class="{ 'no-drop': role === 'ROLE_STUDENT' }"
+      :class="{ 'no-drop': role === ROLE.STUDENT }"
       @click.native.stop="handleAdd"
     />
   </div>

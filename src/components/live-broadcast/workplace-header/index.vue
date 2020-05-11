@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { liveBroadcastService } from "../../../main";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 
 import {
   getCourseData,

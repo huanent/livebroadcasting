@@ -76,12 +76,14 @@
 import VoiceIntensity from "./voice-intensity";
 import { mapGetters, mapMutations } from "vuex";
 import { Emitter } from "../../../core/emit";
+import { ROLE } from "../../../store/account";
 
 export default {
   name: "SelfCamera",
   data() {
     return {
       visibility: false,
+      isServiceReady: false,
       dialogVisible: false,
       activeCameraDevice: {},
       activeMicrophonesDevice: {}
@@ -115,13 +117,15 @@ export default {
   },
   watch: {
     isInit(value) {
-      if (value && this.$refs.video) {
+      if (value && this.$refs.video && this.isServiceReady) {
+        console.log("2", this.$refs.video);
+        console.log(this.isServiceReady);
         this.LOCAL_STREAM_PLAY(this.$refs.video);
         this.visibility = true;
       }
     },
     panelType(value) {
-      if (value !== "camera") {
+      if (value !== "camera" && this.isServiceReady) {
         if (this.role !== "ROLE_STUDENT") {
           this.LOCAL_STREAM_STOP_PLAY();
         }
@@ -143,6 +147,9 @@ export default {
     });
     Emitter.on("SYS_SET_REMOTE_VIDEO", data => {
       this.SET_LOCALSTREAM_VIDEO(data.data);
+    });
+    Emitter.on("LIVE_READY", () => {
+      this.isServiceReady = true;
     });
   },
   methods: {
