@@ -156,9 +156,10 @@ export default {
   created() {},
   methods: {
     onSubmit(formName) {
-      this.classForm.avatar = `userId\\${
-        liveBroadcastService.userId
-      }\\date\\${parseInt(new Date().getTime())}\\${this.fullClassImg}`;
+      const userId = localStorage.getItem("lb_userId");
+      this.classForm.avatar = `userId\\${userId}\\date\\${parseInt(
+        new Date().getTime()
+      )}\\${this.fullClassImg}`;
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.classForm.startTime >= this.classForm.endTime) {
@@ -167,8 +168,7 @@ export default {
             return;
           }
           var formData = new FormData();
-          formData.append("userId", liveBroadcastService.userId);
-          formData.append("roomId", liveBroadcastService.roomId);
+          formData.append("userId", userId);
           formData.append("avatar", this.classForm.avatar);
           formData.append("title", this.classForm.title);
           formData.append("description", this.classForm.description);

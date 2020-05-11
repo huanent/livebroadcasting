@@ -11,9 +11,8 @@ const state = {
   sdkAppId: "1400360542",
   lb_expires: "",
   lb_token: "",
-  tx_userId: "",
-  tx_userSig: "",
-  tx_privateMapKey: "",
+  userId: "",
+
   role: ROLE.TEACHER, // student teacher
   nickname: "",
   avatar: "",
@@ -54,7 +53,8 @@ const mutations = {
     state.avatar = "http://livebroadcasting.jinrui.kooboo.site" + url;
   },
   SET_TX_USERID(state, id) {
-    state.tx_userId = id;
+    state.userId = id;
+    localStorage.setItem("lb_userId", id);
   },
   setTXUserSig(state, tx_userSig) {
     state.tx_userSig = tx_userSig;

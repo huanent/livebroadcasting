@@ -174,9 +174,10 @@ export default {
         });
     },
     updateClass() {
-      this.classForm.avatar = `userId\\${
-        window.liveBroadcastService.userId
-      }\\date\\${parseInt(new Date().getTime())}\\${this.fullClassImg}`;
+      const userId = localStorage.getItem("lb_userId");
+      this.classForm.avatar = `userId\\${userId}\\date\\${parseInt(
+        new Date().getTime()
+      )}\\${this.fullClassImg}`;
       var formData = new FormData();
       formData.append("avatar", this.classForm.avatar);
       formData.append("_id", this.classForm._id);
