@@ -74,7 +74,8 @@ export default {
       "SET_LB_TOKEN",
       "SET_LB_EXPIRES",
       "SET_NICKNAME",
-      "SET_AVATAR_URL"
+      "SET_AVATAR_URL",
+      "SET_TX_USERID"
     ]),
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
@@ -88,15 +89,12 @@ export default {
               if (res.data.success) {
                 this.$message.success(this.$t("login.successTips"));
                 const data = res.data.model;
-                const token = data.token;
-                const expires = data.expires;
-                if (token && expires) {
-                  this.SET_LB_TOKEN(token);
-                  this.SET_LB_EXPIRES(expires);
-                  this.SET_NICKNAME(data.nickname);
-                  this.SET_AVATAR_URL(data.avatar);
-                  this.$router.push({ name: "Classlist" });
-                }
+                this.SET_LB_TOKEN(data.token);
+                this.SET_LB_EXPIRES(data.expires);
+                this.SET_NICKNAME(data.nickname);
+                this.SET_AVATAR_URL(data.avatar);
+                this.SET_TX_USERID(data.username);
+                this.$router.push({ name: "Classlist" });
               } else {
                 this.$message.error(res.data.message);
               }
