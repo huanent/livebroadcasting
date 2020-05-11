@@ -1,6 +1,6 @@
 import { Emitter } from "../../../emit";
 import store from "@/store";
-import { liveBroadcastService } from "../../../../main";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { responseState } from "../send";
 import { ROLE } from "../../../../store/account";
 export const listenHandler = async function() {

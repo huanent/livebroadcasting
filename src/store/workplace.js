@@ -1,5 +1,5 @@
-import { liveBroadcastService } from "@/main";
-import account, { ROLE } from "./account";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
+import account from "./account";
 import {
   responseState,
   switchWorkplaceType,

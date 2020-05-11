@@ -4,6 +4,7 @@ export const ROLE = {
   STUDENT: "ROLE_STUDENT",
   TEACHER: "ROLE_TEACHER"
 };
+
 Vue.prototype.ROLE = ROLE;
 
 const state = {
@@ -13,7 +14,7 @@ const state = {
   tx_userId: "",
   tx_userSig: "",
   tx_privateMapKey: "",
-  role: "ROLE_TEACHER", // student teacher
+  role: ROLE.TEACHER, // student teacher
   nickname: "",
   avatar: ""
 };

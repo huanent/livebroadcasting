@@ -2,7 +2,7 @@ import TIM from "tim-js-sdk";
 
 import store from "@/store";
 let TEduBoard = window["TEduBoard"];
-import { liveBroadcastService } from "@/main";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { Emitter } from "../emit";
 
 export class BoardService {
