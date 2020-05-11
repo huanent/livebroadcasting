@@ -7,7 +7,6 @@ const state = {
   tx_privateMapKey: "",
   role: "student", // student teacher
   nickname: "",
-  username: "",
   avatar: ""
 };
 
@@ -33,8 +32,8 @@ const mutations = {
   SET_AVATAR_URL(state, url) {
     state.avatar = "http://livebroadcasting.jinrui.kooboo.site" + url;
   },
-  setTXUserId(state, tx_userId) {
-    state.tx_userId = tx_userId;
+  SET_TX_USERID(state, id) {
+    state.tx_userId = id;
   },
   setTXUserSig(state, tx_userSig) {
     state.tx_userSig = tx_userSig;
