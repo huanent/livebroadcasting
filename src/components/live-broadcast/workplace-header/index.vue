@@ -133,8 +133,8 @@ export default {
       showProgressDialog: false,
       userId: "jongwong",
       switchStatus: false,
-      activeColor: "#7e7e7e",
-      inactiveColor: "#bbc3cf"
+      activeColor: "#48a7a8",
+      inactiveColor: "#76acc3"
     };
   },
   watch: {
@@ -298,10 +298,10 @@ export default {
   cursor: pointer;
 }
 .menu-operation > a:hover > svg {
-  fill: #dcebeb;
+  fill: #48a7a8;
 }
 .pannel-icon {
-  fill: #8a8a8a;
+  fill: #528a99;
   padding: 2.5px 4px;
   margin: 0 auto;
 }

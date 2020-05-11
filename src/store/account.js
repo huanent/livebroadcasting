@@ -37,7 +37,6 @@ const mutations = {
     localStorage.setItem("lb_expires", lb_expires);
   },
   SET_NICKNAME(state, name) {
-    console.log(name);
     state.nickname = name;
   },
   SET_EMAIL(state, email) {
@@ -49,7 +48,6 @@ const mutations = {
     state.tel = tel;
   },
   SET_AVATAR_URL(state, url) {
-    console.log(url);
     state.avatar = "http://livebroadcasting.jinrui.kooboo.site" + url;
   },
   SET_TX_USERID(state, id) {

@@ -60,7 +60,7 @@ export default {
       }
     };
     var checkEmail = (rule, value, callback) => {
-      var emailReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,3})$/g;
+      var emailReg = /^([a-zA-Z]|[0-9])(\w|-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,3})$/g;
       if (!value) {
         return callback(new Error("邮箱不能为空"));
       } else if (!emailReg.test(value)) {
@@ -150,18 +150,16 @@ export default {
           }
           userApi.updateInfo(formData).then(res => {
             if (res.data.success) {
-              console.log(res);
-              this.SET_NICKNAME(res.data.model.nickname);
-              this.SET_AVATAR_URL(res.data.model.avatar);
-              this.SET_EMAIL(res.data.model.email);
-              this.SET_TEL(res.data.model.tel);
+              // console.log(res);
+              const data = res.data.model;
+              this.SET_NICKNAME(data.nickname);
+              this.SET_AVATAR_URL(data.avatar);
+              this.SET_EMAIL(data.email);
+              this.SET_TEL(data.tel);
+
+              this.fileList = [];
               this.$message.success("修改成功");
-              localStorage.setItem("nickname", res.data.model.nickname);
-              localStorage.setItem("avatar", res.data.model.avatar);
-              localStorage.setItem("email", res.data.model.email);
-              localStorage.setItem("tel", res.data.model.tel);
-              // this.$refs["infoForm"].resetFields();
-              // this.$refs.upload.clearFiles();
+              this.$refs["infoForm"].resetFields();
             }
           });
         }
