@@ -4,7 +4,7 @@
       name="chevron-circle-left"
       color="#737882"
       :size="14"
-      :class="{ 'no-drop': role === 'student' }"
+      :class="{ 'no-drop': role === 'ROLE_STUDENT' }"
       @click.native.stop="handleMinus"
     />
     <span
@@ -14,7 +14,7 @@
       name="chevron-circle-right"
       color="#737882"
       :size="14"
-      :class="{ 'no-drop': role === 'student' }"
+      :class="{ 'no-drop': role === 'ROLE_STUDENT' }"
       @click.native.stop="handleAdd"
     />
   </div>
@@ -36,17 +36,19 @@ export default {
     }
   },
   methods: {
-    handleMinus() {
+    async handleMinus() {
       if (this.pageNum <= 1) {
         return;
       }
       this.$store.commit("workplace/BOARD_NUMBER_DECREASE");
+      this.$store.commit("workplace/SEND_BOARD_STATE");
     },
-    handleAdd() {
+    async handleAdd() {
       if (this.pageNum === this.pageTotal) {
         return;
       }
       this.$store.commit("workplace/BOARD_NUMBER_INCREASE");
+      this.$store.commit("workplace/SEND_BOARD_STATE");
     }
   }
 };

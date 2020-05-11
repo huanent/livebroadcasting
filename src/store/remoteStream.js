@@ -17,7 +17,7 @@ const mutations = {
     state.remoteStreamList.push(remoteStreamList);
   },
   REMOTE_STREAM_PLAY(state, remote) {
-    if (account.state.role === "student") return;
+    if (account.state.role === "ROLE_STUDENT") return;
     liveBroadcastService.trtcService.remoteStreamPlay(
       remote.id,
       remote.element

@@ -16,7 +16,7 @@
           ref="gutter1"
           :class="{
             gutter: true,
-            'gutter-row': role !== 'student',
+            'gutter-row': role !== 'ROLE_STUDENT',
             'gutter-not-allowed': !cameraPanelVisibity
           }"
         ></div>
@@ -84,7 +84,7 @@ export default {
     this.$once("hook:beforeDestroy", () => {
       clearInterval(this.audioLevelTimer);
     });
-    if (this.role !== "student") {
+    if (this.role !== "ROLE_STUDENT") {
       Split({
         columnGutters: [
           // {
