@@ -1,7 +1,8 @@
 import { Emitter } from "../../../emit";
 import store from "@/store";
-import { liveBroadcastService } from "../../../../main";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { responseState } from "../send";
+import { ROLE } from "../../../../store/account";
 export const listenHandler = async function() {
   Emitter.on("TXWhiteBoardExt", (data, item, e, type) => {
     liveBroadcastService.boardService.getActiveBoard().addSyncData(data);
@@ -44,7 +45,7 @@ export const listenHandler = async function() {
 
           break;
         case "ROLE_NOT_TEACHER":
-          if (store.state.account.role !== "ROLE_TEACHER") {
+          if (store.state.account.role !== ROLE.TEACHER) {
             Emitter.emit(
               "SYS_" + info.type,
               info,

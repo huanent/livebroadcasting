@@ -1,6 +1,6 @@
-import { liveBroadcastService } from "@/main";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 
-import account from "./account";
+import account, { ROLE } from "./account";
 const state = {
   //board(涂鸦)
   // drawEnable: true, //是否可以涂鸦
@@ -22,7 +22,7 @@ const state = {
   canRedo: 0,
   canUndo: 0,
 
-  drawEnable: account.state.role !== "ROLE_STUDENT"
+  drawEnable: account.state.role !== ROLE.STUDENT
 };
 
 const getters = {

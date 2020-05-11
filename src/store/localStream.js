@@ -1,4 +1,4 @@
-import { liveBroadcastService } from "@/main";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { Emitter } from "../core/emit";
 
 const state = {

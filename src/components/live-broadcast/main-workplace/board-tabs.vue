@@ -16,7 +16,7 @@
       </div>
       <div class="workplace-settings">
         <multiselect
-          v-if="role !== 'ROLE_STUDENT'"
+          v-if="role !== ROLE.STUDENT"
           v-model="selected"
           ref="select"
           :searchable="false"
