@@ -1,5 +1,8 @@
 <template>
   <div class="classlist">
+    <el-button class="addclass-btn" type="primary"
+      ><router-link to="classform" tag="span">创建课堂</router-link></el-button
+    >
     <el-row type="flex" v-if="classList.length > 0" class="class-container">
       <div class="class-card" v-for="(item, index) in classList" :key="index">
         <el-button
@@ -126,9 +129,12 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  .addclass-btn {
+    margin-left: calc(100% - 8rem);
+  }
   .el-pagination {
     position: absolute;
-    bottom: 10%;
+    bottom: 5%;
   }
   .class-container {
     flex-wrap: wrap;

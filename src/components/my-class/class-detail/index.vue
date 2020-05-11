@@ -1,7 +1,7 @@
 <template>
   <div class="main-area">
     <div class="classlist">
-      <el-row type="flex">
+      <el-row type="flex" class="detail-container">
         <div class="detail-image">
           <img :src="classList.classImg" alt="" />
         </div>
@@ -20,21 +20,26 @@
             <label>创建日期：</label><span>{{ classList.createDate }}</span>
           </div>
         </div>
+        <el-button
+          class="edit-btn"
+          type="primary"
+          @click="updateDialog($route.params.classId)"
+          >编辑</el-button
+        >
       </el-row>
       <div class="class-desc">
         <label>课堂描述：</label><span>{{ classList.description }}</span>
       </div>
-      <div class="class-desc">
+      <div class="class-desc" v-if="$route.params.activeName == 'teacher'">
         <label>参与学生：</label><span>{{ studentsList }}</span>
       </div>
     </div>
-    <el-button
-      v-if="$route.params.activeName == 'teacher'"
+    <!-- <el-button
       class="edit-btn"
       type="primary"
       @click="updateDialog($route.params.classId)"
       >编辑</el-button
-    >
+    > -->
     <el-dialog title="修改课堂信息" :visible.sync="dialogFormVisible">
       <ClassUpdate
         :classId="classId"
@@ -62,7 +67,7 @@ export default {
   },
   created() {
     this.dataInit();
-    console.log(this.$route.params.activeName);
+    // console.log(this.$route.params.activeName);
   },
   methods: {
     updateDialog(classId) {
@@ -111,13 +116,17 @@ export default {
   width: 1205px;
   margin: 0 auto;
   .edit-btn {
+    height: 2.5rem;
     position: absolute;
-    right: 10%;
-    top: 10%;
+    right: 1rem;
+    top: 2rem;
   }
 }
 .classlist {
   width: 100%;
+  .detail-container {
+    align-items: center;
+  }
   .detail-content {
     display: flex;
     flex-direction: column;
@@ -127,8 +136,12 @@ export default {
   }
   .detail-title {
     font-size: 2.5rem;
+    line-height: 3.5rem;
     overflow-wrap: break-word;
-    max-height: 6rem;
+    // max-height: 6rem;
+    max-width: 40rem;
+    // overflow: hidden;
+    padding: 1rem;
     margin-right: 5rem;
   }
   .detail-image {

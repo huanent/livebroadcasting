@@ -72,7 +72,7 @@
 <script>
 import { classCreate } from "@api/class";
 export default {
-  name: "Signup",
+  name: "ClassForm",
   data() {
     var validateEmail = (rule, value, callback) => {
       const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
