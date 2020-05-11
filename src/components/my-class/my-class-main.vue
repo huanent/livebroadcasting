@@ -2,8 +2,8 @@
   <div class="my-class-main">
     <div class="main-head">
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="我的课堂" name="student"></el-tab-pane>
         <el-tab-pane label="我的开课" name="teacher"></el-tab-pane>
+        <el-tab-pane label="我的课堂" name="student"></el-tab-pane>
       </el-tabs>
     </div>
     <div class="main-area">
@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       value: "",
-      activeName: "student"
+      activeName: "teacher"
     };
   },
   components: {

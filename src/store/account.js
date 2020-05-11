@@ -7,7 +7,9 @@ const state = {
   tx_privateMapKey: "",
   role: "ROLE_STUDENT", // student teacher
   nickname: "",
-  avatar: ""
+  avatar: "",
+  email: "",
+  tel: ""
 };
 
 const getters = {
@@ -29,6 +31,14 @@ const mutations = {
   SET_NICKNAME(state, name) {
     console.log(name);
     state.nickname = name;
+  },
+  SET_EMAIL(state, email) {
+    console.log(email);
+    state.email = email;
+  },
+  SET_TEL(state, tel) {
+    console.log(tel);
+    state.tel = tel;
   },
   SET_AVATAR_URL(state, url) {
     console.log(url);

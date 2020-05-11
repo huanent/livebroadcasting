@@ -82,11 +82,21 @@ export default {
     };
     return {
       infoForm: {
-        nickname: "",
-        email: "",
-        tel: ""
+        nickname:
+          this.$store.state.account.nickname ||
+          localStorage.getItem("nickname") ||
+          "",
+        email:
+          this.$store.state.account.email ||
+          localStorage.getItem("email") ||
+          "",
+        tel: this.$store.state.account.tel || localStorage.getItem("tel") || ""
       },
-      fileList: [],
+      fileList: [
+        {
+          url: ""
+        }
+      ],
       rules: {
         nickname: [
           { required: true, validator: checkNickName, trigger: "change" }
@@ -108,8 +118,21 @@ export default {
       }
     };
   },
+  created() {
+    console.log(this.$store.state.account.avatar);
+    this.fileList[0].url =
+      this.$store.state.account.avatar ||
+      `http://livebroadcasting.jinrui.kooboo.site${localStorage.getItem(
+        "avatar"
+      )}`;
+  },
   methods: {
-    ...mapMutations("account", ["SET_NICKNAME", "SET_AVATAR_URL"]),
+    ...mapMutations("account", [
+      "SET_NICKNAME",
+      "SET_AVATAR_URL",
+      "SET_EMAIL",
+      "SET_TEL"
+    ]),
     onSubmit() {
       this.$refs["infoForm"].validate(valid => {
         if (valid) {
@@ -130,7 +153,14 @@ export default {
               console.log(res);
               this.SET_NICKNAME(res.data.model.nickname);
               this.SET_AVATAR_URL(res.data.model.avatar);
-              this.$refs["infoForm"].resetFields();
+              this.SET_EMAIL(res.data.model.email);
+              this.SET_TEL(res.data.model.tel);
+              this.$message.success("修改成功");
+              localStorage.setItem("nickname", res.data.model.nickname);
+              localStorage.setItem("avatar", res.data.model.avatar);
+              localStorage.setItem("email", res.data.model.email);
+              localStorage.setItem("tel", res.data.model.tel);
+              // this.$refs["infoForm"].resetFields();
               // this.$refs.upload.clearFiles();
             }
           });
@@ -165,5 +195,10 @@ export default {
   font-size: 12px;
   font-family: "宋体";
   color: #ccc;
+}
+/deep/ .el-upload-list__item.is-success {
+  .el-upload-list__item-status-label {
+    display: none;
+  }
 }
 </style>
