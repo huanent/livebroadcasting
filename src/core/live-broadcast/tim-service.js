@@ -8,29 +8,26 @@ export class TimService {
   liveBroadcastService;
   tim;
   roomId;
-  async sendSystemMsg(type, userIds, data) {
-    let datas = JSON.stringify({
+  async sendSystemMsg(type, userIds, data, from) {
+    let rawJson = {
       type: type,
       userIds: userIds,
       data: data
-    });
+    };
+    if (!from) {
+      from = liveBroadcastService.userId;
+    }
+    rawJson = Object.assign(rawJson, { from: from });
     let message = this.tim.createCustomMessage({
       to: this.roomId,
       conversationType: TIM.TYPES.CONV_GROUP,
       payload: {
-        data: datas,
+        data: JSON.stringify(rawJson),
         description: "",
         extension: "SYSTEM_COMMAND"
       }
     });
-    this.tim
-      .sendMessage(message)
-      .then(res => {
-        console.log(res.data.message.payload);
-      })
-      .catch(err => {
-        console.warn("sendMessage error:", err);
-      });
+    await this.tim.sendMessage(message);
   }
   async sendMessage(msg, type) {
     if (!type) {

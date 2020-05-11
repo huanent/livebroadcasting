@@ -15,7 +15,8 @@ export const listenHandler = async function() {
     const info = JSON.parse(data);
     if (
       info.userIds instanceof Array &&
-      info.userIds.includes("kblive_" + liveBroadcastService.userId)
+      (info.userIds.includes("kblive_" + liveBroadcastService.userId) ||
+        info.userIds.includes(liveBroadcastService.userId))
     ) {
       Emitter.emit("SYS_" + info.type, info, info.data, e, "SYS_" + info.type);
     } else if (typeof info.userIds === "string" && info.userIds === "all") {

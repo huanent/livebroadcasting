@@ -1,6 +1,7 @@
 import TIM from "tim-js-sdk";
 import { liveBroadcastService } from "../../../../main";
-
+import { Emitter } from "../../../emit";
+import store from "@/store";
 export const sendExaminationMsg = async msg => {
   let message = liveBroadcastService.timService.createCustomMessage({
     to: this.roomId,
@@ -46,8 +47,12 @@ export const requestState = async () => {
     "teacher",
     {}
   );
+  Emitter.on("SYS_REQUEST_STATE_BACK", (info, data, e, type) => {
+    store.commit("workplace/BOARD_TOTAL_PAGE", data.boardTotalPage);
+    store.commit("workplace/BOARD_NUMBER", data.boardNumber);
+    store.commit("workplace/BOARD_SCALE", data.boardScale);
+  });
 };
 export const syncState = async () => {
   await requestTeacherPanelType();
 };
-
