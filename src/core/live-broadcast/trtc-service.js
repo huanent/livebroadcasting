@@ -19,7 +19,7 @@ export class TrtcService {
   async init(roomId, liveBroadcastService) {
     this.liveBroadcastService = liveBroadcastService;
     this.roomId = roomId;
-    let token = await liveBroadcastService.getUserSig("default");
+    let token = await this.liveBroadcastService.getUserSig("default");
     let userId = token.id;
     let client = this.createClient("default", token.id, token.userSig);
     await this.joinroom();
@@ -88,7 +88,7 @@ export class TrtcService {
 
   teacherStreamPlay(elmentOrId) {
     let stream = this.getRemoteStreamByUserId(
-      liveBroadcastService.teacherStreamUserId
+      this.liveBroadcastService.teacherStreamUserId
     );
     if (stream && stream.play) {
       stream.play(elmentOrId);
@@ -96,7 +96,7 @@ export class TrtcService {
   }
   teacherStreamStopPlay() {
     let stream = this.getRemoteStreamByUserId(
-      liveBroadcastService.teacherStreamUserId
+      this.liveBroadcastService.teacherStreamUserId
     );
     if (stream && stream.stop) {
       stream.stop();
@@ -270,7 +270,7 @@ export class TrtcService {
         }
         if (
           remoteStream.userId_ ===
-          "kblive_" + liveBroadcastService.teacherStreamUserId
+          "kblive_" + this.liveBroadcastService.teacherStreamUserId
         ) {
           client.subscribe(remoteStream);
         }
@@ -357,7 +357,7 @@ export class TrtcService {
     });
   }
   async createShareClient() {
-    let token = await liveBroadcastService.getUserSig("share_screen");
+    let token = await this.liveBroadcastService.getUserSig("share_screen");
     let userId = token.id;
     let userSig = token.userSig;
     const shareClient = TRTC.createClient({
