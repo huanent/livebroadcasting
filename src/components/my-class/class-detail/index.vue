@@ -24,6 +24,9 @@
       <div class="class-desc">
         <label>课堂描述：</label><span>{{ classList.description }}</span>
       </div>
+      <div class="class-desc">
+        <label>参与学生：</label><span>{{ studentsList }}</span>
+      </div>
     </div>
     <el-button
       v-if="$route.params.activeName == 'teacher'"
@@ -52,6 +55,7 @@ export default {
   data() {
     return {
       classList: "",
+      studentsList: "",
       classId: "",
       dialogFormVisible: false
     };
@@ -82,6 +86,13 @@ export default {
             this.classList.startTime = formatDate(this.classList.startTime);
             this.classList.endTime = formatDate(this.classList.endTime);
             this.classList.createDate = formatDate(this.classList.createDate);
+            if (res.data.data[0].students) {
+              this.studentsList = JSON.parse(
+                res.data.data[0].students
+              ).toString();
+            } else {
+              this.studentsList = "暂无学生";
+            }
           } else {
             this.$message.error(res.data.message);
           }

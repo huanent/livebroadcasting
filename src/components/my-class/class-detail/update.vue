@@ -72,7 +72,7 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="updateClass">修改</el-button>
+      <el-button type="primary" @click="updateClass">保存</el-button>
     </div>
   </div>
 </template>
@@ -231,7 +231,6 @@ export default {
           () => {
             this.fullClassImg = file.name;
             this.avatar = reader.result;
-            console.log(file);
             this.classForm.file = file;
           },
           false
