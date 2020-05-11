@@ -3,7 +3,7 @@ import COS from "cos-js-sdk-v5";
 import store from "@/store";
 import { Emitter } from "../emit";
 import { listenHandler } from "./tim-message/listen";
-import { liveBroadcastService } from "../../main";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 export class TimService {
   liveBroadcastService;
   tim;

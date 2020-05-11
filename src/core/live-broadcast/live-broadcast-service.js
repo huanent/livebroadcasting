@@ -1,18 +1,20 @@
 import { createRoom, enterRoom } from "../data/data-service";
-
+import store from "@/store";
 import COS from "cos-js-sdk-v5";
 window["COS"] = COS;
 
+import { Emitter } from "../emit";
 import { TrtcService } from "./trtc-service";
 import { TimService } from "./tim-service";
 import { BoardService } from "./board-service";
-export class LiveBroadcastService {
+
+class LiveBroadcastService {
   config;
   mode = "live";
   TokenList = {};
-  roomId = "110946144941603";
+  roomId = "111023414679420";
   activeBoard = null;
-  userId = "jongwong123";
+  userId = "jinrui";
   tim;
   teacherStreamUserId = "jongwong-test";
   trtcService;
@@ -54,3 +56,13 @@ export class LiveBroadcastService {
     }
   }
 }
+
+let liveBroadcast = null;
+
+Emitter.on("LIVE_INIT", async cb => {
+  liveBroadcast = new LiveBroadcastService();
+  await liveBroadcast.init();
+  cb();
+});
+
+export let liveBroadcastService = liveBroadcast;

@@ -1,5 +1,5 @@
 import TIM from "tim-js-sdk";
-import { liveBroadcastService } from "../../../../main";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { Emitter } from "../../../emit";
 import store from "@/store";
 export const sendExaminationMsg = async msg => {

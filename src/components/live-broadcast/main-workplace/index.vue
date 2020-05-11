@@ -43,10 +43,10 @@
 import Toolbar from "../toolbar/index";
 import BoardTabs from "./board-tabs";
 import WorkplaceFooter from "../workplace-footer";
-import { liveBroadcastService } from "../../../main";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { mapGetters, mapMutations } from "vuex";
-import { Emitter } from "../../../core/emit";
-import StreamSourceDialog from "../../common/stream-source-dialog";
+import { Emitter } from "@/core/emit";
+import StreamSourceDialog from "@c/common/stream-source-dialog";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, WorkplaceFooter, StreamSourceDialog },
@@ -59,7 +59,6 @@ export default {
 
   async mounted() {
     this.showStreamSelectdialog = this.streamSelectVisibility;
-    await liveBroadcastService.init();
     this.SET_WORKPLACE_VISIBILITY(true);
     if (this.role === "ROLE_STUDENT") {
       Emitter.on("board-init", () => {

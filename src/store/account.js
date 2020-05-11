@@ -5,7 +5,7 @@ const state = {
   tx_userId: "",
   tx_userSig: "",
   tx_privateMapKey: "",
-  role: "ROLE_STUDENT", // student teacher
+  role: "ROLE_TEACHER", // student teacher
   nickname: "",
   avatar: ""
 };

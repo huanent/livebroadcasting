@@ -44,7 +44,7 @@
 <script>
 import CameraItem from "./camera-item";
 import { mapGetters, mapMutations } from "vuex";
-import { Emitter } from "../../../core/emit";
+import { Emitter } from "@/core/emit";
 
 export default {
   name: "CameraPanel",

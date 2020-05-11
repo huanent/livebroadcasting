@@ -31,6 +31,8 @@
 
 <script>
 import { mapMutations } from "vuex";
+import { Emitter } from "@/core/emit";
+
 export default {
   name: "CameraItem",
   props: {
@@ -62,10 +64,11 @@ export default {
     }
   },
   mounted() {
-    if (this.$refs.video) {
-      this.$emit("on-ready", this.item.id, this.$refs.video);
-    }
-    console.log(this.item);
+    Emitter.on("LIVE_INIT", async cb => {
+      if (this.$refs.video) {
+        this.$emit("on-ready", this.item.id, this.$refs.video);
+      }
+    });
   },
   computed: {
     microIcon() {

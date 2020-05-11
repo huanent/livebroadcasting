@@ -71,6 +71,8 @@
 
 <script>
 import { classCreate } from "@api/class";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
+
 export default {
   name: "Signup",
   data() {
@@ -155,7 +157,7 @@ export default {
   methods: {
     onSubmit(formName) {
       this.classForm.avatar = `userId\\${
-        window.liveBroadcastService.userId
+        liveBroadcastService.userId
       }\\date\\${parseInt(new Date().getTime())}\\${this.fullClassImg}`;
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -165,8 +167,8 @@ export default {
             return;
           }
           var formData = new FormData();
-          formData.append("userId", window.liveBroadcastService.userId);
-          formData.append("roomId", window.liveBroadcastService.roomId);
+          formData.append("userId", liveBroadcastService.userId);
+          formData.append("roomId", liveBroadcastService.roomId);
           formData.append("avatar", this.classForm.avatar);
           formData.append("title", this.classForm.title);
           formData.append("description", this.classForm.description);
