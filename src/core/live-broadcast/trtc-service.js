@@ -89,7 +89,6 @@ export class TrtcService {
     let stream = this.getRemoteStreamByUserId(
       liveBroadcastService.teacherStreamUserId
     );
-    console.log("======================----------", stream);
     if (stream && stream.play) {
       stream.play(elmentOrId);
     }

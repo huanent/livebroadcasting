@@ -12,7 +12,7 @@ class LiveBroadcastService {
   config;
   mode = "live";
   TokenList = {};
-  roomId = "111023414679420";
+  roomId = "113736542811385";
   activeBoard = null;
   userId = "jinrui";
   tim;

@@ -64,11 +64,9 @@ export default {
     }
   },
   mounted() {
-    Emitter.on("LIVE_READY", () => {
-      if (this.$refs.video) {
-        this.$emit("on-ready", this.item.id, this.$refs.video);
-      }
-    });
+    if (this.$refs.video) {
+      this.$emit("on-ready", this.item.id, this.$refs.video);
+    }
   },
   computed: {
     microIcon() {
