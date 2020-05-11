@@ -40,6 +40,7 @@
         </div>
       </div>
     </div>
+    <widgets />
   </div>
 </template>
 
@@ -55,7 +56,7 @@ import { liveBroadcastService } from "../../main";
 import { Emitter } from "../../core/emit";
 import { mapGetters, mapMutations } from "vuex";
 import { ROLE } from "../../store/account";
-
+import Widgets from "../../components/live-broadcast/widgets";
 export default {
   name: "workplace",
   data: function() {
@@ -72,7 +73,7 @@ export default {
     SelfCamera,
     WorkplacePanelHeader,
     CameraPanel,
-    isTimer: false
+    Widgets
   },
   computed: {
     ...mapGetters("account", ["role"]),
