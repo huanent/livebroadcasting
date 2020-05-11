@@ -1,4 +1,5 @@
 import { liveBroadcastService } from "@/main";
+import { sendExaminationMsg } from "../core/live-broadcast/tim-message/send";
 const axios = window["axios"];
 
 const state = {
@@ -49,9 +50,7 @@ const actions = {
     return result;
   },
   async sendExamination({ commit }, questions) {
-    const result = await liveBroadcastService.timService.sendExaminationMsg(
-      JSON.stringify(questions)
-    );
+    const result = await sendExaminationMsg(JSON.stringify(questions));
     return result;
   },
   async sendExamAnsers({ commit }, answers) {

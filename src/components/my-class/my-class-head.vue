@@ -3,13 +3,10 @@
     <div class="head-wrap">
       <div class="head-left">
         <a>
-          <img
-            src="https://img-ph-mirror.nosdn.127.net/dxVtejD4WrrmEsAegQIXCQ==/6631341544097211438.jpg"
-            alt="头像"
-          />
+          <img :src="avatar" alt="头像" />
         </a>
         <div class="head-text">
-          <h2>caffreygo，下午好</h2>
+          <h2>{{ nickname }}，下午好</h2>
           <p>知识的价值不在于占有，而在于使用。</p>
         </div>
       </div>
@@ -21,12 +18,22 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "MyClassHead",
   data() {
     return {
       value: ""
     };
+  },
+  computed: {
+    ...mapGetters("account", ["nickname", "avatar_url"]),
+    avatar() {
+      return this.avatar_url
+        ? this.avatar_url
+        : "../../assets/images/avatar.jpg";
+    }
   }
 };
 </script>

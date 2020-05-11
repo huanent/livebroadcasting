@@ -70,7 +70,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations("account", ["SET_LB_TOKEN", "SET_LB_EXPIRES"]),
+    ...mapMutations("account", [
+      "SET_LB_TOKEN",
+      "SET_LB_EXPIRES",
+      "SET_NICKNAME",
+      "SET_AVATAR_URL"
+    ]),
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -82,12 +87,15 @@ export default {
             .then(res => {
               if (res.data.success) {
                 this.$message.success(this.$t("login.successTips"));
-                const token = res.data.model.token;
-                const expires = res.data.model.expires;
+                const data = res.data.model;
+                const token = data.token;
+                const expires = data.expires;
                 if (token && expires) {
                   this.SET_LB_TOKEN(token);
                   this.SET_LB_EXPIRES(expires);
-                  this.$router.push({ name: "MyClass" });
+                  this.SET_NICKNAME(data.nickname);
+                  this.SET_AVATAR_URL(data.avatar);
+                  this.$router.push({ name: "Classlist" });
                 }
               } else {
                 this.$message.error(res.data.message);

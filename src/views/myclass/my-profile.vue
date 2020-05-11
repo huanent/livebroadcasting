@@ -1,6 +1,6 @@
 <template>
   <div class="profile-wrap">
-    <div class="profile-username">ykt22537555661078570</div>
+    <div class="profile-username">{{ nickname }}</div>
     <div class="profile-avatar">
       <el-popover
         trigger="hover"
@@ -15,19 +15,29 @@
             >退出</router-link
           >
         </ul>
-        <img slot="reference" src="../../assets/images/avatar.jpg" />
+        <img slot="reference" :src="avatar" />
       </el-popover>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "MyProfile",
   data() {
     return {
       visible: false
     };
+  },
+  computed: {
+    ...mapGetters("account", ["nickname", "avatar_url"]),
+    avatar() {
+      return this.avatar_url
+        ? this.avatar_url
+        : "../../assets/images/avatar.jpg";
+    }
   }
 };
 </script>
@@ -48,7 +58,7 @@ export default {
     white-space: nowrap;
     text-align: center;
     // box-sizing: border-box;
-    &:hover{
+    &:hover {
       color: #6dbcc2;
       // color: #10ae58;
     }

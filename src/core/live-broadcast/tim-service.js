@@ -2,33 +2,32 @@ import TIM from "tim-js-sdk";
 import COS from "cos-js-sdk-v5";
 import store from "@/store";
 import { Emitter } from "../emit";
+import { listenHandler } from "./tim-message/listen";
+import { liveBroadcastService } from "../../main";
 export class TimService {
   liveBroadcastService;
   tim;
   roomId;
-  async sendSystemMsg(type, userIds, data) {
-    let datas = JSON.stringify({
+  async sendSystemMsg(type, userIds, data, from) {
+    let rawJson = {
       type: type,
       userIds: userIds,
       data: data
-    });
+    };
+    if (!from) {
+      from = liveBroadcastService.userId;
+    }
+    rawJson = Object.assign(rawJson, { from: from });
     let message = this.tim.createCustomMessage({
       to: this.roomId,
       conversationType: TIM.TYPES.CONV_GROUP,
       payload: {
-        data: datas,
+        data: JSON.stringify(rawJson),
         description: "",
         extension: "SYSTEM_COMMAND"
       }
     });
-    this.tim
-      .sendMessage(message)
-      .then(res => {
-        console.log(res.data.message.payload);
-      })
-      .catch(err => {
-        console.warn("sendMessage error:", err);
-      });
+    await this.tim.sendMessage(message);
   }
   async sendMessage(msg, type) {
     if (!type) {
@@ -51,15 +50,6 @@ export class TimService {
       .catch(err => {
         console.error(err);
       });
-  }
-  async requestTeacherPanelType() {
-    await this.sendSystemMsg("REQUEST_PANEL_TYPE", "teacher", {});
-  }
-  async requestState() {
-    await this.sendSystemMsg("REQUEST_STATE", "teacher", {});
-  }
-  async syncState() {
-    await this.requestTeacherPanelType();
   }
   async init(liveBroadcastService) {
     this.liveBroadcastService = liveBroadcastService;
@@ -86,85 +76,26 @@ export class TimService {
         });
     });
   }
-  handleExamination(e) {
-    // TODO: popup questions
-  }
-  async sendExaminationMsg(msg) {
+  async sendBoardMsg(data) {
     let message = this.tim.createCustomMessage({
       to: this.roomId,
       conversationType: TIM.TYPES.CONV_GROUP,
       payload: {
-        data: msg,
+        data: JSON.stringify(data),
         description: "",
-        extension: "EXMAMINATION_SEND"
+        extension: "TXWhiteBoardExt"
       }
     });
-    this.tim
-      .sendMessage(message)
-      .then(res => {
-        console.log(res.data.message.payload);
-      })
-      .catch(err => {
-        console.warn("sendMessage error:", err);
-      });
+    return this.tim.sendMessage(message);
   }
-  handSystemComand(data) {
-    const info = JSON.parse(data);
-    if (
-      info.userIds instanceof Array &&
-      info.userIds.includes("kblive_" + this.liveBroadcastService.userId)
-    ) {
-      Emitter.emit("CONTROL_LOCAL_STREAM", JSON.parse(data));
-    } else if (typeof info.userIds === "string" && info.userIds === "all") {
-      if (info.type === "CONTROL_WORKPLACE_TYPE") {
-        store.commit("workplace/SET_PANEL_TYPE", info.data.panelType);
-        if (info.data.userId) {
-          this.liveBroadcastService.trtcService.teacherStreamId =
-            info.data.userId;
-        }
-      }
-    } else if (
-      typeof info.userIds === "string" &&
-      info.userIds === "teacher" &&
-      store.state.account.role === "teacher"
-    ) {
-      if (info.type === "REQUEST_PANEL_TYPE") {
-        store.commit("workplace/SEND_PANEL_TYPE");
-      }
-    }
-  }
-  async switchWorkplaceType(panelType, streamId) {
-    let data = {
-      panelType
-    };
-    if (streamId) {
-      Object.assign(data, { streamId });
-    }
-    await this.sendSystemMsg("CONTROL_WORKPLACE_TYPE", "all", data);
-  }
-  listenHandler() {
-    let self = this;
+  async listenHandler() {
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
       e.data.forEach(item => {
         const type = item.payload.extension;
         const data = item.payload.data;
-        // SYSTEM_COMMAND || TXWhiteBoardExt || TIM_TEXT
-        switch (type) {
-          case "TXWhiteBoardExt":
-            self.liveBroadcastService.boardService
-              .getActiveBoard()
-              .addSyncData(data);
-            break;
-          case "SYSTEM_COMMAND":
-            self.handSystemComand(data);
-            break;
-          case "EXMAMINATION_RECEIVE":
-            self.handleExamination(e);
-            break;
-          default:
-            Emitter.emit("TIM_CUSTOM_MESSAGE", item);
-        }
+        Emitter.emit(type, data, item, e, type);
       });
     });
+    await listenHandler();
   }
 }
