@@ -53,6 +53,7 @@ export default {
   data() {
     return {
       showToolbar: true,
+      isServiceReady: false,
       showStreamSelectdialog: false
     };
   },
@@ -69,6 +70,9 @@ export default {
     } else {
       this.SET_WORKPLACE_VISIBILITY(true);
     }
+    Emitter.on("LIVE_READY", () => {
+      this.isServiceReady = true;
+    });
   },
   methods: {
     ...mapMutations("workplace", [
@@ -179,7 +183,7 @@ export default {
         this.TEACHER_REMOTE_STREAM_STOP_PLAY();
       }
 
-      if (this.role !== "ROLE_STUDENT") {
+      if (this.role !== "ROLE_STUDENT" && isServiceReady) {
         switch (type) {
           case "camera":
             this.observerVideo(cameraEl);

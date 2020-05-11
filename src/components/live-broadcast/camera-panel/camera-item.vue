@@ -64,7 +64,7 @@ export default {
     }
   },
   mounted() {
-    Emitter.on("LIVE_INIT", async cb => {
+    Emitter.on("LIVE_READY", () => {
       if (this.$refs.video) {
         this.$emit("on-ready", this.item.id, this.$refs.video);
       }

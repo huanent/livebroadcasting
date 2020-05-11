@@ -78,58 +78,61 @@ export default {
     ...mapGetters("workplace", ["cameraPanelVisibity"])
   },
   mounted() {
-    this.audioLevelTimer = setInterval(() => {
-      this.isTimer = true;
-    }, 200);
-    this.$once("hook:beforeDestroy", () => {
-      clearInterval(this.audioLevelTimer);
-    });
-    if (this.role !== "ROLE_STUDENT") {
-      Split({
-        columnGutters: [
-          // {
-          //   track: 1,
-          //   element: document.querySelector("#gutter")
-          // }
-        ],
-        rowGutters: [
-          {
-            track: 1,
-            element: this.$refs.gutter1
-          }
-          // {
-          //   track: 1,
-          //   element: document.querySelector("#gutter2-1")
-          // }
-        ],
-        dragInterval: 10,
-        onDrag: (direction, track, gridTemplateStyle) => {
-          let str = gridTemplateStyle;
-          if (str) {
-            let list = str.trim().split(" ");
-            if (
-              list[0] &&
-              list[2] &&
-              parseFloat(list[2]) > 0 &&
-              parseFloat(list[0]) / parseFloat(list[2]) < 0.001
-            ) {
-              this.SET_CAMERA_PANEL__VISIBILITY(false);
-            } else {
-              /* this.SET_CAMERA_PANEL__VISIBILITY(true);*/
+    Emitter.emit("LIVE_INIT");
+    Emitter.on("LIVE_READY", () => {
+      this.audioLevelTimer = setInterval(() => {
+        this.isTimer = true;
+      }, 200);
+      this.$once("hook:beforeDestroy", () => {
+        clearInterval(this.audioLevelTimer);
+      });
+      if (this.role !== "ROLE_STUDENT") {
+        Split({
+          columnGutters: [
+            // {
+            //   track: 1,
+            //   element: document.querySelector("#gutter")
+            // }
+          ],
+          rowGutters: [
+            {
+              track: 1,
+              element: this.$refs.gutter1
+            }
+            // {
+            //   track: 1,
+            //   element: document.querySelector("#gutter2-1")
+            // }
+          ],
+          dragInterval: 10,
+          onDrag: (direction, track, gridTemplateStyle) => {
+            let str = gridTemplateStyle;
+            if (str) {
+              let list = str.trim().split(" ");
+              if (
+                list[0] &&
+                list[2] &&
+                parseFloat(list[2]) > 0 &&
+                parseFloat(list[0]) / parseFloat(list[2]) < 0.001
+              ) {
+                this.SET_CAMERA_PANEL__VISIBILITY(false);
+              } else {
+                /* this.SET_CAMERA_PANEL__VISIBILITY(true);*/
+              }
+            }
+            Emitter.emit("split-change");
+          },
+          writeStyle: (grid, gridTemplateProp, gridTemplateStyle) => {
+            if (this.cameraPanelVisibity) {
+              console.log(gridTemplateStyle);
+              grid.style[gridTemplateProp] = gridTemplateStyle;
             }
           }
-          Emitter.emit("split-change");
-        },
-        writeStyle: (grid, gridTemplateProp, gridTemplateStyle) => {
-          if (this.cameraPanelVisibity) {
-            console.log(gridTemplateStyle);
-            grid.style[gridTemplateProp] = gridTemplateStyle;
-          }
-        }
-      });
-    } else {
-      this.SET_CAMERA_PANEL__VISIBILITY(false);
-    }
+        });
+      } else {
+        this.SET_CAMERA_PANEL__VISIBILITY(false);
+      }
+    });
   },
   methods: {
     ...mapMutations("workplace", ["SET_CAMERA_PANEL__VISIBILITY"]),

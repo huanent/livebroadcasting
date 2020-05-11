@@ -16,7 +16,7 @@ class LiveBroadcastService {
   activeBoard = null;
   userId = "jinrui";
   tim;
-  teacherStreamUserId = "jongwong-test";
+  teacherStreamUserId = "jinrui";
   trtcService;
   timService;
   boardService;
@@ -57,12 +57,10 @@ class LiveBroadcastService {
   }
 }
 
-let liveBroadcast = null;
+export let liveBroadcastService = null;
 
-Emitter.on("LIVE_INIT", async cb => {
-  liveBroadcast = new LiveBroadcastService();
-  await liveBroadcast.init();
-  cb();
+Emitter.on("LIVE_INIT", async () => {
+  liveBroadcastService = new LiveBroadcastService();
+  await liveBroadcastService.init();
+  Emitter.emit("LIVE_READY");
 });
-
-export let liveBroadcastService = liveBroadcast;
