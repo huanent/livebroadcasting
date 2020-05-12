@@ -102,15 +102,18 @@ let observerJson = {};
 const watchState = function() {
   props.forEach(key => {
     if (store.state.workplace[key]) {
-      watchInstance[key] = app.$watch("$store.state.workplace." + key, {
-        handler: async (a, b) => {
+      watchInstance[key] = app.$watch(
+        "$store.state.workplace." + key,
+        async (a, b) => {
           let oldVal = observerJson;
           observerJson = getDataSate();
           let diff = getDiff(observerJson.workplace, oldVal.workplace);
           await pushState(diff);
         },
-        deep: true
-      });
+        {
+          deep: true
+        }
+      );
     }
   });
 };

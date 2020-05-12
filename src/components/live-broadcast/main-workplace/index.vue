@@ -184,7 +184,7 @@ export default {
         this.TEACHER_REMOTE_STREAM_STOP_PLAY();
       }
 
-      if (this.role !== "ROLE_STUDENT" && isServiceReady) {
+      if (this.role !== "ROLE_STUDENT" && this.isServiceReady) {
         switch (type) {
           case "camera":
             this.observerVideo(cameraEl);
