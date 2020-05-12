@@ -65,7 +65,7 @@ export default {
   },
   mounted() {
     if (this.$refs.video) {
-      this.$emit("on-ready", this.item.id, this.$refs.video);
+      this.$emit("on-ready", this.item.userId, this.$refs.video);
     }
   },
   computed: {

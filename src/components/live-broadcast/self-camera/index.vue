@@ -118,19 +118,19 @@ export default {
   watch: {
     isInit(value) {
       if (value && this.$refs.video && this.isServiceReady) {
-        this.LOCAL_STREAM_PLAY(this.$refs.video);
+        this.LOCAL_STREAM_PLAY({ el: this.$refs.video });
         this.visibility = true;
       }
     },
     panelType(value) {
-      if (value !== "camera" && this.isServiceReady) {
+      /*      if (value !== "camera" && this.isServiceReady) {
         if (this.role !== "ROLE_STUDENT") {
           this.LOCAL_STREAM_STOP_PLAY();
         }
         setTimeout(() => {
           this.LOCAL_STREAM_PLAY(this.$refs.video);
         }, 300);
-      }
+      }*/
     }
   },
   mounted() {

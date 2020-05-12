@@ -4,14 +4,15 @@ import account from "./account";
 const state = {};
 
 const mutations = {
-  async SHARE_SCREEN_PLAY(state, elemntOrId) {
+  async SHARE_SCREEN_PLAY(state, data) {
     await liveBroadcastService.trtcService.shareScreenStreamPlay(
-      elemntOrId,
+      data,
       account.state.role
     );
   },
-  SHARE_SCREEN_STOP_PLAY(state) {
+  SHARE_SCREEN_STOP_PLAY(state, data) {
     liveBroadcastService.trtcService.shareScreenStreamStopPlay(
+      data,
       account.state.role
     );
   }

@@ -32,11 +32,11 @@ const mutations = {
     let level = liveBroadcastService.trtcService.getAudioLevel();
     state.audioLevel = level;
   },
-  LOCAL_STREAM_PLAY(state, elemntOrId) {
-    liveBroadcastService.trtcService.localStreamPlay(elemntOrId);
+  LOCAL_STREAM_PLAY(state, data) {
+    liveBroadcastService.trtcService.localStreamPlay(data);
   },
-  LOCAL_STREAM_STOP_PLAY(state) {
-    liveBroadcastService.trtcService.localStreamStopPlay();
+  LOCAL_STREAM_STOP_PLAY(state, data) {
+    liveBroadcastService.trtcService.localStreamStopPlay(data);
   },
   TEACHER_REMOTE_STREAM_PLAY(state, elemntOrId) {
     liveBroadcastService.trtcService.teacherStreamPlay(elemntOrId);

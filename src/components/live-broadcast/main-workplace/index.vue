@@ -181,40 +181,19 @@ export default {
     panelType: async function(type, oldType) {
       let cameraEl = this.$refs.camera;
       let screenEl = this.$refs.screen;
-      if (oldType === "screen") {
-        this.SHARE_SCREEN_STOP_PLAY();
-      }
-      if (oldType !== "camera") {
-        this.TEACHER_REMOTE_STREAM_STOP_PLAY();
+      if (type !== "camera") {
+        this.LOCAL_STREAM_STOP_PLAY({ el: cameraEl, isCopy: true });
       }
 
-      if (this.role !== "ROLE_STUDENT" && this.isServiceReady) {
+      if (this.isServiceReady) {
         switch (type) {
           case "camera":
             this.observerVideo(cameraEl);
-            this.LOCAL_STREAM_STOP_PLAY();
-            setTimeout(() => {
-              this.LOCAL_STREAM_PLAY(cameraEl);
-            }, 300);
+            this.LOCAL_STREAM_PLAY({ el: cameraEl, isCopy: true });
             break;
           case "screen":
             this.observerVideo(screenEl);
-            this.SHARE_SCREEN_PLAY(screenEl);
-            break;
-          default:
-        }
-      } else {
-        switch (type) {
-          case "camera":
-            this.observerVideo(cameraEl);
-            this.TEACHER_REMOTE_STREAM_STOP_PLAY();
-            setTimeout(() => {
-              this.TEACHER_REMOTE_STREAM_PLAY(cameraEl);
-            }, 300);
-            break;
-          case "screen":
-            this.observerVideo(screenEl);
-            await this.SHARE_SCREEN_PLAY(screenEl);
+            this.SHARE_SCREEN_PLAY({ el: screenEl, isCopy: true }, true);
             break;
           default:
         }
