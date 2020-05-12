@@ -48,6 +48,12 @@ import userApi from "@api/user";
 import { mapMutations } from "vuex";
 export default {
   name: "PersonInfoEdit",
+  props: {
+    avatar: String,
+    nickname: String,
+    tel: String,
+    email: String
+  },
   data() {
     var checkNickName = (rule, value, callback) => {
       var nicknameReg = /^[\u4E00-\u9FA5A-Za-z0-9]+$/g;
@@ -82,21 +88,11 @@ export default {
     };
     return {
       infoForm: {
-        nickname:
-          this.$store.state.account.nickname ||
-          localStorage.getItem("nickname") ||
-          "",
-        email:
-          this.$store.state.account.email ||
-          localStorage.getItem("email") ||
-          "",
-        tel: this.$store.state.account.tel || localStorage.getItem("tel") || ""
+        nickname: "",
+        email: "",
+        tel: ""
       },
-      fileList: [
-        {
-          url: ""
-        }
-      ],
+      fileList: [],
       rules: {
         nickname: [
           { required: true, validator: checkNickName, trigger: "change" }
@@ -118,21 +114,17 @@ export default {
       }
     };
   },
-  created() {
-    console.log(this.$store.state.account.avatar);
-    this.fileList[0].url =
-      this.$store.state.account.avatar ||
-      `http://livebroadcasting.jinrui.kooboo.site${localStorage.getItem(
-        "avatar"
-      )}`;
+  mounted() {
+    this.infoForm.nickname = this.nickname;
+    this.infoForm.tel = this.tel;
+    this.infoForm.email = this.email;
+    if (this.avatar) {
+      this.fileList.push({
+        url: this.avatar
+      });
+    }
   },
   methods: {
-    ...mapMutations("account", [
-      "SET_NICKNAME",
-      "SET_AVATAR_URL",
-      "SET_EMAIL",
-      "SET_TEL"
-    ]),
     onSubmit() {
       this.$refs["infoForm"].validate(valid => {
         if (valid) {
@@ -141,7 +133,7 @@ export default {
           formData.append("nickname", this.infoForm.nickname);
           formData.append("tel", this.infoForm.tel);
           formData.append("email", this.infoForm.email);
-          if (this.fileList[0]) {
+          if (this.fileList[0] && this.fileList[0].raw) {
             formData.append(
               "files",
               this.fileList[0].raw,
@@ -152,10 +144,6 @@ export default {
             if (res.data.success) {
               // console.log(res);
               const data = res.data.model;
-              this.SET_NICKNAME(data.nickname);
-              this.SET_AVATAR_URL(data.avatar);
-              this.SET_EMAIL(data.email);
-              this.SET_TEL(data.tel);
 
               this.fileList = [];
               this.$message.success("修改成功");

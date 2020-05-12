@@ -22,21 +22,16 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 export default {
   name: "MyProfile",
+  props: {
+    avatar: String,
+    nickname: String
+  },
   data() {
     return {
       visible: false
     };
-  },
-  computed: {
-    ...mapGetters("account", ["nickname", "avatar_url"]),
-    avatar() {
-      return this.avatar_url
-        ? this.avatar_url
-        : require("../../assets/images/avatar.jpg");
-    }
   }
 };
 </script>
