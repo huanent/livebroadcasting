@@ -138,6 +138,11 @@ const mutations = {
   },
   SET_CAMERA_PANEL__VISIBILITY(state, status) {
     state.cameraPanelVisibity = status;
+  },
+  MERGE_STATE(state, data) {
+    data.forEach(key => {
+      state[key] = data[key];
+    });
   }
 };
 export default {

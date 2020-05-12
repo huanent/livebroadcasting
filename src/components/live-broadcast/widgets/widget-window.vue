@@ -1,12 +1,7 @@
 <template>
   <div class="window" :style="{ top: top + 'px', left: left + 'px' }">
-    <header
-      draggable="true"
-      @dragstart="dragstart"
-      @drag="drag"
-      ref="header"
-      @dragend="dragend"
-    >
+    <header draggable="true" @dragstart="dragstart" @drag="drag" ref="header" @dragend="dragend">
+      <span class="timer">定时器</span>
       <div class="close" @click="$emit('close')">+</div>
     </header>
     <div>
@@ -49,9 +44,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .window {
+  //  transition: left 1s linear 2s;
+  //  transition: top 1s linear 2s;
   header {
-    height: 20px;
-    background-color: #ddd;
+    text-align: center;
+    color: #fff;
+    height: 26px;
+    line-height: 26px;
+    background-color: #484950;
     width: 100%;
     .close {
       width: 20px;
@@ -61,10 +61,11 @@ export default {
       bottom: 0;
       right: 0px;
       font-size: 20px;
-      color: #000;
+      color: #98989c;
       transform: rotate(45deg);
       cursor: pointer;
     }
+   
   }
   position: fixed;
   top: 0;

@@ -3,7 +3,7 @@
     <a @click="up">
       <icon name="angle-up" class="btn" :size="20" v-if="controllable"></icon>
     </a>
-    <div>{{ value }}</div>
+    <div class="text">{{ value }}</div>
     <a @click="down">
       <icon name="angle-down" class="btn" :size="20" v-if="controllable"></icon>
     </a>
@@ -15,9 +15,15 @@ export default {
   methods: {
     down() {
       if (this.value > 0) this.$emit("input", this.value - 1);
+      else {
+        this.$emit("input", (this.value = this.max));
+      }
     },
     up() {
       if (this.value < this.max) this.$emit("input", this.value + 1);
+      else {
+        this.$emit("input", (this.value = 0));
+      }
     }
   }
 };
@@ -34,7 +40,13 @@ export default {
     text-align: center;
   }
   .btn {
-    fill: #528a99;
+    fill: #eee;
+  }
+  .text {
+    background: #eee;
+    padding: 5px 0;
+    border-radius: 2px;
+    user-select: none;
   }
 }
 </style>

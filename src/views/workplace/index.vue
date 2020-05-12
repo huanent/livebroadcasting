@@ -181,6 +181,14 @@ export default {
         Emitter.emit("split-change");
       }, 300);
     }
+  },
+  watch: {
+    "$store.state.workplace": {
+      handler: value => {
+        Emitter.emit("workplace-state-change");
+      },
+      deep: true
+    }
   }
 };
 </script>
