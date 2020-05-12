@@ -78,7 +78,7 @@ const getDiff = function(n, o) {
   let ob;
   ob = {};
   for (let i in n) {
-    if (n[i] !== o[i]) {
+    if (JSON.stringify(n[i]) !== JSON.stringify(o[i])) {
       ob[i] = n[i];
     }
   }
@@ -86,10 +86,17 @@ const getDiff = function(n, o) {
 };
 
 export let getState = function(state) {
-  const props = ["boardTotalPage", "boardNumber", "boardScale", "panelType"];
+  const props = [
+    "boardTotalPage",
+    "boardNumber",
+    "boardScale",
+    "panelType",
+    "timerWidget"
+  ];
+
   let ob = {};
   props.forEach(key => {
-    ob[key] = state[key];
+    ob[key] = JSON.parse(JSON.stringify(state[key]));
   });
   return ob;
 };
