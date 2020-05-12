@@ -91,7 +91,9 @@ export let getState = function(state) {
     "boardNumber",
     "boardScale",
     "panelType",
-    "timerWidget"
+    "timerWidget",
+    "activeBoardIndex",
+    "boardProfiles"
   ];
 
   let ob = {};
