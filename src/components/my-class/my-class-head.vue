@@ -3,10 +3,10 @@
     <div class="head-wrap">
       <div class="head-left">
         <a>
-          <img :src="avatar" alt="头像" />
+          <img :src="userInfo.avatar" alt="头像" />
         </a>
         <div class="head-text">
-          <h2>{{ nickname }}，下午好</h2>
+          <h2>{{ userInfo.nickname }}，下午好</h2>
           <p>知识的价值不在于占有，而在于使用。</p>
         </div>
       </div>
@@ -21,8 +21,10 @@
 export default {
   name: "MyClassHead",
   props: {
-    avatar: String,
-    nickname: String
+    userInfo: Object
+    // default: () => {
+    //   return { avatar: "", nickname: "" };
+    // }
   },
   data() {
     return {
