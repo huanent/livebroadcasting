@@ -16,7 +16,6 @@
           class="delete-btn"
           ><i class="el-icon-close"></i
         ></el-button>
-<<<<<<< HEAD
         <el-button
           @click="enterClass(item.classId, item.createUser)"
           type="text"
@@ -27,9 +26,6 @@
           class="card-container"
           @click="getDetail(item.classId, activeName)"
         >
-=======
-        <div class="card-container">
->>>>>>> fe244304de019c129a0b96dd68d25e1a5a63752b
           <div class="detail-image">
             <img :src="item.url" alt="" />
           </div>
