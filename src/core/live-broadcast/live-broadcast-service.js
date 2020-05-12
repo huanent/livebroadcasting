@@ -14,11 +14,11 @@ class LiveBroadcastService {
   config;
   mode = "live";
   TokenList = {};
-  roomId = "113737064261488";
+  roomId = "114467658173138";
   activeBoard = null;
-  userId = "jinrui123adsasd";
+  userId = "caffrey";
   tim;
-  teacherStreamUserId = "jinrui";
+  teacherStreamUserId = "caffrey";
   trtcService;
   timService;
   boardService;
