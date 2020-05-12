@@ -6,7 +6,7 @@
           action
           :class="[
             {
-              'class-upload': fileList.length > 0 || avatar.length > 0
+              'class-upload': fileList.length > 0 || showUpload
             }
           ]"
           list-type="picture-card"
@@ -31,7 +31,7 @@
           <el-date-picker
             v-model="classForm.startTime"
             type="datetime"
-            placeholder="选择开始时间"
+            :placeholder="$t('classform.startTimetips')"
             :editable="false"
             value-format="timestamp"
           >
@@ -43,26 +43,26 @@
           <el-date-picker
             v-model="classForm.endTime"
             type="datetime"
-            placeholder="选择结束时间"
+            :placeholder="$t('classform.endTimetips')"
             :editable="false"
             value-format="timestamp"
           >
           </el-date-picker>
         </div>
       </el-form-item>
-      <el-form-item prop="students" label="添加学生">
+      <el-form-item prop="students" :label="$t('classform.addStudents')">
         <el-select
           v-model="selectedStudents"
           multiple
           filterable
           remote
           reserve-keyword
-          placeholder="请输入关键词"
+          :placeholder="$t('classform.keywordsTips')"
           :remote-method="remoteMethod"
           :loading="loading"
         >
           <el-option
-            v-for="item in options"
+            v-for="item in studentsList"
             :key="item.value"
             :value="item.value"
           >
@@ -71,7 +71,9 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="updateClass">保存</el-button>
+      <el-button type="primary" @click="updateClass">{{
+        $t("classform.submit")
+      }}</el-button>
     </div>
   </div>
 </template>
@@ -84,26 +86,22 @@ export default {
     return {
       classForm: {
         _id: "",
-        // avatar: "",
         title: "",
         description: "",
         startTime: "",
         endTime: "",
         file: ""
       },
-      avatar: "",
+      showUpload: false,
       fileList: [
         {
           url: "",
           name: ""
         }
       ],
-      // fullClassImg: "",
-      options: [],
       selectedStudents: [],
       studentsList: [],
-      loading: false,
-      allStudents: ["Alabama", "Alaska", "Arizona", "Arkansas"]
+      loading: false
     };
   },
   props: {
@@ -118,7 +116,6 @@ export default {
     this.getStudents();
     (this.classForm = {
       _id: "",
-      // avatar: "",
       title: "",
       description: "",
       startTime: "",
@@ -144,13 +141,10 @@ export default {
               this.selectedStudents = [];
             }
             this.classForm = res.data.data[0];
-            // this.classForm.name = res.data.data[0].classImg;
             this.fileList[0].url =
               "http://livebroadcasting.jinrui.kooboo.site" +
               res.data.data[0].url;
             this.fileList[0].name = res.data.data[0].pathname;
-            console.log(this.classForm);
-            console.log(this.fileList);
           } else {
             this.$message.error(res.data.message);
           }
@@ -163,8 +157,8 @@ export default {
       getStudentsList()
         .then(res => {
           if (res.data.success) {
-            this.allStudents = res.data.data;
-            this.studentsList = this.allStudents.map(item => {
+            this.studentsList = res.data.data;
+            this.studentsList = this.studentsList.map(item => {
               return { value: `${item}` };
             });
           } else {
@@ -177,20 +171,13 @@ export default {
     },
     updateClass() {
       const userId = localStorage.getItem("lb_userId");
-      // this.classForm.avatar = `userId\\${userId}\\date\\${parseInt(
-      //   new Date().getTime()
-      // )}\\${this.fullClassImg}`;
       var formData = new FormData();
-      // formData.append("avatar", this.classForm.avatar);
       formData.append("_id", this.classForm._id);
       formData.append("userId", this.classForm.userId);
       formData.append("title", this.classForm.title);
       formData.append("description", this.classForm.description);
       formData.append("startTime", this.classForm.startTime);
       formData.append("endTime", this.classForm.endTime);
-      // if (this.classForm.file) {
-      //   formData.append("file", this.classForm.file.raw);
-      // }
       if (this.classForm.file) {
         formData.append(
           "file",
@@ -220,7 +207,7 @@ export default {
         });
     },
     handleRemove(file, fileList) {
-      this.avatar = "";
+      this.showUpload = false;
       this.fileList = [];
     },
     onFileSelected(file, filelist) {
@@ -240,7 +227,7 @@ export default {
         reader.addEventListener(
           "load",
           () => {
-            this.avatar = reader.result;
+            this.showUpload = true;
             this.classForm.file = file;
           },
           false
@@ -253,12 +240,12 @@ export default {
         this.loading = true;
         setTimeout(() => {
           this.loading = false;
-          this.options = this.studentsList.filter(item => {
+          this.studentsList = this.studentsList.filter(item => {
             return item.value.toLowerCase().indexOf(query.toLowerCase()) > -1;
           });
         }, 200);
       } else {
-        this.options = [];
+        this.studentsList = [];
       }
     }
   }
