@@ -36,20 +36,6 @@ const mutations = {
     state.lb_expires = lb_expires;
     localStorage.setItem("lb_expires", lb_expires);
   },
-  SET_NICKNAME(state, name) {
-    state.nickname = name;
-  },
-  SET_EMAIL(state, email) {
-    console.log(email);
-    state.email = email;
-  },
-  SET_TEL(state, tel) {
-    console.log(tel);
-    state.tel = tel;
-  },
-  SET_AVATAR_URL(state, url) {
-    state.avatar = "http://livebroadcasting.jinrui.kooboo.site" + url;
-  },
   SET_TX_USERID(state, id) {
     state.userId = id;
     localStorage.setItem("lb_userId", id);

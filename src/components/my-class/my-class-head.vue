@@ -18,22 +18,16 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
   name: "MyClassHead",
+  props: {
+    avatar: String,
+    nickname: String
+  },
   data() {
     return {
       value: ""
     };
-  },
-  computed: {
-    ...mapGetters("account", ["nickname", "avatar_url"]),
-    avatar() {
-      return this.avatar_url
-        ? this.avatar_url
-        : "../../assets/images/avatar.jpg";
-    }
   }
 };
 </script>
