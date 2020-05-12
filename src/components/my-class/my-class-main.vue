@@ -7,10 +7,10 @@
       </el-tabs>
     </div>
     <div class="main-area">
-      <!-- <keep-alive> -->
-      <class-list :activeName="activeName" />
-      <!-- <router-view /> -->
-      <!-- </keep-alive> -->
+      <keep-alive>
+        <class-list :activeName="activeName" :label="label" />
+        <!-- <router-view /> -->
+      </keep-alive>
     </div>
   </div>
 </template>
@@ -22,7 +22,8 @@ export default {
   data() {
     return {
       value: "",
-      activeName: "teacher"
+      activeName: "teacher",
+      label: "我的开课"
     };
   },
   components: {
@@ -31,6 +32,7 @@ export default {
   methods: {
     handleClick(tab, event) {
       console.log(tab, event);
+      this.label = tab.label;
     }
   }
 };

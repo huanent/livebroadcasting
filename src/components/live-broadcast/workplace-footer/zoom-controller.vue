@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 import { ROLE } from "../../../store/account";
 
 export default {
@@ -32,7 +32,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("account", ["role"]),
+    ...mapState("account", ["role"]),
     zoomParam() {
       return this.$store.state.workplace.boardScale;
     }

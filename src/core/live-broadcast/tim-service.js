@@ -69,12 +69,16 @@ export class TimService {
       tim
         .login({ userID: userId, userSig: userSig })
         .then(() => {
+          Emitter.emit("LIVE_TIM_READY", this.tim);
           resolve(tim);
         })
         .catch(imError => {
           console.warn("login error:", imError); // 登录失败的相关信息
         });
     });
+  }
+  logout() {
+    this.tim.logout();
   }
   async sendBoardMsg(data) {
     let message = this.tim.createCustomMessage({

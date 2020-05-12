@@ -61,7 +61,7 @@
 </template>
 <script>
 import Tinymce from "../../common/tinymce";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 import { indexToLetter } from "../../../core/utils";
 
 const emptyOption = {

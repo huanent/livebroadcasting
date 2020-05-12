@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapMutations } from "vuex";
 
 export default {
   name: "ShapeBox",
@@ -95,7 +95,6 @@ export default {
       this.SET_BRUSH_COLOR(color);
     },
     onSlider(num) {
-      console.log(num);
       this.SET_BRUSH_THIN(num);
     }
   }

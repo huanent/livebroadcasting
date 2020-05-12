@@ -2,20 +2,16 @@
   <widget-window @close="visible = false" v-if="visible">
     <div class="timer">
       <div class="time">
-        <controller v-model="minuteTens" :max="5" :controllable="!started" />
-        <controller v-model="minuteSingle" :max="9" :controllable="!started" />
-        <span>:</span>
+        <controller v-model="minuteTens" :max="2" :controllable="!started" />
+        <controller v-model="minuteSingle" :max="4" :controllable="!started" />
+        <span class="marks">:</span>
+        <div class="line"></div>
         <controller v-model="secondTens" :max="5" :controllable="!started" />
         <controller v-model="secondSingle" :max="9" :controllable="!started" />
       </div>
-      <el-button
-        size="mini"
-        type="primary"
-        @click="started = true"
-        v-if="!started"
-      >
-        开始
-      </el-button>
+      <div class="beginBtn">
+        <el-button size="mini" type="primary" @click="started = true" v-if="!started">开始</el-button>
+      </div>
     </div>
   </widget-window>
 </template>
@@ -26,8 +22,8 @@ export default {
   data() {
     return {
       visible: true,
-      minuteTens: 1,
-      minuteSingle: 5,
+      minuteTens: 2,
+      minuteSingle: 4,
       secondTens: 0,
       secondSingle: 0,
       started: false,
@@ -80,17 +76,41 @@ export default {
 <style lang="scss" scoped>
 .timer {
   width: 200px;
-  .el-button {
-    width: 100%;
-    border-radius: 0;
+  background: #54555d;
+  .beginBtn {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5px;
+    // padding-left: 18px;
+    // width: 164px;
+    // border-radius: 3px;
+    .el-button {
+      background: #018a8c;
+      width: 160px;
+      padding-bottom: 5px;
+      font-size: 14px;
+    }
   }
   .time {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 20px;
-    span {
+    padding: 14px 20px;
+    span.marks{
       font-size: 30px;
+      color: #eee;
+      user-select: none;
+    }
+    .line{
+      width:160px;
+      height: 1px;
+      opacity: .2;
+      background:#54555d;
+      position: absolute;
+      top:0px;
+      bottom:0px;
+      margin: auto;
     }
   }
 }
