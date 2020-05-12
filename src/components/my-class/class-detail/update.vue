@@ -6,7 +6,7 @@
           action
           :class="[
             {
-              'class-upload': avatar.length > 0 || fileList.length > 0
+              'class-upload': fileList.length > 0 || avatar.length > 0
             }
           ]"
           list-type="picture-card"
@@ -16,7 +16,6 @@
           accept="image/*"
           :auto-upload="false"
           :file-list="fileList"
-          :data="{ username: classForm.username }"
         >
           <icon name="add" :size="20" color="#0a818c"></icon>
         </el-upload>
@@ -85,7 +84,7 @@ export default {
     return {
       classForm: {
         _id: "",
-        avatar: "",
+        // avatar: "",
         title: "",
         description: "",
         startTime: "",
@@ -95,11 +94,11 @@ export default {
       avatar: "",
       fileList: [
         {
-          name: "",
-          url: ""
+          url: "",
+          name: ""
         }
       ],
-      fullClassImg: "",
+      // fullClassImg: "",
       options: [],
       selectedStudents: [],
       studentsList: [],
@@ -119,7 +118,7 @@ export default {
     this.getStudents();
     (this.classForm = {
       _id: "",
-      avatar: "",
+      // avatar: "",
       title: "",
       description: "",
       startTime: "",
@@ -145,10 +144,13 @@ export default {
               this.selectedStudents = [];
             }
             this.classForm = res.data.data[0];
-            this.fileList[0].name = res.data.data[0].classImg;
+            // this.classForm.name = res.data.data[0].classImg;
             this.fileList[0].url =
-              "http://livebroadcasting.jinrui.kooboo.site/__kb/kfile/" +
-              res.data.data[0].classImg;
+              "http://livebroadcasting.jinrui.kooboo.site" +
+              res.data.data[0].url;
+            this.fileList[0].name = res.data.data[0].pathname;
+            console.log(this.classForm);
+            console.log(this.fileList);
           } else {
             this.$message.error(res.data.message);
           }
@@ -175,18 +177,26 @@ export default {
     },
     updateClass() {
       const userId = localStorage.getItem("lb_userId");
-      this.classForm.avatar = `userId\\${userId}\\date\\${parseInt(
-        new Date().getTime()
-      )}\\${this.fullClassImg}`;
+      // this.classForm.avatar = `userId\\${userId}\\date\\${parseInt(
+      //   new Date().getTime()
+      // )}\\${this.fullClassImg}`;
       var formData = new FormData();
-      formData.append("avatar", this.classForm.avatar);
+      // formData.append("avatar", this.classForm.avatar);
       formData.append("_id", this.classForm._id);
+      formData.append("userId", this.classForm.userId);
       formData.append("title", this.classForm.title);
       formData.append("description", this.classForm.description);
       formData.append("startTime", this.classForm.startTime);
       formData.append("endTime", this.classForm.endTime);
+      // if (this.classForm.file) {
+      //   formData.append("file", this.classForm.file.raw);
+      // }
       if (this.classForm.file) {
-        formData.append("file", this.classForm.file.raw);
+        formData.append(
+          "file",
+          this.classForm.file.raw,
+          this.classForm.file.name
+        );
       }
       if (this.selectedStudents) {
         formData.append("students", this.selectedStudents);
@@ -230,7 +240,6 @@ export default {
         reader.addEventListener(
           "load",
           () => {
-            this.fullClassImg = file.name;
             this.avatar = reader.result;
             this.classForm.file = file;
           },

@@ -12,7 +12,7 @@
             action
             :class="[
               {
-                'class-upload': avatar.length > 0
+                'class-upload': classForm.file
               }
             ]"
             list-type="picture-card"
@@ -25,9 +25,9 @@
           >
             <icon name="add" :size="20" color="#0a818c"></icon>
           </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
+          <!-- <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="" />
-          </el-dialog>
+          </el-dialog> -->
         </el-form-item>
         <el-form-item prop="title" :label="$t('classform.title')">
           <el-input v-model="classForm.title"></el-input>
@@ -109,10 +109,10 @@ export default {
     };
 
     return {
-      dialogImageUrl: "",
-      dialogVisible: false,
-      avatar: "",
-      fullClassImg: "",
+      // dialogImageUrl: "",
+      // dialogVisible: false,
+      // avatar: "",
+      // fullClassImg: "",
       classForm: {
         avatar: "",
         title: "",
@@ -157,9 +157,9 @@ export default {
   methods: {
     onSubmit(formName) {
       const userId = localStorage.getItem("lb_userId");
-      this.classForm.avatar = `userId\\${userId}\\date\\${parseInt(
-        new Date().getTime()
-      )}\\${this.fullClassImg}`;
+      // this.classForm.avatar = `userId\\${userId}\\date\\${parseInt(
+      //   new Date().getTime()
+      // )}\\${this.fullClassImg}`;
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.classForm.startTime >= this.classForm.endTime) {
@@ -169,7 +169,7 @@ export default {
           }
           var formData = new FormData();
           formData.append("userId", userId);
-          formData.append("avatar", this.classForm.avatar);
+          // formData.append("avatar", this.classForm.avatar);
           formData.append("title", this.classForm.title);
           formData.append("description", this.classForm.description);
           formData.append("startTime", this.classForm.startTime);
@@ -197,7 +197,7 @@ export default {
       });
     },
     handleRemove(file, fileList) {
-      this.avatar = "";
+      // this.avatar = "";
     },
     resetForm: function(formName) {
       this.$refs[formName].resetFields();
@@ -219,8 +219,8 @@ export default {
         reader.addEventListener(
           "load",
           () => {
-            this.fullClassImg = file.name;
-            this.avatar = reader.result;
+            // this.fullClassImg = file.name;
+            // this.avatar = reader.result;
             this.classForm.file = file;
           },
           false

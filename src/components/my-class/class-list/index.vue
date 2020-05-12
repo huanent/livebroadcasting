@@ -1,14 +1,12 @@
 <template>
   <div class="classlist">
     <el-button class="addclass-btn" type="primary"
-      ><router-link to="classform" tag="span">创建课堂</router-link></el-button
+      ><router-link :to="{ name: 'Classform' }" tag="span"
+        >创建课堂</router-link
+      ></el-button
     >
     <el-row type="flex" v-if="classList.length > 0" class="class-container">
-      <div
-        class="class-card"
-        v-for="(item, index) in classList"
-        :key="item.classId"
-      >
+      <div class="class-card" v-for="item in classList" :key="item.classId">
         <el-button
           v-if="activeName == 'teacher'"
           @click="deleteclass(item.classId)"
@@ -21,7 +19,7 @@
           @click="getDetail(item.classId, activeName)"
         >
           <div class="detail-image">
-            <img :src="item.classImg" alt="" />
+            <img :src="item.url" alt="" />
           </div>
           <div class="detail-content">
             <div class="field">
@@ -97,9 +95,8 @@ export default {
           if (res.data.success) {
             this.classList = res.data.data;
             this.classList.forEach(element => {
-              element.classImg =
-                "http://livebroadcasting.jinrui.kooboo.site/__kb/kfile/" +
-                element.classImg;
+              element.url =
+                "http://livebroadcasting.jinrui.kooboo.site/" + element.url;
               element.startTime = formatDate(element.startTime);
               element.endTime = formatDate(element.endTime);
               element.createDate = formatDate(element.createDate);

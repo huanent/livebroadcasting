@@ -3,7 +3,7 @@
     <div class="classlist">
       <el-row type="flex" class="detail-container">
         <div class="detail-image">
-          <img :src="classList.classImg" alt="" />
+          <img :src="classList.url" alt="" />
         </div>
         <div class="detail-content">
           <div class="detail-title">
@@ -59,7 +59,7 @@ export default {
   },
   data() {
     return {
-      classList: "",
+      classList: [],
       studentsList: "",
       classId: "",
       dialogFormVisible: false
@@ -85,9 +85,8 @@ export default {
         .then(res => {
           if (res.data.success) {
             this.classList = res.data.data[0];
-            this.classList.classImg =
-              "http://livebroadcasting.jinrui.kooboo.site/__kb/kfile/" +
-              this.classList.classImg;
+            this.classList.url =
+              "http://livebroadcasting.jinrui.kooboo.site" + this.classList.url;
             this.classList.startTime = formatDate(this.classList.startTime);
             this.classList.endTime = formatDate(this.classList.endTime);
             this.classList.createDate = formatDate(this.classList.createDate);
