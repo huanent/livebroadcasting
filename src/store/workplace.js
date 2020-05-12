@@ -6,6 +6,8 @@ import {
   syncState
 } from "../core/live-broadcast/tim-message/send";
 const state = {
+  roomId: "",
+  teacherId: "",
   activeBoardIndex: 0,
   boardProfiles: [],
   boardTotalPage: 1,
@@ -37,7 +39,12 @@ const getters = {
 };
 
 const mutations = {
-  // 设置画笔颜色
+  SET_ROOM_ID(state, id) {
+    state.roomId = id;
+  },
+  SET_TEACHER_ID(state, id) {
+    state.teacherId = id;
+  },
   BOARD_PROFILES(state, boardProfiles) {
     state.boardProfiles = boardProfiles;
   },

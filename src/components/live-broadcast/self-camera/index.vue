@@ -153,7 +153,6 @@ export default {
     });
   },
   methods: {
-    ...mapMutations("account", ["role"]),
     ...mapMutations("workplace", ["ACTIVE_CAMERA", "ACTIVE_MICROPHONES"]),
     ...mapMutations("localStream", [
       "SET_LOCALSTREAM_AUDIO",

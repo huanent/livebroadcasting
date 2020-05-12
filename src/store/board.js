@@ -22,7 +22,7 @@ const state = {
   canRedo: 0,
   canUndo: 0,
 
-  drawEnable: account.state.role !== ROLE.STUDENT
+  drawEnable: false
 };
 
 const getters = {
@@ -34,6 +34,9 @@ const getters = {
 };
 
 const mutations = {
+  SET_DRAW_ENABLE(status) {
+    state.drawEnable = Boolean(status);
+  },
   // 设置画笔颜色
   SET_BRUSH_COLOR(state, color) {
     state.brushColor = this.color;

@@ -14,11 +14,11 @@ class LiveBroadcastService {
   config;
   mode = "live";
   TokenList = {};
-  roomId = "114467658173138";
+  roomId = store.state.workplace.roomId;
   activeBoard = null;
-  userId = "caffrey";
+  userId = localStorage.getItem("lb_userId");
   tim;
-  teacherStreamUserId = "caffrey";
+  teacherStreamUserId = store.state.workplace.teacherId;
   trtcService;
   timService;
   boardService;
@@ -69,6 +69,7 @@ export let liveBroadcastService = null;
 Emitter.on("LIVE_INIT", async () => {
   liveBroadcastService = new LiveBroadcastService();
   await liveBroadcastService.init();
+  window.test = liveBroadcastService;
   Emitter.emit("LIVE_READY");
 });
 const props = ["boardTotalPage", "boardNumber", "boardScale", "panelType"];

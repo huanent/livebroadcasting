@@ -21,13 +21,13 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "PageController",
   props: {},
   computed: {
-    ...mapGetters("account", ["role"]),
+    ...mapState("account", ["role"]),
     pageTotal() {
       return this.$store.state.workplace.boardTotalPage;
     },
