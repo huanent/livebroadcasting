@@ -194,9 +194,4 @@ export default {
   font-family: "宋体";
   color: #ccc;
 }
-/deep/ .el-upload-list__item.is-success {
-  .el-upload-list__item-status-label {
-    display: none;
-  }
-}
 </style>

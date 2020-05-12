@@ -62,6 +62,7 @@ body {
     padding: 8px;
     background-color: #fff;
     border: 1px solid #ddd;
+
     li {
       text-align: left;
       font-size: 12px;
@@ -69,9 +70,11 @@ body {
       color: rgb(121, 119, 119);
       padding: 8px;
       box-sizing: border-box;
+
       &.u-menu-bottom {
         border-top: 1px solid #eaeaea;
       }
+
       &:hover {
         background-color: rgba(192, 191, 191, 0.2);
         color: #111;
@@ -84,29 +87,41 @@ body {
   /deep/ .el-upload-list__item {
     display: none;
   }
+
   /deep/ .class-upload {
     height: 60px;
+
     /deep/ .el-upload-list__item {
       display: inline-block !important;
     }
+
     /deep/ .el-upload {
       display: none;
     }
   }
+
   /deep/ .el-upload {
     width: 60px;
     height: 60px;
     margin: 0;
     padding: 0;
+
     svg {
       position: relative;
       left: 0px;
       top: -45px;
     }
   }
+
   /deep/ .el-upload-list--picture-card .el-upload-list__item {
     width: 60px;
     height: 60px;
+  }
+
+  .el-upload-list__item.is-success {
+    .el-upload-list__item-status-label {
+      display: none;
+    }
   }
 }
 
