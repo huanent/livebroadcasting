@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   name: "Login",
   data() {
@@ -64,7 +64,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("device", ["isMobile"]),
+    ...mapState("device", ["isMobile"]),
     onTop() {
       return this.isMobile ? "top" : "left";
     }

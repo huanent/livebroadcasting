@@ -54,7 +54,7 @@ import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { liveBroadcastService } from "../../main";
 import { Emitter } from "../../core/emit";
-import { mapGetters, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { ROLE } from "../../store/account";
 import Widgets from "../../components/live-broadcast/widgets";
 export default {
@@ -76,11 +76,23 @@ export default {
     Widgets
   },
   computed: {
-    ...mapGetters("account", ["role"]),
-    ...mapGetters("workplace", ["cameraPanelVisibity"])
+    ...mapState("account", ["role"]),
+    ...mapState("board", ["drawEnable"]),
+    ...mapState("workplace", ["cameraPanelVisibity"])
   },
   created() {
-    const roomId = this.$route.params.id;
+    const query = this.$route.query;
+    const teacher = query.createUser;
+    const roomId = query.id;
+    this.SET_ROOM_ID(roomId);
+    this.SET_TEACHER_ID(teacher);
+    const role =
+      teacher === localStorage.getItem("lb_userId")
+        ? ROLE.TEACHER
+        : ROLE.STUDENT;
+    this.SET_ROLE(role);
+    const isTeacher = role !== this.ROLE.STUDENT;
+    this.SET_DRAW_ENABLE(isTeacher);
   },
   mounted() {
     Emitter.emit("LIVE_INIT");
@@ -140,7 +152,13 @@ export default {
     });
   },
   methods: {
-    ...mapMutations("workplace", ["SET_CAMERA_PANEL__VISIBILITY"]),
+    ...mapMutations("workplace", [
+      "SET_CAMERA_PANEL__VISIBILITY",
+      "SET_ROOM_ID",
+      "SET_TEACHER_ID"
+    ]),
+    ...mapMutations("account", ["SET_ROLE"]),
+    ...mapMutations("board", ["SET_DRAW_ENABLE"]),
     toggleCameraPanel() {
       if (!this.cameraPanelVisibity) {
         let el = this.$refs.left;

@@ -43,7 +43,10 @@
                 >查看详情</router-link
               >
               <router-link
-                :to="{ name: 'Liveroom', params: { id: item.classId } }"
+                :to="{
+                  name: 'Liveroom',
+                  query: { createUser: item.createUser, id: item.classId }
+                }"
                 >进入课堂</router-link
               >
             </div>
