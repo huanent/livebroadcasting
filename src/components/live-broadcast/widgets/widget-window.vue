@@ -61,7 +61,7 @@ export default {
       bottom: 0;
       right: 0px;
       font-size: 20px;
-      color: #fff;
+      color: #000;
       transform: rotate(45deg);
       cursor: pointer;
     }
@@ -71,5 +71,6 @@ export default {
   left: 0;
   box-shadow: 0px 0px 5px #888888;
   background-color: #fff;
+  z-index: 100000;
 }
 </style>
