@@ -24,6 +24,7 @@
           </div>
         </div>
         <el-button
+          v-if="isCreater"
           class="edit-btn"
           type="primary"
           @click="updateDialog(parseInt($route.query.classId))"
@@ -34,7 +35,7 @@
         <label>{{ $t("classform.description") }}：</label
         ><span>{{ classList.description }}</span>
       </div>
-      <div class="class-desc" v-if="$route.params.activeName == 'teacher'">
+      <div class="class-desc" v-if="isCreater">
         <label>{{ $t("classform.students") }}：</label
         ><span>{{ studentsList }}</span>
       </div>
@@ -61,6 +62,7 @@ export default {
       classList: [],
       studentsList: "",
       classId: "",
+      isCreater: false,
       dialogFormVisible: false
     };
   },
@@ -96,6 +98,11 @@ export default {
               ).toString();
             } else {
               this.studentsList = this.$t("classform.noStudents");
+            }
+            if (
+              localStorage.getItem("lb_userId") == this.classList.createUser
+            ) {
+              this.isCreater = true;
             }
           } else {
             this.$message.error(res.data.message);

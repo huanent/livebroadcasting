@@ -1,7 +1,7 @@
 import { Emitter } from "../../../emit";
 import store from "@/store";
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-import { responseState } from "../send";
+import { pushState, responseState } from "../send";
 import { ROLE } from "../../../../store/account";
 export const listenHandler = async function() {
   Emitter.on("TXWhiteBoardExt", (data, item, e, type) => {
@@ -73,4 +73,45 @@ export const listenHandler = async function() {
   Emitter.on("SYS_REQUEST_BOARD_STATE", (info, data, e, type) => {
     store.commit("workplace/UPDATE_BOARD_STATE", data);
   });
+  Emitter.on("SYS_WS_STATE_CHANGE", (info, data, e, type) => {
+    store.commit("workplace/MERGE_STATE", data);
+  });
 };
+Emitter.on("LIVE_TIM_READY", () => {
+  stateHistory = getState(store.state.workplace);
+});
+
+const getDiff = function(n, o) {
+  let ob;
+  ob = {};
+  for (let i in n) {
+    if (n[i] !== o[i]) {
+      ob[i] = n[i];
+    }
+  }
+  return ob;
+};
+
+export let getState = function(state) {
+  const props = ["boardTotalPage", "boardNumber", "boardScale", "panelType"];
+  let ob = {};
+  props.forEach(key => {
+    ob[key] = state[key];
+  });
+  return ob;
+};
+let stateHistory = {};
+
+Emitter.on("workplace-state-change", () => {
+  let n = getState(store.state.workplace);
+  let o = stateHistory;
+  let diff = getDiff(n, o);
+  console.log(diff);
+  stateHistory = n;
+  let keys = Object.keys(diff);
+  if (keys.length > 0) {
+    if (liveBroadcastService.timService.tim) {
+      pushState(diff).then(() => {});
+    }
+  }
+});

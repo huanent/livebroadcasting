@@ -140,9 +140,9 @@ const mutations = {
     state.cameraPanelVisibity = status;
   },
   MERGE_STATE(state, data) {
-    data.forEach(key => {
-      state[key] = data[key];
-    });
+    for (let i in data) {
+      state[i] = data[i];
+    }
   }
 };
 export default {
