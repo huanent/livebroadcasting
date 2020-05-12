@@ -79,14 +79,21 @@ export default {
   data() {
     return {
       classList: [],
-      pageTotal: 1
+      pageTotal: 1,
+      createCacheArr: [],
+      mylessonCacheArr: []
     };
   },
   props: {
-    activeName: String
+    activeName: String,
+    label: String
   },
   created() {
-    this.dataInit(this.activeName);
+    if (this.createCacheArr.length == 0 && this.mylessonCacheArr.length == 0) {
+      this.dataInit(this.activeName);
+    } else {
+      console.log(1);
+    }
   },
   watch: {
     activeName(newActive) {
@@ -120,10 +127,11 @@ export default {
         })
         .catch(() => {});
     },
-    dataInit(activeName, pageNum) {
+    getData(activeName, pageNum, cacheArr) {
       classListInit(activeName, pageNum)
         .then(res => {
           if (res.data.success) {
+            cacheArr.push(res.data.data);
             this.classList = res.data.data;
             this.classList.forEach(element => {
               element.url =
@@ -140,6 +148,18 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    dataInit(activeName, pageNum) {
+      if (this.createCacheArr.length == 0 && this.label == "我的开课") {
+        this.getData(activeName, pageNum, this.createCacheArr);
+      } else if (
+        this.mylessonCacheArr.length == 0 &&
+        this.label == "我的课堂"
+      ) {
+        this.getData(activeName, pageNum, this.mylessonCacheArr);
+      } else {
+        return false;
+      }
     }
   }
 };
