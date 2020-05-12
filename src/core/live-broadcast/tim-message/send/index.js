@@ -69,3 +69,10 @@ export const syncState = async () => {
   await requestTeacherPanelType();
   await requestBoardState();
 };
+export const pushState = async data => {
+  await liveBroadcastService.timService.sendSystemMsg(
+    "WS_STATE_CHANGE",
+    "ROLE_NOT_TEACHER",
+    data
+  );
+};
