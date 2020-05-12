@@ -20,7 +20,8 @@ const routes = [
         component: () => import("@c/my-class")
       },
       {
-        path: "detail",
+        // path: "/detail/:classId",
+        path: "/detail",
         name: "Classdetail",
         component: () => import("@c/my-class/class-detail")
       },

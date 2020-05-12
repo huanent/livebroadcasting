@@ -2,11 +2,20 @@
   <widget-window @close="visible = false" v-if="visible">
     <div class="timer">
       <div class="time">
-        <controller value="15" />
+        <controller v-model="minuteTens" :max="5" :controllable="!started" />
+        <controller v-model="minuteSingle" :max="9" :controllable="!started" />
         <span>:</span>
-        <controller value="00" />
+        <controller v-model="secondTens" :max="5" :controllable="!started" />
+        <controller v-model="secondSingle" :max="9" :controllable="!started" />
       </div>
-      <el-button size="mini" type="primary">开始</el-button>
+      <el-button
+        size="mini"
+        type="primary"
+        @click="started = true"
+        v-if="!started"
+      >
+        开始
+      </el-button>
     </div>
   </widget-window>
 </template>
@@ -17,13 +26,54 @@ export default {
   data() {
     return {
       visible: true,
-      hours: 15,
-      seconds: 0
+      minuteTens: 1,
+      minuteSingle: 5,
+      secondTens: 0,
+      secondSingle: 0,
+      started: false,
+      clear: null
     };
   },
   components: {
     WidgetWindow,
     Controller
+  },
+  computed: {
+    seconds() {
+      return (
+        this.secondSingle +
+        this.secondTens * 10 +
+        this.minuteSingle * 60 +
+        this.minuteTens * 600
+      );
+    }
+  },
+  watch: {
+    visible(value) {
+      if (!value) {
+        this.minuteTens = 1;
+        this.minuteSingle = 5;
+        this.secondTens = 0;
+        this.secondSingle = 0;
+        this.started = false;
+      }
+    },
+    started(value) {
+      if (value) {
+        this.clear = setInterval(() => {
+          if (this.seconds < 1) return (this.started = false);
+          let current = this.seconds - 1;
+          this.minuteTens = parseInt(current / 600);
+          current = current % 600;
+          this.minuteSingle = parseInt(current / 60);
+          current = current % 60;
+          this.secondTens = parseInt(current / 10);
+          this.secondSingle = parseInt(current % 10);
+        }, 1000);
+      } else if (this.clear) {
+        clearInterval(this.clear);
+      }
+    }
   }
 };
 </script>

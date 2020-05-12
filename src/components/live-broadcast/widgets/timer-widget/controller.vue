@@ -1,21 +1,40 @@
 <template>
-  <div class="item">
-    <div>+</div>
+  <div class="controller">
+    <a @click="up">
+      <icon name="angle-up" class="btn" :size="20" v-if="controllable"></icon>
+    </a>
     <div>{{ value }}</div>
-    <div>-</div>
+    <a @click="down">
+      <icon name="angle-down" class="btn" :size="20" v-if="controllable"></icon>
+    </a>
   </div>
 </template>
 <script>
 export default {
-  props: ["value"]
+  props: ["value", "max", "controllable"],
+  methods: {
+    down() {
+      if (this.value > 0) this.$emit("input", this.value - 1);
+    },
+    up() {
+      if (this.value < this.max) this.$emit("input", this.value + 1);
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
-.item {
+.controller {
   div {
-    width: 50px;
+    width: 30px;
     font-size: 30px;
     text-align: center;
+  }
+  a {
+    margin: 0 auto;
+    text-align: center;
+  }
+  .btn {
+    fill: #528a99;
   }
 }
 </style>

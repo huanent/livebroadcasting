@@ -16,7 +16,20 @@
           class="delete-btn"
           ><i class="el-icon-close"></i
         ></el-button>
+<<<<<<< HEAD
+        <el-button
+          @click="enterClass(item.classId, item.createUser)"
+          type="text"
+          class="enter-class-btn"
+          >进入课堂</el-button
+        >
+        <div
+          class="card-container"
+          @click="getDetail(item.classId, activeName)"
+        >
+=======
         <div class="card-container">
+>>>>>>> fe244304de019c129a0b96dd68d25e1a5a63752b
           <div class="detail-image">
             <img :src="item.url" alt="" />
           </div>
@@ -74,6 +87,7 @@
 
 <script>
 import { removeClassImg, classListInit, formatDate } from "@api/class";
+import { mapMutations } from "vuex";
 export default {
   name: "ClassList",
   data() {
@@ -94,6 +108,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations("account", ["SET_TX_CLASSID"]),
     handleCurrentChange(pageNum) {
       this.dataInit(this.activeName, pageNum);
     },
@@ -139,6 +154,20 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    getDetail(classId) {
+      this.$router.push({
+        path: `/detail`,
+        query: {
+          classId: classId
+        }
+      });
+    },
+    enterClass(classId, creater) {
+      this.SET_TX_CLASSID(classId);
+      this.$router.push({
+        path: `/liveroom/${classId}`
+      });
     }
   }
 };
@@ -165,10 +194,15 @@ export default {
     flex-wrap: wrap;
     width: 100%;
     .delete-btn {
-      width: 1rem;
-      height: 1rem;
+      // width: 1rem;
+      // height: 1rem;
       position: absolute;
       margin-left: 30%;
+      z-index: 99;
+    }
+    .enter-class-btn {
+      position: absolute;
+      margin-left: 24.5%;
       z-index: 99;
     }
     .class-card {
