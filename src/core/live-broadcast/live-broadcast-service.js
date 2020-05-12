@@ -14,11 +14,11 @@ class LiveBroadcastService {
   config;
   mode = "live";
   TokenList = {};
-  roomId = "113737064261488";
+  roomId = "114467658173138";
   activeBoard = null;
-  userId = "jinrui123adsasd";
+  userId = "caffrey";
   tim;
-  teacherStreamUserId = "jinrui";
+  teacherStreamUserId = "caffrey";
   trtcService;
   timService;
   boardService;
@@ -102,15 +102,18 @@ let observerJson = {};
 const watchState = function() {
   props.forEach(key => {
     if (store.state.workplace[key]) {
-      watchInstance[key] = app.$watch("$store.state.workplace." + key, {
-        deep: true,
-        handler: async function(a, b) {
+      watchInstance[key] = app.$watch(
+        "$store.state.workplace." + key,
+        async (a, b) => {
           let oldVal = observerJson;
           observerJson = getDataSate();
           let diff = getDiff(observerJson.workplace, oldVal.workplace);
           await pushState(diff);
+        },
+        {
+          deep: true
         }
-      });
+      );
     }
   });
 };

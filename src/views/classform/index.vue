@@ -61,7 +61,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit('classForm')">
-            {{ $t("classformm.submit") }}
+            {{ $t("classform.submit") }}
           </el-button>
         </el-form-item>
       </el-form>

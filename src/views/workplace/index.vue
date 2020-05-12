@@ -79,6 +79,9 @@ export default {
     ...mapGetters("account", ["role"]),
     ...mapGetters("workplace", ["cameraPanelVisibity"])
   },
+  created() {
+    const roomId = this.$route.params.id;
+  },
   mounted() {
     Emitter.emit("LIVE_INIT");
     Emitter.on("LIVE_READY", () => {
