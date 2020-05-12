@@ -26,8 +26,7 @@
         <el-button
           class="edit-btn"
           type="primary"
-          @click="updateDialog($route.params.classId)"
-          v-if="$route.params.activeName == 'teacher'"
+          @click="updateDialog(parseInt($route.query.classId))"
           >{{ $t("classform.edit") }}</el-button
         >
       </el-row>
@@ -67,6 +66,8 @@ export default {
   },
   created() {
     this.dataInit();
+    // console.log(parseInt(this.$route.params.classId));
+    console.log(this.$route.query.classId);
   },
   methods: {
     updateDialog(classId) {
@@ -80,7 +81,7 @@ export default {
       }
     },
     dataInit() {
-      detailInit(this.$route.params.classId)
+      detailInit(this.$route.query.classId)
         .then(res => {
           if (res.data.success) {
             this.classList = res.data.data[0];

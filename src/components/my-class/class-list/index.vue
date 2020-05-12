@@ -16,6 +16,12 @@
           class="delete-btn"
           ><i class="el-icon-close"></i
         ></el-button>
+        <el-button
+          @click="enterClass(item.classId, item.createUser)"
+          type="text"
+          class="enter-class-btn"
+          >进入课堂</el-button
+        >
         <div
           class="card-container"
           @click="getDetail(item.classId, activeName)"
@@ -61,6 +67,7 @@
 
 <script>
 import { removeClassImg, classListInit, formatDate } from "@api/class";
+import { mapMutations } from "vuex";
 export default {
   name: "ClassList",
   data() {
@@ -81,6 +88,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations("account", ["SET_TX_CLASSID"]),
     handleCurrentChange(pageNum) {
       this.dataInit(this.activeName, pageNum);
     },
@@ -129,11 +137,16 @@ export default {
     },
     getDetail(classId) {
       this.$router.push({
-        name: "Classdetail",
-        params: {
-          classId: classId,
-          activeName: this.activeName
+        path: `/detail`,
+        query: {
+          classId: classId
         }
+      });
+    },
+    enterClass(classId, creater) {
+      this.SET_TX_CLASSID(classId);
+      this.$router.push({
+        path: `/workplace/${classId}`
       });
     }
   }
@@ -161,10 +174,15 @@ export default {
     flex-wrap: wrap;
     width: 100%;
     .delete-btn {
-      width: 1rem;
-      height: 1rem;
+      // width: 1rem;
+      // height: 1rem;
       position: absolute;
       margin-left: 30%;
+      z-index: 99;
+    }
+    .enter-class-btn {
+      position: absolute;
+      margin-left: 24.5%;
       z-index: 99;
     }
     .class-card {
