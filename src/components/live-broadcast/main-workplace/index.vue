@@ -48,6 +48,7 @@ import { mapState, mapMutations } from "vuex";
 import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";
 import { ROLE } from "../../../store/account";
+import { pullState } from "../../../core/live-broadcast/tim-message/send";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, WorkplaceFooter, StreamSourceDialog },
@@ -63,7 +64,10 @@ export default {
     this.showStreamSelectdialog = this.streamSelectVisibility;
     this.SET_WORKPLACE_VISIBILITY(true);
     if (this.role === ROLE.STUDENT) {
-      //pull state
+      //pull state after init
+      setTimeout(async () => {
+        await pullState();
+      }, 2000);
     } else {
       this.SET_WORKPLACE_VISIBILITY(true);
     }
