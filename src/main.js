@@ -14,7 +14,7 @@ Vue.use(element);
 
 Vue.config.productionTip = false;
 
-new Vue({
+export let app = new Vue({
   router,
   store,
   i18n,
