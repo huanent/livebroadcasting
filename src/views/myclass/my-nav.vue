@@ -5,7 +5,7 @@
       <div class="serach-wrap">
         <el-input v-model="value" suffix-icon="el-icon-search"></el-input>
       </div>
-      <my-profile />
+      <my-profile :avatar="avatar" :nickname="nickname" />
     </div>
   </div>
 </template>
@@ -14,6 +14,10 @@
 import MyProfile from "./my-profile";
 export default {
   name: "MyNav",
+  props: {
+    avatar: String,
+    nickname: String
+  },
   data() {
     return {
       value: ""

@@ -73,11 +73,7 @@ export default {
     ...mapMutations("account", [
       "SET_LB_TOKEN",
       "SET_LB_EXPIRES",
-      "SET_NICKNAME",
-      "SET_AVATAR_URL",
-      "SET_TX_USERID",
-      "SET_EMAIL",
-      "SET_TEL"
+      "SET_TX_USERID"
     ]),
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
@@ -94,10 +90,6 @@ export default {
                 const data = res.data.model;
                 this.SET_LB_TOKEN(data.token);
                 this.SET_LB_EXPIRES(data.expires);
-                this.SET_NICKNAME(data.nickname);
-                this.SET_AVATAR_URL(data.avatar);
-                this.SET_EMAIL(data.email);
-                this.SET_TEL(data.tel);
                 this.SET_TX_USERID(data.username);
                 this.$router.push({ name: "Classlist" });
               } else {
