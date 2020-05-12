@@ -48,12 +48,6 @@ const mutations = {
   },
   async BOARD_TOTAL_PAGE(state, boardTotalPage) {
     state.boardTotalPage = boardTotalPage;
-    mutations.SEND_BOARD_STATE();
-  },
-  SEND_BOARD_STATE(state) {
-    if (account.role === ROLE.TEACHER) {
-      responseState("ROLE_NOT_TEACHER").then(() => {});
-    }
   },
   UPDATE_BOARD_STATE(state, data) {
     state.boardTotalPage = data.boardTotalPage;
@@ -63,17 +57,14 @@ const mutations = {
   GET_BOARD_STATE_FROM_BOARD(state) {},
   BOARD_NUMBER(state, boardNumber) {
     state.boardNumber = boardNumber;
-    mutations.SEND_BOARD_STATE();
   },
   BOARD_NUMBER_INCREASE(state, boardNumber) {
     state.boardNumber++;
     liveBroadcastService.boardService.getActiveBoard().nextBoard();
-    mutations.SEND_BOARD_STATE();
   },
   BOARD_NUMBER_DECREASE(state, boardNumber) {
     state.boardNumber--;
     liveBroadcastService.boardService.getActiveBoard().prevBoard();
-    mutations.SEND_BOARD_STATE();
   },
   BOARD_SCALE(state, boardScale) {
     state.boardScale = boardScale;
@@ -81,7 +72,6 @@ const mutations = {
       .getActiveBoard()
       .setBoardScale(state.boardScale);
     liveBroadcastService.boardService.getActiveBoard().reset();
-    mutations.SEND_BOARD_STATE();
   },
   BOARD_SCALE_INCREASE(state, stepScale) {
     state.boardScale = state.boardScale + stepScale;
@@ -89,7 +79,6 @@ const mutations = {
       .getActiveBoard()
       .setBoardScale(state.boardScale);
     liveBroadcastService.boardService.getActiveBoard().resize();
-    mutations.SEND_BOARD_STATE();
   },
   BOARD_SCALE_DECREASE(state, stepScale) {
     state.boardScale = state.boardScale - stepScale;
@@ -97,7 +86,6 @@ const mutations = {
       .getActiveBoard()
       .setBoardScale(state.boardScale);
     liveBroadcastService.boardService.getActiveBoard().resize();
-    mutations.SEND_BOARD_STATE();
   },
   CAMERA_DEVICE_LIST(state, list) {
     state.cameraDeviceList = list;
@@ -124,14 +112,6 @@ const mutations = {
   },
   SET_PANEL_TYPE(state, panelType) {
     state.panelType = panelType;
-  },
-  async SEND_PANEL_TYPE(state) {
-    if (account.state.role !== ROLE.STUDENT) {
-      await switchWorkplaceType(state.panelType);
-    }
-  },
-  async SYNC_STATE(state) {
-    await syncState();
   },
   SET_WORKPLACE_VISIBILITY(state, status) {
     state.workplaceVisibity = status;
