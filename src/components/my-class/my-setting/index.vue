@@ -2,12 +2,7 @@
   <div class="setting-wrap">
     <el-tabs type="border-card" class="setting-tabs">
       <el-tab-pane :label="$t('setting.personInfoEdit')">
-        <person-info-edit
-          :avatar="avatar"
-          :nickname="nickname"
-          :tel="tel"
-          :email="email"
-        />
+        <person-info-edit @update="update" :userInfo="userInfo" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -19,10 +14,12 @@ import PersonInfoEdit from "./person-info-edit";
 export default {
   name: "MySetting",
   props: {
-    avatar: String,
-    nickname: String,
-    tel: String,
-    email: String
+    userInfo: Object
+  },
+  methods: {
+    update(data) {
+      this.$emit("update", data);
+    }
   },
   components: {
     PersonInfoEdit

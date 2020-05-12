@@ -85,7 +85,6 @@ export default {
             .post("/login", data)
             .then(res => {
               if (res.data.success) {
-                console.log(res);
                 this.$message.success(this.$t("login.successTips"));
                 const data = res.data.model;
                 this.SET_LB_TOKEN(data.token);
@@ -112,7 +111,6 @@ export default {
       const data = this.options.find(ele => ele.token === userSig);
       this.setUserSig(data.token);
       this.setAccount(data.user);
-      console.log(this.$store.state.account);
     }
   }
 };

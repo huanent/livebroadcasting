@@ -1,6 +1,6 @@
 <template>
   <div>
-    <my-class-head :avatar="avatar" :nickname="nickname" />
+    <my-class-head :userInfo="userInfo" />
     <my-class-main />
   </div>
 </template>
@@ -12,8 +12,7 @@ import MyClassMain from "./my-class-main";
 export default {
   name: "MyClass",
   props: {
-    avatar: String,
-    nickname: String
+    userInfo: Object
   },
   data() {
     return {};

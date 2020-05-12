@@ -10,37 +10,37 @@
             <span>{{ classList.title }}</span>
           </div>
           <div>
-            <label>开始时间：</label><span>{{ classList.startTime }}</span>
+            <label>{{ $t("classform.startTime") }}：</label
+            ><span>{{ classList.startTime }}</span>
           </div>
           <div>
-            <label>结束时间：</label><span>{{ classList.endTime }}</span>
+            <label>{{ $t("classform.endTime") }}：</label
+            ><span>{{ classList.endTime }}</span>
           </div>
 
           <div>
-            <label>创建日期：</label><span>{{ classList.createDate }}</span>
+            <label>{{ $t("classform.createTime") }}：</label
+            ><span>{{ classList.createDate }}</span>
           </div>
         </div>
         <el-button
           class="edit-btn"
           type="primary"
           @click="updateDialog($route.params.classId)"
-          >编辑</el-button
+          v-if="$route.params.activeName == 'teacher'"
+          >{{ $t("classform.edit") }}</el-button
         >
       </el-row>
       <div class="class-desc">
-        <label>课堂描述：</label><span>{{ classList.description }}</span>
+        <label>{{ $t("classform.description") }}：</label
+        ><span>{{ classList.description }}</span>
       </div>
       <div class="class-desc" v-if="$route.params.activeName == 'teacher'">
-        <label>参与学生：</label><span>{{ studentsList }}</span>
+        <label>{{ $t("classform.students") }}：</label
+        ><span>{{ studentsList }}</span>
       </div>
     </div>
-    <!-- <el-button
-      class="edit-btn"
-      type="primary"
-      @click="updateDialog($route.params.classId)"
-      >编辑</el-button
-    > -->
-    <el-dialog title="修改课堂信息" :visible.sync="dialogFormVisible">
+    <el-dialog :title="$t('classform.edit')" :visible.sync="dialogFormVisible">
       <ClassUpdate
         :classId="classId"
         @setActivityBtn="setActivityBtn"
@@ -67,7 +67,6 @@ export default {
   },
   created() {
     this.dataInit();
-    // console.log(this.$route.params.activeName);
   },
   methods: {
     updateDialog(classId) {
@@ -95,7 +94,7 @@ export default {
                 res.data.data[0].students
               ).toString();
             } else {
-              this.studentsList = "暂无学生";
+              this.studentsList = this.$t("classform.noStudents");
             }
           } else {
             this.$message.error(res.data.message);
