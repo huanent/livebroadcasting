@@ -18,7 +18,7 @@
       <icon name="person_outline" :size="20"></icon>
       <icon @click.native="onWidgetsOpen" name="widgets" :size="20"></icon>
       <icon name="settings" :size="20"></icon>
-      <icon name="exit_to_app" :size="20"></icon>
+      <icon @click.native="liveroomLogout" name="exit_to_app" :size="20"></icon>
       <icon name="info_outline" :size="20"></icon>
     </div>
     <el-dialog
@@ -147,6 +147,9 @@ export default {
     pageChange(index) {
       this.pageNum = index;
       this.getCourseData(this.pageNum, this.pageSize, this.userId);
+    },
+    liveroomLogout() {
+      this.$router.push({ name: "Classlist" });
     },
     handlerTheme() {
       if (this.switchStatus) {
