@@ -43,7 +43,7 @@ export default {
       this.userInfo.avatar =
         "http://livebroadcasting.jinrui.kooboo.site" + data.avatar;
       this.userInfo.email = data.email;
-      this.userInfo.tel = data.email;
+      this.userInfo.tel = data.tel;
       this.userInfo.nickname = data.nickname;
     }
   },

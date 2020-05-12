@@ -6,6 +6,8 @@ import {
   syncState
 } from "../core/live-broadcast/tim-message/send";
 const state = {
+  roomId: "",
+  teacherId: "",
   activeBoardIndex: 0,
   boardProfiles: [],
   boardTotalPage: 1,
@@ -20,24 +22,13 @@ const state = {
   cameraPanelVisibity: true
 };
 
-const getters = {
-  activeBoardIndex: state => state.activeBoardIndex,
-  boardProfiles: state => state.boardProfiles,
-  boardTotalPage: state => state.boardTotalPage,
-  boardNumber: state => state.boardNumber,
-  boardScale: state => state.boardScale,
-  cameraDeviceList: state => state.cameraDeviceList,
-  microphonesDeviceList: state => state.microphonesDeviceList,
-  activeCamera: state => state.activeCamera,
-  activeMicrophones: state => state.activeMicrophones,
-  role: state => state.role,
-  panelType: state => state.panelType,
-  workplaceVisibity: state => state.workplaceVisibity,
-  cameraPanelVisibity: state => state.cameraPanelVisibity
-};
-
 const mutations = {
-  // 设置画笔颜色
+  SET_ROOM_ID(state, id) {
+    state.roomId = id;
+  },
+  SET_TEACHER_ID(state, id) {
+    state.teacherId = id;
+  },
   BOARD_PROFILES(state, boardProfiles) {
     state.boardProfiles = boardProfiles;
   },
@@ -147,11 +138,15 @@ const mutations = {
   },
   SET_CAMERA_PANEL__VISIBILITY(state, status) {
     state.cameraPanelVisibity = status;
+  },
+  MERGE_STATE(state, data) {
+    data.forEach(key => {
+      state[key] = data[key];
+    });
   }
 };
 export default {
   namespaced: true,
   state,
-  getters,
   mutations
 };

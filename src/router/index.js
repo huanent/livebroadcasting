@@ -43,7 +43,7 @@ const routes = [
     component: () => import("@v/signup.vue")
   },
   {
-    path: "/liveroom/:id",
+    path: "/liveroom",
     name: "Liveroom",
     meta: {
       requireAuth: true

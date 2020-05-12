@@ -5,10 +5,6 @@ const state = {
   remoteStreamList: []
 };
 
-const getters = {
-  remoteStreamList: state => state.remoteStreamList
-};
-
 const mutations = {
   SET_REMOTE_STREAM_LIST(state, remoteStreamList) {
     state.remoteStreamList = remoteStreamList;
@@ -67,6 +63,5 @@ const mutations = {
 export default {
   namespaced: true,
   state,
-  getters,
   mutations
 };
