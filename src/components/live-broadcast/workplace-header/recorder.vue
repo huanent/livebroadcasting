@@ -13,7 +13,7 @@
   </a>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 import StreamSourceDialog from "@c/common/stream-source-dialog/index.vue";
 export default {
   data() {
@@ -24,7 +24,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("electron", ["onElectronClient"])
+    ...mapState("electron", ["onElectronClient"])
   },
   methods: {
     async onRecord() {

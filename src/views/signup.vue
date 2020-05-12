@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 export default {
   name: "Signup",
   data() {
@@ -100,7 +100,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("device", ["isMobile"]),
+    ...mapState("device", ["isMobile"]),
     onTop() {
       return this.isMobile ? "top" : "left";
     }

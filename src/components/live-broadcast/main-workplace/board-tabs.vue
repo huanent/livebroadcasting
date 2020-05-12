@@ -53,7 +53,7 @@
 
 <script>
 import { Multiselect } from "vue-multiselect";
-import { mapGetters, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   name: "BoardTabs",
   props: {
@@ -91,7 +91,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("account", ["role"])
+    ...mapState("account", ["role"])
   },
   mounted() {
     this.init();

@@ -3,8 +3,6 @@ import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-servi
 import account from "./account";
 const state = {};
 
-const getters = {};
-
 const mutations = {
   async SHARE_SCREEN_PLAY(state, elemntOrId) {
     await liveBroadcastService.trtcService.shareScreenStreamPlay(
@@ -22,6 +20,5 @@ const mutations = {
 export default {
   namespaced: true,
   state,
-  getters,
   mutations
 };

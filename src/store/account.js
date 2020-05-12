@@ -13,21 +13,13 @@ const state = {
   lb_token: "",
   userId: "",
 
-  role: ROLE.TEACHER, // student teacher
-  nickname: "",
-  avatar: "",
-  email: "",
-  tel: ""
-};
-
-const getters = {
-  tx_userSig: state => state.userSig,
-  role: state => state.role,
-  nickname: state => state.nickname,
-  avatar_url: state => state.avatar
+  role: ROLE.STUDENT // student teacher
 };
 
 const mutations = {
+  SET_ROLE(state, role) {
+    state.role = role;
+  },
   SET_LB_TOKEN(state, lb_token) {
     state.lb_token = lb_token;
     localStorage.setItem("lb_token", lb_token);
@@ -40,10 +32,6 @@ const mutations = {
     state.userId = id;
     localStorage.setItem("lb_userId", id);
   },
-  setTXUserSig(state, tx_userSig) {
-    state.tx_userSig = tx_userSig;
-    localStorage.setItem("tx_userSig", tx_userSig);
-  },
   setTXPrivateMapKey(state, tx_privateMapKey) {
     state.tx_privateMapKey = tx_privateMapKey;
   }
@@ -52,6 +40,5 @@ const mutations = {
 export default {
   namespaced: true,
   state,
-  getters,
   mutations
 };

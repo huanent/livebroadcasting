@@ -22,18 +22,13 @@ const state = {
   canRedo: 0,
   canUndo: 0,
 
-  drawEnable: account.state.role !== ROLE.STUDENT
-};
-
-const getters = {
-  brushColor: state => state.brushColor,
-  brushThin: state => state.brushThin,
-  toolType: state => state.toolType,
-  textColor: state => state.textColor,
-  textSize: state => state.textSize
+  drawEnable: false
 };
 
 const mutations = {
+  SET_DRAW_ENABLE(status) {
+    state.drawEnable = Boolean(status);
+  },
   // 设置画笔颜色
   SET_BRUSH_COLOR(state, color) {
     state.brushColor = this.color;
@@ -108,6 +103,5 @@ const mutations = {
 export default {
   namespaced: true,
   state,
-  getters,
   mutations
 };
