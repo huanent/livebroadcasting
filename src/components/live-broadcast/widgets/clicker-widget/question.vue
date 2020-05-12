@@ -13,7 +13,9 @@
       />
     </div>
     <el-button type="info" round size="mini" @click="add">+</el-button>
-    <el-button class="start-btn" type="primary" size="mini">开始答题</el-button>
+    <el-button class="start-btn" type="primary" size="mini" @click="start">
+      开始答题
+    </el-button>
   </div>
 </template>
 
@@ -24,7 +26,7 @@ export default {
   data() {
     return {
       labels: ["A", "B", "C", "D", "E", "F", "G", "H"],
-      title: "4是质数吗？",
+      title: "正确答案是？",
       items: [
         { detail: "是", isTrue: true },
         { detail: "否", isTrue: false }
@@ -37,6 +39,10 @@ export default {
     },
     remove(item) {
       this.items = this.items.filter(f => f != item);
+    },
+    start() {
+      const keys = this.items.filter(f => f.isTrue);
+      this.$$emit("start");
     }
   },
   components: {

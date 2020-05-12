@@ -1,5 +1,5 @@
 <template>
-  <widget-window class="clicker">
+  <widget-window class="clicker" @close="visible = false" v-if="visible">
     <question />
   </widget-window>
 </template>
@@ -9,7 +9,8 @@ import Question from "./question";
 export default {
   data() {
     return {
-      title: ""
+      title: "",
+      visible: false
     };
   },
   components: {
