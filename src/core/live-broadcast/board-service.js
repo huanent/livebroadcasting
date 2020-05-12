@@ -4,6 +4,7 @@ import store from "@/store";
 let TEduBoard = window["TEduBoard"];
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { Emitter } from "../emit";
+import { requestBoardState } from "./tim-message/send";
 
 export class BoardService {
   activeBoard = null;
@@ -14,7 +15,6 @@ export class BoardService {
     textColor: store.state.board.textColor,
     textSize: store.state.board.textSize,
     toolType: store.state.board.toolType,
-
     drawEnable: store.state.board.drawEnable
   };
   async init(roomId, liveBroadcastService) {
@@ -37,13 +37,13 @@ export class BoardService {
     });
     this.activeBoard = teduBoard;
     teduBoard.on(TEduBoard.EVENT.TEB_INIT, () => {
-      setTimeout(function() {
+      setTimeout(async function() {
         let fileListInfo = teduBoard.getFileInfoList();
         store.commit("workplace/BOARD_PROFILES", fileListInfo);
         let lastindex = fileListInfo.length - 1;
         store.commit("workplace/BOARD_INDEX", lastindex);
+        Emitter.emit("board-init");
       }, 3000);
-      Emitter.emit("board-init");
     });
     Emitter.on("split-change", () => {
       this.getActiveBoard().resize();

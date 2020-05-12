@@ -33,7 +33,7 @@ export const listenHandler = async function() {
           );
           break;
         case "ROLE_TEACHER":
-          if (store.state.account.role === "TEACHER") {
+          if (store.state.account.role === ROLE.TEACHER) {
             Emitter.emit(
               "SYS_" + info.type,
               info,
@@ -64,15 +64,13 @@ export const listenHandler = async function() {
   Emitter.on("SYS_CONTROL_WORKPLACE_TYPE", (info, data, e, type) => {
     store.commit("workplace/SET_PANEL_TYPE", data.panelType);
   });
-  Emitter.on("SYS_REQUEST_STATE", async (info, data, e, type) => {
-    await responseState(info.from);
-  });
   Emitter.on("board-data-change", data => {
     liveBroadcastService.timService.sendBoardMsg(data);
   });
-  Emitter.on("SYS_REQUEST_STATE_BACK", (info, data, e, type) => {
-    store.commit("workplace/BOARD_TOTAL_PAGE", data.boardTotalPage);
-    store.commit("workplace/BOARD_NUMBER", data.boardNumber);
-    store.commit("workplace/BOARD_SCALE", data.boardScale);
+  Emitter.on("SYS_BOARD_STATE_CHANGE", (info, data, e, type) => {
+    store.commit("workplace/UPDATE_BOARD_STATE", data);
+  });
+  Emitter.on("SYS_REQUEST_BOARD_STATE", (info, data, e, type) => {
+    store.commit("workplace/UPDATE_BOARD_STATE", data);
   });
 };

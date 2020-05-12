@@ -2,6 +2,7 @@ import TIM from "tim-js-sdk";
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { Emitter } from "../../../emit";
 import store from "@/store";
+import { ROLE } from "../../../../store/account";
 export const sendExaminationMsg = async msg => {
   let message = liveBroadcastService.timService.createCustomMessage({
     to: this.roomId,
@@ -41,13 +42,12 @@ export const requestTeacherPanelType = async () => {
     {}
   );
 };
-export const requestState = async () => {
+export const requestBoardState = async () => {
   await liveBroadcastService.timService.sendSystemMsg(
-    "REQUEST_STATE",
+    "REQUEST_BOARD_STATE",
     "ROLE_TEACHER",
     {}
   );
-  Emitter.on("SYS_REQUEST_STATE_BACK", (info, data, e, type) => {});
 };
 export const responseState = async id => {
   let userIds = [id];
@@ -67,4 +67,5 @@ export const responseState = async id => {
 };
 export const syncState = async () => {
   await requestTeacherPanelType();
+  await requestBoardState();
 };

@@ -47,6 +47,7 @@ import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-servi
 import { mapGetters, mapMutations } from "vuex";
 import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";
+import { ROLE } from "../../../store/account";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, WorkplaceFooter, StreamSourceDialog },

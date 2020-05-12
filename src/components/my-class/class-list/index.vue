@@ -1,12 +1,14 @@
 <template>
   <div class="classlist">
-    <el-button class="addclass-btn" type="primary"
-      ><router-link :to="{ name: 'Classform' }" tag="span"
-        >创建课堂</router-link
-      ></el-button
+    <el-button
+      v-if="activeName === 'teacher'"
+      class="addclass-btn"
+      type="primary"
+      @click.stop="toClassForm"
+      >{{ $t("classform.createClass") }}</el-button
     >
     <el-row type="flex" v-if="classList.length > 0" class="class-container">
-      <div class="class-card" v-for="item in classList" :key="item.classId">
+      <div class="class-card" v-for="item in classList" :key="item._id">
         <el-button
           v-if="activeName == 'teacher'"
           @click="deleteclass(item.classId)"
@@ -26,21 +28,31 @@
               <span>{{ item.title }}</span>
             </div>
             <div class="field">
-              <label>开始时间：</label><span>{{ item.startTime }}</span>
+              <label>{{ $t("classform.startTime") }}：</label
+              ><span>{{ item.startTime }}</span>
             </div>
             <div class="field">
-              <label>结束时间：</label><span>{{ item.endTime }}</span>
+              <label>{{ $t("classform.endTime") }}：</label
+              ><span>{{ item.endTime }}</span>
             </div>
           </div>
         </div>
       </div>
     </el-row>
-    <div v-else class="nodata">您还没有创建课堂</div>
+    <template v-else>
+      <div v-if="activeName === 'teacher'" class="nodata">
+        {{ $t("classform.noCreateClassTips") }}
+      </div>
+      <div v-if="activeName === 'student'" class="nodata">
+        {{ $t("classform.noJoinClassTips") }}
+      </div>
+    </template>
     <el-pagination
       background
       layout="prev, pager, next"
       :page-size="9"
       :total="pageTotal"
+      hide-on-single-page
       @current-change="handleCurrentChange"
     >
     </el-pagination>
@@ -50,7 +62,7 @@
 <script>
 import { removeClassImg, classListInit, formatDate } from "@api/class";
 export default {
-  name: "Classlist",
+  name: "ClassList",
   data() {
     return {
       classList: [],
@@ -72,22 +84,27 @@ export default {
     handleCurrentChange(pageNum) {
       this.dataInit(this.activeName, pageNum);
     },
+    toClassForm() {
+      this.$router.push({ name: "Classform" });
+    },
     deleteclass(index) {
-      this.$confirm("此操作将删除该课堂, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      this.$confirm(this.$t("classform.deleteTips"), this.$t("text.tips"), {
+        confirmButtonText: this.$t("button.yes"),
+        cancelButtonText: this.$t("button.cancel"),
         type: "warning"
-      }).then(() => {
-        removeClassImg(index).then(res => {
-          if (res.data.success) {
-            this.dataInit(this.activeName);
-            this.$message({
-              type: "success",
-              message: "删除成功!"
-            });
-          }
-        });
-      });
+      })
+        .then(() => {
+          removeClassImg(index).then(res => {
+            if (res.data.success) {
+              this.dataInit(this.activeName);
+              this.$message({
+                type: "success",
+                message: this.$t("text.deleteSuccess")
+              });
+            }
+          });
+        })
+        .catch(() => {});
     },
     dataInit(activeName, pageNum) {
       classListInit(activeName, pageNum)

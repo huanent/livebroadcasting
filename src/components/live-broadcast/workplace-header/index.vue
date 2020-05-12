@@ -114,7 +114,7 @@ import {
   setCourseFile
 } from "../../../core/data/data-service";
 
-import Widgets from "../widgets";
+import Widgets from "./widgets";
 import Recoder from "./recorder.vue";
 
 export default {

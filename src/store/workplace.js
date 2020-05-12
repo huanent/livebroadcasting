@@ -1,5 +1,5 @@
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-import account from "./account";
+import account, { ROLE } from "./account";
 import {
   responseState,
   switchWorkplaceType,
@@ -60,8 +60,16 @@ const mutations = {
     mutations.SEND_BOARD_STATE();
   },
   SEND_BOARD_STATE(state) {
-    responseState("ROLE_NOT_TEACHER").then(() => {});
+    if (account.role === ROLE.TEACHER) {
+      responseState("ROLE_NOT_TEACHER").then(() => {});
+    }
   },
+  UPDATE_BOARD_STATE(state, data) {
+    state.boardTotalPage = data.boardTotalPage;
+    state.boardNumber = data.boardNumber;
+    state.boardScale = data.boardScale;
+  },
+  GET_BOARD_STATE_FROM_BOARD(state) {},
   BOARD_NUMBER(state, boardNumber) {
     state.boardNumber = boardNumber;
     mutations.SEND_BOARD_STATE();
