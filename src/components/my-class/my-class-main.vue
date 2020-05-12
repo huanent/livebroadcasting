@@ -7,10 +7,10 @@
       </el-tabs>
     </div>
     <div class="main-area">
-      <keep-alive>
-        <class-list :activeName="activeName" />
-        <!-- <router-view /> -->
-      </keep-alive>
+      <!-- <keep-alive> -->
+      <class-list :activeName="activeName" />
+      <!-- <router-view /> -->
+      <!-- </keep-alive> -->
     </div>
   </div>
 </template>

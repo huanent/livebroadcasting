@@ -142,9 +142,10 @@ export default {
               // console.log(res);
               const data = res.data.model;
               this.$emit("update", data);
-              this.fileList = [];
+              // this.fileList = [];
               this.$message.success("修改成功");
-              this.$refs["infoForm"].resetFields();
+              // this.$refs["infoForm"].resetFields();
+              this.infoForm = data;
             }
           });
         }
