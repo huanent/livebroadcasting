@@ -52,7 +52,6 @@ import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
-import { liveBroadcastService } from "../../main";
 import { Emitter } from "../../core/emit";
 import { mapState, mapMutations } from "vuex";
 import { ROLE } from "../../store/account";

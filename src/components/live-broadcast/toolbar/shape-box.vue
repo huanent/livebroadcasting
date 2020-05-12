@@ -95,7 +95,6 @@ export default {
       this.SET_BRUSH_COLOR(color);
     },
     onSlider(num) {
-      console.log(num);
       this.SET_BRUSH_THIN(num);
     }
   }

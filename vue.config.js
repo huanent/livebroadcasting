@@ -35,6 +35,9 @@ module.exports = {
       enableInSFC: false
     }
   },
+  configureWebpack: {
+    devtool: "source-map"
+  },
   chainWebpack: config => {
     config.resolve.alias
       .set("@", resolve("./src"))

@@ -118,8 +118,6 @@ export default {
   watch: {
     isInit(value) {
       if (value && this.$refs.video && this.isServiceReady) {
-        console.log("2", this.$refs.video);
-        console.log(this.isServiceReady);
         this.LOCAL_STREAM_PLAY(this.$refs.video);
         this.visibility = true;
       }

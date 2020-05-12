@@ -76,6 +76,9 @@ export class TimService {
         });
     });
   }
+  logout() {
+    this.tim.logout();
+  }
   async sendBoardMsg(data) {
     let message = this.tim.createCustomMessage({
       to: this.roomId,
