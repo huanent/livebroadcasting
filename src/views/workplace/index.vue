@@ -54,7 +54,7 @@ import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { liveBroadcastService } from "../../main";
 import { Emitter } from "../../core/emit";
-import { mapState, mapGetters, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { ROLE } from "../../store/account";
 import Widgets from "../../components/live-broadcast/widgets";
 export default {
@@ -78,7 +78,7 @@ export default {
   computed: {
     ...mapState("account", ["role"]),
     ...mapState("board", ["drawEnable"]),
-    ...mapGetters("workplace", ["cameraPanelVisibity"])
+    ...mapState("workplace", ["cameraPanelVisibity"])
   },
   created() {
     const query = this.$route.query;

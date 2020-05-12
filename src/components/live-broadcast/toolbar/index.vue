@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapMutations } from "vuex";
 import ShapeBox from "./shape-box";
 import TextBox from "./text-box";
 import { Emitter } from "../../../core/emit";

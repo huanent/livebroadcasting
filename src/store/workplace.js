@@ -22,22 +22,6 @@ const state = {
   cameraPanelVisibity: true
 };
 
-const getters = {
-  activeBoardIndex: state => state.activeBoardIndex,
-  boardProfiles: state => state.boardProfiles,
-  boardTotalPage: state => state.boardTotalPage,
-  boardNumber: state => state.boardNumber,
-  boardScale: state => state.boardScale,
-  cameraDeviceList: state => state.cameraDeviceList,
-  microphonesDeviceList: state => state.microphonesDeviceList,
-  activeCamera: state => state.activeCamera,
-  activeMicrophones: state => state.activeMicrophones,
-  role: state => state.role,
-  panelType: state => state.panelType,
-  workplaceVisibity: state => state.workplaceVisibity,
-  cameraPanelVisibity: state => state.cameraPanelVisibity
-};
-
 const mutations = {
   SET_ROOM_ID(state, id) {
     state.roomId = id;
@@ -159,6 +143,5 @@ const mutations = {
 export default {
   namespaced: true,
   state,
-  getters,
   mutations
 };

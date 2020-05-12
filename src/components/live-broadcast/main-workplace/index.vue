@@ -44,7 +44,7 @@ import Toolbar from "../toolbar/index";
 import BoardTabs from "./board-tabs";
 import WorkplaceFooter from "../workplace-footer";
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-import { mapState, mapGetters, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";
 import { ROLE } from "../../../store/account";
@@ -147,10 +147,9 @@ export default {
   },
   computed: {
     ...mapState("account", ["role"]),
-    ...mapGetters("localStream", []),
-    ...mapGetters("workplace", ["panelType", "workplaceVisibity"]),
-    ...mapGetters(["onElectronClient"]),
-    ...mapGetters("electron", ["streamSelectVisibility"]),
+    ...mapState("localStream", []),
+    ...mapState("workplace", ["panelType", "workplaceVisibity"]),
+    ...mapState("electron", ["streamSelectVisibility"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
     },

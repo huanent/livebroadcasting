@@ -74,7 +74,7 @@
 
 <script>
 import VoiceIntensity from "./voice-intensity";
-import { mapGetters, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { Emitter } from "../../../core/emit";
 import { ROLE } from "../../../store/account";
 
@@ -97,13 +97,13 @@ export default {
     this.activeCameraDevice = this.$store.state.workplace.activeCamera;
   },
   computed: {
-    ...mapGetters("localStream", [
+    ...mapState("localStream", [
       "localAudioStatus",
       "localVideoStatus",
       "audioLevel",
       "isInit"
     ]),
-    ...mapGetters("workplace", [
+    ...mapState("workplace", [
       "microphonesDeviceList",
       "cameraDeviceList",
       "panelType"

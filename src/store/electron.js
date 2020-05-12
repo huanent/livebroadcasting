@@ -3,11 +3,6 @@ const state = {
   streamSelectVisibility: false
 };
 
-const getters = {
-  onElectronClient: state => state.onElectronClient,
-  streamSelectVisibility: state => state.streamSelectVisibility
-};
-
 const mutations = {
   RTC_AVAIABLED(state) {
     state.onElectronClient = true;
@@ -20,6 +15,5 @@ const mutations = {
 export default {
   namespaced: true,
   state,
-  getters,
   mutations
 };

@@ -25,14 +25,6 @@ const state = {
   drawEnable: false
 };
 
-const getters = {
-  brushColor: state => state.brushColor,
-  brushThin: state => state.brushThin,
-  toolType: state => state.toolType,
-  textColor: state => state.textColor,
-  textSize: state => state.textSize
-};
-
 const mutations = {
   SET_DRAW_ENABLE(status) {
     state.drawEnable = Boolean(status);
@@ -111,6 +103,5 @@ const mutations = {
 export default {
   namespaced: true,
   state,
-  getters,
   mutations
 };

@@ -8,14 +8,6 @@ const state = {
   isInit: false
 };
 
-const getters = {
-  localAudioStatus: state => state.localAudioStatus,
-  localVideoStatus: state => state.localVideoStatus,
-  audioLevel: state => state.audioLevel,
-  isInit: state => state.isInit,
-  selfCameraStatus: state => state.selfCameraStatus
-};
-
 const mutations = {
   SET_LOCALSTREAM_AUDIO(state, status) {
     if (!liveBroadcastService.trtcService.localStream) return;
@@ -63,6 +55,5 @@ const mutations = {
 export default {
   namespaced: true,
   state,
-  getters,
   mutations
 };

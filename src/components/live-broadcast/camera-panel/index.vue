@@ -43,7 +43,7 @@
 
 <script>
 import CameraItem from "./camera-item";
-import { mapGetters, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { Emitter } from "@/core/emit";
 
 export default {
@@ -70,7 +70,7 @@ export default {
     });
   },
   computed: {
-    ...mapGetters("remoteStream", ["remoteStreamList"]),
+    ...mapState("remoteStream", ["remoteStreamList"]),
     width() {
       let temp = this.remoteStreamList.length / this.slidesPerColumn;
       return Math.ceil(temp) * this.perColumnWidth;
