@@ -1,6 +1,6 @@
 <template>
   <div class="item">
-    <div @click="add">+</div>
+    <div>+</div>
     <div>{{ value }}</div>
     <div>-</div>
   </div>
@@ -11,11 +11,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.item{
-    div{
-        width: 50px;
-        font-size: 30px;
-        text-align: center;
-    }
+.item {
+  div {
+    width: 50px;
+    font-size: 30px;
+    text-align: center;
+  }
 }
 </style>

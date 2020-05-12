@@ -1,6 +1,12 @@
 <template>
-  <div class="window">
-    <header>
+  <div class="window" :style="{ top: top + 'px', left: left + 'px' }">
+    <header
+      draggable="true"
+      @dragstart="dragstart"
+      @drag="drag"
+      ref="header"
+      @dragend="dragend"
+    >
       <div class="close" @click="$emit('close')">+</div>
     </header>
     <div>
@@ -9,7 +15,37 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  props: ["position"],
+  data() {
+    return {
+      top: 0,
+      left: 0,
+      topOffset: 0,
+      leftOffset: 0
+    };
+  },
+  methods: {
+    dragstart(e) {
+      e.dataTransfer.setDragImage(document.createElement("div"), 0, 0);
+      let rect = this.$refs.header.getBoundingClientRect();
+      this.top = rect.top;
+      this.left = rect.left;
+      this.topOffset = e.y - rect.top;
+      this.leftOffset = e.x - rect.left;
+    },
+    drag(e) {
+      let rect = this.$refs.header.getBoundingClientRect();
+      this.top = e.y - this.topOffset;
+      this.left = e.x - this.leftOffset;
+    },
+    dragend(e) {
+      let rect = this.$refs.header.getBoundingClientRect();
+      this.top = e.y - this.topOffset;
+      this.left = e.x - this.leftOffset;
+    }
+  }
+};
 </script>
 <style lang="scss" scoped>
 .window {
