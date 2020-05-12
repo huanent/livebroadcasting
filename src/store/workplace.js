@@ -19,7 +19,12 @@ const state = {
   activeMicrophones: {},
   panelType: "board",
   workplaceVisibity: false,
-  cameraPanelVisibity: true
+  cameraPanelVisibity: true,
+  timerWidget: {
+    visible: false,
+    started: false,
+    seconds: 15 * 60
+  }
 };
 
 const mutations = {
@@ -143,6 +148,15 @@ const mutations = {
     data.forEach(key => {
       state[key] = data[key];
     });
+  },
+  SET_TIMER_VISIBLE(state, visible) {
+    state.timerWidget.visible = visible;
+    state.timerWidget.started = false;
+    state.timerWidget.seconds = 15 * 60;
+  },
+  START_TIMER(state, payload) {
+    state.timerWidget.started = payload.started;
+    state.timerWidget.seconds = payload.seconds;
   }
 };
 export default {

@@ -14,16 +14,10 @@ export default {
   props: ["value", "max", "controllable"],
   methods: {
     down() {
-      if (this.value > 0) this.$emit("input", this.value - 1);
-      else {
-        this.$emit("input", (this.value = this.max));
-      }
+      this.$emit("input", this.value > 0 ? this.value - 1 : this.max);
     },
     up() {
-      if (this.value < this.max) this.$emit("input", this.value + 1);
-      else {
-        this.$emit("input", (this.value = 0));
-      }
+      this.$emit("input", this.value < this.max ? this.value + 1 : 0);
     }
   }
 };
