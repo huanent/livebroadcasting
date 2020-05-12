@@ -1,11 +1,11 @@
 <template>
   <ul class="chatroom-msg-list roll-scroll" ref="messageList">
-    <li class="load-more">
+    <!-- <li class="load-more">
       <div @click="$emit('loadMore')">
         <icon name="clock" color="rgb(182,208,208)" size="14" />
         <span>{{ $t("chatroom.readMore") }}</span>
       </div>
-    </li>
+    </li> -->
     <li
       v-for="(item, index) in msgList"
       :key="index"

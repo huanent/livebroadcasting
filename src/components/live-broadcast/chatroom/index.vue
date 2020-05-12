@@ -20,26 +20,7 @@ export default {
   name: "Chatroom",
   data() {
     return {
-      msgList: [
-        {
-          ID: "112211312",
-          type: "TIM.TYPES.MSG_TEXT",
-          nick: "caffrey",
-          time: "10:02:5211111",
-          flow: "in",
-          conversationID: "",
-          conversationType: "TIM.TYPES.CONV_GROUP",
-          to: "",
-          from: "",
-          status: "success",
-          isRevoked: false,
-          avatar: "http://oa.jinrui.kooboo.site/img/avatar1.jpg",
-          payload: {
-            data: "消息内容"
-          },
-          isTeacher: false
-        }
-      ]
+      msgList: []
     };
   },
   mounted() {
