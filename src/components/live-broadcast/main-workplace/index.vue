@@ -48,7 +48,10 @@ import { mapState, mapMutations } from "vuex";
 import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";
 import { ROLE } from "../../../store/account";
-import { pullState } from "../../../core/live-broadcast/tim-message/send";
+import {
+  pullState,
+  pushState
+} from "../../../core/live-broadcast/tim-message/send";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, WorkplaceFooter, StreamSourceDialog },
@@ -70,6 +73,9 @@ export default {
       }, 2000);
     } else {
       this.SET_WORKPLACE_VISIBILITY(true);
+      setTimeout(async () => {
+        await pushState();
+      }, 2000);
     }
     Emitter.on("LIVE_READY", () => {
       this.isServiceReady = true;

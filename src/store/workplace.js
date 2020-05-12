@@ -76,7 +76,6 @@ const mutations = {
     liveBroadcastService.boardService
       .getActiveBoard()
       .setBoardScale(state.boardScale);
-    liveBroadcastService.boardService.getActiveBoard().reset();
   },
   BOARD_SCALE_INCREASE(state, stepScale) {
     state.boardScale = state.boardScale + stepScale;

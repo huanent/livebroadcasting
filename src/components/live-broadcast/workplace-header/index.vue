@@ -187,7 +187,7 @@ export default {
       let res1 = await transcodeCreate(row.url);
       if (res1.data.success && res1.data.model) {
         let taskId = res1.data.model;
-        this.getDescribe(taskId);
+        this.getDescribe(taskId, row.id);
       }
     },
     onCoursewareClose(done) {

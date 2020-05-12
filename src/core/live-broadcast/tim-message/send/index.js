@@ -21,6 +21,7 @@ export const sendExaminationMsg = async msg => {
 };
 
 export const pushState = async data => {
+  if (!liveBroadcastService.timService.tim) return;
   await liveBroadcastService.timService.sendSystemMsg(
     "WS_PUSH_STATE",
     "ROLE_NOT_TEACHER",
