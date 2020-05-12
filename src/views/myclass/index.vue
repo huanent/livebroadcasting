@@ -1,11 +1,9 @@
 <template>
   <div class="my-class">
-    <my-nav :avatar="avatar" :nickname="nickname" />
+    <my-nav :avatar="userInfo.avatar" :nickname="userInfo.nickname" />
     <router-view
-      :avatar="avatar"
-      :nickname="nickname"
-      :tel="tel"
-      :email="email"
+      @update="handleUserInfoUpdate"
+      :userInfo="userInfo"
     ></router-view>
   </div>
 </template>
@@ -18,10 +16,12 @@ export default {
   name: "MyClass",
   data() {
     return {
-      avatar: "",
-      nickname: "",
-      tel: "",
-      email: ""
+      userInfo: {
+        avatar: "",
+        nickname: "",
+        tel: "",
+        email: ""
+      }
     };
   },
   created() {
@@ -29,14 +29,23 @@ export default {
       if (res.data.success) {
         const data = res.data.model;
         if (data.avatar) {
-          this.avatar =
+          this.userInfo.avatar =
             "http://livebroadcasting.jinrui.kooboo.site" + data.avatar;
         }
-        this.nickname = data.nickname;
-        this.tel = data.tel;
-        this.email = data.email;
+        this.userInfo.nickname = data.nickname;
+        this.userInfo.tel = data.tel;
+        this.userInfo.email = data.email;
       }
     });
+  },
+  methods: {
+    handleUserInfoUpdate(data) {
+      this.userInfo.avatar =
+        "http://livebroadcasting.jinrui.kooboo.site" + data.avatar;
+      this.userInfo.email = data.email;
+      this.userInfo.tel = data.email;
+      this.userInfo.nickname = data.nickname;
+    }
   },
   components: {
     MyNav

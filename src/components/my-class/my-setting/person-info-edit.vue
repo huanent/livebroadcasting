@@ -49,10 +49,7 @@ import { mapMutations } from "vuex";
 export default {
   name: "PersonInfoEdit",
   props: {
-    avatar: String,
-    nickname: String,
-    tel: String,
-    email: String
+    userInfo: Object
   },
   data() {
     var checkNickName = (rule, value, callback) => {
@@ -115,12 +112,12 @@ export default {
     };
   },
   mounted() {
-    this.infoForm.nickname = this.nickname;
-    this.infoForm.tel = this.tel;
-    this.infoForm.email = this.email;
-    if (this.avatar) {
+    this.infoForm.nickname = this.userInfo.nickname;
+    this.infoForm.tel = this.userInfo.tel;
+    this.infoForm.email = this.userInfo.email;
+    if (this.userInfo.avatar) {
       this.fileList.push({
-        url: this.avatar
+        url: this.userInfo.avatar
       });
     }
   },
@@ -144,7 +141,7 @@ export default {
             if (res.data.success) {
               // console.log(res);
               const data = res.data.model;
-
+              this.$emit("update", data);
               this.fileList = [];
               this.$message.success("修改成功");
               this.$refs["infoForm"].resetFields();

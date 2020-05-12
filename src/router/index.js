@@ -43,8 +43,8 @@ const routes = [
     component: () => import("@v/signup.vue")
   },
   {
-    path: "/workplace/:classId",
-    name: "Workplace",
+    path: "/liveroom/:id",
+    name: "Liveroom",
     meta: {
       requireAuth: true
     },

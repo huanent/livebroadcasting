@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="widgets">
     <timer-widget />
   </div>
 </template>

@@ -16,7 +16,7 @@ class LiveBroadcastService {
   TokenList = {};
   roomId = "113737064261488";
   activeBoard = null;
-  userId = "jinrui";
+  userId = "jinrui123adsasd";
   tim;
   teacherStreamUserId = "jinrui";
   trtcService;

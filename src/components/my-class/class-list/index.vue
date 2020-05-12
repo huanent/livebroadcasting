@@ -16,6 +16,7 @@
           class="delete-btn"
           ><i class="el-icon-close"></i
         ></el-button>
+<<<<<<< HEAD
         <el-button
           @click="enterClass(item.classId, item.createUser)"
           type="text"
@@ -26,6 +27,9 @@
           class="card-container"
           @click="getDetail(item.classId, activeName)"
         >
+=======
+        <div class="card-container">
+>>>>>>> fe244304de019c129a0b96dd68d25e1a5a63752b
           <div class="detail-image">
             <img :src="item.url" alt="" />
           </div>
@@ -40,6 +44,22 @@
             <div class="field">
               <label>{{ $t("classform.endTime") }}：</label
               ><span>{{ item.endTime }}</span>
+            </div>
+            <div class="item-btn-group">
+              <router-link
+                :to="{
+                  name: 'Classdetail',
+                  params: {
+                    classId: item.classId,
+                    activeName: activeName
+                  }
+                }"
+                >查看详情</router-link
+              >
+              <router-link
+                :to="{ name: 'Liveroom', params: { id: item.classId } }"
+                >进入课堂</router-link
+              >
             </div>
           </div>
         </div>
@@ -146,7 +166,7 @@ export default {
     enterClass(classId, creater) {
       this.SET_TX_CLASSID(classId);
       this.$router.push({
-        path: `/workplace/${classId}`
+        path: `/liveroom/${classId}`
       });
     }
   }
@@ -196,7 +216,6 @@ export default {
         justify-content: space-between;
       }
       &:hover {
-        cursor: pointer;
         box-shadow: 0px 0px 5px -1px #888888;
       }
       .detail-image {
@@ -213,14 +232,19 @@ export default {
         height: 100%;
         width: 60%;
         .field {
-          margin: 0.5rem;
+          margin: 0.5rem 0.5rem 0;
         }
         .field:nth-child(1) {
-          margin: 0.5rem;
+          margin: 0 0.5rem;
           font-size: 1.5rem;
           overflow: hidden;
           height: 2rem;
           text-overflow: ellipsis;
+        }
+        .item-btn-group {
+          display: flex;
+          justify-content: space-between;
+          margin: 0.5rem 0.5rem 0;
         }
       }
     }
