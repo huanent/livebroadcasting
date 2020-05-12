@@ -10,18 +10,16 @@
         </el-switch>
       </span>
 
-      <recoder></recoder>
-
-      <a @click="onCoursewareOpen"
-        ><icon name="import_contacts" class="pannel-icon" :size="20"></icon
-      ></a>
-      <a><icon name="person_outline" class="pannel-icon" :size="20"></icon></a>
-      <a @click="onWidgetsOpen"
-        ><icon name="widgets" class="pannel-icon" :size="20"></icon
-      ></a>
-      <a><icon name="settings" class="pannel-icon" :size="20"></icon></a>
-      <a><icon name="exit_to_app" class="pannel-icon" :size="20"></icon></a>
-      <a><icon name="info_outline" class="pannel-icon" :size="20"></icon></a>
+      <icon
+        @click.native="onCoursewareOpen"
+        name="import_contacts"
+        :size="20"
+      ></icon>
+      <icon name="person_outline" :size="20"></icon>
+      <icon @click.native="onWidgetsOpen" name="widgets" :size="20"></icon>
+      <icon name="settings" :size="20"></icon>
+      <icon @click.native="liveroomLogout" name="exit_to_app" :size="20"></icon>
+      <icon name="info_outline" :size="20"></icon>
     </div>
     <el-dialog
       title="课件库"
@@ -149,6 +147,9 @@ export default {
     pageChange(index) {
       this.pageNum = index;
       this.getCourseData(this.pageNum, this.pageSize, this.userId);
+    },
+    liveroomLogout() {
+      this.$router.push({ name: "Classlist" });
     },
     handlerTheme() {
       if (this.switchStatus) {
@@ -286,24 +287,22 @@ export default {
   position: relative;
 }
 .menu-operation {
-  display: inline-block;
   padding: 0 2rem;
   float: right;
   height: 100%;
+  display: flex;
+  align-items: center;
 }
-.menu-operation > a {
-  height: auto;
+.menu-operation > svg {
   display: inline-block;
   line-height: 2rem;
   cursor: pointer;
-}
-.menu-operation > a:hover > svg {
-  fill: #48a7a8;
-}
-.pannel-icon {
   fill: #528a99;
   padding: 2.5px 4px;
   margin: 0 auto;
+}
+.menu-operation svg:hover {
+  fill: #48a7a8;
 }
 
 .courseware-content {
