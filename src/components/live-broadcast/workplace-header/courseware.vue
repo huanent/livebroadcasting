@@ -5,6 +5,7 @@
     :before-close="onCoursewareClose"
     :append-to-body="true"
     @close="closeDialog"
+    class="courseware"
   >
     <div class="courseware-content">
       <div>
@@ -48,7 +49,6 @@
             prop="hasTranscode"
           >
             <template slot-scope="scope">
-              <!-- <el-tooltip effect="dark" content="item.tips" placement="top"> -->
               <el-button
                 class="btns"
                 type="text"
@@ -81,7 +81,6 @@
                   ><icon name="trash" :size="16"></icon
                 ></el-tooltip>
               </el-button>
-              <!-- </el-tooltip> -->
             </template>
           </el-table-column>
         </el-table>
@@ -288,41 +287,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-/deep/ .el-dialog {
-  // @include themeify {
-  //   background-color: themed("border_color1");
-  // }
-  background-color: #292b2e;
-  .el-dialog__title {
-    color: #909399;
-  }
-  .el-dialog__body {
-    .el-table th {
-      background-color: #292b2e;
-    }
-    .el-table--enable-row-transition .el-table__body td {
-      background-color: #292b2e;
-    }
-    .el-table th.is-leaf,
-    .el-table td {
-      background-color: #292b2e;
-    }
-    .el-pagination button {
-      background-color: #292b2e;
-      color: gray;
-    }
-    .el-pagination button:disabled {
-      color: "";
-    }
-    .el-pager li {
-      background-color: #292b2e;
-    }
-  }
-}
-.btns {
-  svg {
-    fill: #0a818c;
-  }
-}
-</style>
+<style scoped lang="scss"></style>
