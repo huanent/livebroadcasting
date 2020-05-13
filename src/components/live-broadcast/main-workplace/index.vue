@@ -157,7 +157,9 @@ export default {
       if (type !== "camera") {
         this.LOCAL_STREAM_STOP_PLAY({ el: cameraEl, isCopy: true });
       }
-
+      if (type !== "screen") {
+        this.SHARE_SCREEN_STOP_PLAY({ el: cameraEl, isCopy: true });
+      }
       if (this.isServiceReady) {
         switch (type) {
           case "camera":

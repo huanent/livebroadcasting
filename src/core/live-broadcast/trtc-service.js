@@ -64,11 +64,20 @@ export class TrtcService {
   }
 
   localStreamPlay(data) {
+    let stream;
+    let role = store.state.account.role;
     if (!data.isCopy) {
-      this.localStream.play(data.el);
-      this.coverPlayStyle(this.localStream);
+      stream = this.localStream;
+      if (!stream || stream.play) return;
+      stream.play(data.el);
+      this.coverPlayStyle(stream);
     } else {
-      this.copyStreamPlay(this.localStream, data.el, this.localStream.userId_);
+      if (role !== ROLE.TEACHER) {
+        stream = this.getRemoteStreamByUserId(
+          this.liveBroadcastService.teacherStreamUserId
+        );
+      }
+      this.copyStreamPlay(stream, data.el, stream.userId_);
     }
   }
   localStreamStopPlay(data) {
@@ -134,6 +143,7 @@ export class TrtcService {
   }
 
   async shareScreenStreamPlay(data, role) {
+    data.el.innerHTML = "";
     if (role && role === ROLE.STUDENT) {
       let stream;
       stream = this.getShareStream();
@@ -170,12 +180,13 @@ export class TrtcService {
       });
     });
   }
-  async shareScreenStreamStopPlay(role) {
+  async shareScreenStreamStopPlay(data, role) {
     if (role && role === ROLE.STUDENT) {
       let stream = this.getShareStream();
       if (stream && stream.stop) {
         stream.stop();
         this.clearShareStream();
+        data.el.innerHTML = "";
       }
     } else {
       let stream = this.localShareScreenStream;
@@ -186,6 +197,7 @@ export class TrtcService {
         this.shareScreenClient.leave();
         this.localShareScreenStream = undefined;
         this.shareScreenClient = undefined;
+        data.el.innerHTML = "";
       }
     }
   }
