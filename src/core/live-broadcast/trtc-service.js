@@ -14,7 +14,6 @@ export class TrtcService {
   roomId;
   liveBroadcastService;
   localStreamTypeCache;
-  selectedStreamCache;
   streamCopy = {};
   constructor() {}
   async init(roomId, liveBroadcastService) {
@@ -96,13 +95,24 @@ export class TrtcService {
       this.copyStreamStopPlay(this.localStream.userId_);
     }
   }
-  async copyStreamPlay(stream, elmentOrId, id) {
+  async copyStreamPlay(stream, elmentOrId, id, options) {
     let mediaStream = stream.mediaStream_;
-    const videoTrack = mediaStream.getVideoTracks()[0];
-    let newStream = TRTC.createStream({
-      videoSource: videoTrack,
-      mirror: false
-    });
+
+    let createStreamOptions = { mirror: false };
+    if (!options) {
+      options = { video: true, audio: false };
+    }
+    if (options.video) {
+      const videoTrack = mediaStream.getVideoTracks()[0];
+      Object.assign(createStreamOptions, { videoSource: videoTrack });
+    }
+    if (options.audio) {
+      let audioTracks = mediaStream.getAudioTracks()[0];
+      Object.assign(createStreamOptions, {
+        audioSource: audioTracks
+      });
+    }
+    let newStream = TRTC.createStream(createStreamOptions);
     await newStream.initialize();
     this.streamCopy[id] = newStream;
     this.streamCopy[id].play(elmentOrId);
@@ -133,20 +143,18 @@ export class TrtcService {
     }
   }
   getRemoteStreamByUserId(id) {
-    let keys = Object.keys(this.remoteStreamList);
-    let findKey = keys.find(key => {
-      let item = this.remoteStreamList[key];
-      if (item.userId_ === "kblive_" + id) return true;
-    });
-    let stream = this.remoteStreamList[findKey];
+    let stream = this.remoteStreamList[id].stream;
     if (stream && stream.play) {
       return stream;
     }
   }
   remoteStreamPlay(id, elmentOrId) {
-    let stream = this.remoteStreamList[id];
+    let stream = this.getRemoteStreamByUserId(id);
     if (stream) {
-      stream.play(stream.id_, elmentOrId);
+      this.copyStreamPlay(stream, elmentOrId, "v_" + stream.userId_, {
+        video: true,
+        audio: true
+      });
     }
   }
 
@@ -243,25 +251,31 @@ export class TrtcService {
       ? this.remoteStreamList[id].hasVideo()
       : false;
   }
+  subscribeRemoteStream(userId) {
+    if (this.remoteStreamList[userId].status === "added") {
+      this.remoteStreamList[userId].status = "subscribed";
+      let client = this.clientList["default"];
+      client.subscribe(this.remoteStreamList[userId].stream);
+    }
+  }
   getStreamProfile() {
     let temp = [];
-    let keys = Object.keys(this.remoteStreamList);
-    var self = this;
-    keys.forEach(item => {
+    for (let i in this.remoteStreamList) {
       let regex = /.*(share_screen)$/;
-      let con = regex.test(self.remoteStreamList[item].userId_);
+      let stream = this.remoteStreamList[i].stream;
+      let con = regex.test(stream.userId_);
 
       if (con) {
-        this.remoteShareScreenStream = self.remoteStreamList[item];
+        this.remoteShareScreenStream = stream;
       } else {
         temp.push({
-          userId: self.remoteStreamList[item].userId_,
-          id: self.remoteStreamList[item].id_,
-          hasAudio: self.remoteStreamList[item].hasAudio(),
-          hasVideo: self.remoteStreamList[item].hasVideo()
+          userId: stream.userId_,
+          id: stream.id_,
+          hasAudio: stream.hasAudio(),
+          hasVideo: stream.hasVideo()
         });
       }
-    });
+    }
     return temp;
   }
   getShareStream() {
@@ -302,7 +316,12 @@ export class TrtcService {
       console.log("远端流增加: " + remoteStream.id_);
       //role是学生只订阅分享屏幕流和老师端语音视频流
       console.log(remoteStream);
-      if (store.state.account.role === ROLE.STUDENT) {
+      self.remoteStreamList[remoteStream.userId_] = {
+        stream: remoteStream,
+        status: "added"
+      };
+      this.subscribeRemoteStream(remoteStream.userId_);
+      /*      if (store.state.account.role === ROLE.STUDENT) {
         let regex = /.*(share_screen)$/;
         let con = regex.test(remoteStream.userId_);
         if (con) {
@@ -316,16 +335,16 @@ export class TrtcService {
         }
       } else {
         client.subscribe(remoteStream);
-      }
+      }*/
       /*client.subscribe(remoteStream);*/
     });
 
     client.on("stream-subscribed", event => {
       var self = this;
+      this.remoteStreamListProfile = this.getStreamProfile();
       const remoteStream = event.stream;
       console.log("远端流订阅成功：" + remoteStream.id_);
-      self.remoteStreamList[remoteStream.userId_] = remoteStream;
-      self.remoteStreamListProfile = this.getStreamProfile();
+
       store.commit(
         "remoteStream/SET_REMOTE_STREAM_LIST",
         self.remoteStreamListProfile
@@ -379,7 +398,7 @@ export class TrtcService {
       if (self.remoteStreamList[remoteStream.userId_]) {
         delete self.remoteStreamList[remoteStream.userId_];
       }
-      self.remoteStreamListProfile = this.getStreamProfile();
+      /*    self.remoteStreamListProfile = this.getStreamProfile();*/
       store.commit(
         "remoteStream/SET_REMOTE_STREAM_LIST",
         self.remoteStreamListProfile
