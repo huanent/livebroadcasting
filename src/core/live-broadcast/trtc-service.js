@@ -131,11 +131,12 @@ export class TrtcService {
   }
 
   async shareScreenStreamPlay(data, role) {
-    let shareScreenStream;
     if (role && role === ROLE.STUDENT) {
-      shareScreenStream = this.getShareStream();
-      if (shareScreenStream && shareScreenStream.play) {
-        shareScreenStream.play(data.el);
+      let stream;
+      stream = this.getShareStream();
+      if (stream && stream.play) {
+        stream.play(data.el);
+        this.coverPlayStyle(stream);
       } else {
         setTimeout(() => {
           this.shareScreenStreamPlay(data, role);
@@ -143,12 +144,19 @@ export class TrtcService {
       }
     } else {
       let stream = this.localShareScreenStream;
-      if (stream) {
+      if (stream && stream.play) {
         stream.play(data.el);
+        this.coverPlayStyle(stream);
       } else {
         await this.initShareScreen();
         this.shareScreenStreamPlay(data, role);
       }
+    }
+  }
+  coverPlayStyle(stream) {
+    stream.div_.style.backgroundColor = "";
+    if (stream.div_.children[0]) {
+      stream.div_.children[0].style.objectFit = "contain";
     }
   }
   getElectronStream() {
