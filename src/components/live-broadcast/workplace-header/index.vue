@@ -22,7 +22,6 @@
       <icon name="info_outline" :size="20"></icon>
     </div>
     <Courseware
-      title="课件库"
       :visible="dialogVisible"
       :before-close="onCoursewareClose"
       :append-to-body="true"
