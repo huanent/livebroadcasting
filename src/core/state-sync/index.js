@@ -8,14 +8,20 @@ export function sendState(app) {
       const currentRole = value.account.role;
       const senderConfig = config.filter(f => f.sender == currentRole);
       for (const i of senderConfig) {
-        const stateValue = getStateValue(value, i.path);
-        if (stateValue != i.value) {
-          i.value = stateValue;
+        let stateValue = getStateValue(value, i.path);
+
+        let comparable =
+          stateValue instanceof Object
+            ? JSON.stringify(stateValue)
+            : stateValue;
+
+        if (comparable != i.value) {
+          i.value = comparable;
           liveBroadcastService.timService.sendSystemMsg(
             "STATE_SYNC",
             i.listener,
             {
-              value: i.value,
+              value: stateValue,
               path: i.path
             }
           );

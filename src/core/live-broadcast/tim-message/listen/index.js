@@ -66,7 +66,7 @@ export const listenHandler = async function() {
     liveBroadcastService.timService.sendBoardMsg(data);
   });
   Emitter.on("SYS_WS_PUSH_STATE", (info, data, e, type) => {
-    store.commit("workplace/MERGE_STATE", data);
+    //store.commit("workplace/MERGE_STATE", data);
   });
   Emitter.on("SYS_WS_PULL_STATE", async (info, data, e, type) => {
     if (liveBroadcastService.timService.tim) {
