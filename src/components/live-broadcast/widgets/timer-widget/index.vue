@@ -1,5 +1,10 @@
 <template>
-  <widget-window @close="SET_TIMER_VISIBLE(false)" v-if="timer.visible">
+  <widget-window
+    @close="SET_TIMER_VISIBLE(false)"
+    v-if="timer.visible"
+    :position="timer.position"
+    @moved="UPDATE_POSITION({ name: 'timer', position: $event })"
+  >
     <div class="timer">
       <div class="time">
         <controller
@@ -72,7 +77,11 @@ export default {
     }
   },
   methods: {
-    ...mapMutations("widget", ["START_TIMER", "SET_TIMER_VISIBLE"]),
+    ...mapMutations("widget", [
+      "START_TIMER",
+      "SET_TIMER_VISIBLE",
+      "UPDATE_POSITION"
+    ]),
     setTime(seconds) {
       this.minuteTens = parseInt(seconds / 600);
       seconds = seconds % 600;
