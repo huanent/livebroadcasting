@@ -66,6 +66,7 @@ export class TrtcService {
   localStreamPlay(data) {
     if (!data.isCopy) {
       this.localStream.play(data.el);
+      this.coverPlayStyle(this.localStream);
     } else {
       this.copyStreamPlay(this.localStream, data.el, this.localStream.userId_);
     }
@@ -88,6 +89,7 @@ export class TrtcService {
     await newStream.initialize();
     this.streamCopy[id] = newStream;
     this.streamCopy[id].play(elmentOrId);
+    this.coverPlayStyle(this.streamCopy[id]);
     return true;
   }
   copyStreamStopPlay(id) {
@@ -102,6 +104,7 @@ export class TrtcService {
     );
     if (stream && stream.play) {
       stream.play(elmentOrId);
+      this.coverPlayStyle(stream);
     }
   }
   teacherStreamStopPlay() {
