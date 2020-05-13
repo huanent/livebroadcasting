@@ -21,5 +21,18 @@ export default new Vuex.Store({
     shareScreenStream,
     examination,
     electron
+  },
+  mutations: {
+    SYNC_STATE(state, payload) {
+      let currentValue = state;
+      let lastPropName = payload.path.pop();
+
+      for (const i of payload.path) {
+        currentValue = currentValue[i];
+        if (currentValue === undefined) break;
+      }
+
+      currentValue[lastPropName] = payload.value;
+    }
   }
 });
