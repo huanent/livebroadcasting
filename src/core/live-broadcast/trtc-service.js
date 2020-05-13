@@ -250,8 +250,7 @@ export class TrtcService {
           userId: self.remoteStreamList[item].userId_,
           id: self.remoteStreamList[item].id_,
           hasAudio: self.remoteStreamList[item].hasAudio(),
-          hasVideo: self.remoteStreamList[item].hasVideo(),
-          stream: self.remoteStreamList[item]
+          hasVideo: self.remoteStreamList[item].hasVideo()
         });
       }
     });
