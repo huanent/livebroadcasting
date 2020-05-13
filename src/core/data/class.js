@@ -26,8 +26,6 @@ export const classCreate = function (formData) {
 export const searchClass = function (searchQuery, searchContent, pageNum) {
   if (searchQuery && searchContent) {
     return axios.get("classform/list?searchQuery=" + searchQuery + "&searchContent=" + searchContent + "&pageNum=" + pageNum);
-  } else if (!searchContent) {
-    return axios.get("classform/list?searchQuery=" + searchQuery + "&pageNum=" + pageNum);
   }
 };
 export const classListInit = function (activeName, pageNum) {
