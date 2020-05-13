@@ -82,6 +82,7 @@ export class TimService {
   async listenHandler() {
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, e => {
       e.data.forEach(item => {
+        if (item.to != this.roomId) return;
         const type = item.payload.extension;
         let data = item.payload.data;
         switch (type) {

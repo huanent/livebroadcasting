@@ -1,14 +1,16 @@
 <template>
   <div class="window" :style="{ top: top + 'px', left: left + 'px' }">
     <header
-      draggable="true"
+      :draggable="role == ROLE.TEACHER"
       @dragstart="dragstart"
       @drag="drag"
       ref="header"
       @dragend="dragend"
     >
       <span class="timer">定时器</span>
-      <div class="close" @click="$emit('close')">+</div>
+      <div class="close" @click="$emit('close')" v-if="role == ROLE.TEACHER">
+        +
+      </div>
     </header>
     <div>
       <slot />
@@ -16,6 +18,9 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
+import { ROLE } from "../../../store/account";
+
 export default {
   props: ["position"],
   data() {
@@ -25,6 +30,9 @@ export default {
       topOffset: 0,
       leftOffset: 0
     };
+  },
+  computed: {
+    ...mapState("account", ["role"])
   },
   methods: {
     dragstart(e) {
@@ -50,6 +58,7 @@ export default {
   watch: {
     position: {
       handler(value) {
+        if (this.role == ROLE.TEACHER) return;
         this.top = value.y;
         this.left = value.x;
       },
