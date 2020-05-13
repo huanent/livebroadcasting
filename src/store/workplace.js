@@ -6,6 +6,7 @@ import {
   syncState
 } from "../core/live-broadcast/tim-message/send";
 const state = {
+  themeColor: "dark",
   roomId: "",
   teacherId: "",
   activeBoardIndex: 0,
@@ -28,6 +29,9 @@ const state = {
 };
 
 const mutations = {
+  SET_THEME_COLOR(state, color) {
+    state.themeColor = color;
+  },
   SET_ROOM_ID(state, id) {
     state.roomId = id;
   },
@@ -59,7 +63,7 @@ const mutations = {
     state.boardNumber = data.boardNumber;
     state.boardScale = data.boardScale;
   },
-  GET_BOARD_STATE_FROM_BOARD(state) {},
+  GET_BOARD_STATE_FROM_BOARD(state) { },
   BOARD_NUMBER(state, boardNumber) {
     state.boardNumber = boardNumber;
   },

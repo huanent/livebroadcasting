@@ -110,7 +110,7 @@
 
 <script>
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-
+import { mapMutations } from "vuex";
 // import {
 //   getCourseData,
 //   removeCourseFile,
@@ -152,6 +152,7 @@ export default {
     this.handlerTheme();
   },
   methods: {
+    ...mapMutations("workplace", ["SET_THEME_COLOR"]),
     close_dialog(val) {
       this.dialogVisible = false;
     },
@@ -164,10 +165,19 @@ export default {
     },
     handlerTheme() {
       if (this.switchStatus) {
-        document.body.setAttribute("data-theme", "light");
+        this.SET_THEME_COLOR("light");
+        document.body.setAttribute(
+          "data-theme",
+          this.$store.state.workplace.themeColor
+        );
       } else {
-        document.body.setAttribute("data-theme", "dark");
+        this.SET_THEME_COLOR("dark");
+        document.body.setAttribute(
+          "data-theme",
+          this.$store.state.workplace.themeColor
+        );
       }
+      console.log(this.$store.state.workplace.themeColor);
     },
     // getCourseData(pageNum, pageSize, userId) {
     //   getCourseData(pageNum, pageSize, userId).then(res => {

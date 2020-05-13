@@ -48,23 +48,40 @@
             prop="hasTranscode"
           >
             <template slot-scope="scope">
+              <!-- <el-tooltip effect="dark" content="item.tips" placement="top"> -->
               <el-button
                 class="btns"
                 type="text"
                 size="small"
                 @click="reTranscode(scope.row)"
-                ><icon fill="red" name="recode" :size="16"></icon
+              >
+                <el-tooltip
+                  :effect="$store.state.workplace.themeColor"
+                  content="重新转码"
+                  placement="top"
+                  ><icon name="recode" :size="16"></icon></el-tooltip
               ></el-button>
-              <el-button class="btns" type="text" size="small"
-                ><icon name="fileimport" :size="16"></icon
+              <el-button class="btns" type="text" size="small">
+                <el-tooltip
+                  :effect="$store.state.workplace.themeColor"
+                  content="上传板书"
+                  placement="top"
+                  ><icon name="fileimport" :size="16"></icon></el-tooltip
               ></el-button>
               <el-button
                 @click="deleteCourseFile(scope.row)"
                 class="btns"
                 type="text"
                 size="small"
-                ><icon name="trash" :size="16"></icon
-              ></el-button>
+              >
+                <el-tooltip
+                  :effect="$store.state.workplace.themeColor"
+                  content="删除"
+                  placement="top"
+                  ><icon name="trash" :size="16"></icon
+                ></el-tooltip>
+              </el-button>
+              <!-- </el-tooltip> -->
             </template>
           </el-table-column>
         </el-table>
@@ -81,7 +98,7 @@
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="onCoursewareClose">取 消</el-button>
+      <!-- <el-button @click="onCoursewareClose">取 消</el-button> -->
       <el-button type="primary" @click="onCoursewareClose">确 定</el-button>
     </span>
   </el-dialog>
@@ -272,6 +289,37 @@ export default {
 </script>
 
 <style scoped lang="scss">
+/deep/ .el-dialog {
+  // @include themeify {
+  //   background-color: themed("border_color1");
+  // }
+  background-color: #292b2e;
+  .el-dialog__title {
+    color: #909399;
+  }
+  .el-dialog__body {
+    .el-table th {
+      background-color: #292b2e;
+    }
+    .el-table--enable-row-transition .el-table__body td {
+      background-color: #292b2e;
+    }
+    .el-table th.is-leaf,
+    .el-table td {
+      background-color: #292b2e;
+    }
+    .el-pagination button {
+      background-color: #292b2e;
+      color: gray;
+    }
+    .el-pagination button:disabled {
+      color: "";
+    }
+    .el-pager li {
+      background-color: #292b2e;
+    }
+  }
+}
 .btns {
   svg {
     fill: #0a818c;
