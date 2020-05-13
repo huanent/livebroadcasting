@@ -64,10 +64,20 @@ export class TrtcService {
   }
 
   localStreamPlay(data) {
+    let stream;
+    let role = store.state.account.role;
     if (!data.isCopy) {
-      this.localStream.play(data.el);
+      stream = this.localStream;
+      if (!stream || stream.play) return;
+      stream.play(data.el);
+      this.coverPlayStyle(stream);
     } else {
-      this.copyStreamPlay(this.localStream, data.el, this.localStream.userId_);
+      if (role !== ROLE.TEACHER) {
+        stream = this.getRemoteStreamByUserId(
+          this.liveBroadcastService.teacherStreamUserId
+        );
+      }
+      this.copyStreamPlay(stream, data.el, stream.userId_);
     }
   }
   localStreamStopPlay(data) {
@@ -88,6 +98,7 @@ export class TrtcService {
     await newStream.initialize();
     this.streamCopy[id] = newStream;
     this.streamCopy[id].play(elmentOrId);
+    this.coverPlayStyle(this.streamCopy[id]);
     return true;
   }
   copyStreamStopPlay(id) {
@@ -102,6 +113,7 @@ export class TrtcService {
     );
     if (stream && stream.play) {
       stream.play(elmentOrId);
+      this.coverPlayStyle(stream);
     }
   }
   teacherStreamStopPlay() {
@@ -131,11 +143,13 @@ export class TrtcService {
   }
 
   async shareScreenStreamPlay(data, role) {
-    let shareScreenStream;
+    data.el.innerHTML = "";
     if (role && role === ROLE.STUDENT) {
-      shareScreenStream = this.getShareStream();
-      if (shareScreenStream && shareScreenStream.play) {
-        shareScreenStream.play(data.el);
+      let stream;
+      stream = this.getShareStream();
+      if (stream && stream.play) {
+        stream.play(data.el);
+        this.coverPlayStyle(stream);
       } else {
         setTimeout(() => {
           this.shareScreenStreamPlay(data, role);
@@ -143,12 +157,19 @@ export class TrtcService {
       }
     } else {
       let stream = this.localShareScreenStream;
-      if (stream) {
+      if (stream && stream.play) {
         stream.play(data.el);
+        this.coverPlayStyle(stream);
       } else {
         await this.initShareScreen();
         this.shareScreenStreamPlay(data, role);
       }
+    }
+  }
+  coverPlayStyle(stream) {
+    stream.div_.style.backgroundColor = "";
+    if (stream.div_.children[0]) {
+      stream.div_.children[0].style.objectFit = "contain";
     }
   }
   getElectronStream() {
@@ -159,12 +180,13 @@ export class TrtcService {
       });
     });
   }
-  async shareScreenStreamStopPlay(role) {
+  async shareScreenStreamStopPlay(data, role) {
     if (role && role === ROLE.STUDENT) {
       let stream = this.getShareStream();
       if (stream && stream.stop) {
         stream.stop();
         this.clearShareStream();
+        data.el.innerHTML = "";
       }
     } else {
       let stream = this.localShareScreenStream;
@@ -175,6 +197,7 @@ export class TrtcService {
         this.shareScreenClient.leave();
         this.localShareScreenStream = undefined;
         this.shareScreenClient = undefined;
+        data.el.innerHTML = "";
       }
     }
   }

@@ -9,6 +9,7 @@ import element from "@c/common/element";
 import "@style/normalize.css";
 import "./assets/style/element-variable.scss";
 import "@style/custom.scss";
+import { sendState } from "./core/state-sync";
 
 Vue.use(element);
 
@@ -20,6 +21,8 @@ export let app = new Vue({
   i18n,
   render: h => h(App)
 }).$mount("#app");
+
+sendState(app);
 
 if (window.rtcService) {
   console.log(window.rtcService);

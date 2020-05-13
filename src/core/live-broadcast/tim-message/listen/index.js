@@ -3,6 +3,7 @@ import store from "@/store";
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { pushState } from "../send";
 import { ROLE } from "../../../../store/account";
+import { listenState } from "../../../state-sync";
 export const listenHandler = async function() {
   Emitter.on("TXWhiteBoardExt", (data, item, e, type) => {
     liveBroadcastService.boardService.getActiveBoard().addSyncData(data);
@@ -15,6 +16,9 @@ export const listenHandler = async function() {
   });
   Emitter.on("SYSTEM_COMMAND", (data, item, e, type) => {
     const info = JSON.parse(data);
+    if (info.type == "STATE_SYNC") {
+      listenState(store, info);
+    }
     if (
       info.userIds instanceof Array &&
       (info.userIds.includes("kblive_" + liveBroadcastService.userId) ||
@@ -62,7 +66,7 @@ export const listenHandler = async function() {
     liveBroadcastService.timService.sendBoardMsg(data);
   });
   Emitter.on("SYS_WS_PUSH_STATE", (info, data, e, type) => {
-    store.commit("workplace/MERGE_STATE", data);
+    //store.commit("workplace/MERGE_STATE", data);
   });
   Emitter.on("SYS_WS_PULL_STATE", async (info, data, e, type) => {
     if (liveBroadcastService.timService.tim) {
