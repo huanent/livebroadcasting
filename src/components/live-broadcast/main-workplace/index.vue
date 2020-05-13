@@ -11,11 +11,7 @@
         class="workplace-content"
         :show-lable="panelType === 'board'"
       >
-        <div
-          class="board-wrapper"
-          v-show="panelType === 'board'"
-          @click="boardClick"
-        >
+        <div class="board-wrapper" v-show="panelType === 'board'">
           <div id="board-el" class="roll-scroll"></div>
         </div>
         <div class="board-wrapper" v-show="panelType === 'screen'">
@@ -77,9 +73,9 @@ export default {
       "BOARD_INDEX",
       "SET_PANEL_TYPE",
       "SEND_PANEL_TYPE",
-      "SET_WORKPLACE_VISIBILITY",
-      "SET_CAMERA_PANEL__VISIBILITY"
+      "SET_WORKPLACE_VISIBILITY"
     ]),
+    ...mapMutations("features", []),
     ...mapMutations("localStream", [
       "LOCAL_STREAM_PLAY",
       "LOCAL_STREAM_STOP_PLAY",
@@ -97,9 +93,6 @@ export default {
       if (item.fid) {
         this.DELETE_BOARD_FILE(item.fid);
       }
-    },
-    boardClick() {
-      /* this.SET_CAMERA_PANEL__VISIBILITY(false);*/
     },
     onSelected(stream) {
       this.STREAM_SELECT_VISIBILITY(false);

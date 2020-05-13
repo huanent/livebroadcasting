@@ -28,6 +28,7 @@ export default {
   props: {},
   computed: {
     ...mapState("account", ["role"]),
+    ...mapState("features", ["canControlBoard"]),
     pageTotal() {
       return this.$store.state.workplace.boardTotalPage;
     },
@@ -37,13 +38,13 @@ export default {
   },
   methods: {
     async handleMinus() {
-      if (this.pageNum <= 1) {
+      if (this.pageNum <= 1 || !this.canControlBoard) {
         return;
       }
       this.$store.commit("workplace/BOARD_NUMBER_DECREASE");
     },
     async handleAdd() {
-      if (this.pageNum === this.pageTotal) {
+      if (this.pageNum === this.pageTotal || !this.canControlBoard) {
         return;
       }
       this.$store.commit("workplace/BOARD_NUMBER_INCREASE");

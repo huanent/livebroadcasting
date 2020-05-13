@@ -110,6 +110,10 @@ export default {
       mylessonCacheArr: [],
       createPageCache: 1,
       mylessonPageCache: 1,
+      currentPageArr: {
+        student: 1,
+        teacher: 1
+      },
       searchContent: "",
       searchQuery: "classId",
       searchMode: false
@@ -120,6 +124,7 @@ export default {
     // label: String
   },
   created() {
+    console.log(this.currentPageArr);
     if (this.createCacheArr.length == 0 && this.mylessonCacheArr.length == 0) {
       this.dataInit(this.activeName);
     } else {
@@ -135,9 +140,6 @@ export default {
       if (newActive == "student" && this.mylessonCacheArr.length > 0) {
         this.classList = this.mylessonCacheArr[0];
         this.pageTotal = this.mylessonPageCache;
-      }
-      if (newActive == "search") {
-        return;
       }
       this.dataInit(newActive);
     }

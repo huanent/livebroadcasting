@@ -26,7 +26,7 @@ const state = {
 };
 
 const mutations = {
-  SET_DRAW_ENABLE(status) {
+  SET_DRAW_ENABLE(state, status) {
     state.drawEnable = Boolean(status);
   },
   // 设置画笔颜色
