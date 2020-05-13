@@ -12,6 +12,15 @@
         <li>
           <a @click="onOpenQuestionView">答题器</a>
         </li>
+        <li>
+          <a
+            @click="
+              SET_TIMER_VISIBLE(true);
+              widgetVisible = false;
+            "
+            >定时器</a
+          >
+        </li>
       </ul>
     </el-dialog>
     <question :visible.sync="questionVisible"></question>
@@ -22,6 +31,7 @@
 <script>
 import Question from "../question";
 import QuestionView from "../question/view";
+import { mapMutations } from "vuex";
 export default {
   name: "Widgets",
   props: {
@@ -34,6 +44,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations("workplace", ["SET_TIMER_VISIBLE"]),
     onOpenQuestion() {
       this.questionVisible = true;
       this.closeWidgets();

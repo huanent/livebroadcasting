@@ -41,14 +41,12 @@ export default {
         return;
       }
       this.$store.commit("workplace/BOARD_NUMBER_DECREASE");
-      this.$store.commit("workplace/SEND_BOARD_STATE");
     },
     async handleAdd() {
       if (this.pageNum === this.pageTotal) {
         return;
       }
       this.$store.commit("workplace/BOARD_NUMBER_INCREASE");
-      this.$store.commit("workplace/SEND_BOARD_STATE");
     }
   }
 };

@@ -48,6 +48,10 @@ import { mapState, mapMutations } from "vuex";
 import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";
 import { ROLE } from "../../../store/account";
+import {
+  pullState,
+  pushState
+} from "../../../core/live-broadcast/tim-message/send";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, WorkplaceFooter, StreamSourceDialog },
@@ -63,13 +67,15 @@ export default {
     this.showStreamSelectdialog = this.streamSelectVisibility;
     this.SET_WORKPLACE_VISIBILITY(true);
     if (this.role === ROLE.STUDENT) {
-      Emitter.on("board-init", () => {
-        setTimeout(async () => {
-          await this.SYNC_STATE();
-        }, 1000);
-      });
+      //pull state after init
+      setTimeout(async () => {
+        await pullState();
+      }, 2000);
     } else {
       this.SET_WORKPLACE_VISIBILITY(true);
+      setTimeout(async () => {
+        await pushState();
+      }, 2000);
     }
     Emitter.on("LIVE_READY", () => {
       this.isServiceReady = true;
@@ -82,7 +88,6 @@ export default {
       "BOARD_INDEX",
       "SET_PANEL_TYPE",
       "SEND_PANEL_TYPE",
-      "SYNC_STATE",
       "SET_WORKPLACE_VISIBILITY",
       "SET_CAMERA_PANEL__VISIBILITY"
     ]),
@@ -176,43 +181,19 @@ export default {
     panelType: async function(type, oldType) {
       let cameraEl = this.$refs.camera;
       let screenEl = this.$refs.screen;
-      if (oldType === "screen") {
-        this.SHARE_SCREEN_STOP_PLAY();
-      }
-      if (oldType !== "camera") {
-        this.TEACHER_REMOTE_STREAM_STOP_PLAY();
+      if (type !== "camera") {
+        this.LOCAL_STREAM_STOP_PLAY({ el: cameraEl, isCopy: true });
       }
 
-      if (this.role !== "ROLE_STUDENT" && this.isServiceReady) {
+      if (this.isServiceReady) {
         switch (type) {
           case "camera":
             this.observerVideo(cameraEl);
-            this.LOCAL_STREAM_STOP_PLAY();
-            setTimeout(() => {
-              this.LOCAL_STREAM_PLAY(cameraEl);
-              this.SEND_PANEL_TYPE();
-            }, 300);
+            this.LOCAL_STREAM_PLAY({ el: cameraEl, isCopy: true });
             break;
           case "screen":
             this.observerVideo(screenEl);
-            this.SHARE_SCREEN_PLAY(screenEl);
-            this.SEND_PANEL_TYPE();
-            break;
-          default:
-            this.SEND_PANEL_TYPE();
-        }
-      } else {
-        switch (type) {
-          case "camera":
-            this.observerVideo(cameraEl);
-            this.TEACHER_REMOTE_STREAM_STOP_PLAY();
-            setTimeout(() => {
-              this.TEACHER_REMOTE_STREAM_PLAY(cameraEl);
-            }, 300);
-            break;
-          case "screen":
-            this.observerVideo(screenEl);
-            await this.SHARE_SCREEN_PLAY(screenEl);
+            this.SHARE_SCREEN_PLAY({ el: screenEl, isCopy: true }, true);
             break;
           default:
         }

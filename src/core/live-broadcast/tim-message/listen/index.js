@@ -1,7 +1,7 @@
 import { Emitter } from "../../../emit";
 import store from "@/store";
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-import { pushState, responseState } from "../send";
+import { pushState } from "../send";
 import { ROLE } from "../../../../store/account";
 export const listenHandler = async function() {
   Emitter.on("TXWhiteBoardExt", (data, item, e, type) => {
@@ -58,23 +58,16 @@ export const listenHandler = async function() {
       }
     }
   });
-  Emitter.on("SYS_REQUEST_PANEL_TYPE", (info, data, e, type) => {
-    store.commit("workplace/SEND_PANEL_TYPE");
-  });
-  Emitter.on("SYS_CONTROL_WORKPLACE_TYPE", (info, data, e, type) => {
-    store.commit("workplace/SET_PANEL_TYPE", data.panelType);
-  });
   Emitter.on("board-data-change", data => {
     liveBroadcastService.timService.sendBoardMsg(data);
   });
-  Emitter.on("SYS_BOARD_STATE_CHANGE", (info, data, e, type) => {
-    store.commit("workplace/UPDATE_BOARD_STATE", data);
-  });
-  Emitter.on("SYS_REQUEST_BOARD_STATE", (info, data, e, type) => {
-    store.commit("workplace/UPDATE_BOARD_STATE", data);
-  });
-  Emitter.on("SYS_WS_STATE_CHANGE", (info, data, e, type) => {
+  Emitter.on("SYS_WS_PUSH_STATE", (info, data, e, type) => {
     store.commit("workplace/MERGE_STATE", data);
+  });
+  Emitter.on("SYS_WS_PULL_STATE", async (info, data, e, type) => {
+    if (liveBroadcastService.timService.tim) {
+      await pushState(stateHistory);
+    }
   });
 };
 Emitter.on("LIVE_TIM_READY", () => {
@@ -85,7 +78,7 @@ const getDiff = function(n, o) {
   let ob;
   ob = {};
   for (let i in n) {
-    if (n[i] !== o[i]) {
+    if (JSON.stringify(n[i]) !== JSON.stringify(o[i])) {
       ob[i] = n[i];
     }
   }
@@ -93,10 +86,19 @@ const getDiff = function(n, o) {
 };
 
 export let getState = function(state) {
-  const props = ["boardTotalPage", "boardNumber", "boardScale", "panelType"];
+  const props = [
+    "boardTotalPage",
+    "boardNumber",
+    "boardScale",
+    "panelType",
+    "timerWidget",
+    "activeBoardIndex",
+    "boardProfiles"
+  ];
+
   let ob = {};
   props.forEach(key => {
-    ob[key] = state[key];
+    ob[key] = JSON.parse(JSON.stringify(state[key]));
   });
   return ob;
 };
@@ -106,7 +108,6 @@ Emitter.on("workplace-state-change", () => {
   let n = getState(store.state.workplace);
   let o = stateHistory;
   let diff = getDiff(n, o);
-  console.log(diff);
   stateHistory = n;
   let keys = Object.keys(diff);
   if (keys.length > 0) {
