@@ -68,16 +68,24 @@ export class TrtcService {
     let role = store.state.account.role;
     if (!data.isCopy) {
       stream = this.localStream;
-      if (!stream || stream.play) return;
-      stream.play(data.el);
-      this.coverPlayStyle(stream);
+      if (stream && stream.play) {
+        stream.play(data.el);
+        this.coverPlayStyle(stream);
+      }
     } else {
-      if (role !== ROLE.TEACHER) {
+      if (role === ROLE.TEACHER) {
+        stream = this.localStream;
+        if (stream && stream.userId_) {
+          this.copyStreamPlay(stream, data.el, stream.userId_);
+        }
+      } else {
         stream = this.getRemoteStreamByUserId(
           this.liveBroadcastService.teacherStreamUserId
         );
+        if (stream && stream.userId_) {
+          this.copyStreamPlay(stream, data.el, stream.userId_);
+        }
       }
-      this.copyStreamPlay(stream, data.el, stream.userId_);
     }
   }
   localStreamStopPlay(data) {
