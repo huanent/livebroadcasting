@@ -1,5 +1,6 @@
 import Vue from "vue";
-
+import features from "./features";
+import store from "@/store";
 export const ROLE = {
   STUDENT: "ROLE_STUDENT",
   TEACHER: "ROLE_TEACHER"
@@ -19,6 +20,7 @@ const state = {
 const mutations = {
   SET_ROLE(state, role) {
     state.role = role;
+    store.commit("features/INIT_STATE", state.role);
   },
   SET_LB_TOKEN(state, lb_token) {
     state.lb_token = lb_token;

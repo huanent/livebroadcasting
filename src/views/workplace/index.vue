@@ -21,7 +21,11 @@
           }"
         ></div>
         <div class="main-workplace-panel">
-          <div @click="toggleCameraPanel" class="camera-icon-box">
+          <div
+            v-if="cameraPanelToggleButtonVisibity"
+            @click="toggleCameraPanel"
+            class="camera-icon-box"
+          >
             <icon
               :name="cameraPanelVisibity ? 'indent' : 'outdent'"
               class="panel-icon"
@@ -53,9 +57,10 @@ import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { Emitter } from "../../core/emit";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapGetters } from "vuex";
 import { ROLE } from "../../store/account";
 import Widgets from "../../components/live-broadcast/widgets";
+import { initFeaturesState } from "../../store/features";
 export default {
   name: "workplace",
   data: function() {
@@ -77,7 +82,12 @@ export default {
   computed: {
     ...mapState("account", ["role"]),
     ...mapState("board", ["drawEnable"]),
-    ...mapState("workplace", ["cameraPanelVisibity"])
+    ...mapState("workplace", []),
+    ...mapState("features", [
+      "cameraPanelVisibity",
+      "cameraPanelToggleButtonVisibity",
+      "canControlBoard"
+    ])
   },
   created() {
     const query = this.$route.query;
@@ -90,8 +100,7 @@ export default {
         ? ROLE.TEACHER
         : ROLE.STUDENT;
     this.SET_ROLE(role);
-    const isTeacher = role !== this.ROLE.STUDENT;
-    this.SET_DRAW_ENABLE(isTeacher);
+    this.SET_DRAW_ENABLE(this.canControlBoard);
   },
   mounted() {
     Emitter.emit("LIVE_INIT");
@@ -131,7 +140,7 @@ export default {
                 parseFloat(list[2]) > 0 &&
                 parseFloat(list[0]) / parseFloat(list[2]) < 0.001
               ) {
-                this.SET_CAMERA_PANEL__VISIBILITY(false);
+                this.SET_CAMERA_PANEL_VISIBILITY(false);
               } else {
                 /* this.SET_CAMERA_PANEL__VISIBILITY(true);*/
               }
@@ -146,16 +155,17 @@ export default {
           }
         });
       } else {
-        this.SET_CAMERA_PANEL__VISIBILITY(false);
+        this.SET_CAMERA_PANEL_VISIBILITY(false);
       }
     });
   },
   methods: {
     ...mapMutations("workplace", [
-      "SET_CAMERA_PANEL__VISIBILITY",
       "SET_ROOM_ID",
-      "SET_TEACHER_ID"
+      "SET_TEACHER_ID",
+      "m_cameraPanelToggleButtonVisibity"
     ]),
+    ...mapMutations("features", ["SET_CAMERA_PANEL_VISIBILITY"]),
     ...mapMutations("account", ["SET_ROLE"]),
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
     toggleCameraPanel() {
@@ -176,7 +186,7 @@ export default {
           }
         }
       }
-      this.SET_CAMERA_PANEL__VISIBILITY(!this.cameraPanelVisibity);
+      this.SET_CAMERA_PANEL_VISIBILITY(!this.cameraPanelVisibity);
       setTimeout(() => {
         Emitter.emit("split-change");
       }, 300);

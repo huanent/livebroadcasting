@@ -20,7 +20,6 @@ const state = {
   activeMicrophones: {},
   panelType: "board",
   workplaceVisibity: false,
-  cameraPanelVisibity: true,
   timerWidget: {
     visible: false,
     started: false,
@@ -123,9 +122,6 @@ const mutations = {
   },
   SET_WORKPLACE_VISIBILITY(state, status) {
     state.workplaceVisibity = status;
-  },
-  SET_CAMERA_PANEL__VISIBILITY(state, status) {
-    state.cameraPanelVisibity = status;
   },
   SET_TIMER_VISIBLE(state, visible) {
     state.timerWidget.visible = visible;
