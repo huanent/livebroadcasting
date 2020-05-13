@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="课件库"
+    :title="$t('courseware.title')"
     :visible.sync="dialogVisible"
     :before-close="onCoursewareClose"
     :append-to-body="true"
@@ -57,14 +57,14 @@
               >
                 <el-tooltip
                   :effect="$store.state.workplace.themeColor"
-                  content="重新转码"
+                  :content="$t('courseware.recode')"
                   placement="top"
                   ><icon name="recode" :size="16"></icon></el-tooltip
               ></el-button>
               <el-button class="btns" type="text" size="small">
                 <el-tooltip
                   :effect="$store.state.workplace.themeColor"
-                  content="上传板书"
+                  :content="$t('courseware.toboard')"
                   placement="top"
                   ><icon name="fileimport" :size="16"></icon></el-tooltip
               ></el-button>
@@ -76,7 +76,7 @@
               >
                 <el-tooltip
                   :effect="$store.state.workplace.themeColor"
-                  content="删除"
+                  :content="$t('courseware.del')"
                   placement="top"
                   ><icon name="trash" :size="16"></icon
                 ></el-tooltip>
@@ -97,8 +97,12 @@
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
-      <!-- <el-button @click="onCoursewareClose">取 消</el-button> -->
-      <el-button type="primary" @click="onCoursewareClose">确 定</el-button>
+      <el-button @click="onCoursewareClose">{{
+        $t("button.cancel")
+      }}</el-button>
+      <el-button type="primary" @click="onCoursewareClose">{{
+        $t("button.yes")
+      }}</el-button>
     </span>
   </el-dialog>
 </template>
@@ -287,4 +291,10 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.btns {
+  svg {
+    fill: #0a818c;
+  }
+}
+</style>
