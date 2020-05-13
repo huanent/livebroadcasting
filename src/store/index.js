@@ -10,6 +10,7 @@ import shareScreenStream from "./shareScreenStream";
 import examination from "./examination";
 import electron from "./electron";
 import features from "./features";
+import widget from "./widget";
 Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
@@ -22,7 +23,8 @@ export default new Vuex.Store({
     shareScreenStream,
     examination,
     electron,
-    features
+    features,
+    widget
   },
   mutations: {
     SYNC_STATE(state, payload) {

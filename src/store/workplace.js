@@ -19,12 +19,7 @@ const state = {
   activeCamera: {},
   activeMicrophones: {},
   panelType: "board",
-  workplaceVisibity: false,
-  timerWidget: {
-    visible: false,
-    started: false,
-    seconds: 15 * 60
-  }
+  workplaceVisibity: false
 };
 
 const mutations = {
@@ -62,7 +57,7 @@ const mutations = {
     state.boardNumber = data.boardNumber;
     state.boardScale = data.boardScale;
   },
-  GET_BOARD_STATE_FROM_BOARD(state) { },
+  GET_BOARD_STATE_FROM_BOARD(state) {},
   BOARD_NUMBER(state, boardNumber) {
     state.boardNumber = boardNumber;
   },
@@ -122,20 +117,6 @@ const mutations = {
   },
   SET_WORKPLACE_VISIBILITY(state, status) {
     state.workplaceVisibity = status;
-  },
-  SET_TIMER_VISIBLE(state, visible) {
-    state.timerWidget.visible = visible;
-    state.timerWidget.started = false;
-    state.timerWidget.seconds = 15 * 60;
-  },
-  START_TIMER(state, payload) {
-    state.timerWidget.started = payload.started;
-    state.timerWidget.seconds = payload.seconds;
-  },
-  MERGE_STATE(state, data) {
-    for (let i in data) {
-      state[i] = data[i];
-    }
   }
 };
 export default {
