@@ -7,7 +7,7 @@ export default [
     sender: ROLE.TEACHER
   },
   {
-    path: ["workplace", "timerWidget"],
+    path: ["widget", "timer"],
     listener: ROLE.STUDENT,
     sender: ROLE.TEACHER
   }

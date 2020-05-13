@@ -1,6 +1,12 @@
 <template>
   <div class="window" :style="{ top: top + 'px', left: left + 'px' }">
-    <header draggable="true" @dragstart="dragstart" @drag="drag" ref="header" @dragend="dragend">
+    <header
+      draggable="true"
+      @dragstart="dragstart"
+      @drag="drag"
+      ref="header"
+      @dragend="dragend"
+    >
       <span class="timer">定时器</span>
       <div class="close" @click="$emit('close')">+</div>
     </header>
@@ -38,6 +44,16 @@ export default {
       let rect = this.$refs.header.getBoundingClientRect();
       this.top = e.y - this.topOffset;
       this.left = e.x - this.leftOffset;
+      this.$emit("moved", { x: this.left, y: this.top });
+    }
+  },
+  watch: {
+    position: {
+      handler(value) {
+        this.top = value.y;
+        this.left = value.x;
+      },
+      deep: true
     }
   }
 };
@@ -65,7 +81,6 @@ export default {
       transform: rotate(45deg);
       cursor: pointer;
     }
-   
   }
   position: fixed;
   top: 0;

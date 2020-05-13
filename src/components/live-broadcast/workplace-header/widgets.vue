@@ -44,7 +44,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations("workplace", ["SET_TIMER_VISIBLE"]),
+    ...mapMutations("widget", ["SET_TIMER_VISIBLE"]),
     onOpenQuestion() {
       this.questionVisible = true;
       this.closeWidgets();

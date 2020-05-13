@@ -1,5 +1,10 @@
 <template>
-  <widget-window @close="SET_TIMER_VISIBLE(false)" v-if="timerWidget.visible">
+  <widget-window
+    @close="SET_TIMER_VISIBLE(false)"
+    v-if="timer.visible"
+    :position="timer.position"
+    @moved="UPDATE_POSITION({ name: 'timer', position: $event })"
+  >
     <div class="timer">
       <div class="time">
         <controller
@@ -57,7 +62,7 @@ export default {
     Controller
   },
   computed: {
-    ...mapState("workplace", ["timerWidget"]),
+    ...mapState("widget", ["timer"]),
     ...mapState("account", ["role"]),
     seconds() {
       return (
@@ -68,14 +73,14 @@ export default {
       );
     },
     showOperation() {
-      return this.role == ROLE.TEACHER && !this.timerWidget.started;
+      return this.role == ROLE.TEACHER && !this.timer.started;
     }
   },
   methods: {
-    ...mapMutations("workplace", [
-      "CLOSE_TIMER",
+    ...mapMutations("widget", [
       "START_TIMER",
-      "SET_TIMER_VISIBLE"
+      "SET_TIMER_VISIBLE",
+      "UPDATE_POSITION"
     ]),
     setTime(seconds) {
       this.minuteTens = parseInt(seconds / 600);
@@ -87,7 +92,7 @@ export default {
     }
   },
   watch: {
-    "timerWidget.started"(value) {
+    "timer.started"(value) {
       if (value) {
         this.clear = setInterval(() => {
           if (this.seconds < 1) {
@@ -100,8 +105,8 @@ export default {
         clearInterval(this.clear);
       }
     },
-    "timerWidget.visible"() {
-      this.setTime(this.timerWidget.seconds);
+    "timer.visible"() {
+      this.setTime(this.timer.seconds);
     }
   }
 };
