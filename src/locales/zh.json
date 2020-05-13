@@ -68,6 +68,7 @@
   "classform.keywordsTips": "请输入关键词",
   "classform.deleteTips": "此操作将删除该课堂, 是否继续?",
   "classform.createClass": "创建课堂",
+  "classform.searchClass": "搜索课堂",
   "classform.noCreateClassTips": "您还未创建课堂,请点击‘创建课堂’按钮创建",
   "classform.noJoinClassTips": "您还未加入相关课堂",
 

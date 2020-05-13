@@ -19,7 +19,7 @@
           <div id="board-el" class="roll-scroll"></div>
         </div>
         <div class="board-wrapper" v-show="panelType === 'screen'">
-          <div ref="screen" style="height: 100%;width: 100%;"></div>
+          <div ref="screen"></div>
         </div>
         <div class="board-wrapper" v-show="panelType === 'camera'">
           <div ref="camera" id="workplace-camera"></div>
@@ -119,33 +119,6 @@ export default {
     indexChange(index) {
       this.BOARD_INDEX(index);
     },
-    observerVideo(targetNode) {
-      let config = {
-        childList: true,
-        subtree: true
-      };
-      let observer;
-      const mutationCallback = mutationsList => {
-        if (
-          this.$refs.camera &&
-          this.$refs.camera.children[0] &&
-          this.$refs.camera.children[0].children[0] &&
-          this.$refs.camera.children[0].children[0].tagName === "VIDEO"
-        ) {
-          this.$refs.camera.children[0].children[0].style.objectFit = "contain";
-        }
-        if (
-          this.$refs.screen &&
-          this.$refs.screen.children[0] &&
-          this.$refs.screen.children[0].children[0] &&
-          this.$refs.screen.children[0].children[0].tagName === "VIDEO"
-        ) {
-          this.$refs.screen.children[0].children[0].style.objectFit = "contain";
-        }
-      };
-      observer = new MutationObserver(mutationCallback);
-      observer.observe(targetNode, config);
-    },
     onChange(type) {
       this.SET_PANEL_TYPE(type);
     }
@@ -184,15 +157,15 @@ export default {
       if (type !== "camera") {
         this.LOCAL_STREAM_STOP_PLAY({ el: cameraEl, isCopy: true });
       }
-
+      if (type !== "screen") {
+        this.SHARE_SCREEN_STOP_PLAY({ el: cameraEl, isCopy: true });
+      }
       if (this.isServiceReady) {
         switch (type) {
           case "camera":
-            this.observerVideo(cameraEl);
             this.LOCAL_STREAM_PLAY({ el: cameraEl, isCopy: true });
             break;
           case "screen":
-            this.observerVideo(screenEl);
             this.SHARE_SCREEN_PLAY({ el: screenEl, isCopy: true }, true);
             break;
           default:
@@ -232,6 +205,7 @@ export default {
   height: calc(100% - 4rem);
   width: calc(100% - 10rem);
   margin: 2rem 5rem;
+
   > div {
     height: 100%;
     width: 100%;

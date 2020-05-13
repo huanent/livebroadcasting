@@ -1,29 +1,36 @@
 /* eslint-disable*/
 import axios from "axios";
 
-export const removeClassImg = function(classId) {
+export const removeClassImg = function (classId) {
   return axios.post("/liveroom/remove", { classId });
 };
-export const detailInit = function(classId) {
+export const detailInit = function (classId) {
   return axios.get("/classform/list?classId=" + classId);
 };
-export const updateDataInit = function(classId) {
+export const updateDataInit = function (classId) {
   return axios.get("/classform/list?classId=" + classId);
 };
-export const getStudentsList = function() {
+export const getStudentsList = function () {
   return axios.get("/classform/list?students=true");
 };
-export const formatDate = function(timeStamp) {
+export const formatDate = function (timeStamp) {
   timeStamp = new Date(parseInt(timeStamp)).toLocaleString();
   return timeStamp;
 };
-export const classUpdate = function(formData) {
+export const classUpdate = function (formData) {
   return axios.post("/classform/update", formData);
 };
-export const classCreate = function(formData) {
+export const classCreate = function (formData) {
   return axios.post("liveRoom/create", formData);
 };
-export const classListInit = function(activeName, pageNum) {
+export const searchClass = function (searchQuery, searchContent, pageNum) {
+  if (searchQuery && searchContent) {
+    return axios.get("classform/list?searchQuery=" + searchQuery + "&searchContent=" + searchContent + "&pageNum=" + pageNum);
+  } else if (!searchContent) {
+    return axios.get("classform/list?searchQuery=" + searchQuery + "&pageNum=" + pageNum);
+  }
+};
+export const classListInit = function (activeName, pageNum) {
   var apiurl = "";
   pageNum = pageNum || 1;
   const userId = localStorage.getItem("lb_userId");
