@@ -8,31 +8,22 @@ export class TimService {
   liveBroadcastService;
   tim;
   roomId;
-  async sendSystemMsg(type, userIds, data, from) {
-    let rawJson = {
-      type: type,
-      userIds: userIds,
-      data: data
-    };
-    if (!from) {
-      from = liveBroadcastService.userId;
-    }
-    rawJson = Object.assign(rawJson, { from: from });
-    let message = this.tim.createCustomMessage({
-      to: this.roomId,
-      conversationType: TIM.TYPES.CONV_GROUP,
-      payload: {
-        data: JSON.stringify(rawJson),
-        description: "",
-        extension: "SYSTEM_COMMAND"
-      }
-    });
-    await this.tim.sendMessage(message);
+
+  sendSystemMsg(type, listeners, data, from) {
+    //if (!from) from = liveBroadcastService.userId;
+
+    return this.sendMessage(
+      JSON.stringify({
+        type,
+        listeners,
+        from,
+        data
+      }),
+      "SYSTEM_COMMAND"
+    );
   }
-  async sendMessage(msg, type) {
-    if (!type) {
-      type = "TIM_TEXT";
-    }
+
+  sendMessage(msg, type = "TIM_TEXT") {
     let message = this.tim.createCustomMessage({
       to: this.roomId,
       conversationType: TIM.TYPES.CONV_GROUP,
@@ -42,15 +33,10 @@ export class TimService {
         extension: type
       }
     });
-    this.tim
-      .sendMessage(message)
-      .then(() => {
-        return true;
-      })
-      .catch(err => {
-        console.error(err);
-      });
+
+    return this.tim.sendMessage(message);
   }
+
   async init(liveBroadcastService) {
     this.liveBroadcastService = liveBroadcastService;
     this.roomId = liveBroadcastService.roomId;
@@ -92,14 +78,41 @@ export class TimService {
     });
     return this.tim.sendMessage(message);
   }
+
   async listenHandler() {
-    this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(e) {
+    this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, e => {
       e.data.forEach(item => {
         const type = item.payload.extension;
-        const data = item.payload.data;
-        Emitter.emit(type, data, item, e, type);
+        let data = item.payload.data;
+        switch (type) {
+          case "TXWhiteBoardExt":
+            liveBroadcastService.boardService
+              .getActiveBoard()
+              .addSyncData(data);
+            break;
+          case "TIM_TEXT":
+            Emitter.emit("TIM_CUSTOM_MESSAGE", item);
+            break;
+          case "SYSTEM_COMMAND":
+            data = JSON.parse(data);
+            if (!this.isListener(data.listeners)) break;
+            Emitter.emit("SYS_" + data.type, data);
+            break;
+          default:
+            break;
+        }
       });
     });
     await listenHandler();
+  }
+
+  isListener(listeners) {
+    if (!listeners) return true;
+    const currentRole = store.state.account.role;
+    const currentId = store.state.account.userId;
+    if (listeners == currentRole || currentRole == currentId) return true;
+    if (listeners instanceof Array) {
+      if (listeners.find(f => f == currentId)) return true;
+    }
   }
 }

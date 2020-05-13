@@ -1,7 +1,9 @@
 import config from "./config";
 import { liveBroadcastService } from "../live-broadcast/live-broadcast-service";
 
-export function sendState(app) {
+export const syncConfig = config;
+
+export function autoSyncState(app) {
   app.$watch(
     _ => app.$store.state,
     value => {
@@ -32,14 +34,7 @@ export function sendState(app) {
   );
 }
 
-export function listenState(store, data) {
-  const currentRole = store.state.account.role;
-  if (currentRole == data.userIds) {
-    store.commit("SYNC_STATE", data.data);
-  }
-}
-
-function getStateValue(state, path) {
+export function getStateValue(state, path) {
   let currentValue = state;
 
   for (const i of path) {

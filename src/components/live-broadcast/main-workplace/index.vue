@@ -66,17 +66,6 @@ export default {
   async mounted() {
     this.showStreamSelectdialog = this.streamSelectVisibility;
     this.SET_WORKPLACE_VISIBILITY(true);
-    if (this.role === ROLE.STUDENT) {
-      //pull state after init
-      setTimeout(async () => {
-        await pullState();
-      }, 2000);
-    } else {
-      this.SET_WORKPLACE_VISIBILITY(true);
-      setTimeout(async () => {
-        await pushState();
-      }, 2000);
-    }
     Emitter.on("LIVE_READY", () => {
       this.isServiceReady = true;
     });
