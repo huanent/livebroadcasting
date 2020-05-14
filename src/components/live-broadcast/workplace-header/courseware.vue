@@ -176,10 +176,7 @@ export default {
       }
     },
     onFilePreview(file) {
-      window.open(
-        "http://livebroadcasting.jinrui.kooboo.site" + file.response.model.url,
-        "_blank"
-      );
+      window.open(file.response.model.url, "_blank");
     },
     beforeUpload(file) {
       var fileSize = file.size / 1024 / 1024;
@@ -194,6 +191,7 @@ export default {
       return isLt100M && !isLt0M;
     },
     async onUploadSuccess(res) {
+      console.log("成功upload");
       if (res.success && res.model.url) {
         this.reTranscode(res.model);
       }
@@ -229,11 +227,6 @@ export default {
       if (res1.data.success && res1.data.model) {
         let taskId = res1.data.model;
         this.getDescribe(taskId, row.id);
-      }
-    },
-    async onUploadSuccess(res) {
-      if (res.success && res.model.url) {
-        this.reTranscode(res.model);
       }
     },
     getDescribe(taskId, fileId) {
@@ -273,19 +266,9 @@ export default {
     showProgressDialogFun() {
       this.showProgressDialog = true;
     },
-    async onUploadSuccess(res) {
-      if (res.success && res.model.url) {
-        this.reTranscode(res.model);
-      }
-    },
     closeProgressDialogFun() {
       this.showProgressDialog = false;
       this.transcodeProgress = 0;
-    },
-    async onUploadSuccess(res) {
-      if (res.success && res.model.url) {
-        this.reTranscode(res.model);
-      }
     }
   }
 };

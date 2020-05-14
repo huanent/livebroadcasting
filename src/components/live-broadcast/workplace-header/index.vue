@@ -215,12 +215,12 @@ export default {
       if (done && done instanceof Function) {
         done();
       }
-    },
-    async onUploadSuccess(res) {
-      if (res.success && res.model.url) {
-        this.reTranscode(res.model);
-      }
     }
+    // async onUploadSuccess(res) {
+    //   if (res.success && res.model.url) {
+    //     this.reTranscode(res.model);
+    //   }
+    // }
     // getDescribe(taskId, fileId) {
     //   let self = this;
     //   self.showProgressDialogFun();
