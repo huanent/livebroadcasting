@@ -1,5 +1,5 @@
 <template>
-  <widget-window @close="SET_TIMER_VISIBLE(false)" v-if="timerWidget.visible">
+  <widget-window @close="SET_TIMER_VISIBLE(false)" v-if="timerWidget.visible" nameWidget="定时器">
     <div class="timer">
       <div class="time">
         <controller

@@ -24,6 +24,9 @@ const state = {
     visible: false,
     started: false,
     seconds: 15 * 60
+  },
+  diceWidget:{
+    visible:false
   }
 };
 
@@ -127,6 +130,10 @@ const mutations = {
     state.timerWidget.visible = visible;
     state.timerWidget.started = false;
     state.timerWidget.seconds = 15 * 60;
+  },
+  SET_DICE_VISIBLE(state, visible) {
+    state.diceWidget.visible = visible;
+  
   },
   START_TIMER(state, payload) {
     state.timerWidget.started = payload.started;

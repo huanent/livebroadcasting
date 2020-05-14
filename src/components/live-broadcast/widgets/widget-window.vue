@@ -1,7 +1,7 @@
 <template>
   <div class="window" :style="{ top: top + 'px', left: left + 'px' }">
     <header draggable="true" @dragstart="dragstart" @drag="drag" ref="header" @dragend="dragend">
-      <span class="timer">定时器</span>
+      <span class="timer">{{nameWidget}}</span>
       <div class="close" @click="$emit('close')">+</div>
     </header>
     <div>
@@ -11,7 +11,7 @@
 </template>
 <script>
 export default {
-  props: ["position"],
+  props: ["position","nameWidget"],
   data() {
     return {
       top: 0,
