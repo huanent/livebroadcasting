@@ -50,7 +50,7 @@
               <label>{{ $t("classform.endTime") }}：</label
               ><span>{{ item.endTime }}</span>
             </div>
-            <div class="item-btn-group">
+            <div class="item-btn-group" v-if="item.joined">
               <router-link
                 :to="{
                   name: 'Classdetail',
@@ -67,6 +67,9 @@
                 }"
                 >进入课堂</router-link
               >
+            </div>
+            <div class="item-btn-group" v-else>
+              <span class="btn-apply" @click="applyEnter(item)">申请进入</span>
             </div>
           </div>
         </div>
@@ -97,14 +100,16 @@ import {
   removeClassImg,
   classListInit,
   formatDate,
-  searchClass
+  searchClass,
+  classApply
 } from "@api/class";
 import { mapMutations } from "vuex";
 export default {
   name: "ClassList",
   data() {
     return {
-      classList: [],
+      userId: "",
+      classList: { joined: false },
       pageTotal: 1,
       createCacheArr: [],
       mylessonCacheArr: [],
@@ -124,7 +129,8 @@ export default {
     // label: String
   },
   created() {
-    console.log(this.currentPageArr);
+    // console.log(this.currentPageArr);
+    this.userId = localStorage.getItem("lb_userId");
     if (this.createCacheArr.length == 0 && this.mylessonCacheArr.length == 0) {
       this.dataInit(this.activeName);
     } else {
@@ -160,6 +166,13 @@ export default {
             element.startTime = formatDate(element.startTime);
             element.endTime = formatDate(element.endTime);
             element.createDate = formatDate(element.createDate);
+            if (element.students) {
+              element.joined =
+                JSON.parse(element.students).indexOf(this.userId) !== -1;
+            }
+            if (element.createUser == this.userId) {
+              element.joined = true;
+            }
           });
           this.pageTotal = res.data.total;
           this.searchMode = true;
@@ -215,7 +228,15 @@ export default {
               element.startTime = formatDate(element.startTime);
               element.endTime = formatDate(element.endTime);
               element.createDate = formatDate(element.createDate);
+              if (element.students) {
+                element.joined =
+                  JSON.parse(element.students).indexOf(this.userId) !== -1;
+              }
+              if (element.createUser == this.userId) {
+                element.joined = true;
+              }
             });
+            console.log(this.classList);
             this.pageTotal = res.data.total;
             if (activeName == "student") {
               this.mylessonPageCache = res.data.total;
@@ -242,6 +263,27 @@ export default {
       } else {
         return false;
       }
+    },
+    applyEnter(item) {
+      var formData = new FormData();
+      formData.append("classId", item.classId);
+      formData.append("userId", this.userId);
+      classApply(formData).then(res => {
+        if (res.data.success) {
+          this.classList.forEach(element => {
+            if (element.classId == item.classId) {
+              element.joined = true;
+            }
+          });
+          this.$message.success(res.data.message);
+          this.$router.push({
+            name: "Liveroom",
+            query: { createUser: item.createUser, id: item.classId }
+          });
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
     }
   }
 };
@@ -330,6 +372,10 @@ export default {
           display: flex;
           justify-content: space-between;
           margin: 0.5rem 0.5rem 0;
+          .btn-apply {
+            color: #0a818c;
+            cursor: pointer;
+          }
         }
       }
     }

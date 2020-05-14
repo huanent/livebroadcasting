@@ -20,6 +20,9 @@ export const formatDate = function (timeStamp) {
 export const classUpdate = function (formData) {
   return axios.post("/classform/update", formData);
 };
+export const classApply = function (formData) {
+  return axios.post("/classform/apply", formData);
+};
 export const classCreate = function (formData) {
   return axios.post("liveRoom/create", formData);
 };
