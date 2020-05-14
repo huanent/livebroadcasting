@@ -9,14 +9,11 @@ export class TimService {
   tim;
   roomId;
 
-  sendSystemMsg(type, listeners, data, from) {
-    //if (!from) from = liveBroadcastService.userId;
-
+  sendSystemMsg(type, listeners, data) {
     return this.sendMessage(
       JSON.stringify({
         type,
         listeners,
-        from,
         data
       }),
       "SYSTEM_COMMAND"
@@ -97,7 +94,7 @@ export class TimService {
           case "SYSTEM_COMMAND":
             data = JSON.parse(data);
             if (!this.isListener(data.listeners)) break;
-            Emitter.emit("SYS_" + data.type, data);
+            Emitter.emit("SYS_" + data.type, data, item);
             break;
           default:
             break;
@@ -110,10 +107,10 @@ export class TimService {
   isListener(listeners) {
     if (!listeners) return true;
     const currentRole = store.state.account.role;
-    const currentId = store.state.account.userId;
+    const id = store.state.account.userInfo._id;
     if (listeners == currentRole || currentRole == currentId) return true;
     if (listeners instanceof Array) {
-      if (listeners.find(f => f == currentId)) return true;
+      if (listeners.find(f => f == id)) return true;
     }
   }
 }

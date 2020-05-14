@@ -62,7 +62,8 @@ export default {
         this.top = value.y;
         this.left = value.x;
       },
-      deep: true
+      deep: true,
+      immediate: true
     }
   }
 };

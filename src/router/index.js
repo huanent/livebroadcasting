@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "../store";
+import userApi from "../core/data/user";
 
 Vue.use(VueRouter);
 
@@ -13,6 +15,9 @@ const routes = [
     path: "/my",
     name: "MyClass",
     component: () => import("@v/myclass"),
+    meta: {
+      requireAuth: true
+    },
     children: [
       {
         path: "/",
@@ -64,25 +69,30 @@ const router = new VueRouter({
   routes
 });
 
-// const hasToken = () => Boolean(localStorage.getItem("lb_token"));
-// const isExpired = () => {
-//   const timestamp = new Date().getTime()
-//   const expires = Number(localStorage.getItem("lb_expires"))
-//   return timestamp > expires
-// };
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(item => item.meta.requireAuth)) {
-//     if (!hasToken() || isExpired) {
-//       next({
-//         path: "/login",
-//         replace: true
-//       });
-//     } else {
-//       next();
-//     }
-//   } else {
-//     next();
-//   }
-// });
+const hasToken = () => Boolean(localStorage.getItem("lb_token"));
+const isExpired = () => {
+  const timestamp = new Date().getTime();
+  const expires = Number(localStorage.getItem("lb_expires"));
+  return timestamp > expires;
+};
+
+router.beforeEach(async (to, from, next) => {
+  if (to.matched.some(item => item.meta.requireAuth)) {
+    if (!hasToken() || isExpired()) {
+      next({
+        path: "/login",
+        replace: true
+      });
+    } else {
+      if (!store.state.account.userInfo) {
+        var result = await userApi.getUserInfo();
+        store.commit("account/SET_USER_INFO", result.data.model);
+      }
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 export default router;

@@ -8,13 +8,14 @@ export const listenHandler = async function() {
     store.commit("SYNC_STATE", data.data);
   });
 
-  Emitter.on("SYS_PULL_STATE", data => {
+  Emitter.on("SYS_PULL_STATE", (data, item) => {
     const config = syncConfig.filter(
       f => f.sender == ROLE.TEACHER && f.listener == ROLE.STUDENT
     );
+
     for (const i of config) {
       let value = getStateValue(store.state, i.path);
-      liveBroadcastService.timService.sendSystemMsg("STATE_SYNC", data.from, {
+      liveBroadcastService.timService.sendSystemMsg("STATE_SYNC", item.from, {
         value: value,
         path: i.path
       });
@@ -27,14 +28,11 @@ export const listenHandler = async function() {
 
   Emitter.on("LIVE_READY", () => {
     const currentRole = store.state.account.role;
-    const currentId = store.state.account.userId;
     if (currentRole == ROLE.STUDENT) {
       setTimeout(() => {
         liveBroadcastService.timService.sendSystemMsg(
           "PULL_STATE",
-          ROLE.TEACHER,
-          {},
-          currentId
+          ROLE.TEACHER
         );
       }, 2000);
     }

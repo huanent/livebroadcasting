@@ -9,6 +9,8 @@ export const ROLE = {
 Vue.prototype.ROLE = ROLE;
 
 const state = {
+  userInfo: null,
+
   sdkAppId: "1400360542",
   lb_expires: "",
   lb_token: "",
@@ -36,6 +38,9 @@ const mutations = {
   },
   setTXPrivateMapKey(state, tx_privateMapKey) {
     state.tx_privateMapKey = tx_privateMapKey;
+  },
+  SET_USER_INFO(state, data) {
+    state.userInfo = data;
   }
 };
 
