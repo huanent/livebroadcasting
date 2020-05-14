@@ -8,14 +8,14 @@ export const listenHandler = async function() {
     store.commit("SYNC_STATE", data.data);
   });
 
-  Emitter.on("SYS_PULL_STATE", (data, item) => {
+  Emitter.on("SYS_PULL_STATE", data => {
     const config = syncConfig.filter(
       f => f.sender == ROLE.TEACHER && f.listener == ROLE.STUDENT
     );
 
     for (const i of config) {
       let value = getStateValue(store.state, i.path);
-      liveBroadcastService.timService.sendSystemMsg("STATE_SYNC", item.from, {
+      liveBroadcastService.timService.sendSystemMsg("STATE_SYNC", data, {
         value: value,
         path: i.path
       });
@@ -32,7 +32,8 @@ export const listenHandler = async function() {
       setTimeout(() => {
         liveBroadcastService.timService.sendSystemMsg(
           "PULL_STATE",
-          ROLE.TEACHER
+          ROLE.TEACHER,
+          store.state.account.userInfo.username
         );
       }, 2000);
     }

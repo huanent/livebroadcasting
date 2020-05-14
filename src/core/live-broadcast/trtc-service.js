@@ -3,6 +3,7 @@ import store from "@/store";
 import { Emitter } from "../emit";
 import electron from "../../store/electron";
 import { ROLE } from "../../store/account";
+import { enterRoom } from "../data/data-service.js";
 
 export class TrtcService {
   localStream;
@@ -11,20 +12,23 @@ export class TrtcService {
   clientList = {};
   localShareScreenStream;
   shareScreenClient;
-  roomId;
   liveBroadcastService;
   localStreamTypeCache;
   streamCopy = {};
   constructor() {}
+
+  token;
   async init(roomId, liveBroadcastService) {
     this.liveBroadcastService = liveBroadcastService;
-    this.roomId = roomId;
-    let token = await this.liveBroadcastService.getUserSig("default");
-    let userId = token.id;
-    let client = this.createClient("default", token.id, token.userSig);
+    this.token = store.state.workplace.token;
+    let client = this.createClient(
+      "default",
+      this.token.id,
+      this.token.userSig
+    );
     await this.joinroom();
     const localStream = TRTC.createStream({
-      userId,
+      userId: this.token.id,
       audio: store.state.localStream.localAudioStatus,
       video: store.state.localStream.localVideoStatus,
       mirror: false
@@ -55,9 +59,9 @@ export class TrtcService {
   createClient(key, userId, userSig) {
     this.clientList[key] = TRTC.createClient({
       mode: "live",
-      sdkAppId: store.state.account.sdkAppId,
-      userId: userId,
-      userSig: userSig
+      sdkAppId: this.token.appId,
+      userId: this.token.id,
+      userSig: this.token.userSig
     });
     return this.clientList[key];
   }
@@ -298,7 +302,7 @@ export class TrtcService {
   async joinroom() {
     let client = this.clientList["default"];
     client
-      .join({ roomId: this.roomId })
+      .join({ roomId: this.token.classId.toString() })
       .catch(error => {
         console.error("进房失败 " + error);
       })
@@ -416,18 +420,19 @@ export class TrtcService {
     });
   }
   async createShareClient() {
-    let token = await this.liveBroadcastService.getUserSig("share_screen");
-    let userId = token.id;
-    let userSig = token.userSig;
+    let res = await enterRoom(
+      store.state.account.userInfo.username + "_share_screen",
+      this.token.classId
+    );
     const shareClient = TRTC.createClient({
       mode: "live",
-      sdkAppId: store.state.account.sdkAppId,
-      userId,
-      userSig
+      sdkAppId: res.data.appId,
+      userId: res.data.id,
+      userSig: res.data.userSig
     });
     // 指明该 shareClient 默认不接收任何远端流 （它只负责发送屏幕分享流）
     shareClient.setDefaultMuteRemoteStreams(true);
-    await shareClient.join({ roomId: this.roomId });
+    await shareClient.join({ roomId: res.data.classId });
     return shareClient;
   }
 }

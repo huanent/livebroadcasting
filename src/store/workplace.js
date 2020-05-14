@@ -5,9 +5,10 @@ import {
   switchWorkplaceType,
   syncState
 } from "../core/live-broadcast/tim-message/send";
+
+import { enterRoom } from "../core/data/data-service";
 const state = {
   themeColor: "dark",
-  roomId: "",
   teacherId: "",
   activeBoardIndex: 0,
   boardProfiles: [],
@@ -19,15 +20,16 @@ const state = {
   activeCamera: {},
   activeMicrophones: {},
   panelType: "board",
-  workplaceVisibity: false
+  workplaceVisibity: false,
+  token: null
 };
 
 const mutations = {
+  SET_TOKEN(state, token) {
+    state.token = token;
+  },
   SET_THEME_COLOR(state, color) {
     state.themeColor = color;
-  },
-  SET_ROOM_ID(state, id) {
-    state.roomId = id;
   },
   SET_TEACHER_ID(state, id) {
     state.teacherId = id;
@@ -119,8 +121,17 @@ const mutations = {
     state.workplaceVisibity = status;
   }
 };
+
+const actions = {
+  async enterRoom({ commit, rootState }, roomId) {
+    let res = await enterRoom(rootState.account.userInfo.username, roomId);
+    commit("SET_TOKEN", res.data);
+  }
+};
+
 export default {
   namespaced: true,
   state,
-  mutations
+  mutations,
+  actions
 };

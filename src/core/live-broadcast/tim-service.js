@@ -7,7 +7,7 @@ import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-servi
 export class TimService {
   liveBroadcastService;
   tim;
-  roomId;
+  token;
 
   sendSystemMsg(type, listeners, data) {
     return this.sendMessage(
@@ -22,7 +22,7 @@ export class TimService {
 
   sendMessage(msg, type = "TIM_TEXT") {
     let message = this.tim.createCustomMessage({
-      to: this.roomId,
+      to: this.token.classId.toString(),
       conversationType: TIM.TYPES.CONV_GROUP,
       payload: {
         data: msg,
@@ -35,37 +35,26 @@ export class TimService {
   }
 
   async init(liveBroadcastService) {
+    this.token = store.state.workplace.token;
     this.liveBroadcastService = liveBroadcastService;
-    this.roomId = liveBroadcastService.roomId;
-    let token = await liveBroadcastService.getUserSig("default");
-    let tim = TIM.create({
-      SDKAppID: store.state.account.sdkAppId
-    });
+    this.tim = TIM.create({ SDKAppID: this.token.appId });
 
-    tim.setLogLevel(1); // 普通级别，日志量较多，接入时建议使用
+    this.tim.setLogLevel(2); // 普通级别，日志量较多，接入时建议使用
     // 注册 COS SDK 插件
-    tim.registerPlugin({ "cos-js-sdk": COS });
-    let userId = token.id;
-    let userSig = token.userSig;
-    this.tim = tim;
-    return new Promise(resolve => {
-      tim
-        .login({ userID: userId, userSig: userSig })
-        .then(() => {
-          Emitter.emit("LIVE_TIM_READY", this.tim);
-          resolve(tim);
-        })
-        .catch(imError => {
-          console.warn("login error:", imError); // 登录失败的相关信息
-        });
+    this.tim.registerPlugin({ "cos-js-sdk": COS });
+    await this.tim.login({
+      userID: this.token.id,
+      userSig: this.token.userSig
     });
+    Emitter.emit("LIVE_TIM_READY", this.tim);
   }
   logout() {
     this.tim.logout();
   }
+
   async sendBoardMsg(data) {
     let message = this.tim.createCustomMessage({
-      to: this.roomId,
+      to: this.token.classId.toString(),
       conversationType: TIM.TYPES.CONV_GROUP,
       payload: {
         data: JSON.stringify(data),
@@ -79,7 +68,7 @@ export class TimService {
   async listenHandler() {
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, e => {
       e.data.forEach(item => {
-        if (item.to != this.roomId) return;
+        if (item.to != this.token.classId.toString()) return;
         const type = item.payload.extension;
         let data = item.payload.data;
         switch (type) {
@@ -94,7 +83,7 @@ export class TimService {
           case "SYSTEM_COMMAND":
             data = JSON.parse(data);
             if (!this.isListener(data.listeners)) break;
-            Emitter.emit("SYS_" + data.type, data, item);
+            Emitter.emit("SYS_" + data.type, data);
             break;
           default:
             break;
@@ -107,8 +96,8 @@ export class TimService {
   isListener(listeners) {
     if (!listeners) return true;
     const currentRole = store.state.account.role;
-    const id = store.state.account.userInfo._id;
-    if (listeners == currentRole || currentRole == currentId) return true;
+    const id = store.state.account.userInfo.username;
+    if (listeners == currentRole || listeners == id) return true;
     if (listeners instanceof Array) {
       if (listeners.find(f => f == id)) return true;
     }

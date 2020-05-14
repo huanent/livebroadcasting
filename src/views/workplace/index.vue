@@ -57,7 +57,7 @@ import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { Emitter } from "../../core/emit";
-import { mapState, mapMutations, mapGetters } from "vuex";
+import { mapState, mapMutations, mapGetters, mapActions } from "vuex";
 import { ROLE } from "../../store/account";
 import Widgets from "../../components/live-broadcast/widgets";
 import { initFeaturesState } from "../../store/features";
@@ -89,20 +89,18 @@ export default {
       "canControlBoard"
     ])
   },
-  created() {
+
+  async mounted() {
     const query = this.$route.query;
     const teacher = query.createUser;
-    const roomId = query.id;
-    this.SET_ROOM_ID(roomId);
     this.SET_TEACHER_ID(teacher);
+    await this.enterRoom(query.id);
     const role =
       teacher === localStorage.getItem("lb_userId")
         ? ROLE.TEACHER
         : ROLE.STUDENT;
     this.SET_ROLE(role);
     this.SET_DRAW_ENABLE(this.canControlBoard);
-  },
-  mounted() {
     Emitter.emit("LIVE_INIT");
     Emitter.on("LIVE_READY", () => {
       this.audioLevelTimer = setInterval(() => {
@@ -161,13 +159,13 @@ export default {
   },
   methods: {
     ...mapMutations("workplace", [
-      "SET_ROOM_ID",
       "SET_TEACHER_ID",
       "m_cameraPanelToggleButtonVisibity"
     ]),
     ...mapMutations("features", ["SET_CAMERA_PANEL_VISIBILITY"]),
     ...mapMutations("account", ["SET_ROLE"]),
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
+    ...mapActions("workplace", ["enterRoom"]),
     toggleCameraPanel() {
       if (!this.cameraPanelVisibity) {
         let el = this.$refs.left;

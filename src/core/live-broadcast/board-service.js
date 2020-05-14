@@ -17,16 +17,17 @@ export class BoardService {
     toolType: store.state.board.toolType,
     drawEnable: store.state.board.drawEnable
   };
+
+  token;
   async init(roomId, liveBroadcastService) {
+    this.token = store.state.workplace.token;
     this.liveBroadcastService = liveBroadcastService;
-    let tim = this.liveBroadcastService.timService.tim;
-    let token = await liveBroadcastService.getUserSig("default");
     let initParams = {
       id: "board-el",
-      classId: roomId,
-      sdkAppId: store.state.account.sdkAppId,
-      userId: token.id,
-      userSig: token.userSig
+      classId: this.token.classId,
+      sdkAppId: this.token.appId,
+      userId: this.token.id,
+      userSig: this.token.userSig
     };
 
     let teduBoard = new TEduBoard(

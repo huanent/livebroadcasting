@@ -10,8 +10,6 @@ Vue.prototype.ROLE = ROLE;
 
 const state = {
   userInfo: null,
-
-  sdkAppId: "1400360542",
   lb_expires: "",
   lb_token: "",
   userId: "",
