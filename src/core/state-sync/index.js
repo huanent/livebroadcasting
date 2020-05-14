@@ -11,7 +11,6 @@ export function autoSyncState(app) {
       const senderConfig = config.filter(f => f.sender == currentRole);
       for (const i of senderConfig) {
         let stateValue = getStateValue(value, i.path);
-
         let comparable =
           stateValue instanceof Object
             ? JSON.stringify(stateValue)
@@ -24,7 +23,9 @@ export function autoSyncState(app) {
             i.listener,
             {
               value: stateValue,
-              path: i.path
+              path: i.path,
+              toPath: i.toPath,
+              primaryId: i.primaryId
             }
           );
         }

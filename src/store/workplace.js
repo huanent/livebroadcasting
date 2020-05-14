@@ -15,7 +15,8 @@ const state = {
   activeMicrophones: {},
   panelType: "board",
   workplaceVisibity: false,
-  token: null
+  token: null,
+  featuresList: []
 };
 
 const mutations = {

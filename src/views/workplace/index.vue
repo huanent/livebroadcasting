@@ -80,7 +80,7 @@ export default {
     Widgets
   },
   computed: {
-    ...mapState("account", ["role"]),
+    ...mapState("account", ["role", "userInfo"]),
     ...mapState("board", ["drawEnable"]),
     ...mapState("workplace", []),
     ...mapState("features", [
@@ -101,6 +101,9 @@ export default {
         : ROLE.STUDENT;
     this.SET_ROLE(role);
     this.SET_DRAW_ENABLE(this.canControlBoard);
+    setTimeout(() => {
+      this.SET_ID(this.userInfo.username);
+    }, 2000);
     Emitter.emit("LIVE_INIT");
     Emitter.on("LIVE_READY", () => {
       this.audioLevelTimer = setInterval(() => {
@@ -162,7 +165,7 @@ export default {
       "SET_TEACHER_ID",
       "m_cameraPanelToggleButtonVisibity"
     ]),
-    ...mapMutations("features", ["SET_CAMERA_PANEL_VISIBILITY"]),
+    ...mapMutations("features", ["SET_CAMERA_PANEL_VISIBILITY", "SET_ID"]),
     ...mapMutations("account", ["SET_ROLE"]),
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
     ...mapActions("workplace", ["enterRoom"]),
