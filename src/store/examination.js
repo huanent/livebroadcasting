@@ -1,5 +1,4 @@
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-import { sendExaminationMsg } from "../core/live-broadcast/tim-message/send";
 const axios = window["axios"];
 
 const state = {

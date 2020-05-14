@@ -44,10 +44,6 @@ import { mapState, mapMutations } from "vuex";
 import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";
 import { ROLE } from "../../../store/account";
-import {
-  pullState,
-  pushState
-} from "../../../core/live-broadcast/tim-message/send";
 export default {
   name: "MainWorkplace",
   components: { Toolbar, BoardTabs, WorkplaceFooter, StreamSourceDialog },

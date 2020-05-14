@@ -1,10 +1,4 @@
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-import account, { ROLE } from "./account";
-import {
-  responseState,
-  switchWorkplaceType,
-  syncState
-} from "../core/live-broadcast/tim-message/send";
 
 import { enterRoom } from "../core/data/data-service";
 const state = {
