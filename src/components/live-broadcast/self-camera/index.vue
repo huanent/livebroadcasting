@@ -74,7 +74,7 @@
 
 <script>
 import VoiceIntensity from "./voice-intensity";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import { Emitter } from "../../../core/emit";
 import { ROLE } from "../../../store/account";
 
@@ -97,12 +97,7 @@ export default {
     this.activeCameraDevice = this.$store.state.workplace.activeCamera;
   },
   computed: {
-    ...mapState("localStream", [
-      "localAudioStatus",
-      "localVideoStatus",
-      "audioLevel",
-      "isInit"
-    ]),
+    ...mapState("localStream", ["audioLevel", "isInit"]),
     ...mapState("workplace", ["microphonesDeviceList", "cameraDeviceList"]),
     ...mapState("features", ["videoStatus", "audioStatus"]),
     microIcon() {
@@ -119,13 +114,11 @@ export default {
         this.visibility = true;
       }
     },
-    videoStatus(value) {
-      this.localVideoStatus = value;
-      this.SET_LOCALSTREAM_VIDEO(value);
+    videoStatus(status) {
+      this.switchVideo(status);
     },
-    audioStatus(value) {
-      this.SET_LOCALSTREAM_AUDIO(value);
-      this.localAudioStatus = value;
+    audioStatus(status) {
+      this.switchAudio(status);
     }
   },
   mounted() {
@@ -142,17 +135,23 @@ export default {
   methods: {
     ...mapMutations("workplace", ["ACTIVE_CAMERA", "ACTIVE_MICROPHONES"]),
     ...mapMutations("localStream", [
-      "SET_LOCALSTREAM_AUDIO",
-      "SET_LOCALSTREAM_VIDEO",
       "SET_AUDIOLEVEL",
       "LOCAL_STREAM_PLAY",
       "LOCAL_STREAM_STOP_PLAY"
     ]),
+    ...mapActions("localStream", ["switchVideo", "switchAudio"]),
+    ...mapMutations("features", ["SET_VIDEO_STATUS", "SET_AUDIO_STATUS"]),
     onOpenSetting() {
       this.dialogVisible = true;
     },
     onDialogClose() {
       this.dialogVisible = false;
+    },
+    onVideoStateChange() {
+      this.SET_VIDEO_STATUS(!this.videoStatus);
+    },
+    onMicroStateChange() {
+      this.SET_AUDIO_STATUS(!this.audioStatus);
     },
     onDialogSave() {
       if (this.activeCameraDevice) {

@@ -18,6 +18,12 @@ const mutations = {
   SET_CAMERA_PANEL_VISIBILITY(state, status) {
     state.cameraPanelVisibity = status;
   },
+  SET_VIDEO_STATUS(state, status) {
+    state.videoStatus = status;
+  },
+  SET_AUDIO_STATUS(state, status) {
+    state.audioStatus = status;
+  },
   INIT_STATE(state, role) {
     let data = initFeaturesState(role);
     for (let i in data) {
