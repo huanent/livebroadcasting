@@ -1,8 +1,8 @@
 <template>
   <div>
-    <widget-window nameWidget="抽奖">
+    <!--    <widget-window nameWidget="抽奖">
       <div class="contain">sa</div>
-    </widget-window>
+    </widget-window>-->
   </div>
 </template>
 <script>
@@ -12,10 +12,10 @@ export default {
   name: "App",
   components: {
     WidgetWindow
-  },
+  }
 };
 </script>
-<style  scoped>
+<style scoped>
 .contain {
   width: 200px;
   height: 200px;

@@ -62,10 +62,10 @@ export default {
   data() {
     return {
       translateX: 0,
-      perColumnHeight: 185,
+      perColumnHeight: 210,
       slidesPerColumn: 1,
-      perColumnWidth: 400,
-      slidesPerView: 4
+      perColumnWidth: 200,
+      slidesPerView: 5
     };
   },
   mounted() {
@@ -165,7 +165,7 @@ export default {
   }
 }
 .swiper-wrapper {
-  width: 80%;
+  width: 90%;
   overflow: hidden;
 }
 .camera-item-list {
@@ -181,7 +181,7 @@ export default {
 }
 .camera-left-ctl,
 .camera-right-ctl {
-  width: 10%;
+  width: 5%;
   height: 100%;
   display: flex;
   justify-content: center;

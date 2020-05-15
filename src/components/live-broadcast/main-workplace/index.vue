@@ -11,13 +11,13 @@
         class="workplace-content"
         :show-lable="panelType === 'board'"
       >
-        <div class="board-wrapper" v-show="panelType === 'board'">
+        <div class="wrapper" v-show="panelType === 'board'">
           <div id="board-el" class="roll-scroll"></div>
         </div>
-        <div class="board-wrapper" v-show="panelType === 'screen'">
+        <div class="wrapper" v-show="panelType === 'screen'">
           <div ref="screen"></div>
         </div>
-        <div class="board-wrapper" v-show="panelType === 'camera'">
+        <div class="wrapper" v-show="panelType === 'camera'">
           <div ref="camera" id="workplace-camera"></div>
         </div>
       </BoardTabs>
@@ -178,11 +178,11 @@ export default {
   height: 100%;
   overflow: hidden;
 }
-.board-wrapper {
+.wrapper {
   position: relative;
-  height: calc(100% - 4rem);
-  width: calc(100% - 10rem);
-  margin: 2rem 5rem;
+  height: 100%;
+  width: calc(100% - 5rem);
+  margin: 0 2.5rem;
 
   > div {
     height: 100%;

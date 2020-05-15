@@ -176,12 +176,17 @@ export default {
   display: inline-block;
   line-height: 2rem;
   cursor: pointer;
-  fill: #528a99;
+
+  @include themeify {
+    fill: themedOpacity("font_color3", 0.7);
+  }
   padding: 2.5px 4px;
   margin: 0 auto;
 }
 .menu-operation svg:hover {
-  fill: #48a7a8;
+  @include themeify {
+    fill: themedOpacity("font_color3", 1);
+  }
 }
 
 .courseware-content {

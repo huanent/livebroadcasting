@@ -242,7 +242,7 @@ export default {
 .workplace-panel-content {
   display: grid;
   width: 100%;
-  grid-template-columns: 79.9% 0.1% 20%;
+  grid-template-columns: 82.9% 0.1% 17%;
   height: 100%;
   overflow: hidden;
 }
