@@ -2,7 +2,7 @@ import store from "@/store";
 export const initFeaturesState = function(role) {
   let isTeacher = role === "ROLE_TEACHER";
   return {
-    id: null,
+    timestamp: 1,
     cameraPanelVisibity: isTeacher,
     cameraPanelToggleButtonVisibity: isTeacher,
     canClickboardTabs: isTeacher,
@@ -22,8 +22,8 @@ const mutations = {
     }
     console.log(state);
   },
-  SET_ID(state, id) {
-    state.id = id;
+  SET_TIMESTAMP(state, data) {
+    state.timestamp = data;
   }
 };
 
