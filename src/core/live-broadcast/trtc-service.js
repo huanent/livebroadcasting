@@ -28,8 +28,8 @@ export class TrtcService {
     await this.joinroom();
     const localStream = TRTC.createStream({
       userId: this.token.id,
-      audio: store.state.localStream.localAudioStatus,
-      video: store.state.localStream.localVideoStatus,
+      audio: store.state.features.videoStatus,
+      video: store.state.features.audioStatus,
       mirror: false
     });
     this.localStream = localStream;

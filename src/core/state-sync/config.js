@@ -17,6 +17,11 @@ export default [
     sender: ROLE.TEACHER
   },
   {
+    path: ["widget", "timer"],
+    listener: ROLE.STUDENT,
+    sender: ROLE.TEACHER
+  },
+  {
     path: ["workplace", "boardTotalPage"],
     listener: ROLE.STUDENT,
     sender: ROLE.TEACHER

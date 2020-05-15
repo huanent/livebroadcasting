@@ -2,31 +2,11 @@ import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-servi
 import { Emitter } from "../core/emit";
 
 const state = {
-  localAudioStatus: true,
-  localVideoStatus: true,
   audioLevel: 0.0,
   isInit: false
 };
 
 const mutations = {
-  SET_LOCALSTREAM_AUDIO(state, status) {
-    if (!liveBroadcastService.trtcService.localStream) return;
-    state.localAudioStatus = status;
-    if (status) {
-      liveBroadcastService.trtcService.localStream.unmuteAudio();
-    } else {
-      liveBroadcastService.trtcService.localStream.muteAudio();
-    }
-  },
-  SET_LOCALSTREAM_VIDEO(state, status) {
-    if (!liveBroadcastService.trtcService.localStream) return;
-    state.localVideoStatus = status;
-    if (status) {
-      liveBroadcastService.trtcService.localStream.unmuteVideo();
-    } else {
-      liveBroadcastService.trtcService.localStream.muteVideo();
-    }
-  },
   SET_AUDIOLEVEL(state) {
     if (!liveBroadcastService) return;
     let level = liveBroadcastService.trtcService.getAudioLevel();
@@ -52,8 +32,27 @@ const mutations = {
   }
 };
 
+const actions = {
+  switchAudio(state, status) {
+    if (!liveBroadcastService.trtcService.localStream) return;
+    if (status) {
+      liveBroadcastService.trtcService.localStream.unmuteAudio();
+    } else {
+      liveBroadcastService.trtcService.localStream.muteAudio();
+    }
+  },
+  switchVideo(state, status) {
+    if (!liveBroadcastService.trtcService.localStream) return;
+    if (status) {
+      liveBroadcastService.trtcService.localStream.unmuteVideo();
+    } else {
+      liveBroadcastService.trtcService.localStream.muteVideo();
+    }
+  }
+};
 export default {
   namespaced: true,
   state,
-  mutations
+  mutations,
+  actions
 };
