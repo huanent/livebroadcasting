@@ -2,7 +2,7 @@
   <widget-window nameWidget="骰子">
     <transition>
       <div class="dice">
-        <div id="content" ref="dice" @click="start" :class="test">
+        <div id="content" ref="dice" @click="start" :class="changepoint">
           <!-- 第一个筛子 -->
           <div>
             <span></span>
@@ -73,9 +73,8 @@ import { ROLE } from "@/store/account";
 export default {
   data() {
     return {
-      test: "",
-      num: 0,
-      val:0
+      changepoint: "",
+      num: 0
     };
   },
   components: {
@@ -96,24 +95,17 @@ export default {
       }
       this.num = num;
       if (num == 1) {
-        this.test = "test";
-        this.val=1;
+        this.changepoint = "pointone";
       } else if (num == 2) {
-        this.test = "testa";
-        this.val=5;
+        this.changepoint = "pointtwo";
       } else if (num == 3) {
-        this.test = "testb";
-        this.val=6;
+        this.changepoint = "pointthree";
       } else if (num == 4) {
-        this.test = "testc";
-        this.val=2;
+        this.changepoint = "pointfour";
       } else if (num == 5) {
-        this.test = "testd";
-        this.val=4;
+        this.changepoint = "pointfive";
       } else {
-        this.test = "teste";
-        this.val=3;
-
+        this.changepoint = "pointsix";
       }
     },
     ...mapMutations("workplace", ["SET_DICE_VISIBLE"])
@@ -282,23 +274,22 @@ export default {
     transform: rotateY(3600deg) rotateX(3510deg);
   }
 }
-.test {
+.pointone {
   animation: move1 2s ease-in-out forwards;
 }
-.testa {
-  animation: move2 2s ease-in-out forwards;
-}
-.testb {
-  animation: move3 2s ease-in-out forwards;
-}
-.testc {
+.pointtwo {
   animation: move4 2s ease-in-out forwards;
 }
-
-.testd {
+.pointthree {
+  animation: move6 2s ease-in-out forwards;
+}
+.pointfour {
   animation: move5 2s ease-in-out forwards;
 }
-.teste {
-  animation: move6 2s ease-in-out forwards;
+.pointfive {
+  animation: move2 2s ease-in-out forwards;
+}
+.pointsix {
+  animation: move3 2s ease-in-out forwards;
 }
 </style>

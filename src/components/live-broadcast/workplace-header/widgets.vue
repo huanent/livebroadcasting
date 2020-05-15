@@ -30,24 +30,15 @@
             >骰子</a
           >
         </li>
-        <li>
-          <a
-            @click="luck=true;
-              widgetVisible = false;
-            "
-            >抽奖</a
-          >
-        </li>
+        
       </ul>
     </el-dialog>
     <question :visible.sync="questionVisible"></question>
     <question-view :visible.sync="questionViewVisible"></question-view>
-    <luck-draw v-if="luck"></luck-draw>
   </div>
 </template>
 
 <script>
-import LuckDraw from "../widgets/luck-draw"
 import Question from "../question";
 import QuestionView from "../question/view";
 import { mapMutations } from "vuex";
@@ -58,7 +49,6 @@ export default {
   },
   data() {
     return {
-      luck:false,
       questionVisible: false,
       questionViewVisible: false
     };
@@ -90,7 +80,6 @@ export default {
   components: {
     Question,
     QuestionView,
-    LuckDraw
   }
 };
 </script>

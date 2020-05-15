@@ -1,17 +1,25 @@
 <template>
-  <div class="contain">
-    sad
+  <div>
+    <widget-window nameWidget="抽奖">
+      <div class="contain">sa</div>
+    </widget-window>
   </div>
 </template>
 <script>
+import WidgetWindow from "../widget-window";
+
 export default {
-  name: "App"
+  name: "App",
+  components: {
+    WidgetWindow
+  },
 };
 </script>
 <style  scoped>
-.contain{
+.contain {
   width: 200px;
   height: 200px;
-  backgroundL:#f40;
+  background: #54555d;
+  color: red;
 }
 </style>
