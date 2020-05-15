@@ -21,7 +21,13 @@
       <icon @click.native="liveroomLogout" name="exit_to_app" :size="20"></icon>
       <icon name="info_outline" :size="20"></icon>
     </div>
-    <el-dialog
+    <Courseware
+      :visible="dialogVisible"
+      :before-close="onCoursewareClose"
+      :append-to-body="true"
+      @close-dialogStatus="close_dialog"
+    />
+    <!-- <el-dialog
       title="课件库"
       :visible.sync="dialogVisible"
       :before-close="onCoursewareClose"
@@ -96,24 +102,25 @@
         <el-button @click="onCoursewareClose">取 消</el-button>
         <el-button type="primary" @click="onCoursewareClose">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
     <widgets :visible.sync="widegtsVisible"></widgets>
   </div>
 </template>
 
 <script>
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-
-import {
-  getCourseData,
-  removeCourseFile,
-  transcodeCreate,
-  transcodeDescribe,
-  setCourseFile
-} from "../../../core/data/data-service";
+import { mapMutations } from "vuex";
+// import {
+//   getCourseData,
+//   removeCourseFile,
+//   transcodeCreate,
+//   transcodeDescribe,
+//   setCourseFile
+// } from "../../../core/data/data-service";
 
 import Widgets from "./widgets";
 import Recoder from "./recorder.vue";
+import Courseware from "./courseware";
 
 export default {
   name: "WorkplaceHeader",
@@ -144,32 +151,45 @@ export default {
     this.handlerTheme();
   },
   methods: {
-    pageChange(index) {
-      this.pageNum = index;
-      this.getCourseData(this.pageNum, this.pageSize, this.userId);
+    ...mapMutations("workplace", ["SET_THEME_COLOR"]),
+    close_dialog(val) {
+      this.dialogVisible = false;
     },
+    // pageChange(index) {
+    //   this.pageNum = index;
+    //   this.getCourseData(this.pageNum, this.pageSize, this.userId);
+    // },
     liveroomLogout() {
       this.$router.push({ name: "Classlist" });
     },
     handlerTheme() {
       if (this.switchStatus) {
-        document.body.setAttribute("data-theme", "light");
+        this.SET_THEME_COLOR("light");
+        document.body.setAttribute(
+          "data-theme",
+          this.$store.state.workplace.themeColor
+        );
       } else {
-        document.body.setAttribute("data-theme", "dark");
+        this.SET_THEME_COLOR("dark");
+        document.body.setAttribute(
+          "data-theme",
+          this.$store.state.workplace.themeColor
+        );
       }
+      console.log(this.$store.state.workplace.themeColor);
     },
-    getCourseData(pageNum, pageSize, userId) {
-      getCourseData(pageNum, pageSize, userId).then(res => {
-        if (res.data.success) {
-          this.total = res.data.model.total;
-          this.courseFileList = res.data.model.list;
-          console.log(this.total, this.courseFileList);
-        }
-      });
-    },
+    // getCourseData(pageNum, pageSize, userId) {
+    //   getCourseData(pageNum, pageSize, userId).then(res => {
+    //     if (res.data.success) {
+    //       this.total = res.data.model.total;
+    //       this.courseFileList = res.data.model.list;
+    //       console.log(this.total, this.courseFileList);
+    //     }
+    //   });
+    // },
     onCoursewareOpen() {
       this.dialogVisible = true;
-      this.getCourseData(this.pageNum, this.pageSize, this.userId);
+      // this.getCourseData(this.pageNum, this.pageSize, this.userId);
     },
     onWidgetsOpen() {
       this.widegtsVisible = true;
@@ -177,105 +197,106 @@ export default {
     handleExceed(file) {
       console.log("文件超出");
     },
-    onFilePreview(file) {
-      window.open(
-        "http://livebroadcasting.jinrui.kooboo.site" + file.response.model.url,
-        "_blank"
-      );
-    },
-    async reTranscode(row) {
-      let res1 = await transcodeCreate(row.url);
-      if (res1.data.success && res1.data.model) {
-        let taskId = res1.data.model;
-        this.getDescribe(taskId, row.id);
-      }
-    },
+    // onFilePreview(file) {
+    //   window.open(
+    //     "http://livebroadcasting.jinrui.kooboo.site" + file.response.model.url,
+    //     "_blank"
+    //   );
+    // },
+    // async reTranscode(row) {
+    //   let res1 = await transcodeCreate(row.url);
+    //   if (res1.data.success && res1.data.model) {
+    //     let taskId = res1.data.model;
+    //     this.getDescribe(taskId, row.id);
+    //   }
+    // },
     onCoursewareClose(done) {
       this.dialogVisible = false;
       if (done && done instanceof Function) {
         done();
       }
-    },
-    async onUploadSuccess(res) {
-      if (res.success && res.model.url) {
-        this.reTranscode(res.model);
-      }
-    },
-    getDescribe(taskId, fileId) {
-      let self = this;
-      self.showProgressDialogFun();
-      let interval = setInterval(async () => {
-        let res = await transcodeDescribe(taskId);
-        if (res.data.success) {
-          if (res.data.model.progress) {
-            self.transcodeProgress = res.data.model.progress;
-          }
-          if (self.transcodeProgress >= 100) {
-            clearInterval(interval);
-            console.log(res);
-
-            let model = res.data.model;
-            let body = {
-              id: fileId,
-              hasTranscode: "true",
-              pages: model.pages.toString(),
-              resultUrl: model.resultUrl,
-              compressFileUrl: model.compressFileUrl,
-              taskId: model.taskId,
-              title: model.title,
-              resolution: model.resolution,
-              requestId: model.requestId
-            };
-            let res1 = await setCourseFile(body);
-            if (res1) {
-              self.getCourseData(this.pageNum, this.pageSize, this.userId);
-              self.closeProgressDialogFun();
-            }
-          }
-        }
-      }, 300);
-    },
-    showProgressDialogFun() {
-      /*    this.dialogVisible = false;*/
-      this.showProgressDialog = true;
-    },
-    closeProgressDialogFun() {
-      /*    this.dialogVisible = true;*/
-      this.showProgressDialog = false;
-      this.transcodeProgress = 0;
-    },
-    beforeRemove(file, fileList) {
-      var id = file.response.model.id;
-      removeCourseFile(id).then(res => {
-        if (res.data.success) {
-          console.log("删除成功");
-        }
-      });
-    },
-    beforeUpload(file) {
-      var fileSize = file.size / 1024 / 1024;
-      const isLt100M = fileSize < 100;
-      const isLt0M = fileSize === 0;
-      if (!isLt100M) {
-        alert("文件不能超出100M");
-      }
-      if (isLt0M) {
-        alert("不能是空文件");
-      }
-      return isLt100M && !isLt0M;
-    },
-    rowDblclick(file) {
-      this.$store.commit("workplace/ADD_BOARD_FILE", {
-        resultUrl: file.resultUrl,
-        title: file.title,
-        pages: file.pages,
-        resolution: file.resolution
-      });
     }
+    // async onUploadSuccess(res) {
+    //   if (res.success && res.model.url) {
+    //     this.reTranscode(res.model);
+    //   }
+    // }
+    // getDescribe(taskId, fileId) {
+    //   let self = this;
+    //   self.showProgressDialogFun();
+    //   let interval = setInterval(async () => {
+    //     let res = await transcodeDescribe(taskId);
+    //     if (res.data.success) {
+    //       if (res.data.model.progress) {
+    //         self.transcodeProgress = res.data.model.progress;
+    //       }
+    //       if (self.transcodeProgress >= 100) {
+    //         clearInterval(interval);
+    //         console.log(res);
+
+    //         let model = res.data.model;
+    //         let body = {
+    //           id: fileId,
+    //           hasTranscode: "true",
+    //           pages: model.pages.toString(),
+    //           resultUrl: model.resultUrl,
+    //           compressFileUrl: model.compressFileUrl,
+    //           taskId: model.taskId,
+    //           title: model.title,
+    //           resolution: model.resolution,
+    //           requestId: model.requestId
+    //         };
+    //         let res1 = await setCourseFile(body);
+    //         if (res1) {
+    //           self.getCourseData(this.pageNum, this.pageSize, this.userId);
+    //           self.closeProgressDialogFun();
+    //         }
+    //       }
+    //     }
+    //   }, 300);
+    // },
+    // showProgressDialogFun() {
+    //   /*    this.dialogVisible = false;*/
+    //   this.showProgressDialog = true;
+    // },
+    // closeProgressDialogFun() {
+    //   /*    this.dialogVisible = true;*/
+    //   this.showProgressDialog = false;
+    //   this.transcodeProgress = 0;
+    // },
+    // beforeRemove(file, fileList) {
+    //   var id = file.response.model.id;
+    //   removeCourseFile(id).then(res => {
+    //     if (res.data.success) {
+    //       console.log("删除成功");
+    //     }
+    //   });
+    // },
+    // beforeUpload(file) {
+    //   var fileSize = file.size / 1024 / 1024;
+    //   const isLt100M = fileSize < 100;
+    //   const isLt0M = fileSize === 0;
+    //   if (!isLt100M) {
+    //     alert("文件不能超出100M");
+    //   }
+    //   if (isLt0M) {
+    //     alert("不能是空文件");
+    //   }
+    //   return isLt100M && !isLt0M;
+    // },
+    // rowDblclick(file) {
+    //   this.$store.commit("workplace/ADD_BOARD_FILE", {
+    //     resultUrl: file.resultUrl,
+    //     title: file.title,
+    //     pages: file.pages,
+    //     resolution: file.resolution
+    //   });
+    // }
   },
   components: {
     Widgets,
-    Recoder
+    Recoder,
+    Courseware
   }
 };
 </script>

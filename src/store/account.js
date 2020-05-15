@@ -1,5 +1,6 @@
 import Vue from "vue";
-
+import features from "./features";
+import store from "@/store";
 export const ROLE = {
   STUDENT: "ROLE_STUDENT",
   TEACHER: "ROLE_TEACHER"
@@ -8,7 +9,7 @@ export const ROLE = {
 Vue.prototype.ROLE = ROLE;
 
 const state = {
-  sdkAppId: "1400360542",
+  userInfo: null,
   lb_expires: "",
   lb_token: "",
   userId: "",
@@ -19,6 +20,7 @@ const state = {
 const mutations = {
   SET_ROLE(state, role) {
     state.role = role;
+    store.commit("features/INIT_STATE", state.role);
   },
   SET_LB_TOKEN(state, lb_token) {
     state.lb_token = lb_token;
@@ -34,6 +36,9 @@ const mutations = {
   },
   setTXPrivateMapKey(state, tx_privateMapKey) {
     state.tx_privateMapKey = tx_privateMapKey;
+  },
+  SET_USER_INFO(state, data) {
+    state.userInfo = data;
   }
 };
 

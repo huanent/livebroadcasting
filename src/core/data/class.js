@@ -20,14 +20,15 @@ export const formatDate = function (timeStamp) {
 export const classUpdate = function (formData) {
   return axios.post("/classform/update", formData);
 };
+export const classApply = function (formData) {
+  return axios.post("/classform/apply", formData);
+};
 export const classCreate = function (formData) {
   return axios.post("liveRoom/create", formData);
 };
 export const searchClass = function (searchQuery, searchContent, pageNum) {
   if (searchQuery && searchContent) {
     return axios.get("classform/list?searchQuery=" + searchQuery + "&searchContent=" + searchContent + "&pageNum=" + pageNum);
-  } else if (!searchContent) {
-    return axios.get("classform/list?searchQuery=" + searchQuery + "&pageNum=" + pageNum);
   }
 };
 export const classListInit = function (activeName, pageNum) {

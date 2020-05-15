@@ -1,12 +1,8 @@
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-import account, { ROLE } from "./account";
-import {
-  responseState,
-  switchWorkplaceType,
-  syncState
-} from "../core/live-broadcast/tim-message/send";
+
+import { enterRoom } from "../core/data/data-service";
 const state = {
-  roomId: "",
+  themeColor: "dark",
   teacherId: "",
   activeBoardIndex: 0,
   boardProfiles: [],
@@ -19,20 +15,16 @@ const state = {
   activeMicrophones: {},
   panelType: "board",
   workplaceVisibity: false,
-  cameraPanelVisibity: true,
-  timerWidget: {
-    visible: false,
-    started: false,
-    seconds: 15 * 60
-  },
-  diceWidget:{
-    visible:false
-  }
+  token: null,
+  featuresList: []
 };
 
 const mutations = {
-  SET_ROOM_ID(state, id) {
-    state.roomId = id;
+  SET_TOKEN(state, token) {
+    state.token = token;
+  },
+  SET_THEME_COLOR(state, color) {
+    state.themeColor = color;
   },
   SET_TEACHER_ID(state, id) {
     state.teacherId = id;
@@ -122,31 +114,19 @@ const mutations = {
   },
   SET_WORKPLACE_VISIBILITY(state, status) {
     state.workplaceVisibity = status;
-  },
-  SET_CAMERA_PANEL__VISIBILITY(state, status) {
-    state.cameraPanelVisibity = status;
-  },
-  SET_TIMER_VISIBLE(state, visible) {
-    state.timerWidget.visible = visible;
-    state.timerWidget.started = false;
-    state.timerWidget.seconds = 15 * 60;
-  },
-  SET_DICE_VISIBLE(state, visible) {
-    state.diceWidget.visible = visible;
-  
-  },
-  START_TIMER(state, payload) {
-    state.timerWidget.started = payload.started;
-    state.timerWidget.seconds = payload.seconds;
-  },
-  MERGE_STATE(state, data) {
-    for (let i in data) {
-      state[i] = data[i];
-    }
   }
 };
+
+const actions = {
+  async enterRoom({ commit, rootState }, roomId) {
+    let res = await enterRoom(rootState.account.userInfo.username, roomId);
+    commit("SET_TOKEN", res.data);
+  }
+};
+
 export default {
   namespaced: true,
   state,
-  mutations
+  mutations,
+  actions
 };

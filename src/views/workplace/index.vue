@@ -21,7 +21,11 @@
           }"
         ></div>
         <div class="main-workplace-panel">
-          <div @click="toggleCameraPanel" class="camera-icon-box">
+          <div
+            v-if="cameraPanelToggleButtonVisibity"
+            @click="toggleCameraPanel"
+            class="camera-icon-box"
+          >
             <icon
               :name="cameraPanelVisibity ? 'indent' : 'outdent'"
               class="panel-icon"
@@ -53,9 +57,11 @@ import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { Emitter } from "../../core/emit";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapGetters, mapActions } from "vuex";
 import { ROLE } from "../../store/account";
 import Widgets from "../../components/live-broadcast/widgets";
+import { initFeaturesState } from "../../store/features";
+import { initLiveBroadcastService } from "../../core/live-broadcast/live-broadcast-service";
 export default {
   name: "workplace",
   data: function() {
@@ -75,89 +81,103 @@ export default {
     Widgets
   },
   computed: {
-    ...mapState("account", ["role"]),
+    ...mapState("account", ["role", "userInfo"]),
     ...mapState("board", ["drawEnable"]),
-    ...mapState("workplace", ["cameraPanelVisibity"])
+    ...mapState("workplace", []),
+    ...mapState("features", [
+      "cameraPanelVisibity",
+      "cameraPanelToggleButtonVisibity",
+      "canControlBoard"
+    ])
   },
-  created() {
+
+  async mounted() {
     const query = this.$route.query;
     const teacher = query.createUser;
-    const roomId = query.id;
-    this.SET_ROOM_ID(roomId);
     this.SET_TEACHER_ID(teacher);
+    await this.enterRoom(query.id);
     const role =
       teacher === localStorage.getItem("lb_userId")
         ? ROLE.TEACHER
         : ROLE.STUDENT;
     this.SET_ROLE(role);
-    const isTeacher = role !== this.ROLE.STUDENT;
-    this.SET_DRAW_ENABLE(isTeacher);
-  },
-  mounted() {
-    Emitter.emit("LIVE_INIT");
-    Emitter.on("LIVE_READY", () => {
-      this.audioLevelTimer = setInterval(() => {
-        this.isTimer = true;
-      }, 200);
-      this.$once("hook:beforeDestroy", () => {
-        clearInterval(this.audioLevelTimer);
-      });
-      if (this.role !== "ROLE_STUDENT") {
-        Split({
-          columnGutters: [
-            // {
-            //   track: 1,
-            //   element: document.querySelector("#gutter")
-            // }
-          ],
-          rowGutters: [
-            {
-              track: 1,
-              element: this.$refs.gutter1
-            }
-            // {
-            //   track: 1,
-            //   element: document.querySelector("#gutter2-1")
-            // }
-          ],
-          dragInterval: 10,
-          onDrag: (direction, track, gridTemplateStyle) => {
-            let str = gridTemplateStyle;
-            if (str) {
-              let list = str.trim().split(" ");
-              if (
-                list[0] &&
-                list[2] &&
-                parseFloat(list[2]) > 0 &&
-                parseFloat(list[0]) / parseFloat(list[2]) < 0.001
-              ) {
-                this.SET_CAMERA_PANEL__VISIBILITY(false);
-              } else {
-                /* this.SET_CAMERA_PANEL__VISIBILITY(true);*/
-              }
-            }
-            Emitter.emit("split-change");
-          },
-          writeStyle: (grid, gridTemplateProp, gridTemplateStyle) => {
-            if (this.cameraPanelVisibity) {
-              console.log(gridTemplateStyle);
-              grid.style[gridTemplateProp] = gridTemplateStyle;
+    this.SET_DRAW_ENABLE(this.canControlBoard);
+    await initLiveBroadcastService();
+    if (role == ROLE.TEACHER) {
+      setTimeout(() => {
+        Emitter.emit("SYS_PULL_STATE", ROLE.STUDENT);
+      }, 2000);
+    } else {
+      this.SET_TIMESTAMP(new Date().getTime());
+      setInterval(() => {
+        this.SET_TIMESTAMP(new Date().getTime());
+      }, 10000);
+    }
+    this.audioLevelTimer = setInterval(() => {
+      this.isTimer = true;
+    }, 200);
+    this.$once("hook:beforeDestroy", () => {
+      clearInterval(this.audioLevelTimer);
+    });
+    if (this.role !== "ROLE_STUDENT") {
+      Split({
+        columnGutters: [
+          // {
+          //   track: 1,
+          //   element: document.querySelector("#gutter")
+          // }
+        ],
+        rowGutters: [
+          {
+            track: 1,
+            element: this.$refs.gutter1
+          }
+          // {
+          //   track: 1,
+          //   element: document.querySelector("#gutter2-1")
+          // }
+        ],
+        dragInterval: 10,
+        onDrag: (direction, track, gridTemplateStyle) => {
+          let str = gridTemplateStyle;
+          if (str) {
+            let list = str.trim().split(" ");
+            if (
+              list[0] &&
+              list[2] &&
+              parseFloat(list[2]) > 0 &&
+              parseFloat(list[0]) / parseFloat(list[2]) < 0.001
+            ) {
+              this.SET_CAMERA_PANEL_VISIBILITY(false);
+            } else {
+              /* this.SET_CAMERA_PANEL__VISIBILITY(true);*/
             }
           }
-        });
-      } else {
-        this.SET_CAMERA_PANEL__VISIBILITY(false);
-      }
-    });
+          Emitter.emit("split-change");
+        },
+        writeStyle: (grid, gridTemplateProp, gridTemplateStyle) => {
+          if (this.cameraPanelVisibity) {
+            console.log(gridTemplateStyle);
+            grid.style[gridTemplateProp] = gridTemplateStyle;
+          }
+        }
+      });
+    } else {
+      this.SET_CAMERA_PANEL_VISIBILITY(false);
+    }
   },
   methods: {
     ...mapMutations("workplace", [
-      "SET_CAMERA_PANEL__VISIBILITY",
-      "SET_ROOM_ID",
-      "SET_TEACHER_ID"
+      "SET_TEACHER_ID",
+      "m_cameraPanelToggleButtonVisibity"
+    ]),
+    ...mapMutations("features", [
+      "SET_CAMERA_PANEL_VISIBILITY",
+      "SET_TIMESTAMP"
     ]),
     ...mapMutations("account", ["SET_ROLE"]),
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
+    ...mapActions("workplace", ["enterRoom"]),
     toggleCameraPanel() {
       if (!this.cameraPanelVisibity) {
         let el = this.$refs.left;
@@ -176,7 +196,7 @@ export default {
           }
         }
       }
-      this.SET_CAMERA_PANEL__VISIBILITY(!this.cameraPanelVisibity);
+      this.SET_CAMERA_PANEL_VISIBILITY(!this.cameraPanelVisibity);
       setTimeout(() => {
         Emitter.emit("split-change");
       }, 300);

@@ -1,23 +1,39 @@
 import config from "./config";
 import { liveBroadcastService } from "../live-broadcast/live-broadcast-service";
 
-export function sendState(app) {
+export const syncConfig = config;
+
+export function autoSyncState(app) {
   app.$watch(
     _ => app.$store.state,
     value => {
       const currentRole = value.account.role;
       const senderConfig = config.filter(f => f.sender == currentRole);
       for (const i of senderConfig) {
-        const stateValue = getStateValue(value, i.path);
-        if (stateValue != i.value) {
-          i.value = stateValue;
+        let stateValue = getStateValue(value, i.path);
+        let comparable =
+          stateValue instanceof Object
+            ? JSON.stringify(stateValue)
+            : stateValue;
+
+        if (comparable != i.value) {
+          i.value = comparable;
+
+          let payload = {
+            value: stateValue,
+            path: i.path,
+            toPath: i.toPath
+          };
+
+          if (i.primaryKey) {
+            payload.primaryKey = value.account.userInfo.username;
+            payload.streamId = value.workplace.token.id;
+          }
+
           liveBroadcastService.timService.sendSystemMsg(
             "STATE_SYNC",
             i.listener,
-            {
-              value: i.value,
-              path: i.path
-            }
+            payload
           );
         }
       }
@@ -26,14 +42,7 @@ export function sendState(app) {
   );
 }
 
-export function listenState(store, data) {
-  const currentRole = store.state.account.role;
-  if (currentRole == data.userIds) {
-    store.commit("SYNC_STATE", data.data);
-  }
-}
-
-function getStateValue(state, path) {
+export function getStateValue(state, path) {
   let currentValue = state;
 
   for (const i of path) {

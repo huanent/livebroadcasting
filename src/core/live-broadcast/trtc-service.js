@@ -1,8 +1,8 @@
 import TRTC from "trtc-js-sdk";
 import store from "@/store";
 import { Emitter } from "../emit";
-import electron from "../../store/electron";
 import { ROLE } from "../../store/account";
+import { enterRoom } from "../data/data-service.js";
 
 export class TrtcService {
   localStream;
@@ -11,21 +11,23 @@ export class TrtcService {
   clientList = {};
   localShareScreenStream;
   shareScreenClient;
-  roomId;
   liveBroadcastService;
   localStreamTypeCache;
-  selectedStreamCache;
   streamCopy = {};
   constructor() {}
+
+  token;
   async init(roomId, liveBroadcastService) {
     this.liveBroadcastService = liveBroadcastService;
-    this.roomId = roomId;
-    let token = await this.liveBroadcastService.getUserSig("default");
-    let userId = token.id;
-    let client = this.createClient("default", token.id, token.userSig);
+    this.token = store.state.workplace.token;
+    let client = this.createClient(
+      "default",
+      this.token.id,
+      this.token.userSig
+    );
     await this.joinroom();
     const localStream = TRTC.createStream({
-      userId,
+      userId: this.token.id,
       audio: store.state.localStream.localAudioStatus,
       video: store.state.localStream.localVideoStatus,
       mirror: false
@@ -56,9 +58,9 @@ export class TrtcService {
   createClient(key, userId, userSig) {
     this.clientList[key] = TRTC.createClient({
       mode: "live",
-      sdkAppId: store.state.account.sdkAppId,
-      userId: userId,
-      userSig: userSig
+      sdkAppId: this.token.appId,
+      userId: this.token.id,
+      userSig: this.token.userSig
     });
     return this.clientList[key];
   }
@@ -68,16 +70,24 @@ export class TrtcService {
     let role = store.state.account.role;
     if (!data.isCopy) {
       stream = this.localStream;
-      if (!stream || stream.play) return;
-      stream.play(data.el);
-      this.coverPlayStyle(stream);
+      if (stream && stream.play) {
+        stream.play(data.el);
+        this.coverPlayStyle(stream);
+      }
     } else {
-      if (role !== ROLE.TEACHER) {
+      if (role === ROLE.TEACHER) {
+        stream = this.localStream;
+        if (stream && stream.userId_) {
+          this.copyStreamPlay(stream, data.el, stream.userId_);
+        }
+      } else {
         stream = this.getRemoteStreamByUserId(
           this.liveBroadcastService.teacherStreamUserId
         );
+        if (stream && stream.userId_) {
+          this.copyStreamPlay(stream, data.el, stream.userId_);
+        }
       }
-      this.copyStreamPlay(stream, data.el, stream.userId_);
     }
   }
   localStreamStopPlay(data) {
@@ -88,13 +98,24 @@ export class TrtcService {
       this.copyStreamStopPlay(this.localStream.userId_);
     }
   }
-  async copyStreamPlay(stream, elmentOrId, id) {
+  async copyStreamPlay(stream, elmentOrId, id, options) {
     let mediaStream = stream.mediaStream_;
-    const videoTrack = mediaStream.getVideoTracks()[0];
-    let newStream = TRTC.createStream({
-      videoSource: videoTrack,
-      mirror: false
-    });
+
+    let createStreamOptions = { mirror: false };
+    if (!options) {
+      options = { video: true, audio: false };
+    }
+    if (options.video) {
+      const videoTrack = mediaStream.getVideoTracks()[0];
+      Object.assign(createStreamOptions, { videoSource: videoTrack });
+    }
+    if (options.audio) {
+      let audioTracks = mediaStream.getAudioTracks()[0];
+      Object.assign(createStreamOptions, {
+        audioSource: audioTracks
+      });
+    }
+    let newStream = TRTC.createStream(createStreamOptions);
     await newStream.initialize();
     this.streamCopy[id] = newStream;
     this.streamCopy[id].play(elmentOrId);
@@ -125,20 +146,23 @@ export class TrtcService {
     }
   }
   getRemoteStreamByUserId(id) {
-    let keys = Object.keys(this.remoteStreamList);
-    let findKey = keys.find(key => {
-      let item = this.remoteStreamList[key];
-      if (item.userId_ === "kblive_" + id) return true;
-    });
-    let stream = this.remoteStreamList[findKey];
-    if (stream && stream.play) {
-      return stream;
+    if (!this.remoteStreamList[id] && this.remoteStreamList["kblive_" + id]) {
+      id = "kblive_" + id;
+    }
+    if (this.remoteStreamList[id] && this.remoteStreamList[id].stream) {
+      let stream = this.remoteStreamList[id].stream;
+      if (stream && stream.play) {
+        return stream;
+      }
     }
   }
   remoteStreamPlay(id, elmentOrId) {
-    let stream = this.remoteStreamList[id];
+    let stream = this.getRemoteStreamByUserId(id);
     if (stream) {
-      stream.play(stream.id_, elmentOrId);
+      this.copyStreamPlay(stream, elmentOrId, "v_" + stream.userId_, {
+        video: true,
+        audio: true
+      });
     }
   }
 
@@ -235,36 +259,44 @@ export class TrtcService {
       ? this.remoteStreamList[id].hasVideo()
       : false;
   }
+  subscribeRemoteStream(userId) {
+    if (this.remoteStreamList[userId].status === "added") {
+      this.remoteStreamList[userId].status = "subscribed";
+      let client = this.clientList["default"];
+      client.subscribe(this.remoteStreamList[userId].stream);
+    }
+  }
   getStreamProfile() {
     let temp = [];
-    let keys = Object.keys(this.remoteStreamList);
-    var self = this;
-    keys.forEach(item => {
+    for (let i in this.remoteStreamList) {
       let regex = /.*(share_screen)$/;
-      let con = regex.test(self.remoteStreamList[item].userId_);
+      let stream = this.remoteStreamList[i].stream;
+      let con = regex.test(stream.userId_);
 
       if (con) {
-        this.remoteShareScreenStream = self.remoteStreamList[item];
+        this.remoteShareScreenStream = stream;
       } else {
         temp.push({
-          userId: self.remoteStreamList[item].userId_,
-          id: self.remoteStreamList[item].id_,
-          hasAudio: self.remoteStreamList[item].hasAudio(),
-          hasVideo: self.remoteStreamList[item].hasVideo(),
-          stream: self.remoteStreamList[item]
+          userId: stream.userId_,
+          id: stream.id_,
+          hasAudio: stream.hasAudio(),
+          hasVideo: stream.hasVideo()
         });
       }
-    });
+    }
     return temp;
   }
   getShareStream() {
     let keys = Object.keys(this.remoteStreamList);
     let findKey = keys.find(key => {
-      if (/.*(share_screen)$/.test(this.remoteStreamList[key].userId_)) {
+      if (/.*(share_screen)$/.test(key)) {
         return true;
       }
     });
-    return this.remoteStreamList[findKey];
+    let stream = this.getRemoteStreamByUserId(findKey);
+    if (stream) {
+      return stream;
+    }
   }
   clearShareStream() {
     let keys = Object.keys(this.remoteStreamList);
@@ -277,7 +309,7 @@ export class TrtcService {
   async joinroom() {
     let client = this.clientList["default"];
     client
-      .join({ roomId: this.roomId })
+      .join({ roomId: this.token.classId.toString() })
       .catch(error => {
         console.error("进房失败 " + error);
       })
@@ -295,7 +327,12 @@ export class TrtcService {
       console.log("远端流增加: " + remoteStream.id_);
       //role是学生只订阅分享屏幕流和老师端语音视频流
       console.log(remoteStream);
-      if (store.state.account.role === ROLE.STUDENT) {
+      self.remoteStreamList[remoteStream.userId_] = {
+        stream: remoteStream,
+        status: "added"
+      };
+      this.subscribeRemoteStream(remoteStream.userId_);
+      /*      if (store.state.account.role === ROLE.STUDENT) {
         let regex = /.*(share_screen)$/;
         let con = regex.test(remoteStream.userId_);
         if (con) {
@@ -309,16 +346,16 @@ export class TrtcService {
         }
       } else {
         client.subscribe(remoteStream);
-      }
+      }*/
       /*client.subscribe(remoteStream);*/
     });
 
     client.on("stream-subscribed", event => {
       var self = this;
+      this.remoteStreamListProfile = this.getStreamProfile();
       const remoteStream = event.stream;
       console.log("远端流订阅成功：" + remoteStream.id_);
-      self.remoteStreamList[remoteStream.userId_] = remoteStream;
-      self.remoteStreamListProfile = this.getStreamProfile();
+
       store.commit(
         "remoteStream/SET_REMOTE_STREAM_LIST",
         self.remoteStreamListProfile
@@ -372,7 +409,7 @@ export class TrtcService {
       if (self.remoteStreamList[remoteStream.userId_]) {
         delete self.remoteStreamList[remoteStream.userId_];
       }
-      self.remoteStreamListProfile = this.getStreamProfile();
+      /*    self.remoteStreamListProfile = this.getStreamProfile();*/
       store.commit(
         "remoteStream/SET_REMOTE_STREAM_LIST",
         self.remoteStreamListProfile
@@ -390,18 +427,19 @@ export class TrtcService {
     });
   }
   async createShareClient() {
-    let token = await this.liveBroadcastService.getUserSig("share_screen");
-    let userId = token.id;
-    let userSig = token.userSig;
+    let res = await enterRoom(
+      store.state.account.userInfo.username + "_share_screen",
+      this.token.classId
+    );
     const shareClient = TRTC.createClient({
       mode: "live",
-      sdkAppId: store.state.account.sdkAppId,
-      userId,
-      userSig
+      sdkAppId: res.data.appId,
+      userId: res.data.id,
+      userSig: res.data.userSig
     });
     // 指明该 shareClient 默认不接收任何远端流 （它只负责发送屏幕分享流）
     shareClient.setDefaultMuteRemoteStreams(true);
-    await shareClient.join({ roomId: this.roomId });
+    await shareClient.join({ roomId: res.data.classId });
     return shareClient;
   }
 }

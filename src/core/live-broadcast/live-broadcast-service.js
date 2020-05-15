@@ -1,66 +1,107 @@
-import { createRoom, enterRoom } from "../data/data-service";
 import store from "@/store";
-import COS from "cos-js-sdk-v5";
-window["COS"] = COS;
 import { Emitter } from "../emit";
 import { TrtcService } from "./trtc-service";
 import { TimService } from "./tim-service";
 import { BoardService } from "./board-service";
-import { pushState } from "./tim-message/send";
+import { ROLE } from "../../models/role";
+import { syncConfig, getStateValue } from "../state-sync";
+
 class LiveBroadcastService {
   config;
   mode = "live";
-  TokenList = {};
-  roomId = store.state.workplace.roomId;
-  activeBoard = null;
   userId = localStorage.getItem("lb_userId");
-  tim;
   teacherStreamUserId = store.state.workplace.teacherId;
   trtcService;
   timService;
   boardService;
+
   constructor() {
     this.trtcService = new TrtcService();
     this.timService = new TimService();
     this.boardService = new BoardService();
   }
-  async getUserSig(key) {
-    if (!key) {
-      key = "default";
-    }
-    if (this.TokenList[key] && !this.TokenList[key].isExpired) {
-      return this.TokenList[key];
-    } else {
-      let id = this.userId;
-      if (key !== "default") {
-        id = this.userId + "_" + key;
-      }
-      let res = await enterRoom(id, this.roomId);
-      let token = Object.assign({ isExpired: false }, res.data);
-      this.TokenList[key] = token;
-      return token;
-    }
-  }
+
   async init() {
-    let res = await createRoom(this.userId);
-    if (res && res.data.success) {
-      await this.getUserSig("default");
-      await this.timService.init(this);
-      this.trtcService.init(this.roomId, this);
-      await this.boardService.init(this.roomId, this);
-      await this.timService.listenHandler();
-      return true;
-    } else {
-      console.error(res.data.messages);
+    let token = store.state.workplace.token;
+    await this.timService.init(token);
+    this.trtcService.init("", this);
+    await this.boardService.init(token);
+
+    Emitter.on("board-data-change", data => {
+      this.timService.sendMessage(JSON.stringify(data), "TIW_DATA");
+    });
+
+    Emitter.on("tim_message_received", data => {
+      data.forEach(item => {
+        if (item.to != token.classId.toString()) return;
+        const type = item.payload.extension;
+        let data = item.payload.data;
+        switch (type) {
+          case "TIW_DATA":
+            this.boardService.getActiveBoard().addSyncData(data);
+            break;
+          case "TIM_TEXT":
+            Emitter.emit("TIM_CUSTOM_MESSAGE", item);
+            break;
+          case "SYSTEM_COMMAND":
+            data = JSON.parse(data);
+            if (!this.isListener(data.listeners)) break;
+            Emitter.emit("SYS_" + data.type, data);
+            break;
+          default:
+            break;
+        }
+      });
+    });
+
+    Emitter.on("SYS_STATE_SYNC", data => {
+      store.commit("SYNC_STATE", data.data);
+    });
+
+    Emitter.on("SYS_PULL_STATE", data => {
+      const config = syncConfig.filter(
+        f => f.sender == ROLE.TEACHER && f.listener == ROLE.STUDENT
+      );
+
+      for (const i of config) {
+        let value = getStateValue(store.state, i.path);
+        this.timService.sendSystemMsg("STATE_SYNC", data, {
+          value: value,
+          path: i.path
+        });
+      }
+    });
+
+    const currentRole = store.state.account.role;
+    if (currentRole == ROLE.STUDENT) {
+      this.timService.sendSystemMsg(
+        "PULL_STATE",
+        ROLE.TEACHER,
+        store.state.account.userInfo.username
+      );
+    }
+
+    return true;
+  }
+  async destroy() {
+    if (this.timService) await this.timService.logout();
+    if (this.boardService) this.boardService.destroy();
+  }
+
+  isListener(listeners) {
+    if (!listeners) return true;
+    const currentRole = store.state.account.role;
+    const id = store.state.account.userInfo.username;
+    if (listeners == currentRole || listeners == id) return true;
+    if (listeners instanceof Array) {
+      if (listeners.find(f => f == id)) return true;
     }
   }
-  async destroy() {}
 }
 
 export let liveBroadcastService = null;
 
-Emitter.on("LIVE_INIT", async () => {
+export async function initLiveBroadcastService() {
   liveBroadcastService = new LiveBroadcastService();
   await liveBroadcastService.init();
-  Emitter.emit("LIVE_READY");
-});
+}

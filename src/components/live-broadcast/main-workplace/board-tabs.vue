@@ -91,7 +91,8 @@ export default {
     };
   },
   computed: {
-    ...mapState("account", ["role"])
+    ...mapState("account", ["role"]),
+    ...mapState("features", ["canClickboardTabs"])
   },
   mounted() {
     this.init();
@@ -121,6 +122,7 @@ export default {
   },
   methods: {
     switchTab(index) {
+      if (!this.canClickboardTabs) return;
       this.d_activeIndex = index;
     },
     selectOptionByType(type) {

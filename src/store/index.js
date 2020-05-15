@@ -9,6 +9,8 @@ import remoteStream from "./remoteStream";
 import shareScreenStream from "./shareScreenStream";
 import examination from "./examination";
 import electron from "./electron";
+import features from "./features";
+import widget from "./widget";
 Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
@@ -20,19 +22,38 @@ export default new Vuex.Store({
     remoteStream,
     shareScreenStream,
     examination,
-    electron
+    electron,
+    features,
+    widget
   },
   mutations: {
     SYNC_STATE(state, payload) {
-      let currentValue = state;
-      let lastPropName = payload.path.pop();
+      if (payload.primaryKey) {
+        let currentValue = getCurrentValue(state, payload.toPath);
 
-      for (const i of payload.path) {
-        currentValue = currentValue[i];
-        if (currentValue === undefined) break;
+        let old = currentValue.findIndex(
+          f => f.__primaryKey == payload.primaryKey
+        );
+
+        currentValue.splice(old, 1);
+        payload.value.__primaryKey = payload.primaryKey;
+        payload.value.__streamId = payload.streamId;
+        currentValue.push(payload.value);
+      } else {
+        let lastPropName = payload.path.pop();
+        let currentValue = getCurrentValue(state, payload.path);
+        if (!currentValue) return;
+        currentValue[lastPropName] = payload.value;
       }
-
-      currentValue[lastPropName] = payload.value;
     }
   }
 });
+
+function getCurrentValue(state, path) {
+  for (const i of path) {
+    state = state[i];
+    if (state === undefined) break;
+  }
+
+  return state;
+}

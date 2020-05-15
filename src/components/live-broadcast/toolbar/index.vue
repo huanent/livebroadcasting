@@ -22,7 +22,11 @@
         item.singleclass
       ]"
     >
-      <el-tooltip effect="dark" :content="item.tips" placement="right">
+      <el-tooltip
+        :effect="$store.state.workplace.themeColor"
+        :content="item.tips"
+        placement="right"
+      >
         <el-popover
           placement="left"
           trigger="click"

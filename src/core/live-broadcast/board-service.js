@@ -1,10 +1,6 @@
-import TIM from "tim-js-sdk";
-
 import store from "@/store";
 let TEduBoard = window["TEduBoard"];
-import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { Emitter } from "../emit";
-import { requestBoardState } from "./tim-message/send";
 
 export class BoardService {
   activeBoard = null;
@@ -17,14 +13,12 @@ export class BoardService {
     toolType: store.state.board.toolType,
     drawEnable: store.state.board.drawEnable
   };
-  async init(roomId, liveBroadcastService) {
-    this.liveBroadcastService = liveBroadcastService;
-    let tim = this.liveBroadcastService.timService.tim;
-    let token = await liveBroadcastService.getUserSig("default");
+
+  async init(token) {
     let initParams = {
       id: "board-el",
-      classId: roomId,
-      sdkAppId: store.state.account.sdkAppId,
+      classId: token.classId,
+      sdkAppId: token.appId,
       userId: token.id,
       userSig: token.userSig
     };
@@ -49,6 +43,10 @@ export class BoardService {
       this.getActiveBoard().resize();
     });
     return teduBoard;
+  }
+
+  destroy() {
+    this.activeBoard.destroy();
   }
   getActiveBoard() {
     return this.activeBoard;
@@ -83,7 +81,7 @@ export class BoardService {
     this.getBoardFiles();
   }
   addBoard() {
-    liveBroadcastService.activeBoard.addBoard();
+    this.activeBoard.addBoard();
     store.commit("workplace/BOARD_INDEX", 0);
   }
   getBoardFiles() {

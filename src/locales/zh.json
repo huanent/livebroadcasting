@@ -6,6 +6,11 @@
   "text.tips": "提示",
   "text.deleteSuccess": "删除成功",
 
+  "courseware.title": "课件库",
+  "courseware.recode": "重新转码",
+  "courseware.del": "删除",
+  "courseware.toboard": "上传白板",
+
   "login": "登录",
   "login.title": "Live boardcasting",
   "login.chooseAccount": "选择一个账号登录",

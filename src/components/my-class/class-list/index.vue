@@ -50,7 +50,7 @@
               <label>{{ $t("classform.endTime") }}：</label
               ><span>{{ item.endTime }}</span>
             </div>
-            <div class="item-btn-group">
+            <div class="item-btn-group" v-if="item.joined">
               <router-link
                 :to="{
                   name: 'Classdetail',
@@ -67,6 +67,9 @@
                 }"
                 >进入课堂</router-link
               >
+            </div>
+            <div class="item-btn-group" v-else>
+              <span class="btn-apply" @click="applyEnter(item)">申请进入</span>
             </div>
           </div>
         </div>
@@ -85,6 +88,11 @@
       layout="prev, pager, next"
       :page-size="9"
       :total="pageTotal"
+      :current-page="
+        activeName === 'teacher'
+          ? createPageCache.current
+          : mylessonPageCache.current
+      "
       hide-on-single-page
       @current-change="handleCurrentChange"
     >
@@ -97,19 +105,31 @@ import {
   removeClassImg,
   classListInit,
   formatDate,
-  searchClass
+  searchClass,
+  classApply
 } from "@api/class";
 import { mapMutations } from "vuex";
 export default {
   name: "ClassList",
   data() {
     return {
-      classList: [],
+      userId: "",
+      classList: { joined: false },
       pageTotal: 1,
       createCacheArr: [],
       mylessonCacheArr: [],
-      createPageCache: 1,
-      mylessonPageCache: 1,
+      createPageCache: {
+        total: 1,
+        current: 1
+      },
+      mylessonPageCache: {
+        total: 1,
+        current: 1
+      },
+      // currentPageArr: {
+      //   student: 1,
+      //   teacher: 1
+      // },
       searchContent: "",
       searchQuery: "classId",
       searchMode: false
@@ -120,6 +140,8 @@ export default {
     // label: String
   },
   created() {
+    // console.log(this.currentPageArr);
+    this.userId = localStorage.getItem("lb_userId");
     if (this.createCacheArr.length == 0 && this.mylessonCacheArr.length == 0) {
       this.dataInit(this.activeName);
     } else {
@@ -130,14 +152,13 @@ export default {
     activeName(newActive) {
       if (newActive == "teacher" && this.createCacheArr.length > 0) {
         this.classList = this.createCacheArr[0];
-        this.pageTotal = this.createPageCache;
+        this.pageTotal = this.createPageCache.total;
+        this.searchMode = false;
       }
       if (newActive == "student" && this.mylessonCacheArr.length > 0) {
         this.classList = this.mylessonCacheArr[0];
-        this.pageTotal = this.mylessonPageCache;
-      }
-      if (newActive == "search") {
-        return;
+        this.pageTotal = this.mylessonPageCache.total;
+        this.searchMode = false;
       }
       this.dataInit(newActive);
     }
@@ -158,6 +179,13 @@ export default {
             element.startTime = formatDate(element.startTime);
             element.endTime = formatDate(element.endTime);
             element.createDate = formatDate(element.createDate);
+            if (element.students) {
+              element.joined =
+                JSON.parse(element.students).indexOf(this.userId) !== -1;
+            }
+            if (element.createUser == this.userId) {
+              element.joined = true;
+            }
           });
           this.pageTotal = res.data.total;
           this.searchMode = true;
@@ -169,9 +197,11 @@ export default {
     handleCurrentChange(pageNum) {
       if (this.activeName == "student") {
         this.mylessonCacheArr = [];
+        this.mylessonPageCache.current = pageNum;
       }
       if (this.activeName == "teacher") {
         this.createCacheArr = [];
+        this.createPageCache.current = pageNum;
       }
       if (this.searchMode) {
         this.searchClass(pageNum);
@@ -213,13 +243,21 @@ export default {
               element.startTime = formatDate(element.startTime);
               element.endTime = formatDate(element.endTime);
               element.createDate = formatDate(element.createDate);
+              if (element.students) {
+                element.joined =
+                  JSON.parse(element.students).indexOf(this.userId) !== -1;
+              }
+              if (element.createUser == this.userId) {
+                element.joined = true;
+              }
             });
+            console.log(this.classList);
             this.pageTotal = res.data.total;
             if (activeName == "student") {
-              this.mylessonPageCache = res.data.total;
+              this.mylessonPageCache.total = res.data.total;
             }
             if (activeName == "teacher") {
-              this.createPageCache = res.data.total;
+              this.createPageCache.total = res.data.total;
             }
           } else {
             this.$message.error(res.data.message);
@@ -240,6 +278,27 @@ export default {
       } else {
         return false;
       }
+    },
+    applyEnter(item) {
+      var formData = new FormData();
+      formData.append("classId", item.classId);
+      formData.append("userId", this.userId);
+      classApply(formData).then(res => {
+        if (res.data.success) {
+          this.classList.forEach(element => {
+            if (element.classId == item.classId) {
+              element.joined = true;
+            }
+          });
+          this.$message.success(res.data.message);
+          this.$router.push({
+            name: "Liveroom",
+            query: { createUser: item.createUser, id: item.classId }
+          });
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
     }
   }
 };
@@ -328,6 +387,10 @@ export default {
           display: flex;
           justify-content: space-between;
           margin: 0.5rem 0.5rem 0;
+          .btn-apply {
+            color: #0a818c;
+            cursor: pointer;
+          }
         }
       }
     }

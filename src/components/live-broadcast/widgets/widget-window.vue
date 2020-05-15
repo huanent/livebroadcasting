@@ -1,8 +1,16 @@
 <template>
   <div class="window" :style="{ top: top + 'px', left: left + 'px' }">
-    <header draggable="true" @dragstart="dragstart" @drag="drag" ref="header" @dragend="dragend">
+    <header
+      :draggable="role == ROLE.TEACHER"
+      @dragstart="dragstart"
+      @drag="drag"
+      ref="header"
+      @dragend="dragend"
+    >
       <span class="timer">{{nameWidget}}</span>
-      <div class="close" @click="$emit('close')">+</div>
+      <div class="close" @click="$emit('close')" v-if="role == ROLE.TEACHER">
+        +
+      </div>
     </header>
     <div>
       <slot />
@@ -10,6 +18,9 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
+import { ROLE } from "../../../store/account";
+
 export default {
   props: ["position","nameWidget"],
   data() {
@@ -19,6 +30,9 @@ export default {
       topOffset: 0,
       leftOffset: 0
     };
+  },
+  computed: {
+    ...mapState("account", ["role"])
   },
   methods: {
     dragstart(e) {
@@ -38,6 +52,18 @@ export default {
       let rect = this.$refs.header.getBoundingClientRect();
       this.top = e.y - this.topOffset;
       this.left = e.x - this.leftOffset;
+      this.$emit("moved", { x: this.left, y: this.top });
+    }
+  },
+  watch: {
+    position: {
+      handler(value) {
+        if (this.role == ROLE.TEACHER) return;
+        this.top = value.y;
+        this.left = value.x;
+      },
+      deep: true,
+      immediate: true
     }
   }
 };
@@ -65,7 +91,6 @@ export default {
       transform: rotate(45deg);
       cursor: pointer;
     }
-   
   }
   position: fixed;
   top: 0;
