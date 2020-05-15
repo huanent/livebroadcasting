@@ -101,8 +101,7 @@ class LiveBroadcastService {
 
 export let liveBroadcastService = null;
 
-Emitter.on("LIVE_INIT", async () => {
+export async function initLiveBroadcastService() {
   liveBroadcastService = new LiveBroadcastService();
   await liveBroadcastService.init();
-  Emitter.emit("LIVE_READY");
-});
+}

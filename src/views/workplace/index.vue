@@ -61,6 +61,7 @@ import { mapState, mapMutations, mapGetters, mapActions } from "vuex";
 import { ROLE } from "../../store/account";
 import Widgets from "../../components/live-broadcast/widgets";
 import { initFeaturesState } from "../../store/features";
+import { initLiveBroadcastService } from "../../core/live-broadcast/live-broadcast-service";
 export default {
   name: "workplace",
   data: function() {
@@ -101,71 +102,79 @@ export default {
         : ROLE.STUDENT;
     this.SET_ROLE(role);
     this.SET_DRAW_ENABLE(this.canControlBoard);
-    setInterval(() => {
+    await initLiveBroadcastService();
+    if (role == ROLE.TEACHER) {
+      setTimeout(() => {
+        Emitter.emit("SYS_PULL_STATE", ROLE.STUDENT);
+      }, 2000);
+    } else {
       this.SET_TIMESTAMP(new Date().getTime());
-    }, 10000);
-    Emitter.emit("LIVE_INIT");
-    Emitter.on("LIVE_READY", () => {
-      this.audioLevelTimer = setInterval(() => {
-        this.isTimer = true;
-      }, 200);
-      this.$once("hook:beforeDestroy", () => {
-        clearInterval(this.audioLevelTimer);
-      });
-      if (this.role !== "ROLE_STUDENT") {
-        Split({
-          columnGutters: [
-            // {
-            //   track: 1,
-            //   element: document.querySelector("#gutter")
-            // }
-          ],
-          rowGutters: [
-            {
-              track: 1,
-              element: this.$refs.gutter1
-            }
-            // {
-            //   track: 1,
-            //   element: document.querySelector("#gutter2-1")
-            // }
-          ],
-          dragInterval: 10,
-          onDrag: (direction, track, gridTemplateStyle) => {
-            let str = gridTemplateStyle;
-            if (str) {
-              let list = str.trim().split(" ");
-              if (
-                list[0] &&
-                list[2] &&
-                parseFloat(list[2]) > 0 &&
-                parseFloat(list[0]) / parseFloat(list[2]) < 0.001
-              ) {
-                this.SET_CAMERA_PANEL_VISIBILITY(false);
-              } else {
-                /* this.SET_CAMERA_PANEL__VISIBILITY(true);*/
-              }
-            }
-            Emitter.emit("split-change");
-          },
-          writeStyle: (grid, gridTemplateProp, gridTemplateStyle) => {
-            if (this.cameraPanelVisibity) {
-              console.log(gridTemplateStyle);
-              grid.style[gridTemplateProp] = gridTemplateStyle;
+      setInterval(() => {
+        this.SET_TIMESTAMP(new Date().getTime());
+      }, 10000);
+    }
+    this.audioLevelTimer = setInterval(() => {
+      this.isTimer = true;
+    }, 200);
+    this.$once("hook:beforeDestroy", () => {
+      clearInterval(this.audioLevelTimer);
+    });
+    if (this.role !== "ROLE_STUDENT") {
+      Split({
+        columnGutters: [
+          // {
+          //   track: 1,
+          //   element: document.querySelector("#gutter")
+          // }
+        ],
+        rowGutters: [
+          {
+            track: 1,
+            element: this.$refs.gutter1
+          }
+          // {
+          //   track: 1,
+          //   element: document.querySelector("#gutter2-1")
+          // }
+        ],
+        dragInterval: 10,
+        onDrag: (direction, track, gridTemplateStyle) => {
+          let str = gridTemplateStyle;
+          if (str) {
+            let list = str.trim().split(" ");
+            if (
+              list[0] &&
+              list[2] &&
+              parseFloat(list[2]) > 0 &&
+              parseFloat(list[0]) / parseFloat(list[2]) < 0.001
+            ) {
+              this.SET_CAMERA_PANEL_VISIBILITY(false);
+            } else {
+              /* this.SET_CAMERA_PANEL__VISIBILITY(true);*/
             }
           }
-        });
-      } else {
-        this.SET_CAMERA_PANEL_VISIBILITY(false);
-      }
-    });
+          Emitter.emit("split-change");
+        },
+        writeStyle: (grid, gridTemplateProp, gridTemplateStyle) => {
+          if (this.cameraPanelVisibity) {
+            console.log(gridTemplateStyle);
+            grid.style[gridTemplateProp] = gridTemplateStyle;
+          }
+        }
+      });
+    } else {
+      this.SET_CAMERA_PANEL_VISIBILITY(false);
+    }
   },
   methods: {
     ...mapMutations("workplace", [
       "SET_TEACHER_ID",
       "m_cameraPanelToggleButtonVisibity"
     ]),
-    ...mapMutations("features", ["SET_CAMERA_PANEL_VISIBILITY", "SET_TIMESTAMP"]),
+    ...mapMutations("features", [
+      "SET_CAMERA_PANEL_VISIBILITY",
+      "SET_TIMESTAMP"
+    ]),
     ...mapMutations("account", ["SET_ROLE"]),
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
     ...mapActions("workplace", ["enterRoom"]),
