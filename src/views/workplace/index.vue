@@ -61,7 +61,10 @@ import { mapState, mapMutations, mapGetters, mapActions } from "vuex";
 import { ROLE } from "../../store/account";
 import Widgets from "../../components/live-broadcast/widgets";
 import { initFeaturesState } from "../../store/features";
-import { initLiveBroadcastService } from "../../core/live-broadcast/live-broadcast-service";
+import {
+  initLiveBroadcastService,
+  liveBroadcastService
+} from "../../core/live-broadcast/live-broadcast-service";
 export default {
   name: "workplace",
   data: function() {
@@ -110,6 +113,11 @@ export default {
     } else {
       setTimeout(() => {
         this.SET_TIMESTAMP(new Date().getTime());
+        liveBroadcastService.timService.sendSystemMsg(
+          "PULL_STATE",
+          ROLE.TEACHER,
+          this.userInfo.username
+        );
       }, 2000);
       setInterval(() => {
         this.SET_TIMESTAMP(new Date().getTime());

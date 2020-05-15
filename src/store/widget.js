@@ -34,6 +34,9 @@ const mutations = {
   SET_DICE_VISIBLE(state, visible) {
     state.dice.visible = visible;
     state.dice.value = 0;
+  },
+  SET_DICE_VALUE(state, value) {
+    state.dice.value = value;
   }
 };
 
