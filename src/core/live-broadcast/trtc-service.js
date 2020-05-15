@@ -146,9 +146,14 @@ export class TrtcService {
     }
   }
   getRemoteStreamByUserId(id) {
-    let stream = this.remoteStreamList[id].stream;
-    if (stream && stream.play) {
-      return stream;
+    if (!this.remoteStreamList[id] && this.remoteStreamList["kblive_" + id]) {
+      id = "kblive_" + id;
+    }
+    if (this.remoteStreamList[id] && this.remoteStreamList[id].stream) {
+      let stream = this.remoteStreamList[id].stream;
+      if (stream && stream.play) {
+        return stream;
+      }
     }
   }
   remoteStreamPlay(id, elmentOrId) {
@@ -284,11 +289,14 @@ export class TrtcService {
   getShareStream() {
     let keys = Object.keys(this.remoteStreamList);
     let findKey = keys.find(key => {
-      if (/.*(share_screen)$/.test(this.remoteStreamList[key].userId_)) {
+      if (/.*(share_screen)$/.test(key)) {
         return true;
       }
     });
-    return this.remoteStreamList[findKey];
+    let stream = this.getRemoteStreamByUserId(findKey);
+    if (stream) {
+      return stream;
+    }
   }
   clearShareStream() {
     let keys = Object.keys(this.remoteStreamList);
