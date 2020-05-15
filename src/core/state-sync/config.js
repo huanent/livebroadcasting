@@ -1,4 +1,4 @@
-import { ROLE } from "../../store/account";
+import { ROLE } from "../../models/role";
 
 export default [
   {
