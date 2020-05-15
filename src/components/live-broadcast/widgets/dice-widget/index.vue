@@ -125,6 +125,9 @@ export default {
   width: 200px;
   height: 200px;
   background: #54555d;
+  padding-left: 36px;
+  box-sizing: border-box;
+  padding-top: 23px;
   #content {
     width: 134px;
     height: 134px;
