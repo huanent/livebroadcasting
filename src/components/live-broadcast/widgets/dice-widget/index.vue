@@ -1,5 +1,10 @@
 <template>
-  <widget-window nameWidget="骰子">
+  <widget-window
+    nameWidget="骰子"
+    :position="dice.position"
+    v-if="dice.visible"
+    @moved="UPDATE_POSITION({ name: 'dice', position: $event })"
+  >
     <transition>
       <div class="dice">
         <div id="content" ref="dice" @click="start" :class="changepoint">
@@ -81,10 +86,11 @@ export default {
     WidgetWindow
   },
   computed: {
-    ...mapState("workplace", ["diceWidget"]),
+    ...mapState("widget", ["dice"]),
     ...mapState("account", ["role"])
   },
   methods: {
+    ...mapMutations("widget", ["UPDATE_POSITION"]),
     start() {
       var num = parseInt(1 + Math.random() * 6);
       function better() {
@@ -116,8 +122,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .dice {
-  width: 600px;
-  height: 600px;
+  width: 200px;
+  height: 200px;
   background: #54555d;
   #content {
     width: 134px;

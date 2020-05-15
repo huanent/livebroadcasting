@@ -7,6 +7,14 @@ const state = {
     visible: false,
     started: false,
     seconds: 15 * 60
+  },
+  dice: {
+    position: {
+      x: 0,
+      y: 0
+    },
+    visible: false,
+    value: 0
   }
 };
 
@@ -22,6 +30,10 @@ const mutations = {
   },
   UPDATE_POSITION(state, payload) {
     if (payload.position) state[payload.name].position = payload.position;
+  },
+  SET_DICE_VISIBLE(state, visible) {
+    state.dice.visible = visible;
+    state.dice.value = 0;
   }
 };
 

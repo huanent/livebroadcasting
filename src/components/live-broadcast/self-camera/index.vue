@@ -103,16 +103,13 @@ export default {
       "audioLevel",
       "isInit"
     ]),
-    ...mapState("workplace", [
-      "microphonesDeviceList",
-      "cameraDeviceList",
-      "panelType"
-    ]),
+    ...mapState("workplace", ["microphonesDeviceList", "cameraDeviceList"]),
+    ...mapState("features", ["videoStatus", "audioStatus"]),
     microIcon() {
-      return this.localAudioStatus ? "microphone" : "microphone-slash";
+      return this.audioStatus ? "microphone" : "microphone-slash";
     },
     videoIcon() {
-      return this.localVideoStatus ? "video" : "video-slash";
+      return this.videoStatus ? "video" : "video-slash";
     }
   },
   watch: {
@@ -122,15 +119,13 @@ export default {
         this.visibility = true;
       }
     },
-    panelType(value) {
-      /*      if (value !== "camera" && this.isServiceReady) {
-        if (this.role !== "ROLE_STUDENT") {
-          this.LOCAL_STREAM_STOP_PLAY();
-        }
-        setTimeout(() => {
-          this.LOCAL_STREAM_PLAY(this.$refs.video);
-        }, 300);
-      }*/
+    videoStatus(value) {
+      this.localVideoStatus = value;
+      this.SET_LOCALSTREAM_VIDEO(value);
+    },
+    audioStatus(value) {
+      this.SET_LOCALSTREAM_AUDIO(value);
+      this.localAudioStatus = value;
     }
   },
   mounted() {
@@ -139,12 +134,6 @@ export default {
     }, 200);
     this.$once("hook:beforeDestroy", () => {
       clearInterval(audioLevelTimer);
-    });
-    Emitter.on("SYS_SET_REMOTE_AUDIO", data => {
-      this.SET_LOCALSTREAM_AUDIO(data.data);
-    });
-    Emitter.on("SYS_SET_REMOTE_VIDEO", data => {
-      this.SET_LOCALSTREAM_VIDEO(data.data);
     });
     Emitter.on("LIVE_READY", () => {
       this.isServiceReady = true;
@@ -159,12 +148,6 @@ export default {
       "LOCAL_STREAM_PLAY",
       "LOCAL_STREAM_STOP_PLAY"
     ]),
-    onMicroStateChange() {
-      this.SET_LOCALSTREAM_AUDIO(!this.localAudioStatus);
-    },
-    onVideoStateChange() {
-      this.SET_LOCALSTREAM_VIDEO(!this.localVideoStatus);
-    },
     onOpenSetting() {
       this.dialogVisible = true;
     },

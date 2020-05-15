@@ -41,7 +41,7 @@ class LiveBroadcastService {
             this.boardService.getActiveBoard().addSyncData(data);
             break;
           case "TIM_TEXT":
-            Emitter.emit("TIM_CUSTOM_MESSAGE", item);
+            store.commit("workplace/ADD_CHAT_MESSAGE", JSON.parse(data));
             break;
           case "SYSTEM_COMMAND":
             data = JSON.parse(data);
@@ -104,4 +104,5 @@ export let liveBroadcastService = null;
 export async function initLiveBroadcastService() {
   liveBroadcastService = new LiveBroadcastService();
   await liveBroadcastService.init();
+  Emitter.emit("LIVE_READY");
 }

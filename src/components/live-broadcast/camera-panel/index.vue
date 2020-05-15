@@ -27,7 +27,18 @@
             :style="{ height: perColumnHeight + 'px' }"
             style="color: white;display: inline-block;width: 100%"
           >
-            <CameraItem :item="item" @on-ready="play"></CameraItem>
+            <CameraItem
+              :item="item"
+              :audio="
+                getFeatures(item.userId) && getFeatures(item.userId).audioStatus
+              "
+              :video="
+                getFeatures(item.userId) && getFeatures(item.userId).videoStatus
+              "
+              @on-ready="play"
+              @video-change="videoChange($event, item.userId)"
+              @audio-change="audioChange($event, item.userId)"
+            ></CameraItem>
           </div>
         </div>
       </div>
@@ -43,7 +54,7 @@
 
 <script>
 import CameraItem from "./camera-item";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import { Emitter } from "@/core/emit";
 
 export default {
@@ -71,6 +82,7 @@ export default {
   },
   computed: {
     ...mapState("remoteStream", ["remoteStreamList"]),
+    ...mapState("workplace", ["featuresList"]),
     width() {
       let temp = this.remoteStreamList.length / this.slidesPerColumn;
       return Math.ceil(temp) * this.perColumnWidth;
@@ -91,6 +103,29 @@ export default {
 
   methods: {
     ...mapMutations("remoteStream", ["REMOTE_STREAM_PLAY"]),
+    ...mapActions("features", ["manualControlFeatures"]),
+    getFeatures(userId) {
+      let feature = this.featuresList.find((item, index) => {
+        if (item.__primaryKey === userId) return true;
+      });
+      if (feature) {
+        return feature;
+      }
+    },
+    videoChange(e, userId) {
+      this.manualControlFeatures({
+        id: userId,
+        propName: "videoStatus",
+        value: e
+      });
+    },
+    audioChange(e, userId) {
+      this.manualControlFeatures({
+        id: userId,
+        propName: "audioStatus",
+        value: e
+      });
+    },
     render() {
       let el = this.$refs.swiper;
       if (!el) return;

@@ -7,7 +7,7 @@
       ref="header"
       @dragend="dragend"
     >
-      <span class="timer">{{nameWidget}}</span>
+      <span class="timer">{{ nameWidget }}</span>
       <div class="close" @click="$emit('close')" v-if="role == ROLE.TEACHER">
         +
       </div>
@@ -22,7 +22,7 @@ import { mapState } from "vuex";
 import { ROLE } from "../../../store/account";
 
 export default {
-  props: ["position","nameWidget"],
+  props: ["position", "nameWidget"],
   data() {
     return {
       top: 0,
@@ -58,7 +58,7 @@ export default {
   watch: {
     position: {
       handler(value) {
-        if (this.role == ROLE.TEACHER) return;
+        if (this.role == ROLE.TEACHER || !value) return;
         this.top = value.y;
         this.left = value.x;
       },
