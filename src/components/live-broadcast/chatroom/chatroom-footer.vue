@@ -2,6 +2,7 @@
   <div class="chatroom-footer">
     <el-input
       v-model="message"
+      placeholder="请输入消息"
       size="small"
       class="mr10"
       @keyup.enter.native="onSubmit"
@@ -22,9 +23,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      if (this.message.trim().length === 0) {
-        return;
-      }
+      if (this.message.trim().length === 0) return;
       this.$emit("send", this.message);
       this.message = "";
     }

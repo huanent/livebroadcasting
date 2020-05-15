@@ -16,7 +16,8 @@ const state = {
   panelType: "board",
   workplaceVisibity: false,
   token: null,
-  featuresList: []
+  featuresList: [],
+  chatMessages: []
 };
 
 const mutations = {
@@ -25,6 +26,9 @@ const mutations = {
   },
   SET_THEME_COLOR(state, color) {
     state.themeColor = color;
+  },
+  ADD_CHAT_MESSAGE(state, msg) {
+    state.chatMessages.push(msg);
   },
   SET_TEACHER_ID(state, id) {
     state.teacherId = id;
@@ -105,9 +109,6 @@ const mutations = {
       remote.id,
       remote.element
     );
-  },
-  async SEND_MESSAGE(state, msg) {
-    await liveBroadcastService.timService.sendMessage(msg);
   },
   SET_PANEL_TYPE(state, panelType) {
     state.panelType = panelType;
