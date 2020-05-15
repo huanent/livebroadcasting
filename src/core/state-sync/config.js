@@ -14,7 +14,7 @@ export default [
   {
     path: ["features"],
     toPath: ["workplace", "featuresList"],
-    primaryId: "id",
+    primaryKey: true,
     listener: ROLE.TEACHER,
     sender: ROLE.STUDENT
   }

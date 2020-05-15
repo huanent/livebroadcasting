@@ -28,14 +28,15 @@ export default new Vuex.Store({
   },
   mutations: {
     SYNC_STATE(state, payload) {
-      if (payload.primaryId) {
+      if (payload.primaryKey) {
         let currentValue = getCurrentValue(state, payload.toPath);
 
         let old = currentValue.findIndex(
-          f => f[payload.primaryId] == payload.value[payload.primaryId]
+          f => f.__primaryKey == payload.primaryKey
         );
 
         currentValue.splice(old, 1);
+        payload.value.__primaryKey = payload.primaryKey;
         currentValue.push(payload.value);
       } else {
         let lastPropName = payload.path.pop();
