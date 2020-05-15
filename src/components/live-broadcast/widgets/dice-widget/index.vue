@@ -74,7 +74,8 @@ export default {
   data() {
     return {
       test: "",
-      num: 0
+      num: 0,
+      val:0
     };
   },
   components: {
@@ -87,26 +88,32 @@ export default {
   methods: {
     start() {
       var num = parseInt(1 + Math.random() * 6);
-      function sf() {
+      function better() {
         return (num = parseInt(1 + Math.random() * 6));
       }
       if (this.num == num) {
-        num = sf();
+        num = better();
       }
       this.num = num;
-
       if (num == 1) {
         this.test = "test";
+        this.val=1;
       } else if (num == 2) {
         this.test = "testa";
+        this.val=5;
       } else if (num == 3) {
         this.test = "testb";
+        this.val=6;
       } else if (num == 4) {
         this.test = "testc";
+        this.val=2;
       } else if (num == 5) {
         this.test = "testd";
+        this.val=4;
       } else {
         this.test = "teste";
+        this.val=3;
+
       }
     },
     ...mapMutations("workplace", ["SET_DICE_VISIBLE"])
