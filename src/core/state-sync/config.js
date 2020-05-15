@@ -12,6 +12,11 @@ export default [
     sender: ROLE.TEACHER
   },
   {
+    path: ["widget", "dice"],
+    listener: ROLE.STUDENT,
+    sender: ROLE.TEACHER
+  },
+  {
     path: ["features"],
     toPath: ["workplace", "featuresList"],
     primaryKey: true,

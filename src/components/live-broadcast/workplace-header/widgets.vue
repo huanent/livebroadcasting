@@ -21,7 +21,7 @@
             >定时器</a
           >
         </li>
-         <li>
+        <li>
           <a
             @click="
               SET_DICE_VISIBLE(true);
@@ -53,7 +53,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations("widget", ["SET_TIMER_VISIBLE"]),
+    ...mapMutations("widget", ["SET_TIMER_VISIBLE", "SET_DICE_VISIBLE"]),
     onOpenQuestion() {
       this.questionVisible = true;
       this.closeWidgets();
