@@ -89,6 +89,22 @@ export class TrtcService {
         }
       }
     }
+    /*    if (role === ROLE.TEACHER) {
+      stream = this.localStream;
+      if (stream && stream.userId_) {
+        this.copyStreamPlay(stream, data.el, stream.userId_, {
+          video: true,
+          audio: true
+        });
+      }
+    } else {
+      stream = this.getRemoteStreamByUserId(
+        this.liveBroadcastService.teacherStreamUserId
+      );
+      if (stream && stream.userId_) {
+        this.copyStreamPlay(stream, data.el, stream.userId_);
+      }
+    }*/
   }
   localStreamStopPlay(data) {
     if (!data.isCopy) {
@@ -277,10 +293,9 @@ export class TrtcService {
         this.remoteShareScreenStream = stream;
       } else {
         temp.push({
-          userId: stream.userId_,
-          id: stream.id_,
-          hasAudio: stream.hasAudio(),
-          hasVideo: stream.hasVideo()
+          userId: removeUserIdPrefix(stream.userId_),
+          rawUserId: stream.userId_,
+          id: stream.id_
         });
       }
     }
@@ -443,3 +458,9 @@ export class TrtcService {
     return shareClient;
   }
 }
+const removeUserIdPrefix = function(userId) {
+  if (userId.indexOf("kblive_") === 0) {
+    return userId.substring(7);
+  }
+  return userId;
+};

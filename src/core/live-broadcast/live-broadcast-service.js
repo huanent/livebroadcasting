@@ -104,4 +104,5 @@ export let liveBroadcastService = null;
 export async function initLiveBroadcastService() {
   liveBroadcastService = new LiveBroadcastService();
   await liveBroadcastService.init();
+  Emitter.emit("LIVE_READY");
 }

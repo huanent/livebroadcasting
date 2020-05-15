@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 import { Emitter } from "@/core/emit";
 
 export default {
@@ -39,8 +39,14 @@ export default {
     item: {
       type: Object,
       default: () => {
-        return { hasAudio: false, hasVideo: false, id: "", userId: "" };
+        return { id: "", userId: "" };
       }
+    },
+    audio: {
+      default: true
+    },
+    video: {
+      default: true
     }
   },
   data() {
@@ -50,17 +56,12 @@ export default {
   },
   methods: {
     ...mapMutations("remoteStream", ["SET_REMOTE_AUDIO", "SET_REMOTE_VIDEO"]),
+    ...mapActions("features", ["manualControlFeatures"]),
     onMicroStateChange() {
-      this.SET_REMOTE_AUDIO({
-        userId: this.item.userId,
-        status: !this.item.hasAudio
-      });
+      this.$emit("audio-change", !this.audio);
     },
     onVideoStateChange() {
-      this.SET_REMOTE_VIDEO({
-        userId: this.item.userId,
-        status: !this.item.hasVideo
-      });
+      this.$emit("video-change", !this.video);
     }
   },
   mounted() {
@@ -70,10 +71,10 @@ export default {
   },
   computed: {
     microIcon() {
-      return this.item.hasAudio ? "microphone" : "microphone-slash";
+      return this.audio ? "microphone" : "microphone-slash";
     },
     videoIcon() {
-      return this.item.hasVideo ? "video" : "video-slash";
+      return this.video ? "video" : "video-slash";
     }
   }
 };
