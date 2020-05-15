@@ -1,8 +1,8 @@
 <template>
-  <widget-window @close="SET_DICE_VISIBLE(false);dd()" v-if="diceWidget.visible" nameWidget="骰子">
+  <widget-window nameWidget="骰子">
     <transition>
       <div class="dice">
-        <div id="content" ref="dice" @click="btn" :class="test">
+        <div id="content" ref="dice" @click="start" :class="test">
           <!-- 第一个筛子 -->
           <div>
             <span></span>
@@ -74,7 +74,7 @@ export default {
   data() {
     return {
       test: "",
-      num:0
+      num: 0
     };
   },
   components: {
@@ -85,25 +85,16 @@ export default {
     ...mapState("account", ["role"])
   },
   methods: {
-    dd(){
-      this.num=0;
-      this.test="";
-    },
-    btn() {
+    start() {
       var num = parseInt(1 + Math.random() * 6);
-      function sf(){
-         return num = parseInt(1 + Math.random() * 6);
+      function sf() {
+        return (num = parseInt(1 + Math.random() * 6));
       }
-      if(this.num==num){
+      if (this.num == num) {
         num = sf();
       }
-      this.num=num
-      // if(num==6||this.num==num){
-      //   this.num=(--num)==0?parseInt(1 + Math.random() * 6):num;
-      // }else{
-      //  this.num=num
-      // }
-       console.log(num);
+      this.num = num;
+
       if (num == 1) {
         this.test = "test";
       } else if (num == 2) {
@@ -112,11 +103,10 @@ export default {
         this.test = "testb";
       } else if (num == 4) {
         this.test = "testc";
-      } else if(num==5){
+      } else if (num == 5) {
         this.test = "testd";
-      }else{
+      } else {
         this.test = "teste";
-
       }
     },
     ...mapMutations("workplace", ["SET_DICE_VISIBLE"])
@@ -128,7 +118,7 @@ export default {
 <style lang="scss" scoped>
 .dice {
   width: 600px;
-  height:600px;
+  height: 600px;
   background: #54555d;
   #content {
     width: 134px;
@@ -231,16 +221,8 @@ export default {
     transform: rotateY(30deg) rotateX(-20deg);
   }
 
-  20% {
-    transform: rotateY(3600deg) rotateX(3600deg);
-  }
-
-  90% {
-    transform: rotateY(3600deg) rotateX(3600deg);
-  }
-
   100% {
-    transform: rotateY(30deg) rotateX(-20deg);
+    transform: rotateY(3600deg) rotateX(3600deg);
   }
 }
 
@@ -249,16 +231,8 @@ export default {
     transform: rotateY(30deg) rotateX(-20deg);
   }
 
-  20% {
-    transform: rotateY(3510deg) rotateX(3600deg);
-  }
-
-  90% {
-    transform: rotateY(3510deg) rotateX(3600deg);
-  }
-
   100% {
-    transform: rotateY(30deg) rotateX(-20deg);
+    transform: rotateY(3510deg) rotateX(3600deg);
   }
 }
 
@@ -267,16 +241,8 @@ export default {
     transform: rotateY(30deg) rotateX(-20deg);
   }
 
-  20% {
-    transform: rotateY(3690deg) rotateX(3600deg);
-  }
-
-  90% {
-    transform: rotateY(3690deg) rotateX(3600deg);
-  }
-
   100% {
-    transform: rotateY(30deg) rotateX(-20deg);
+    transform: rotateY(3690deg) rotateX(3600deg);
   }
 }
 
@@ -285,16 +251,8 @@ export default {
     transform: rotateY(30deg) rotateX(-20deg);
   }
 
-  20% {
-    transform: rotateY(3780deg) rotateX(3600deg);
-  }
-
-  90% {
-    transform: rotateY(3780deg) rotateX(3600deg);
-  }
-
   100% {
-    transform: rotateY(30deg) rotateX(-20deg);
+    transform: rotateY(3780deg) rotateX(3600deg);
   }
 }
 
@@ -303,16 +261,8 @@ export default {
     transform: rotateY(30deg) rotateX(-20deg);
   }
 
-  20% {
-    transform: rotateY(3600deg) rotateX(3690deg);
-  }
-
-  90% {
-    transform: rotateY(3600deg) rotateX(3690deg);
-  }
-
   100% {
-    transform: rotateY(30deg) rotateX(-20deg);
+    transform: rotateY(3600deg) rotateX(3690deg);
   }
 }
 
@@ -321,35 +271,27 @@ export default {
     transform: rotateY(30deg) rotateX(-20deg);
   }
 
-  20% {
-    transform: rotateY(3600deg) rotateX(3510deg);
-  }
-
-  90% {
-    transform: rotateY(3600deg) rotateX(3510deg);
-  }
-
   100% {
-    transform: rotateY(30deg) rotateX(-20deg);
+    transform: rotateY(3600deg) rotateX(3510deg);
   }
 }
 .test {
-  animation: move1 5s ease-in-out 1;
+  animation: move1 2s ease-in-out forwards;
 }
 .testa {
-  animation: move2 5s ease-in-out 1;
+  animation: move2 2s ease-in-out forwards;
 }
 .testb {
-  animation: move3 5s ease-in-out 1;
+  animation: move3 2s ease-in-out forwards;
 }
 .testc {
-  animation: move4 5s ease-in-out 1;
+  animation: move4 2s ease-in-out forwards;
 }
 
 .testd {
-  animation: move5 5s ease-in-out 1;
+  animation: move5 2s ease-in-out forwards;
 }
 .teste {
-  animation: move6 5s ease-in-out 1;
+  animation: move6 2s ease-in-out forwards;
 }
 </style>
