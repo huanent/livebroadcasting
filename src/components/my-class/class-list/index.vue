@@ -88,6 +88,11 @@
       layout="prev, pager, next"
       :page-size="9"
       :total="pageTotal"
+      :current-page="
+        activeName === 'teacher'
+          ? createPageCache.current
+          : mylessonPageCache.current
+      "
       hide-on-single-page
       @current-change="handleCurrentChange"
     >
@@ -113,12 +118,18 @@ export default {
       pageTotal: 1,
       createCacheArr: [],
       mylessonCacheArr: [],
-      createPageCache: 1,
-      mylessonPageCache: 1,
-      currentPageArr: {
-        student: 1,
-        teacher: 1
+      createPageCache: {
+        total: 1,
+        current: 1
       },
+      mylessonPageCache: {
+        total: 1,
+        current: 1
+      },
+      // currentPageArr: {
+      //   student: 1,
+      //   teacher: 1
+      // },
       searchContent: "",
       searchQuery: "classId",
       searchMode: false
@@ -141,11 +152,13 @@ export default {
     activeName(newActive) {
       if (newActive == "teacher" && this.createCacheArr.length > 0) {
         this.classList = this.createCacheArr[0];
-        this.pageTotal = this.createPageCache;
+        this.pageTotal = this.createPageCache.total;
+        this.searchMode = false;
       }
       if (newActive == "student" && this.mylessonCacheArr.length > 0) {
         this.classList = this.mylessonCacheArr[0];
-        this.pageTotal = this.mylessonPageCache;
+        this.pageTotal = this.mylessonPageCache.total;
+        this.searchMode = false;
       }
       this.dataInit(newActive);
     }
@@ -184,9 +197,11 @@ export default {
     handleCurrentChange(pageNum) {
       if (this.activeName == "student") {
         this.mylessonCacheArr = [];
+        this.mylessonPageCache.current = pageNum;
       }
       if (this.activeName == "teacher") {
         this.createCacheArr = [];
+        this.createPageCache.current = pageNum;
       }
       if (this.searchMode) {
         this.searchClass(pageNum);
@@ -239,10 +254,10 @@ export default {
             console.log(this.classList);
             this.pageTotal = res.data.total;
             if (activeName == "student") {
-              this.mylessonPageCache = res.data.total;
+              this.mylessonPageCache.total = res.data.total;
             }
             if (activeName == "teacher") {
-              this.createPageCache = res.data.total;
+              this.createPageCache.total = res.data.total;
             }
           } else {
             this.$message.error(res.data.message);
