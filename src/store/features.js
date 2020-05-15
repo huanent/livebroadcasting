@@ -1,4 +1,5 @@
 import store from "@/store";
+import { liveBroadcastService } from "../core/live-broadcast/live-broadcast-service";
 export const initFeaturesState = function(role) {
   let isTeacher = role === "ROLE_TEACHER";
   return {
@@ -27,8 +28,17 @@ const mutations = {
   }
 };
 
+const actions = {
+  manualControlFeatures({ commit }, { id, propName, value }) {
+    liveBroadcastService.timService.sendSystemMsg("STATE_SYNC", id, {
+      value: value,
+      path: ["features", propName]
+    });
+  }
+};
 export default {
   namespaced: true,
   state,
-  mutations
+  mutations,
+  actions
 };

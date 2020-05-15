@@ -108,7 +108,9 @@ export default {
         Emitter.emit("SYS_PULL_STATE", ROLE.STUDENT);
       }, 2000);
     } else {
-      this.SET_TIMESTAMP(new Date().getTime());
+      setTimeout(() => {
+        this.SET_TIMESTAMP(new Date().getTime());
+      }, 2000);
       setInterval(() => {
         this.SET_TIMESTAMP(new Date().getTime());
       }, 10000);
