@@ -18,15 +18,22 @@ export function autoSyncState(app) {
 
         if (comparable != i.value) {
           i.value = comparable;
+
+          let payload = {
+            value: stateValue,
+            path: i.path,
+            toPath: i.toPath
+          };
+
+          if (i.primaryKey) {
+            payload.primaryKey = value.account.userInfo.username;
+            payload.streamId = value.workplace.token.id;
+          }
+
           liveBroadcastService.timService.sendSystemMsg(
             "STATE_SYNC",
             i.listener,
-            {
-              value: stateValue,
-              path: i.path,
-              toPath: i.toPath,
-              primaryId: i.primaryId
-            }
+            payload
           );
         }
       }
