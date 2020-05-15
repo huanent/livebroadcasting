@@ -117,8 +117,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .dice {
-  width: 600px;
-  height: 600px;
+  width: 200px;
+  height: 200px;
   background: #54555d;
   #content {
     width: 134px;
