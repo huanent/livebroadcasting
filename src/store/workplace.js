@@ -1,9 +1,10 @@
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 
 import { enterRoom } from "../core/data/data-service";
+import { ROLE } from "../models/role";
+
 const state = {
   themeColor: "dark",
-  teacherId: "",
   activeBoardIndex: 0,
   boardProfiles: [],
   boardTotalPage: 1,
@@ -15,6 +16,7 @@ const state = {
   activeMicrophones: {},
   panelType: "board",
   workplaceVisibity: false,
+  role: null,
   token: null,
   featuresList: []
 };
@@ -23,11 +25,11 @@ const mutations = {
   SET_TOKEN(state, token) {
     state.token = token;
   },
+  SET_ROLE(state, role) {
+    state.role = role;
+  },
   SET_THEME_COLOR(state, color) {
     state.themeColor = color;
-  },
-  SET_TEACHER_ID(state, id) {
-    state.teacherId = id;
   },
   BOARD_PROFILES(state, boardProfiles) {
     state.boardProfiles = boardProfiles;
@@ -118,8 +120,14 @@ const mutations = {
 };
 
 const actions = {
-  async enterRoom({ commit, rootState }, roomId) {
-    let res = await enterRoom(rootState.account.userInfo.username, roomId);
+  async enterRoom({ commit, rootState }, query) {
+    const role =
+      query.createUser == rootState.account.username
+        ? ROLE.TEACHER
+        : ROLE.STUDENT;
+
+    commit("SET_ROLE", role);
+    let res = await enterRoom(rootState.account.userInfo.username, query.id);
     commit("SET_TOKEN", res.data);
   }
 };

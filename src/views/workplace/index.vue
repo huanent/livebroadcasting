@@ -91,15 +91,8 @@ export default {
   },
 
   async mounted() {
-    const query = this.$route.query;
-    const teacher = query.createUser;
-    this.SET_TEACHER_ID(teacher);
-    await this.enterRoom(query.id);
-    const role =
-      teacher === localStorage.getItem("lb_userId")
-        ? ROLE.TEACHER
-        : ROLE.STUDENT;
-    this.SET_ROLE(role);
+    await this.enterRoom(this.$route.query);
+
     this.SET_DRAW_ENABLE(this.canControlBoard);
     setInterval(() => {
       this.SET_TIMESTAMP(new Date().getTime());
@@ -165,7 +158,10 @@ export default {
       "SET_TEACHER_ID",
       "m_cameraPanelToggleButtonVisibity"
     ]),
-    ...mapMutations("features", ["SET_CAMERA_PANEL_VISIBILITY", "SET_TIMESTAMP"]),
+    ...mapMutations("features", [
+      "SET_CAMERA_PANEL_VISIBILITY",
+      "SET_TIMESTAMP"
+    ]),
     ...mapMutations("account", ["SET_ROLE"]),
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
     ...mapActions("workplace", ["enterRoom"]),

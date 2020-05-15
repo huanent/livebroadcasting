@@ -9,8 +9,6 @@ import { syncConfig, getStateValue } from "../state-sync";
 class LiveBroadcastService {
   config;
   mode = "live";
-  userId = localStorage.getItem("lb_userId");
-  teacherStreamUserId = store.state.workplace.teacherId;
   trtcService;
   timService;
   boardService;
