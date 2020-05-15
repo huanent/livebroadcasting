@@ -27,6 +27,7 @@ export function autoSyncState(app) {
 
           if (i.primaryKey) {
             payload.primaryKey = value.account.userInfo.username;
+            payload.streamId = value.workplace.token.id;
           }
 
           liveBroadcastService.timService.sendSystemMsg(
