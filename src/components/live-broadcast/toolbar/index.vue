@@ -22,11 +22,7 @@
         item.singleclass
       ]"
     >
-      <el-tooltip
-        :effect="$store.state.workplace.themeColor"
-        :content="item.tips"
-        placement="right"
-      >
+      <el-tooltip :content="item.tips" placement="right" open-delay="1000">
         <el-popover
           placement="left"
           trigger="click"
@@ -303,13 +299,13 @@ export default {
 <style lang="scss" scoped>
 .toolbar {
   z-index: 99;
+
   width: 2rem;
   color: #eee;
   @include themeify {
-    background-color: themed("background_color1");
-    border: 1px solid themed("background_color5");
+    background-color: themed("toolbar_bg");
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   }
-  background-color: rgba(48, 49, 51, 0.79);
   position: absolute;
   padding: 0.3rem 0;
   text-align: center;
@@ -317,7 +313,7 @@ export default {
 .svg-icon {
   padding: 0.4rem;
   @include themeify {
-    fill: themed("toolbar_icon");
+    fill: mix(themed("color_opposite"), themed("color_like"), 40%);
   }
 }
 .toolbar-item {
@@ -326,26 +322,26 @@ export default {
   width: 100%;
 }
 .toolbar-item:hover {
-  background-color: rgba(0, 0, 0, 0.43);
-  @include themeify {
-    background-color: themed("background_color5");
-  }
+  /*  @include themeify {
+    background-color: rgba(themed("color_opposite"), 0.1);
+  }*/
   .svg-icon {
     @include themeify {
-      fill: themed("active_icon");
+      fill: themed("font_color1");
+      transform: scale(1.3);
     }
   }
 }
 .toolbar-item-active {
   @include themeify {
-    background-color: themed("toolbar_active");
+    background-color: rgba(themed("color_opposite"), 0.1);
   }
   .svg-icon {
     @include themeify {
-      fill: themed("active_icon");
+      fill: themed("font_color1");
+      transform: scale(1.3);
     }
   }
-  background-color: rgba(0, 0, 0, 0.43);
 }
 .toolbar-item-disabled svg {
   cursor: not-allowed !important;

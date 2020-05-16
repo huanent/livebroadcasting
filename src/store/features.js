@@ -8,6 +8,7 @@ export const initFeaturesState = function(role) {
     cameraPanelToggleButtonVisibity: isTeacher,
     canClickboardTabs: isTeacher,
     canControlBoard: isTeacher,
+    toolBarVisibity: true,
     videoStatus: true,
     audioStatus: true
   };

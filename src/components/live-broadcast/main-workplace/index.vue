@@ -106,14 +106,13 @@ export default {
     ...mapState("localStream", []),
     ...mapState("workplace", ["panelType", "workplaceVisibity"]),
     ...mapState("electron", ["streamSelectVisibility"]),
+    ...mapState("features", ["toolBarVisibity"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
     },
     isToolBarShow() {
       return (
-        this.showToolbar &&
-        this.panelType === "board" &&
-        this.role === "ROLE_TEACHER"
+        this.showToolbar && this.panelType === "board" && this.toolBarVisibity
       );
     },
     index() {
@@ -159,6 +158,9 @@ export default {
   height: 100%;
   width: 100%;
   position: relative;
+  @include themeify {
+    background: themedOpacity("color_opposite", 0.005);
+  }
 }
 .workplace-footer {
   height: 2rem;

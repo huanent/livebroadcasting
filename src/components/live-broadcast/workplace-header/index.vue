@@ -67,7 +67,7 @@ export default {
       transcodeProgress: 0,
       showProgressDialog: false,
       userId: "jongwong",
-      switchStatus: false,
+      switchStatus: true,
       activeColor: "#48a7a8",
       inactiveColor: "#76acc3"
     };
@@ -178,14 +178,14 @@ export default {
   cursor: pointer;
 
   @include themeify {
-    fill: themedOpacity("font_color3", 0.7);
+    fill: themedOpacity("font_color1", 0.7);
   }
   padding: 2.5px 4px;
   margin: 0 auto;
 }
 .menu-operation svg:hover {
   @include themeify {
-    fill: themedOpacity("font_color3", 1);
+    fill: themedOpacity("font_color1", 1);
   }
 }
 
