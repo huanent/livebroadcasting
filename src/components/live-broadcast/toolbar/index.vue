@@ -304,8 +304,8 @@ export default {
   color: #eee;
   @include themeify {
     background-color: themed("toolbar_bg");
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   }
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   position: absolute;
   padding: 0.3rem 0;
   text-align: center;
@@ -313,7 +313,7 @@ export default {
 .svg-icon {
   padding: 0.4rem;
   @include themeify {
-    fill: mix(themed("color_opposite"), themed("color_like"), 40%);
+    fill: themed("font_color2");
   }
 }
 .toolbar-item {

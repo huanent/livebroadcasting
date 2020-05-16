@@ -301,12 +301,6 @@ export default {
 .message-panel {
   background: #292b2e;
 }
-.panel-icon {
-  fill: #f1faf8;
-  padding: 5px;
-  background-color: rgba(156, 156, 156, 0.4);
-  transform: rotate(-90deg);
-}
 
 .camera-icon-box {
   cursor: pointer;
@@ -314,5 +308,23 @@ export default {
   z-index: 999;
   position: absolute;
   top: calc(28px);
+  @include themeify {
+    background-color: themed("toolbar_bg");
+  }
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  .svg-icon {
+    @include themeify {
+      fill: themed("font_color2");
+      padding: 5px;
+      transform: rotate(-90deg);
+    }
+  }
+}
+.camera-icon-box:hover {
+  .svg-icon {
+    @include themeify {
+      fill: themed("font_color1");
+    }
+  }
 }
 </style>
