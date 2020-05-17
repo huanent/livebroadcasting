@@ -34,10 +34,9 @@ export default {
         avatar: this.userInfo.avatar,
         nickname: this.userInfo.nickname,
         username: this.userInfo.username,
-        time: new Date().toLocaleString(),
+        time: new Date().toDateString(),
         isTeacher: this.role == ROLE.TEACHER
       };
-
       liveBroadcastService.timService.sendMessage(JSON.stringify(msg));
       this.ADD_CHAT_MESSAGE(msg);
     }

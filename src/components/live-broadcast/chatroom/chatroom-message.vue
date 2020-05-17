@@ -6,7 +6,6 @@
         <span class="chatroom-msg__name">{{
           message.nickname || message.username
         }}</span>
-        <span class="chatroom-msg__time">{{ message.time }}</span>
       </div>
     </div>
     <div class="chatroom-msg-body">
