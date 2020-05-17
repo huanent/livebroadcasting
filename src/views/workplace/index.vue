@@ -19,7 +19,9 @@
             'gutter-row': role !== ROLE.STUDENT,
             'gutter-not-allowed': !cameraPanelVisibity
           }"
-        ></div>
+        >
+          <div></div>
+        </div>
         <div class="main-workplace-panel">
           <div
             v-if="cameraPanelToggleButtonVisibity"
@@ -35,10 +37,14 @@
           <MainWorkplace></MainWorkplace>
         </div>
       </div>
-      <div class="gutter"></div>
+      <div class="gutter gutter-col">
+        <div></div>
+      </div>
       <div id="workplace-panel-right">
         <self-camera />
-        <div class="gutter"></div>
+        <div class="gutter gutter-row">
+          <div></div>
+        </div>
         <div class="message-panel">
           <chatroom />
         </div>
@@ -221,7 +227,7 @@ export default {
   margin: 0;
   padding: 0;
   @include themeify {
-    background: themedOpacity("background_color1", 0.8);
+    background: themed("background_color1");
   }
   /*  display: grid;
   grid-template-rows: 2rem auto;*/
@@ -232,9 +238,12 @@ export default {
   }
   width: 100%;
   height: 2rem;
-  margin-bottom: 2px;
   overflow: hidden;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.44);
+  @include themeify {
+    border-bottom: 1px solid themed("border_color1");
+  }
+  box-sizing: border-box;
+  /*  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.44);*/
   & > * {
     overflow: hidden;
   }
@@ -242,7 +251,7 @@ export default {
 .workplace-panel-content {
   display: grid;
   width: 100%;
-  grid-template-columns: 82.9% 0.1% 17%;
+  grid-template-columns: 83% 0 17%;
   height: 100%;
   overflow: hidden;
 }
@@ -265,20 +274,39 @@ export default {
   height: calc(100vh - 2rem);
   width: 100%;
   overflow: hidden;
+  @include themeify {
+    border-left: 1px solid themed("border_color1");
+  }
   & > * {
     overflow: hidden;
   }
 }
 .gutter {
-  @include themeify {
-    background: themedOpacity("border_color1", 1);
-  }
 }
+
 .gutter-row {
   cursor: row-resize;
+  @include themeify {
+    background: themed("background_color2");
+  }
+  > div {
+    height: 1px !important;
+    @include themeify {
+      background-color: themed("background_color1");
+    }
+
+    margin: 0 auto;
+  }
 }
 .gutter-col {
-  cursor: col-resize;
+  div {
+    width: 1px !important;
+    height: 100%;
+    @include themeify {
+      background-color: rgba(themed("border_color1"), 0.2);
+    }
+    margin: 0 auto;
+  }
 }
 .gutter-not-allowed {
   cursor: not-allowed;

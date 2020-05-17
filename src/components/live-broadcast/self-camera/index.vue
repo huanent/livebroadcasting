@@ -168,7 +168,9 @@ export default {
 
 <style scoped lang="scss">
 .self-camera-panel {
-  background: #212224;
+  @include themeify {
+    background: themed("background_color3");
+  }
   margin: 10px 10px 5px;
   position: relative;
   .self-camera-mask {
@@ -233,9 +235,7 @@ export default {
     }
   }
 }
-.hide {
-  visibility: hidden;
-}
+
 .local_video {
   height: 100%;
   width: 100%;

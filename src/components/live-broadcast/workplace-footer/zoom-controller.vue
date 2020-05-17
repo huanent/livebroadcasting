@@ -87,6 +87,11 @@ export default {
     @include themeify {
       fill: themed("font_color2") !important;
     }
+    :hover {
+      @include themeify {
+        fill: mix(themed("font_color2"), themed("color_opposite"), 70%);
+      }
+    }
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="main-workplace-container">
-    <div style="height: 100%" :class="{ hide: !workplaceVisibity }">
+    <div :class="{ hide: !workplaceVisibity }">
       <BoardTabs
         :datas="boardProfiles"
         @on-close="onTabsClose"
@@ -11,21 +11,25 @@
         class="workplace-content"
         :show-lable="panelType === 'board'"
       >
-        <div class="wrapper" v-show="panelType === 'board'">
-          <div id="board-el" class="roll-scroll"></div>
-        </div>
-        <div class="wrapper" v-show="panelType === 'screen'">
-          <div ref="screen"></div>
-        </div>
-        <div class="wrapper" v-show="panelType === 'camera'">
-          <div ref="camera" id="workplace-camera"></div>
-        </div>
       </BoardTabs>
-      <div class="workplace-footer">
-        <workplace-footer v-show="panelType === 'board'" />
-      </div>
-      <Toolbar v-if="isToolBarShow"></Toolbar>
     </div>
+
+    <div class="wrapper" style="height: calc(100% - 2rem)">
+      <div v-show="panelType === 'board'">
+        <div id="board-el" class="roll-scroll"></div>
+        <div class="workplace-footer" v-show="panelType === 'board'">
+          <workplace-footer />
+        </div>
+      </div>
+
+      <div v-show="panelType === 'screen'">
+        <div ref="screen"></div>
+      </div>
+      <div v-show="panelType === 'camera'">
+        <div ref="camera" id="workplace-camera"></div>
+      </div>
+    </div>
+    <Toolbar v-if="isToolBarShow"></Toolbar>
     <div style="height: 100%" :class="{ hide: workplaceVisibity }"></div>
 
     <StreamSourceDialog
@@ -162,36 +166,35 @@ export default {
     background: themedOpacity("color_opposite", 0.005);
   }
 }
-.workplace-footer {
-  height: 2rem;
-  color: #737882;
-  @include themeify {
-    background: themed("background_color3");
-  }
-  border-top: rgba(30, 33, 37, 0.19) 1px solid;
-}
-.workplace-content {
-  height: calc(100% - 2rem);
-}
+
 #board-el {
   position: absolute;
   z-index: 1;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 2rem);
   overflow: hidden;
 }
 .wrapper {
-  position: relative;
   height: 100%;
-  width: calc(100% - 5rem);
-  margin: 0 2.5rem;
-
+  width: 100%;
   > div {
-    height: 100%;
     width: 100%;
+    height: 100%;
+    position: relative;
+    div {
+      height: 100%;
+      width: 100%;
+    }
   }
 }
-.hide {
-  visibility: hidden;
+.workplace-footer {
+  height: 2rem !important;
+  color: #737882;
+  position: absolute;
+  bottom: 0;
+  @include themeify {
+    background: themed("background_color3");
+  }
+  border-top: rgba(30, 33, 37, 0.19) 1px solid;
 }
 </style>

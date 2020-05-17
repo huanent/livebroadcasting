@@ -162,14 +162,12 @@ export default {
 
 <style scoped lang="scss">
 .board-tabs {
-  height: 100%;
   color: #bfbfbf;
   font-size: small;
   user-select: none;
 }
 
 .tab-body {
-  height: calc(100% - 1.8rem);
 }
 .tab-item {
   padding: 0.3rem;

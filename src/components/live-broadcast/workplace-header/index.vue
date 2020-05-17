@@ -1,29 +1,40 @@
 <template>
   <div class="workplace-header-component">
     <div class="menu-operation">
-      <span style="padding: 0 20px">
-        <el-switch
-          v-model="switchStatus"
-          :active-color="activeColor"
-          :inactive-color="inactiveColor"
-        >
-        </el-switch>
-      </span>
+      <el-tooltip :content="'切换主题'" placement="bottom" :open-delay="300">
+        <span style="padding: 0 20px">
+          <el-switch v-model="switchStatus"> </el-switch>
+        </span>
+      </el-tooltip>
+      <el-tooltip :content="'课件库'" placement="bottom" :open-delay="300">
+        <icon
+          @click.native="onCoursewareOpen"
+          name="import_contacts"
+          :size="20"
+        ></icon>
+      </el-tooltip>
 
-      <icon
-        @click.native="onCoursewareOpen"
-        name="import_contacts"
-        :size="20"
-      ></icon>
-      <icon
-        name="person_outline"
-        :size="20"
-        @click.native="onShowFeaturesControlVisible"
-      ></icon>
-      <icon @click.native="onWidgetsOpen" name="widgets" :size="20"></icon>
-      <icon name="settings" :size="20"></icon>
-      <icon @click.native="liveroomLogout" name="exit_to_app" :size="20"></icon>
-      <icon name="info_outline" :size="20"></icon>
+      <el-tooltip :content="'应用中心'" placement="bottom" :open-delay="300">
+        <icon @click.native="onWidgetsOpen" name="widgets" :size="20"></icon>
+      </el-tooltip>
+      <el-tooltip :content="'控制面板'" placement="bottom" :open-delay="300">
+        <icon
+          name="settings"
+          :size="20"
+          @click.native="onShowFeaturesControlVisible"
+        ></icon>
+      </el-tooltip>
+      <!--    <el-tooltip :content="'个人设置'" placement="bottom" :open-delay="300">
+        <icon name="settings" :size="20"></icon>
+      </el-tooltip>-->
+      <el-tooltip :content="'退出'" placement="bottom" :open-delay="300">
+        <icon
+          @click.native="liveroomLogout"
+          name="exit_to_app"
+          :size="20"
+        ></icon>
+      </el-tooltip>
+      <!--   <icon name="info_outline" :size="20"></icon>-->
     </div>
     <Courseware
       :visible="dialogVisible"
@@ -178,18 +189,35 @@ export default {
   cursor: pointer;
 
   @include themeify {
-    fill: themedOpacity("font_color1", 0.7);
+    fill: themed("font_color2");
   }
   padding: 2.5px 4px;
   margin: 0 auto;
 }
 .menu-operation svg:hover {
   @include themeify {
-    fill: themedOpacity("font_color1", 1);
+    fill: themed("font_color1");
   }
 }
 
 .courseware-content {
   min-height: 40vh;
+}
+
+.menu-operation {
+  /deep/ .el-switch__core {
+    border-color: #636363;
+    background-color: #7f7f7f;
+  }
+  /*/deep/.el-switch__core:after {
+    background-color: #7f7f7f;
+  }
+  /deep/.el-switch.is-checked .el-switch__core:after {
+    background-color: #ffffff;
+  }*/
+  /deep/ .el-switch.is-checked .el-switch__core {
+    border-color: #acacac;
+    background-color: #b2b2b2;
+  }
 }
 </style>

@@ -192,14 +192,18 @@ export default {
     display: inline-block;
     padding: 0.5rem;
     cursor: pointer;
-    /deep/ .svg-icon {
+    .svg-icon {
       padding: 1rem;
       margin: 0 auto;
-      fill: #979797 !important;
+      @include themeify {
+        fill: themed("font_color2");
+      }
     }
     &:hover {
-      /deep/ .svg-icon {
-        fill: #e9e9e9 !important;
+      .svg-icon {
+        @include themeify {
+          fill: mix(themed("font_color2"), themed("color_opposite"), 70%);
+        }
       }
     }
   }

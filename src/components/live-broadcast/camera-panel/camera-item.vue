@@ -147,9 +147,7 @@ export default {
     }
   }
 }
-.hide {
-  visibility: hidden;
-}
+
 .remote-video-view {
   height: 100%;
   width: 100%;
