@@ -5,6 +5,7 @@
 
   "text.tips": "提示",
   "text.deleteSuccess": "删除成功",
+  "text.deleteFailed": "删除失败",
 
   "courseware.title": "课件库",
   "courseware.recode": "重新转码",

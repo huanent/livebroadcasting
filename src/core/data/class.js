@@ -1,37 +1,44 @@
 /* eslint-disable*/
 import axios from "axios";
+const id = localStorage.getItem("lb_token");
 
-export const removeClassImg = function (classId) {
-  return axios.post("/liveroom/remove", { classId });
+export const removeClass = function(classId) {
+  return axios.post("/liveroom/remove", { classId, id });
 };
-export const detailInit = function (classId) {
+export const getClassList = function(type) {
+  return axios.get(`/class/list?id=${id}&type=${type}`);
+};
+export const detailInit = function(classId) {
   return axios.get("/classform/list?classId=" + classId);
 };
-export const updateDataInit = function (classId) {
+export const updateDataInit = function(classId) {
   return axios.get("/classform/list?classId=" + classId);
 };
-export const getStudentsList = function () {
+export const getStudentsList = function() {
   return axios.get("/classform/list?students=true");
 };
-export const formatDate = function (timeStamp) {
-  timeStamp = new Date(parseInt(timeStamp)).toLocaleString();
-  return timeStamp;
-};
-export const classUpdate = function (formData) {
+export const classUpdate = function(formData) {
   return axios.post("/classform/update", formData);
 };
-export const classApply = function (formData) {
-  return axios.post("/classform/apply", formData);
+export const classApply = function(formData) {
+  return axios.post("/class/apply", formData);
 };
-export const classCreate = function (formData) {
+export const classCreate = function(formData) {
   return axios.post("liveRoom/create", formData);
 };
-export const searchClass = function (searchQuery, searchContent, pageNum) {
+export const searchClass = function(searchQuery, searchContent, pageNum) {
   if (searchQuery && searchContent) {
-    return axios.get("classform/list?searchQuery=" + searchQuery + "&searchContent=" + searchContent + "&pageNum=" + pageNum);
+    return axios.get(
+      "classform/list?searchQuery=" +
+        searchQuery +
+        "&searchContent=" +
+        searchContent +
+        "&pageNum=" +
+        pageNum
+    );
   }
 };
-export const classListInit = function (activeName, pageNum) {
+export const classListInit = function(activeName, pageNum) {
   var apiurl = "";
   pageNum = pageNum || 1;
   const userId = localStorage.getItem("lb_userId");
