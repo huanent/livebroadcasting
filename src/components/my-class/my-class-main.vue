@@ -27,7 +27,7 @@
               <el-option label="创建者" value="createUser"></el-option>
             </el-select>
             <el-button
-              @click="handleSearch"
+              @click="handleSearch(1)"
               slot="append"
               icon="el-icon-search"
             ></el-button>
@@ -113,7 +113,11 @@ export default {
     },
     handlePageChange(index) {
       this.pageNum = index;
-      this.getListData(this.activeName, this.pageNum, this.pageSize);
+      if (!this.isSearching) {
+        this.getListData(this.activeName, this.pageNum, this.pageSize);
+      } else {
+        this.handleSearch(index);
+      }
     },
     handleFieldChange() {
       this.searchValue = "";
@@ -126,7 +130,7 @@ export default {
       this.searchField = "";
       this.getListData(this.activeName, this.pageNum, this.pageSize);
     },
-    handleSearch() {
+    handleSearch(pageNum) {
       if (!this.searchField || !this.searchField.trim()) {
         this.$message.info("请先选择搜索的字段");
         return;
@@ -134,7 +138,7 @@ export default {
       if (!this.searchValue) return;
       this.loading = true;
       this.isSearching = true;
-      this.pageNum = 1;
+      this.pageNum = pageNum;
       classSearch(
         this.searchField,
         this.searchValue,

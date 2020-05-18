@@ -3,11 +3,19 @@
     <el-row type="flex" v-if="classList.length > 0" class="class-container">
       <div class="class-card" v-for="item in classList" :key="item._id">
         <el-button
-          v-if="type === 'creator'"
+          v-if="type === 'creator' && !isSearching"
           @click="handleDelete(item.classId)"
           type="text"
           class="delete-btn"
           title="删除课堂"
+          ><i class="el-icon-close"></i
+        ></el-button>
+        <el-button
+          v-if="type === 'participant' && !isSearching"
+          @click="handleQuit(item.classId)"
+          type="text"
+          class="delete-btn"
+          title="退出课堂"
           ><i class="el-icon-close"></i
         ></el-button>
         <div class="card-container">
@@ -56,8 +64,11 @@
       </div>
     </el-row>
     <template v-else>
-      <div class="nodata">
-        {{ $t("classform.noCreateClassTips") }}
+      <div class="nodata" v-if="!isSearching">
+        {{ nodataTips }}
+      </div>
+      <div class="nodata" v-else>
+        没有对应的搜索结果...
       </div>
     </template>
   </div>
@@ -65,7 +76,7 @@
 
 <script>
 import dayjs from "dayjs";
-import { classApply, removeClass } from "@api/class";
+import { classApply, classRemove, classQuit } from "@api/class";
 
 export default {
   name: "ClassList",
@@ -75,13 +86,49 @@ export default {
     isSearching: Boolean,
     type: String
   },
+  computed: {
+    nodataTips() {
+      return this.type === "creator"
+        ? this.$t("classform.noCreateClassTips")
+        : this.$t("classform.noJoinClassTips");
+    }
+  },
   filters: {
     timeFormat(timestamp) {
       return dayjs(parseInt(timestamp)).format("YYYY/MM/DD HH:mm");
     }
   },
   methods: {
-    handleDelete(id) {},
+    handleDelete(classId) {
+      this.$confirm("此操作将删除所有课堂数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const result = await classRemove(classId);
+          if (result.data.success) {
+            this.$message.success("删除课堂成功");
+            this.$emit("refresh");
+          }
+        })
+        .catch(() => {});
+    },
+    handleQuit(classId) {
+      this.$confirm("此操作会将您从当前课堂移除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const result = await classQuit(classId);
+          if (result.data.success) {
+            this.$message.success("移除课堂成功");
+            this.$emit("refresh");
+          }
+        })
+        .catch(() => {});
+    },
     handleJoinClass(id) {
       classApply(id)
         .then(res => {
@@ -104,16 +151,14 @@ export default {
 .classlist {
   overflow: auto;
   margin: 15px 0;
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
   .addclass-btn {
     margin-left: calc(100% - 8rem);
   }
   .nodata {
     font-size: 1.5rem;
+    padding: 20px 0;
     color: #0a818c;
+    text-align: center;
   }
   .el-pagination {
     margin-top: 1rem;
@@ -122,11 +167,11 @@ export default {
     flex-wrap: wrap;
     width: 100%;
     .delete-btn {
-      // width: 1rem;
-      // height: 1rem;
       position: absolute;
-      margin-left: 30%;
       z-index: 99;
+      right: 4px;
+      top: 0;
+      font-size: 18px;
     }
     .enter-class-btn {
       position: absolute;
@@ -134,12 +179,14 @@ export default {
       z-index: 99;
     }
     .class-card {
+      position: relative;
       width: 32%;
+      height: fit-content;
+      background: white;
       margin: 0.5%;
       .card-container {
         display: flex;
         align-items: center;
-        background: white;
         padding: 1rem;
         justify-content: space-between;
       }

@@ -19,20 +19,17 @@ export const classSearch = function(field, value, pageNum, pageSize) {
 export const classRemove = function(classId) {
   return axios.post("/class/remove", { classId, id });
 };
-export const removeClass = function(classId) {
-  return axios.post("/liveroom/remove", { classId, id });
+export const classQuit = function(classId) {
+  return axios.post("/class/quit", { classId, userId });
 };
-export const detailInit = function(classId) {
-  return axios.get("/classform/list?classId=" + classId);
+export const classGet = function(classId) {
+  return axios.get(`/class/get?classId=${classId}`);
 };
-export const updateDataInit = function(classId) {
-  return axios.get("/classform/list?classId=" + classId);
-};
-export const getStudentsList = function() {
-  return axios.get("/classform/list?students=true");
+export const getUserList = function() {
+  return axios.get("/user/list");
 };
 export const classUpdate = function(formData) {
-  return axios.post("/classform/update", formData);
+  return axios.post("/class/update", formData);
 };
 export const classCreate = function(formData) {
   return axios.post("liveRoom/create", formData);
