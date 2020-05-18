@@ -16,7 +16,9 @@
         />
       </div>
     </div>
-    <div :id="item.id" ref="video" class="remote-video-view"></div>
+    <div :id="item.id" ref="video" class="remote-video-view">
+      <icon v-if="!video" class="no-video" name="person" color="#34363b" />
+    </div>
     <div class="self-camera-footer">
       <div>
         <!-- <icon name="microphone" color="#0A818C" :size="18" />
@@ -151,6 +153,12 @@ export default {
 .remote-video-view {
   height: 100%;
   width: 100%;
+  background: rgb(52, 54, 58);
+  .no-video {
+    width: 100% !important;
+    height: 100% !important;
+    background-color: #202224;
+  }
 }
 .camera-setting {
   position: absolute;

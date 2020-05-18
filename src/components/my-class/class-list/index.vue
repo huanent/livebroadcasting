@@ -126,10 +126,6 @@ export default {
         total: 1,
         current: 1
       },
-      // currentPageArr: {
-      //   student: 1,
-      //   teacher: 1
-      // },
       searchContent: "",
       searchQuery: "classId",
       searchMode: false
@@ -137,10 +133,8 @@ export default {
   },
   props: {
     activeName: String
-    // label: String
   },
   created() {
-    // console.log(this.currentPageArr);
     this.userId = localStorage.getItem("lb_userId");
     if (this.createCacheArr.length == 0 && this.mylessonCacheArr.length == 0) {
       this.dataInit(this.activeName);

@@ -19,7 +19,14 @@
         <icon name="settings" size="16" class="camera-setting"></icon>
       </a>
     </div>
-    <div class="local_video" ref="video"></div>
+    <div class="local_video" ref="video">
+      <icon
+        v-if="!$store.state.features.videoStatus"
+        class="no-video"
+        name="person"
+        color="#34363b"
+      />
+    </div>
     <div class="self-camera-footer">
       <div>
         <icon :name="microIcon" color="#0A818C" :size="18" />
@@ -239,6 +246,12 @@ export default {
 .local_video {
   height: 100%;
   width: 100%;
+  background: rgb(52, 54, 58);
+  .no-video {
+    width: 100% !important;
+    height: 100% !important;
+    background-color: #202224;
+  }
 }
 .camera-setting {
   position: absolute;
