@@ -102,7 +102,11 @@ export default {
 
   async mounted() {
     await this.enterRoom(this.$route.query);
-
+    const role =
+      this.$route.query.createUser == this.userInfo.username
+        ? ROLE.TEACHER
+        : ROLE.STUDENT;
+    this.SET_ROLE(role);
     this.SET_DRAW_ENABLE(this.canControlBoard);
     await initLiveBroadcastService();
     if (role == ROLE.TEACHER) {
