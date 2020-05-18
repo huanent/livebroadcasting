@@ -8,8 +8,9 @@
 
   "courseware.title": "课件库",
   "courseware.recode": "重新转码",
-  "courseware.del": "删除",
-  "courseware.toboard": "上传白板",
+  "courseware.del": "删除课件",
+  "courseware.toboard": "加载白板",
+  "courseware.download": "下载课件",
 
   "login": "登录",
   "login.title": "Live boardcasting",
