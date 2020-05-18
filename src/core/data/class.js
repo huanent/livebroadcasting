@@ -1,46 +1,36 @@
 /* eslint-disable*/
 import axios from "axios";
+const id = localStorage.getItem("lb_token");
+const userId = localStorage.getItem("lb_userId");
 
-export const removeClassImg = function (classId) {
-  return axios.post("/liveroom/remove", { classId });
+export const getClassList = function(type, pageNum, pageSize) {
+  return axios.get(
+    `/class/list?id=${id}&type=${type}&pageNum=${pageNum}&pageSize=${pageSize}`
+  );
 };
-export const detailInit = function (classId) {
-  return axios.get("/classform/list?classId=" + classId);
+export const classApply = function(classId) {
+  return axios.post("/class/apply", { userId, classId });
 };
-export const updateDataInit = function (classId) {
-  return axios.get("/classform/list?classId=" + classId);
+export const classSearch = function(field, value, pageNum, pageSize) {
+  return axios.get(
+    `/class/search?field=${field}&value=${value}&pageNum=${pageNum}&pageSize=${pageSize}`
+  );
 };
-export const getStudentsList = function () {
-  return axios.get("/classform/list?students=true");
+export const classRemove = function(classId) {
+  return axios.post("/class/remove", { classId, id });
 };
-export const formatDate = function (timeStamp) {
-  timeStamp = new Date(parseInt(timeStamp)).toLocaleString();
-  return timeStamp;
+export const classQuit = function(classId) {
+  return axios.post("/class/quit", { classId, userId });
 };
-export const classUpdate = function (formData) {
-  return axios.post("/classform/update", formData);
+export const classGet = function(classId) {
+  return axios.get(`/class/get?classId=${classId}`);
 };
-export const classApply = function (formData) {
-  return axios.post("/classform/apply", formData);
+export const getUserList = function() {
+  return axios.get("/user/list");
 };
-export const classCreate = function (formData) {
+export const classUpdate = function(formData) {
+  return axios.post("/class/update", formData);
+};
+export const classCreate = function(formData) {
   return axios.post("liveRoom/create", formData);
-};
-export const searchClass = function (searchQuery, searchContent, pageNum) {
-  if (searchQuery && searchContent) {
-    return axios.get("classform/list?searchQuery=" + searchQuery + "&searchContent=" + searchContent + "&pageNum=" + pageNum);
-  }
-};
-export const classListInit = function (activeName, pageNum) {
-  var apiurl = "";
-  pageNum = pageNum || 1;
-  const userId = localStorage.getItem("lb_userId");
-  if (!userId) return;
-  if (activeName == "student") {
-    apiurl = "/classform/list?isstudent=" + userId + "&pageNum=" + pageNum;
-  }
-  if (activeName == "teacher") {
-    apiurl = "/classform/list?createUser=" + userId + "&pageNum=" + pageNum;
-  }
-  return axios.get(apiurl);
 };
