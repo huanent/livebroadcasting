@@ -3,24 +3,24 @@
     <div class="classlist">
       <el-row type="flex" class="detail-container">
         <div class="detail-image">
-          <img :src="classList.url" alt="" />
+          <img :src="classInfo.url" alt="" />
         </div>
         <div class="detail-content">
           <div class="detail-title">
-            <span>{{ classList.title }}</span>
+            <span>{{ classInfo.title }}</span>
           </div>
           <div>
             <label>{{ $t("classform.startTime") }}：</label
-            ><span>{{ classList.startTime }}</span>
+            ><span>{{ classInfo.startTime | timeFormat }}</span>
           </div>
           <div>
             <label>{{ $t("classform.endTime") }}：</label
-            ><span>{{ classList.endTime }}</span>
+            ><span>{{ classInfo.endTime | timeFormat }}</span>
           </div>
 
           <div>
             <label>{{ $t("classform.createTime") }}：</label
-            ><span>{{ classList.createDate }}</span>
+            ><span>{{ classInfo.createDate | timeFormat }}</span>
           </div>
         </div>
         <el-button
@@ -33,24 +33,31 @@
       </el-row>
       <div class="class-desc">
         <label>{{ $t("classform.description") }}：</label
-        ><span>{{ classList.description }}</span>
+        ><span>{{ classInfo.description }}</span>
       </div>
       <div class="class-desc" v-if="isCreater">
-        <label>{{ $t("classform.students") }}：</label
-        ><span>{{ studentsList }}</span>
+        <label>{{ $t("classform.students") }}：</label>
+        <span v-for="item in classInfo.students" :key="item._id">
+          {{ item.userId }}、
+        </span>
       </div>
     </div>
-    <el-dialog :title="$t('classform.edit')" :visible.sync="dialogFormVisible">
+    <el-dialog
+      :title="$t('classform.edit')"
+      :visible.sync="dialogFormVisible"
+      :close-on-click-modal="false"
+    >
       <ClassUpdate
-        :classId="classId"
-        @setActivityBtn="setActivityBtn"
+        :classInfo="classInfo"
+        @updateSuccess="handleRefresh"
       ></ClassUpdate>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { detailInit, formatDate } from "@api/class";
+import { classGet } from "@api/class";
+import dayjs from "dayjs";
 import ClassUpdate from "./update";
 export default {
   name: "ClassDetail",
@@ -59,53 +66,42 @@ export default {
   },
   data() {
     return {
-      classList: [],
-      studentsList: "",
+      classInfo: [],
       classId: "",
-      isCreater: false,
       dialogFormVisible: false
     };
   },
+  computed: {
+    isCreater() {
+      return localStorage.getItem("lb_userId") === this.classInfo.createUser;
+    }
+  },
+  filters: {
+    timeFormat(timestamp) {
+      return dayjs(parseInt(timestamp)).format("YYYY/MM/DD HH:mm");
+    }
+  },
   created() {
-    this.dataInit();
-    // console.log(parseInt(this.$route.params.classId));
-    console.log(this.$route.query.classId);
+    this.getClassInfo();
   },
   methods: {
+    handleRefresh() {
+      this.getClassInfo();
+      this.dialogFormVisible = false;
+    },
     updateDialog(classId) {
       this.classId = classId;
       this.dialogFormVisible = true;
     },
-    setActivityBtn(data) {
-      if (data == false) {
-        this.dataInit();
-        this.dialogFormVisible = false;
-      }
-    },
-    dataInit() {
-      detailInit(this.$route.query.classId)
+    getClassInfo() {
+      classGet(this.$route.query.classId)
         .then(res => {
           if (res.data.success) {
-            this.classList = res.data.data[0];
-            this.classList.url =
-              "http://livebroadcasting.jinrui.kooboo.site" + this.classList.url;
-            this.classList.startTime = formatDate(this.classList.startTime);
-            this.classList.endTime = formatDate(this.classList.endTime);
-            this.classList.createDate = formatDate(this.classList.createDate);
-            if (res.data.data[0].students) {
-              this.studentsList = JSON.parse(
-                res.data.data[0].students
-              ).toString();
-            } else {
-              this.studentsList = this.$t("classform.noStudents");
-            }
-            if (
-              localStorage.getItem("lb_userId") == this.classList.createUser
-            ) {
-              this.isCreater = true;
-            }
+            this.classInfo = res.data.model;
+            this.classInfo.url =
+              "http://livebroadcasting.jinrui.kooboo.site" + this.classInfo.url;
           } else {
-            this.$message.error(res.data.message);
+            this.$message.error("没有对应的课堂信息");
           }
         })
         .catch(err => {
