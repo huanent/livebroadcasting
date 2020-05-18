@@ -4,67 +4,48 @@
       name="minus-circle"
       color="#737882"
       :size="14"
-      :class="{ 'no-drop': role === ROLE.STUDENT }"
+      v-if="canControlBoard"
       @click.native.stop="handleMinus"
     />
-    <span>{{ zoomParam | NumToPercent }}</span>
+    <span>{{ currentFile.scale + "%" }}</span>
     <icon
       name="plus-circle"
       color="#737882"
       :size="14"
-      :class="{ 'no-drop': role === ROLE.STUDENT }"
+      v-if="canControlBoard"
       @click.native.stop="handleAdd"
     />
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { ROLE } from "../../../store/account";
+import { mapState, mapMutations } from "vuex";
+import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
 
 export default {
   name: "ZoomController",
   data() {
     return {
-      rate: 0.5,
       max: 400,
       min: 100
     };
   },
   computed: {
-    ...mapState("account", ["role"]),
+    ...mapState("features", ["canControlBoard"]),
+    ...mapState("board", ["currentFile"]),
     zoomParam() {
       return this.$store.state.workplace.boardScale;
     }
   },
-  filters: {
-    NumToPercent(num) {
-      num = Number(num);
-      if (num <= 0 || isNaN(num)) {
-        return "0%";
-      } else {
-        return Math.round(num * 100) / 100 + "%";
-      }
-    }
-  },
   methods: {
+    ...mapMutations("board", ["SCALE_BOARD"]),
     handleMinus() {
-      if (this.zoomParam <= this.min || this.role === ROLE.STUDENT) {
-        return;
-      }
-      this.$store.commit(
-        "workplace/BOARD_SCALE_DECREASE",
-        this.zoomParam * this.rate
-      );
+      if (this.currentFile.scale <= this.min) return;
+      this.SCALE_BOARD(this.currentFile.scale - 100);
     },
     handleAdd() {
-      if (this.zoomParam >= this.max || this.role === ROLE.STUDENT) {
-        return;
-      }
-      this.$store.commit(
-        "workplace/BOARD_SCALE_INCREASE",
-        this.zoomParam * this.rate * 2
-      );
+      if (this.currentFile.scale >= this.max) return;
+      this.SCALE_BOARD(this.currentFile.scale + 100);
     }
   }
 };

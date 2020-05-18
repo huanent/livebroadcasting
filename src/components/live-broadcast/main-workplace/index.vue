@@ -2,7 +2,6 @@
   <div class="main-workplace-container">
     <div :class="{ hide: !workplaceVisibity }">
       <BoardTabs
-        :datas="boardProfiles"
         @on-close="onTabsClose"
         :active-index.sync="index"
         @index-change="indexChange($event)"

@@ -3,14 +3,18 @@
     <div class="board-tabs-header">
       <div
         class="tab-item"
-        v-for="(item, i) in datas"
+        v-for="(item, i) in fileList"
         :key="i"
-        @click="switchTab(i, item)"
-        :class="{ 'tab-item-active': d_activeIndex === i }"
+        @click="switchTab(item)"
+        :class="{ 'tab-item-active': item === currentFile }"
         v-show="showLable"
       >
         <span class="board-tab-title-container">{{ item.title }}</span>
-        <span @click="onClose(item, i)" class="board-tab-icon-container">
+        <span
+          @click="onClose(item)"
+          class="board-tab-icon-container"
+          v-if="canClickboardTabs"
+        >
           <icon class="board-tab-icon" name="times" :size="12"></icon>
         </span>
       </div>
@@ -47,15 +51,13 @@
         </div>
       </div>
     </div>
-    <div class="tab-body">
-      <slot></slot>
-    </div>
   </div>
 </template>
 
 <script>
 import { Multiselect } from "vue-multiselect";
 import { mapState, mapMutations } from "vuex";
+import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
 export default {
   name: "BoardTabs",
   props: {
@@ -94,26 +96,14 @@ export default {
   },
   computed: {
     ...mapState("account", ["role"]),
-    ...mapState("features", ["canClickboardTabs"])
+    ...mapState("features", ["canClickboardTabs"]),
+    ...mapState("board", ["fileList", "currentFile"])
   },
   mounted() {
     this.init();
     this.selectOptionByType(this.panelType);
   },
   watch: {
-    activeIndex(value) {
-      this.d_activeIndex = value;
-    },
-    d_activeIndex(newVal, oldVal) {
-      if (this.tabItemList[oldVal]) {
-        this.tabItemList[oldVal].isActive = false;
-      }
-      if (this.tabItemList[newVal]) {
-        this.tabItemList[newVal].isActive = true;
-      }
-      this.$emit("index-change", newVal);
-      this.$emit("active-index", newVal);
-    },
     panelType(type) {
       this.options.forEach(item => {
         if (item.type === type) {
@@ -123,9 +113,10 @@ export default {
     }
   },
   methods: {
-    switchTab(index) {
+    ...mapMutations("board", ["DELETE_BOARD"]),
+    switchTab(item) {
       if (!this.canClickboardTabs) return;
-      this.d_activeIndex = index;
+      liveBroadcastService.boardService.switchFile(item);
     },
     selectOptionByType(type) {
       this.selected = this.options.find(item => {
@@ -134,9 +125,8 @@ export default {
         }
       });
     },
-    onClose(item, i) {
-      this.datas.splice(i, 1);
-      this.$emit("on-close", item, i);
+    onClose(item) {
+      this.DELETE_BOARD(item);
     },
     toggle() {
       this.$refs.select.isOpen = !this.$refs.select.isOpen;
@@ -165,9 +155,6 @@ export default {
   color: #bfbfbf;
   font-size: small;
   user-select: none;
-}
-
-.tab-body {
 }
 .tab-item {
   padding: 0.3rem;

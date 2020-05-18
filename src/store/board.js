@@ -1,28 +1,20 @@
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 
-import account, { ROLE } from "./account";
 const state = {
-  //board(涂鸦)
-  // drawEnable: true, //是否可以涂鸦
-  // synDrawEnable: true, //是否将你画的涂鸦同步给其他人
   toolType: 1,
   brushThin: 20,
-  // backgroundImage: "背景图",
-  // backgroundImageH5: "背景图H5",
-  // backgroundColor: "#ff0000",
-  // globalBackgroundColor: "#ff0000",
   brushColor: "#ba3136", // 画笔颜色
   textColor: "#222222",
-  // textStyle: "#ff0000",
-  // textFamily: "sans-serif,serif,monospace",
   textSize: 320,
-  // scaleSize: 100,
-  // fitMode: 1,
-  // ration: "16:9",
   canRedo: 0,
   canUndo: 0,
-
-  drawEnable: false
+  drawEnable: false,
+  fileList: [],
+  currentFile: {
+    pageCount: 0,
+    currentPageIndex: 1,
+    scale: 100
+  }
 };
 
 const mutations = {
@@ -97,6 +89,29 @@ const mutations = {
   },
   ADD_BOARD() {
     liveBroadcastService.boardService.addBoard();
+  },
+  SYNC_STATE(state, data) {
+    for (const key in data) {
+      state[key] = data[key];
+    }
+  },
+
+  SCALE_BOARD(state, value) {
+    liveBroadcastService.boardService.activeBoard.setBoardScale(value);
+    state.currentFile.scale = value;
+  },
+  PAGING(state, index) {
+    if (index > state.currentFile.currentPageIndex) {
+      liveBroadcastService.boardService.activeBoard.nextBoard(true);
+    } else if (index < state.currentFile.currentPageIndex) {
+      liveBroadcastService.boardService.activeBoard.prevBoard(true);
+    }
+    state.currentFile.currentPageIndex = index;
+  },
+  DELETE_BOARD(state, file) {
+    state.fileList = state.fileList.filter(f => f != file);
+    state.currentFile = state.fileList[state.fileList.length - 1];
+    liveBroadcastService.boardService.activeBoard.deleteFile(file.fid);
   }
 };
 

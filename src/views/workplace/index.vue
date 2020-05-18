@@ -180,10 +180,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations("workplace", [
-      "SET_TEACHER_ID",
-      "m_cameraPanelToggleButtonVisibity"
-    ]),
     ...mapMutations("features", [
       "SET_CAMERA_PANEL_VISIBILITY",
       "SET_TIMESTAMP"

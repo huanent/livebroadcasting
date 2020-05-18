@@ -35,12 +35,6 @@ const mutations = {
   ADD_CHAT_MESSAGE(state, msg) {
     state.chatMessages.push(msg);
   },
-  SET_TEACHER_ID(state, id) {
-    state.teacherId = id;
-  },
-  BOARD_PROFILES(state, boardProfiles) {
-    state.boardProfiles = boardProfiles;
-  },
   async ADD_BOARD_FILE(state, file) {
     await liveBroadcastService.boardService.addBoardFiles(
       file.resultUrl,
@@ -48,52 +42,6 @@ const mutations = {
       file.pages,
       file.resolution
     );
-  },
-  DELETE_BOARD_FILE(state, fid) {
-    liveBroadcastService.boardService.deleteBoardFile(fid);
-  },
-  BOARD_INDEX(state, index) {
-    state.activeBoardIndex = index;
-  },
-  async BOARD_TOTAL_PAGE(state, boardTotalPage) {
-    state.boardTotalPage = boardTotalPage;
-  },
-  UPDATE_BOARD_STATE(state, data) {
-    state.boardTotalPage = data.boardTotalPage;
-    state.boardNumber = data.boardNumber;
-    state.boardScale = data.boardScale;
-  },
-  GET_BOARD_STATE_FROM_BOARD(state) {},
-  BOARD_NUMBER(state, boardNumber) {
-    state.boardNumber = boardNumber;
-  },
-  BOARD_NUMBER_INCREASE(state, boardNumber) {
-    state.boardNumber++;
-    liveBroadcastService.boardService.getActiveBoard().nextBoard();
-  },
-  BOARD_NUMBER_DECREASE(state, boardNumber) {
-    state.boardNumber--;
-    liveBroadcastService.boardService.getActiveBoard().prevBoard();
-  },
-  BOARD_SCALE(state, boardScale) {
-    state.boardScale = boardScale;
-    liveBroadcastService.boardService
-      .getActiveBoard()
-      .setBoardScale(state.boardScale);
-  },
-  BOARD_SCALE_INCREASE(state, stepScale) {
-    state.boardScale = state.boardScale + stepScale;
-    liveBroadcastService.boardService
-      .getActiveBoard()
-      .setBoardScale(state.boardScale);
-    liveBroadcastService.boardService.getActiveBoard().resize();
-  },
-  BOARD_SCALE_DECREASE(state, stepScale) {
-    state.boardScale = state.boardScale - stepScale;
-    liveBroadcastService.boardService
-      .getActiveBoard()
-      .setBoardScale(state.boardScale);
-    liveBroadcastService.boardService.getActiveBoard().resize();
   },
   CAMERA_DEVICE_LIST(state, list) {
     state.cameraDeviceList = list;

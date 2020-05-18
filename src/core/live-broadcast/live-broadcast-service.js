@@ -36,7 +36,7 @@ class LiveBroadcastService {
         let data = item.payload.data;
         switch (type) {
           case "TIW_DATA":
-            this.boardService.getActiveBoard().addSyncData(data);
+            Emitter.emit("remote-board-data-change", data);
             break;
           case "TIM_TEXT":
             store.commit("workplace/ADD_CHAT_MESSAGE", JSON.parse(data));
