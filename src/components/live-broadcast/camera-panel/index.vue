@@ -30,10 +30,12 @@
             <CameraItem
               :item="item"
               :audio="
-                getFeatures(item.userId) && getFeatures(item.userId).audioStatus
+                getFeatures(item.userId) &&
+                  getFeatures(item.userId).subscribeAudio
               "
               :video="
-                getFeatures(item.userId) && getFeatures(item.userId).videoStatus
+                getFeatures(item.userId) &&
+                  getFeatures(item.userId).subscribeVideo
               "
               @on-ready="play"
               @video-change="videoChange($event, item.userId)"
@@ -56,6 +58,8 @@
 import CameraItem from "./camera-item";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { Emitter } from "@/core/emit";
+import { ROLE } from "../../../models/role";
+import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
 
 export default {
   name: "CameraPanel",
@@ -65,7 +69,8 @@ export default {
       perColumnHeight: 210,
       slidesPerColumn: 1,
       perColumnWidth: 200,
-      slidesPerView: 5
+      slidesPerView: 5,
+      oldFeaturesList: undefined
     };
   },
   mounted() {
@@ -81,6 +86,7 @@ export default {
     });
   },
   computed: {
+    ...mapState("account", ["role"]),
     ...mapState("remoteStream", ["remoteStreamList"]),
     ...mapState("workplace", ["featuresList"]),
     width() {
@@ -91,6 +97,36 @@ export default {
   watch: {
     slidesPerColumn() {
       this.render();
+    },
+    featuresList: {
+      handler(featuresList) {
+        let oldFeaturesList = this.oldFeaturesList;
+
+        featuresList.forEach(async (features, index) => {
+          if (
+            oldFeaturesList &&
+            oldFeaturesList[index] &&
+            oldFeaturesList[index].__primaryKey === features.__primaryKey
+          ) {
+            let oldFeatures = oldFeaturesList[index];
+            if (
+              oldFeatures.subscribeVideo !== features.subscribeVideo ||
+              oldFeatures.subscribeAudio !== features.subscribeAudio
+            ) {
+              let options = {
+                video: features.subscribeVideo,
+                audio: features.subscribeAudio
+              };
+              await liveBroadcastService.trtcService.subscribeRemoteStream(
+                features.__primaryKey,
+                options
+              );
+            }
+          }
+        });
+        this.oldFeaturesList = JSON.parse(JSON.stringify(this.featuresList));
+      },
+      deep: true
     }
   },
   filters: {
@@ -99,8 +135,6 @@ export default {
   components: {
     CameraItem
   },
-  getSlidesPerColumn() {},
-
   methods: {
     ...mapMutations("remoteStream", ["REMOTE_STREAM_PLAY"]),
     ...mapActions("features", ["manualControlFeatures"]),
@@ -115,14 +149,14 @@ export default {
     videoChange(e, userId) {
       this.manualControlFeatures({
         id: userId,
-        propName: "videoStatus",
+        propName: "subscribeVideo",
         value: e
       });
     },
     audioChange(e, userId) {
       this.manualControlFeatures({
         id: userId,
-        propName: "audioStatus",
+        propName: "subscribeAudio",
         value: e
       });
     },
@@ -147,8 +181,13 @@ export default {
       }
       this.translateX = translateX;
     },
-    play(id, element) {
-      this.REMOTE_STREAM_PLAY({ id, element });
+    async play(id, element) {
+      let options = { video: true, audio: true };
+      this.REMOTE_STREAM_PLAY({
+        id: id,
+        element: element,
+        options: options
+      });
     }
   }
 };

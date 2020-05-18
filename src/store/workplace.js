@@ -109,12 +109,6 @@ const mutations = {
     liveBroadcastService.trtcService.setMicrophonesDevice(device.deviceId);
     state.activeMicrophones = device;
   },
-  REMOTE_STREAM_PLAY(state, remote) {
-    liveBroadcastService.trtcService.remoteStreamPlay(
-      remote.id,
-      remote.element
-    );
-  },
   SET_PANEL_TYPE(state, panelType) {
     state.panelType = panelType;
   },

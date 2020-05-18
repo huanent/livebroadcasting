@@ -10,7 +10,9 @@ export const initFeaturesState = function(role) {
     canControlBoard: isTeacher,
     toolBarVisibity: true,
     videoStatus: true,
-    audioStatus: true
+    audioStatus: true,
+    subscribeVideo: true,
+    subscribeAudio: true
   };
 };
 const state = initFeaturesState();

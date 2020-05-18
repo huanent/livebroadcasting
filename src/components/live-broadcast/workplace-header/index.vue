@@ -78,7 +78,7 @@ export default {
       transcodeProgress: 0,
       showProgressDialog: false,
       userId: "jongwong",
-      switchStatus: true,
+      switchStatus: false,
       activeColor: "#48a7a8",
       inactiveColor: "#76acc3"
     };
