@@ -7,16 +7,19 @@
       </el-tabs>
     </div>
     <div class="main-area">
-      <div class="operation-area">
-        <div class="search">
+      <div class="operation-area clearfix">
+        <div class="search right">
           <el-input
-            placeholder="请输入搜索内容"
+            v-if="activeName === 'participant'"
+            placeholder="搜索加入课堂"
             v-model="searchValue"
             class="input-with-select"
+            clearable
           >
             <el-select
-              v-model="searchQuery"
+              v-model="searchField"
               slot="prepend"
+              @change="handleFieldChange"
               placeholder="请选择"
             >
               <el-option label="房间号" value="classId"></el-option>
@@ -24,28 +27,44 @@
               <el-option label="创建者" value="createUser"></el-option>
             </el-select>
             <el-button
-              @click="searchClass()"
+              @click="handleSearch"
               slot="append"
               icon="el-icon-search"
             ></el-button>
           </el-input>
         </div>
         <el-button
-          class="addclass-btn"
+          v-if="activeName === 'creator'"
+          class="right"
           type="primary"
           @click.stop="toClassForm"
           >{{ $t("classform.createClass") }}</el-button
         >
       </div>
       <keep-alive>
-        <class-list :classList="classList" v-loading="loading" />
+        <class-list
+          :classList="list"
+          v-loading="loading"
+          :type="activeName"
+          :isSearching="isSearching"
+          @refresh="handleRefresh"
+        />
       </keep-alive>
+      <el-pagination
+        :page-size="pageSize"
+        :current-page="pageNum"
+        @current-change="handlePageChange"
+        layout="prev, pager, next"
+        :hide-on-single-page="true"
+        :total="total"
+      >
+      </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import { getClassList } from "@api/class";
+import { getClassList, classSearch } from "@api/class";
 import dayjs from "dayjs";
 import ClassList from "./class-list";
 
@@ -53,23 +72,34 @@ export default {
   name: "MyClassMian",
   data() {
     return {
+      searchResult: [],
+      isSearching: false,
+      pageSize: 9,
+      pageNum: 1,
+      total: 0,
       searchValue: "",
+      searchField: "",
       classList: [],
-      total: "",
       loading: false,
       activeName: "creator"
     };
   },
+  computed: {
+    list() {
+      return this.isSearching ? this.searchResult : this.classList;
+    }
+  },
   created() {
-    this.getListData(this.activeName);
+    this.getListData(this.activeName, this.pageNum, this.pageSize);
   },
   methods: {
-    getListData(type) {
+    getListData(type, pageNum, pageSize) {
       this.loading = true;
-      getClassList(type).then(res => {
+      getClassList(type, pageNum, pageSize).then(res => {
         if (res.data.success) {
-          this.total = res.data.total;
-          this.classList = res.data.model;
+          const data = res.data.model;
+          this.total = data.total;
+          this.classList = data.list;
           this.loading = false;
         } else {
           this.$message.error("课堂数据获取失败");
@@ -77,7 +107,51 @@ export default {
       });
     },
     handleTabChange() {
-      this.getListData(this.activeName);
+      this.pageNum = 1;
+      this.isSearching = false;
+      this.getListData(this.activeName, this.pageNum, this.pageSize);
+    },
+    handlePageChange(index) {
+      this.pageNum = index;
+      this.getListData(this.activeName, this.pageNum, this.pageSize);
+    },
+    handleFieldChange() {
+      this.searchValue = "";
+    },
+    handleRefresh() {
+      this.isSearching = false;
+      this.pageNum = 1;
+      this.searchResult = [];
+      this.searchValue = "";
+      this.searchField = "";
+      this.getListData(this.activeName, this.pageNum, this.pageSize);
+    },
+    handleSearch() {
+      if (!this.searchField || !this.searchField.trim()) {
+        this.$message.info("请先选择搜索的字段");
+        return;
+      }
+      if (!this.searchValue) return;
+      this.loading = true;
+      this.isSearching = true;
+      this.pageNum = 1;
+      classSearch(
+        this.searchField,
+        this.searchValue,
+        this.pageNum,
+        this.pageSize
+      )
+        .then(res => {
+          if (res.data.success) {
+            const data = res.data.model;
+            this.total = data.total;
+            this.searchResult = data.list;
+            this.loading = false;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     toClassForm() {
       this.$router.push({ name: "Classform" });

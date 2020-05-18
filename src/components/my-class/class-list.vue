@@ -3,9 +3,11 @@
     <el-row type="flex" v-if="classList.length > 0" class="class-container">
       <div class="class-card" v-for="item in classList" :key="item._id">
         <el-button
-          @click="deleteclass(item.classId)"
+          v-if="type === 'creator'"
+          @click="handleDelete(item.classId)"
           type="text"
           class="delete-btn"
+          title="删除课堂"
           ><i class="el-icon-close"></i
         ></el-button>
         <div class="card-container">
@@ -34,7 +36,14 @@
                 }"
                 >查看详情</router-link
               >
+              <span
+                v-if="isSearching"
+                class="btn-apply"
+                @click="handleJoinClass(item.classId)"
+                >加入课堂</span
+              >
               <router-link
+                v-else
                 :to="{
                   name: 'Liveroom',
                   query: { createUser: item.createUser, id: item.classId }
@@ -56,17 +65,36 @@
 
 <script>
 import dayjs from "dayjs";
-import { removeClass } from "@api/class";
+import { classApply, removeClass } from "@api/class";
 
 export default {
   name: "ClassList",
 
   props: {
-    classList: Array
+    classList: Array,
+    isSearching: Boolean,
+    type: String
   },
   filters: {
     timeFormat(timestamp) {
       return dayjs(parseInt(timestamp)).format("YYYY/MM/DD HH:mm");
+    }
+  },
+  methods: {
+    handleDelete(id) {},
+    handleJoinClass(id) {
+      classApply(id)
+        .then(res => {
+          if (res.data.success) {
+            this.$message.success("加入课堂成功");
+            this.$emit("refresh");
+          } else {
+            this.$message.error("加入课堂失败");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
@@ -75,6 +103,7 @@ export default {
 <style lang="scss" scoped>
 .classlist {
   overflow: auto;
+  margin: 15px 0;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
