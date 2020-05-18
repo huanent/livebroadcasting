@@ -2,8 +2,9 @@
   <div
     class="toolbar"
     ref="toolbar"
+    :class="{ hide: isHide }"
     :style="{
-      left: left + 'px',
+      right: right + 'px',
       top: top + 'px'
     }"
   >
@@ -22,11 +23,7 @@
         item.singleclass
       ]"
     >
-      <el-tooltip
-        :effect="$store.state.workplace.themeColor"
-        :content="item.tips"
-        placement="right"
-      >
+      <el-tooltip :content="item.tips" placement="right" :open-delay="300">
         <el-popover
           placement="left"
           trigger="click"
@@ -122,8 +119,9 @@ export default {
           tips: this.$t("toolbar.move")
         }
       ],
-      left: 0,
-      top: 0
+      right: 0,
+      top: 0,
+      isHide: true
     };
   },
   components: {
@@ -133,14 +131,18 @@ export default {
   mounted() {
     this.activeTool = this.toolslist[0];
     this.lastActiveSwitchTool = this.activeTool;
-    this.initToolBarPosition();
+    setTimeout(() => {
+      this.initToolBarPosition();
+      this.isHide = false;
+    }, 500);
+
     Emitter.on("split-change", () => {
       let el = this.$refs.toolbar;
       let parentEl = el.parentElement;
       if (this.toolHight < el.clientHeight) {
         this.toolHight = el.clientHeight;
       }
-      if (this.toolHight > parentEl.clientHeight - 50) {
+      if (this.toolHight > parentEl.clientHeight) {
         this.hideTool = true;
         this.initToolBarPosition("bottom", true);
       } else {
@@ -217,17 +219,15 @@ export default {
       this.hideTool = false;
       this.initToolBarPosition("top", true);
     },
-    initToolBarPosition(type, leftFix) {
+    initToolBarPosition(type, isFix) {
       let el = this.$refs.toolbar;
       if (el) {
         let parentEl = el.parentElement;
         let ph = parentEl.getBoundingClientRect().height;
-        let pw = parentEl.getBoundingClientRect().width;
         let h = el.getBoundingClientRect().height;
-        let w = el.getBoundingClientRect().width;
         this.top = ph / 2 - h / 2;
-        if (!leftFix) {
-          this.left = pw - w;
+        if (!isFix) {
+          this.right = 0;
         }
 
         if (this.toolHight < el.clientHeight) {
@@ -241,7 +241,7 @@ export default {
         }
       }
     },
-    checkEdge(left, top) {
+    checkEdge(right, top) {
       let odiv = this.$refs.toolbar;
       let rect = odiv.getBoundingClientRect();
       let w = rect.width;
@@ -249,8 +249,8 @@ export default {
       let prect = odiv.parentElement.getBoundingClientRect();
       let pw = prect.width;
       let ph = prect.height;
-      if (left < 0 || top < 0) return true;
-      if (left > 0 && left - pw + w >= 0) return true;
+      if (right < 0 || top < 0) return true;
+      if (right > 0 && right - (pw - w) >= 0) return true;
       if (top > 0 && top - ph + h >= 0) return true;
     },
     toggerTool(item, index) {
@@ -274,11 +274,15 @@ export default {
       let odiv = this.$refs.toolbar;
       let disX = e.clientX - odiv.offsetLeft;
       let disY = e.clientY - odiv.offsetTop;
+      let el = this.$refs.toolbar;
+      if (!el) return;
+      let parentEl = el.parentElement;
+      let pw = parentEl.getBoundingClientRect().width;
       document.onmousemove = e => {
-        let left = e.clientX - disX;
+        let right = pw - (e.clientX - disX);
         let top = e.clientY - disY;
-        if (!this.checkEdge(left, top)) {
-          this.left = left;
+        if (!this.checkEdge(right, top)) {
+          this.right = right;
           this.top = top;
         }
       };
@@ -303,13 +307,13 @@ export default {
 <style lang="scss" scoped>
 .toolbar {
   z-index: 99;
+
   width: 2rem;
   color: #eee;
   @include themeify {
-    background-color: themed("background_color1");
-    border: 1px solid themed("background_color5");
+    background-color: themed("toolbar_bg");
   }
-  background-color: rgba(48, 49, 51, 0.79);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   position: absolute;
   padding: 0.3rem 0;
   text-align: center;
@@ -317,7 +321,7 @@ export default {
 .svg-icon {
   padding: 0.4rem;
   @include themeify {
-    fill: themed("toolbar_icon");
+    fill: themed("font_color2");
   }
 }
 .toolbar-item {
@@ -326,26 +330,26 @@ export default {
   width: 100%;
 }
 .toolbar-item:hover {
-  background-color: rgba(0, 0, 0, 0.43);
-  @include themeify {
-    background-color: themed("background_color5");
-  }
+  /*  @include themeify {
+    background-color: rgba(themed("color_opposite"), 0.1);
+  }*/
   .svg-icon {
     @include themeify {
-      fill: themed("active_icon");
+      fill: themed("font_color1");
+      transform: scale(1.3);
     }
   }
 }
 .toolbar-item-active {
   @include themeify {
-    background-color: themed("toolbar_active");
+    background-color: rgba(themed("color_opposite"), 0.1);
   }
   .svg-icon {
     @include themeify {
-      fill: themed("active_icon");
+      fill: themed("font_color1");
+      transform: scale(1.3);
     }
   }
-  background-color: rgba(0, 0, 0, 0.43);
 }
 .toolbar-item-disabled svg {
   cursor: not-allowed !important;

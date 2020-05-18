@@ -6,13 +6,13 @@ const state = {
   // drawEnable: true, //是否可以涂鸦
   // synDrawEnable: true, //是否将你画的涂鸦同步给其他人
   toolType: 1,
-  brushThin: 100,
+  brushThin: 20,
   // backgroundImage: "背景图",
   // backgroundImageH5: "背景图H5",
   // backgroundColor: "#ff0000",
   // globalBackgroundColor: "#ff0000",
-  brushColor: "#BABA81", // 画笔颜色
-  textColor: "#000000",
+  brushColor: "#ba3136", // 画笔颜色
+  textColor: "#222222",
   // textStyle: "#ff0000",
   // textFamily: "sans-serif,serif,monospace",
   textSize: 320,

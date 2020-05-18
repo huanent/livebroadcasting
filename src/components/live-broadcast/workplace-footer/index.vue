@@ -23,8 +23,7 @@ export default {
 <style lang="scss" scoped>
 .workplace-footer-main {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
-  padding: 0 10%;
 }
 </style>

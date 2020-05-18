@@ -10,6 +10,7 @@ import "@style/normalize.css";
 import "./assets/style/element-variable.scss";
 import "@style/custom.scss";
 import { autoSyncState } from "./core/state-sync";
+import { watchFeaturesListState } from "./core/live-broadcast/trtc-service";
 
 Vue.use(element);
 
@@ -23,7 +24,7 @@ export let app = new Vue({
 }).$mount("#app");
 
 autoSyncState(app);
-
+watchFeaturesListState(app);
 if (window.rtcService) {
   console.log(window.rtcService);
   store.commit("electron/RTC_AVAIABLED");

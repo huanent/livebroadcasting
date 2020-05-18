@@ -1,6 +1,7 @@
 <template>
   <widget-window
     @close="SET_TIMER_VISIBLE(false)"
+    nameWidget="定时器"
     v-if="timer.visible"
     :position="timer.position"
     @moved="UPDATE_POSITION({ name: 'timer', position: $event })"

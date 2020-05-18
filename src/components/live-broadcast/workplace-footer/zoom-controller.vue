@@ -83,15 +83,14 @@ export default {
   > span {
     user-select: none;
   }
-  > svg {
-    &:hover {
-      fill: #dcebeb !important;
+  > .svg-icon {
+    @include themeify {
+      fill: themed("font_color2") !important;
     }
-  }
-  > svg.no-drop {
-    cursor: no-drop !important;
-    &:hover {
-      fill: rgb(115, 120, 130) !important;
+    :hover {
+      @include themeify {
+        fill: mix(themed("font_color2"), themed("color_opposite"), 70%);
+      }
     }
   }
 }

@@ -19,7 +19,9 @@
             'gutter-row': role !== ROLE.STUDENT,
             'gutter-not-allowed': !cameraPanelVisibity
           }"
-        ></div>
+        >
+          <div></div>
+        </div>
         <div class="main-workplace-panel">
           <div
             v-if="cameraPanelToggleButtonVisibity"
@@ -35,10 +37,14 @@
           <MainWorkplace></MainWorkplace>
         </div>
       </div>
-      <div class="gutter"></div>
+      <div class="gutter gutter-col">
+        <div></div>
+      </div>
       <div id="workplace-panel-right">
         <self-camera />
-        <div class="gutter"></div>
+        <div class="gutter gutter-row">
+          <div></div>
+        </div>
         <div class="message-panel">
           <chatroom />
         </div>
@@ -61,6 +67,10 @@ import { mapState, mapMutations, mapGetters, mapActions } from "vuex";
 import { ROLE } from "../../store/account";
 import Widgets from "../../components/live-broadcast/widgets";
 import { initFeaturesState } from "../../store/features";
+import {
+  initLiveBroadcastService,
+  liveBroadcastService
+} from "../../core/live-broadcast/live-broadcast-service";
 export default {
   name: "workplace",
   data: function() {
@@ -94,64 +104,76 @@ export default {
     await this.enterRoom(this.$route.query);
 
     this.SET_DRAW_ENABLE(this.canControlBoard);
-    setInterval(() => {
-      this.SET_TIMESTAMP(new Date().getTime());
-    }, 10000);
-    Emitter.emit("LIVE_INIT");
-    Emitter.on("LIVE_READY", () => {
-      this.audioLevelTimer = setInterval(() => {
-        this.isTimer = true;
-      }, 200);
-      this.$once("hook:beforeDestroy", () => {
-        clearInterval(this.audioLevelTimer);
-      });
-      if (this.role !== "ROLE_STUDENT") {
-        Split({
-          columnGutters: [
-            // {
-            //   track: 1,
-            //   element: document.querySelector("#gutter")
-            // }
-          ],
-          rowGutters: [
-            {
-              track: 1,
-              element: this.$refs.gutter1
-            }
-            // {
-            //   track: 1,
-            //   element: document.querySelector("#gutter2-1")
-            // }
-          ],
-          dragInterval: 10,
-          onDrag: (direction, track, gridTemplateStyle) => {
-            let str = gridTemplateStyle;
-            if (str) {
-              let list = str.trim().split(" ");
-              if (
-                list[0] &&
-                list[2] &&
-                parseFloat(list[2]) > 0 &&
-                parseFloat(list[0]) / parseFloat(list[2]) < 0.001
-              ) {
-                this.SET_CAMERA_PANEL_VISIBILITY(false);
-              } else {
-                /* this.SET_CAMERA_PANEL__VISIBILITY(true);*/
-              }
-            }
-            Emitter.emit("split-change");
-          },
-          writeStyle: (grid, gridTemplateProp, gridTemplateStyle) => {
-            if (this.cameraPanelVisibity) {
-              console.log(gridTemplateStyle);
-              grid.style[gridTemplateProp] = gridTemplateStyle;
+    await initLiveBroadcastService();
+    if (role == ROLE.TEACHER) {
+      setTimeout(() => {
+        Emitter.emit("SYS_PULL_STATE", ROLE.STUDENT);
+      }, 2000);
+    } else {
+      setTimeout(() => {
+        this.SET_TIMESTAMP(new Date().getTime());
+        liveBroadcastService.timService.sendSystemMsg(
+          "PULL_STATE",
+          ROLE.TEACHER,
+          this.userInfo.username
+        );
+      }, 2000);
+      setInterval(() => {
+        this.SET_TIMESTAMP(new Date().getTime());
+      }, 10000);
+    }
+    this.audioLevelTimer = setInterval(() => {
+      this.isTimer = true;
+    }, 200);
+    this.$once("hook:beforeDestroy", () => {
+      clearInterval(this.audioLevelTimer);
+    });
+    if (this.role !== "ROLE_STUDENT") {
+      Split({
+        columnGutters: [
+          // {
+          //   track: 1,
+          //   element: document.querySelector("#gutter")
+          // }
+        ],
+        rowGutters: [
+          {
+            track: 1,
+            element: this.$refs.gutter1
+          }
+          // {
+          //   track: 1,
+          //   element: document.querySelector("#gutter2-1")
+          // }
+        ],
+        dragInterval: 10,
+        onDrag: (direction, track, gridTemplateStyle) => {
+          let str = gridTemplateStyle;
+          if (str) {
+            let list = str.trim().split(" ");
+            if (
+              list[0] &&
+              list[2] &&
+              parseFloat(list[2]) > 0 &&
+              parseFloat(list[0]) / parseFloat(list[2]) < 0.001
+            ) {
+              this.SET_CAMERA_PANEL_VISIBILITY(false);
+            } else {
+              /* this.SET_CAMERA_PANEL__VISIBILITY(true);*/
             }
           }
-        });
-      } else {
-        this.SET_CAMERA_PANEL_VISIBILITY(false);
-      }
-    });
+          Emitter.emit("split-change");
+        },
+        writeStyle: (grid, gridTemplateProp, gridTemplateStyle) => {
+          if (this.cameraPanelVisibity) {
+            console.log(gridTemplateStyle);
+            grid.style[gridTemplateProp] = gridTemplateStyle;
+          }
+        }
+      });
+    } else {
+      this.SET_CAMERA_PANEL_VISIBILITY(false);
+    }
   },
   methods: {
     ...mapMutations("workplace", [
@@ -198,7 +220,7 @@ export default {
   margin: 0;
   padding: 0;
   @include themeify {
-    background: themedOpacity("background_color1", 0.8);
+    background: themed("background_color1");
   }
   /*  display: grid;
   grid-template-rows: 2rem auto;*/
@@ -209,9 +231,12 @@ export default {
   }
   width: 100%;
   height: 2rem;
-  margin-bottom: 2px;
   overflow: hidden;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.44);
+  @include themeify {
+    border-bottom: 1px solid themed("border_color1");
+  }
+  box-sizing: border-box;
+  /*  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.44);*/
   & > * {
     overflow: hidden;
   }
@@ -219,7 +244,7 @@ export default {
 .workplace-panel-content {
   display: grid;
   width: 100%;
-  grid-template-columns: 79.9% 0.1% 20%;
+  grid-template-columns: 83% 0 17%;
   height: 100%;
   overflow: hidden;
 }
@@ -242,20 +267,39 @@ export default {
   height: calc(100vh - 2rem);
   width: 100%;
   overflow: hidden;
+  @include themeify {
+    border-left: 1px solid themed("border_color1");
+  }
   & > * {
     overflow: hidden;
   }
 }
 .gutter {
-  @include themeify {
-    background: themedOpacity("border_color1", 1);
-  }
 }
+
 .gutter-row {
   cursor: row-resize;
+  @include themeify {
+    background: themed("background_color2");
+  }
+  > div {
+    height: 1px !important;
+    @include themeify {
+      background-color: themed("background_color1");
+    }
+
+    margin: 0 auto;
+  }
 }
 .gutter-col {
-  cursor: col-resize;
+  div {
+    width: 1px !important;
+    height: 100%;
+    @include themeify {
+      background-color: rgba(themed("border_color1"), 0.2);
+    }
+    margin: 0 auto;
+  }
 }
 .gutter-not-allowed {
   cursor: not-allowed;
@@ -278,12 +322,6 @@ export default {
 .message-panel {
   background: #292b2e;
 }
-.panel-icon {
-  fill: #f1faf8;
-  padding: 5px;
-  background-color: rgba(156, 156, 156, 0.4);
-  transform: rotate(-90deg);
-}
 
 .camera-icon-box {
   cursor: pointer;
@@ -291,5 +329,23 @@ export default {
   z-index: 999;
   position: absolute;
   top: calc(28px);
+  @include themeify {
+    background-color: themed("toolbar_bg");
+  }
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  .svg-icon {
+    @include themeify {
+      fill: themed("font_color2");
+      padding: 5px;
+      transform: rotate(-90deg);
+    }
+  }
+}
+.camera-icon-box:hover {
+  .svg-icon {
+    @include themeify {
+      fill: themed("font_color1");
+    }
+  }
 }
 </style>

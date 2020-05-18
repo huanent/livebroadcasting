@@ -1,40 +1,50 @@
-$themes: (light: (font_color1: rgb(196, 193, 193),
-    font_color2: rgb(110, 109, 109),
+$themes: (
+  light: (
+    font_color1: rgb(10, 129, 140),
+    font_color2: #a8a8a8,
     background_color1: #eeeeee,
     background_color2: rgb(255, 255, 255),
     background_color3: rgb(255, 255, 255),
     background_color4: rgb(241, 238, 238),
     background_color5: rgb(10, 129, 140),
     background_color6: rgb(224, 224, 224),
-    toolbar_icon: rgb(10, 129, 140),
-    toolbar_active: rgb(10, 129, 140),
+    toolbar_icon: rgb(238, 238, 238),
+    toolbar_active: rgb(131, 148, 160),
     active_icon: rgb(224, 224, 224),
     border_color1: #ccc,
     border_color2: rgb(9, 255, 0),
-    color_like: rgb(212, 212, 212),
+    color_like: rgb(255, 255, 255),
     color_opposite: rgb(0, 0, 0),
-    test: rgb(238, 238, 238)),
-  dark: (font_color1: rgb(226, 222, 222),
-    font_color2: rgb(255, 255, 255),
+    test: rgb(238, 238, 238),
+    toolbar_bg: rgb(255, 255, 255),
+    primary: rgb(10, 129, 140),
+    bg_1: rgb(10, 129, 140)
+  ),
+  dark: (
+    font_color1: rgb(226, 222, 222),
+    font_color2: #7f7f7f,
     background_color1: #1a1b1d,
     background_color2: #1e2125,
     background_color3: rgb(41, 43, 46),
     background_color4: rgb(0, 0, 0),
-    background_color5: rgb(48, 49, 51),
+    background_color5: rgb(24, 25, 27),
     background_color6: rgb(30, 33, 37),
     toolbar_icon: rgb(255, 255, 255),
     toolbar_active: rgb(48, 49, 51),
     active_icon: rgb(224, 224, 224),
-    border_color1: rgb(44, 44, 44),
+    border_color1: #141414,
     border_color2: rgb(231, 181, 181),
-    color_like: rgb(44, 44, 44),
+    color_like: rgb(0, 0, 0),
     color_opposite: rgb(255, 255, 255),
-    test: rgb(238, 238, 238)));
+    test: rgb(238, 238, 238),
+    toolbar_bg: rgb(34, 34, 34),
+    primary: rgb(10, 129, 140),
+    bg_1: rgb(65, 65, 65)
+  )
+);
 
 @mixin themeify {
-
-  @each $theme-name,
-  $theme-map in $themes {
+  @each $theme-name, $theme-map in $themes {
     $theme-map: $theme-map !global;
 
     body[data-theme="#{$theme-name}"] & {
@@ -50,7 +60,7 @@ $themes: (light: (font_color1: rgb(196, 193, 193),
 
 @function themedOpacity($key, $opacity) {
   $color: map-get($theme-map, $key);
-  @return opacify($color, $opacity);
+  @return rgba($color, $opacity);
 }
 
 $white: #ffffff;

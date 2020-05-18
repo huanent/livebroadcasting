@@ -26,17 +26,19 @@
         >
           <template slot="singleLabel" slot-scope="props"
             ><div class="select-header">
-              {{ props.option.title }}
+              <span>{{ props.option.title }}</span>
+
+              <div
+                @mousedown.prevent.stop="toggle()"
+                class="multiselect__select"
+              >
+                <icon :name="caretIconName" size="14"></icon>
+              </div>
             </div>
           </template>
           <template slot="option" slot-scope="props">
             <div class="select-option">
               {{ props.option.title }}
-            </div>
-          </template>
-          <template slot="caret">
-            <div @mousedown.prevent.stop="toggle()" class="multiselect__select">
-              <icon :name="caretIconName" size="14"></icon>
             </div>
           </template>
         </multiselect>
@@ -160,14 +162,12 @@ export default {
 
 <style scoped lang="scss">
 .board-tabs {
-  height: 100%;
   color: #bfbfbf;
   font-size: small;
   user-select: none;
 }
 
 .tab-body {
-  height: calc(100% - 1.8rem);
 }
 .tab-item {
   padding: 0.3rem;
@@ -178,12 +178,8 @@ export default {
 .tab-item:hover {
   @include themeify {
     background: themed("background_color4");
-    color: themed("color_opposite");
   }
   background-color: #141414;
-}
-.tab-item > span:hover {
-  color: #0a818c;
 }
 .board-tabs-header {
   @include themeify {
@@ -196,9 +192,6 @@ export default {
 .board-tab-icon {
   padding: 0 0 0 0.5rem;
   fill: #bfbfbf !important;
-}
-.board-tab-icon:hover {
-  fill: #0a818c !important;
 }
 .board-tab-icon-container {
   padding: 0.2rem 0 0.2rem 0.5rem;
@@ -215,30 +208,44 @@ export default {
 }
 
 .workplace-settings {
-  text-align: center;
   float: right;
   justify-content: center;
-  min-width: 100px;
+  text-align: left;
+  width: 7.5rem;
   margin-right: 2rem;
+  line-height: 1.8rem;
   .type-text {
-    line-height: 1.8rem;
     color: #ffffff;
     font-size: 14px;
+    width: 100%;
   }
-  .select-header,
-  .select-option {
+  .select-header {
     text-align: left;
     z-index: 100;
-    line-height: 1.8rem;
+    background-color: none;
+    padding: 0 0.5rem;
+    cursor: pointer;
+    span {
+      padding-right: 0.5rem;
+    }
+  }
+  .select-option {
+    z-index: 100;
+    padding: 0 1.5rem 0 0.5rem;
+    cursor: pointer;
     @include themeify {
-      background: themed("background_color6");
-      color: themed("color_opposite");
+      background-color: themed("toolbar_bg");
     }
   }
   .select-option:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #e8f1ff;
-    /* border: 1px solid #0a818c;*/
+    @include themeify {
+      background-color: mix(
+        themed("color_like"),
+        themed("color_opposite"),
+        90%
+      );
+      color: themed("font_color1");
+    }
   }
 }
 
@@ -258,9 +265,8 @@ cover component Multiselect style
 /deep/ .multiselect__content-wrapper {
   position: absolute;
   z-index: 999;
-  border-radius: 10px;
-  box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.32);
-  background-color: red;
+  border-radius: 1px;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.32);
 }
 /deep/ .multiselect__select {
   float: right;

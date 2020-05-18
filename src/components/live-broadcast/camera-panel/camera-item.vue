@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 import { Emitter } from "@/core/emit";
 
 export default {
@@ -39,8 +39,14 @@ export default {
     item: {
       type: Object,
       default: () => {
-        return { hasAudio: false, hasVideo: false, id: "", userId: "" };
+        return { id: "", userId: "" };
       }
+    },
+    audio: {
+      default: true
+    },
+    video: {
+      default: true
     }
   },
   data() {
@@ -50,17 +56,12 @@ export default {
   },
   methods: {
     ...mapMutations("remoteStream", ["SET_REMOTE_AUDIO", "SET_REMOTE_VIDEO"]),
+    ...mapActions("features", ["manualControlFeatures"]),
     onMicroStateChange() {
-      this.SET_REMOTE_AUDIO({
-        userId: this.item.userId,
-        status: !this.item.hasAudio
-      });
+      this.$emit("audio-change", !this.audio);
     },
     onVideoStateChange() {
-      this.SET_REMOTE_VIDEO({
-        userId: this.item.userId,
-        status: !this.item.hasVideo
-      });
+      this.$emit("video-change", !this.video);
     }
   },
   mounted() {
@@ -70,10 +71,10 @@ export default {
   },
   computed: {
     microIcon() {
-      return this.item.hasAudio ? "microphone" : "microphone-slash";
+      return this.audio ? "microphone" : "microphone-slash";
     },
     videoIcon() {
-      return this.item.hasVideo ? "video" : "video-slash";
+      return this.video ? "video" : "video-slash";
     }
   }
 };
@@ -84,7 +85,6 @@ export default {
   background: #212224;
   margin: 10px 10px 5px;
   position: relative;
-  width: calc(100% - 10px);
   height: calc(100% - 15px);
   .self-camera-mask {
     position: absolute;
@@ -123,7 +123,6 @@ export default {
     justify-content: space-between;
     height: 32px;
     line-height: 32px;
-    padding: 15px 10px 6px 10px;
     background: linear-gradient(
       0deg,
       rgba(0, 0, 0, 0.7) 0%,
@@ -148,9 +147,7 @@ export default {
     }
   }
 }
-.hide {
-  visibility: hidden;
-}
+
 .remote-video-view {
   height: 100%;
   width: 100%;
@@ -165,12 +162,15 @@ export default {
 .camera-setting:hover {
   fill: #dcebeb !important;
 }
+video {
+  object-fit: contain !important;
+}
 
 /deep/ .el-dialog {
   /* background: #212224;*/
   min-height: 400px;
 }
 /*/deep/ .el-dialog__title {
-          color: white;
-        }*/
+            color: white;
+          }*/
 </style>

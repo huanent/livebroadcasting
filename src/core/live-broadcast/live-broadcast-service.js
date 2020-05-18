@@ -39,12 +39,12 @@ class LiveBroadcastService {
             this.boardService.getActiveBoard().addSyncData(data);
             break;
           case "TIM_TEXT":
-            Emitter.emit("TIM_CUSTOM_MESSAGE", item);
+            store.commit("workplace/ADD_CHAT_MESSAGE", JSON.parse(data));
             break;
           case "SYSTEM_COMMAND":
             data = JSON.parse(data);
             if (!this.isListener(data.listeners)) break;
-            Emitter.emit("SYS_" + data.type, data);
+            Emitter.emit("SYS_" + data.type, data.data);
             break;
           default:
             break;
@@ -53,7 +53,7 @@ class LiveBroadcastService {
     });
 
     Emitter.on("SYS_STATE_SYNC", data => {
-      store.commit("SYNC_STATE", data.data);
+      store.commit("SYNC_STATE", data);
     });
 
     Emitter.on("SYS_PULL_STATE", data => {
@@ -69,15 +69,6 @@ class LiveBroadcastService {
         });
       }
     });
-
-    const currentRole = store.state.account.role;
-    if (currentRole == ROLE.STUDENT) {
-      this.timService.sendSystemMsg(
-        "PULL_STATE",
-        ROLE.TEACHER,
-        store.state.account.userInfo.username
-      );
-    }
 
     return true;
   }
@@ -99,8 +90,8 @@ class LiveBroadcastService {
 
 export let liveBroadcastService = null;
 
-Emitter.on("LIVE_INIT", async () => {
+export async function initLiveBroadcastService() {
   liveBroadcastService = new LiveBroadcastService();
   await liveBroadcastService.init();
   Emitter.emit("LIVE_READY");
-});
+}

@@ -74,7 +74,7 @@
 
 <script>
 import VoiceIntensity from "./voice-intensity";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import { Emitter } from "../../../core/emit";
 import { ROLE } from "../../../store/account";
 
@@ -97,22 +97,14 @@ export default {
     this.activeCameraDevice = this.$store.state.workplace.activeCamera;
   },
   computed: {
-    ...mapState("localStream", [
-      "localAudioStatus",
-      "localVideoStatus",
-      "audioLevel",
-      "isInit"
-    ]),
-    ...mapState("workplace", [
-      "microphonesDeviceList",
-      "cameraDeviceList",
-      "panelType"
-    ]),
+    ...mapState("localStream", ["audioLevel", "isInit"]),
+    ...mapState("workplace", ["microphonesDeviceList", "cameraDeviceList"]),
+    ...mapState("features", ["videoStatus", "audioStatus"]),
     microIcon() {
-      return this.localAudioStatus ? "microphone" : "microphone-slash";
+      return this.audioStatus ? "microphone" : "microphone-slash";
     },
     videoIcon() {
-      return this.localVideoStatus ? "video" : "video-slash";
+      return this.videoStatus ? "video" : "video-slash";
     }
   },
   watch: {
@@ -122,15 +114,11 @@ export default {
         this.visibility = true;
       }
     },
-    panelType(value) {
-      /*      if (value !== "camera" && this.isServiceReady) {
-        if (this.role !== "ROLE_STUDENT") {
-          this.LOCAL_STREAM_STOP_PLAY();
-        }
-        setTimeout(() => {
-          this.LOCAL_STREAM_PLAY(this.$refs.video);
-        }, 300);
-      }*/
+    videoStatus(status) {
+      this.switchVideo(status);
+    },
+    audioStatus(status) {
+      this.switchAudio(status);
     }
   },
   mounted() {
@@ -140,12 +128,6 @@ export default {
     this.$once("hook:beforeDestroy", () => {
       clearInterval(audioLevelTimer);
     });
-    Emitter.on("SYS_SET_REMOTE_AUDIO", data => {
-      this.SET_LOCALSTREAM_AUDIO(data.data);
-    });
-    Emitter.on("SYS_SET_REMOTE_VIDEO", data => {
-      this.SET_LOCALSTREAM_VIDEO(data.data);
-    });
     Emitter.on("LIVE_READY", () => {
       this.isServiceReady = true;
     });
@@ -153,23 +135,23 @@ export default {
   methods: {
     ...mapMutations("workplace", ["ACTIVE_CAMERA", "ACTIVE_MICROPHONES"]),
     ...mapMutations("localStream", [
-      "SET_LOCALSTREAM_AUDIO",
-      "SET_LOCALSTREAM_VIDEO",
       "SET_AUDIOLEVEL",
       "LOCAL_STREAM_PLAY",
       "LOCAL_STREAM_STOP_PLAY"
     ]),
-    onMicroStateChange() {
-      this.SET_LOCALSTREAM_AUDIO(!this.localAudioStatus);
-    },
-    onVideoStateChange() {
-      this.SET_LOCALSTREAM_VIDEO(!this.localVideoStatus);
-    },
+    ...mapActions("localStream", ["switchVideo", "switchAudio"]),
+    ...mapMutations("features", ["SET_VIDEO_STATUS", "SET_AUDIO_STATUS"]),
     onOpenSetting() {
       this.dialogVisible = true;
     },
     onDialogClose() {
       this.dialogVisible = false;
+    },
+    onVideoStateChange() {
+      this.SET_VIDEO_STATUS(!this.videoStatus);
+    },
+    onMicroStateChange() {
+      this.SET_AUDIO_STATUS(!this.audioStatus);
     },
     onDialogSave() {
       if (this.activeCameraDevice) {
@@ -186,7 +168,9 @@ export default {
 
 <style scoped lang="scss">
 .self-camera-panel {
-  background: #212224;
+  @include themeify {
+    background: themed("background_color3");
+  }
   margin: 10px 10px 5px;
   position: relative;
   .self-camera-mask {
@@ -251,9 +235,7 @@ export default {
     }
   }
 }
-.hide {
-  visibility: hidden;
-}
+
 .local_video {
   height: 100%;
   width: 100%;

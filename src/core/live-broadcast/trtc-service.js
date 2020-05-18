@@ -3,6 +3,9 @@ import store from "@/store";
 import { Emitter } from "../emit";
 import { ROLE } from "../../store/account";
 import { enterRoom } from "../data/data-service.js";
+import config from "../state-sync/config";
+import { liveBroadcastService } from "./live-broadcast-service";
+import { getStateValue } from "../state-sync";
 
 export class TrtcService {
   localStream;
@@ -28,13 +31,18 @@ export class TrtcService {
     await this.joinroom();
     const localStream = TRTC.createStream({
       userId: this.token.id,
-      audio: store.state.localStream.localAudioStatus,
-      video: store.state.localStream.localVideoStatus,
+      audio: store.state.features.videoStatus,
+      video: store.state.features.audioStatus,
       mirror: false
     });
     this.localStream = localStream;
     await localStream.initialize();
-    localStream.setVideoProfile("1080p");
+    localStream.setVideoProfile({
+      width: 1920,
+      height: 1080,
+      frameRate: 5,
+      bitrate: 1600
+    });
     await client.publish(localStream);
     store.commit("localStream/IS_INIT");
   }
@@ -72,7 +80,7 @@ export class TrtcService {
       stream = this.localStream;
       if (stream && stream.play) {
         stream.play(data.el);
-        this.coverPlayStyle(stream);
+        this.coverPlayStyle(stream, "fill");
       }
     } else {
       if (role === ROLE.TEACHER) {
@@ -89,6 +97,22 @@ export class TrtcService {
         }
       }
     }
+    /*    if (role === ROLE.TEACHER) {
+      stream = this.localStream;
+      if (stream && stream.userId_) {
+        this.copyStreamPlay(stream, data.el, stream.userId_, {
+          video: true,
+          audio: true
+        });
+      }
+    } else {
+      stream = this.getRemoteStreamByUserId(
+        this.liveBroadcastService.teacherStreamUserId
+      );
+      if (stream && stream.userId_) {
+        this.copyStreamPlay(stream, data.el, stream.userId_);
+      }
+    }*/
   }
   localStreamStopPlay(data) {
     if (!data.isCopy) {
@@ -117,15 +141,25 @@ export class TrtcService {
     }
     let newStream = TRTC.createStream(createStreamOptions);
     await newStream.initialize();
+    newStream.setVideoProfile({
+      width: 1920,
+      height: 1080,
+      frameRate: 5,
+      bitrate: 1600
+    });
     this.streamCopy[id] = newStream;
     this.streamCopy[id].play(elmentOrId);
     this.coverPlayStyle(this.streamCopy[id]);
-    return true;
+    return newStream;
   }
   copyStreamStopPlay(id) {
     let stream = this.streamCopy[id];
     if (stream) {
+      let parent = stream.div_.parentElement;
       stream.stop();
+      if (parent) {
+        parent.innerHTML = "";
+      }
     }
   }
   teacherStreamPlay(elmentOrId) {
@@ -159,9 +193,11 @@ export class TrtcService {
   remoteStreamPlay(id, elmentOrId) {
     let stream = this.getRemoteStreamByUserId(id);
     if (stream) {
-      this.copyStreamPlay(stream, elmentOrId, "v_" + stream.userId_, {
+      this.copyStreamPlay(stream, elmentOrId, stream.userId_, {
         video: true,
         audio: true
+      }).then(newStream => {
+        this.coverPlayStyle(newStream, "fill");
       });
     }
   }
@@ -190,10 +226,13 @@ export class TrtcService {
       }
     }
   }
-  coverPlayStyle(stream) {
+  coverPlayStyle(stream, objectFit) {
+    if (!objectFit) {
+      objectFit = "contain";
+    }
     stream.div_.style.backgroundColor = "";
     if (stream.div_.children[0]) {
-      stream.div_.children[0].style.objectFit = "contain";
+      stream.div_.children[0].style.objectFit = objectFit;
     }
   }
   getElectronStream() {
@@ -277,10 +316,9 @@ export class TrtcService {
         this.remoteShareScreenStream = stream;
       } else {
         temp.push({
-          userId: stream.userId_,
-          id: stream.id_,
-          hasAudio: stream.hasAudio(),
-          hasVideo: stream.hasVideo()
+          userId: removeUserIdPrefix(stream.userId_),
+          rawUserId: stream.userId_,
+          id: stream.id_
         });
       }
     }
@@ -442,4 +480,21 @@ export class TrtcService {
     await shareClient.join({ roomId: res.data.classId });
     return shareClient;
   }
+}
+const removeUserIdPrefix = function(userId) {
+  if (userId.indexOf("kblive_") === 0) {
+    return userId.substring(7);
+  }
+  return userId;
+};
+export function watchFeaturesListState(app) {
+  app.$watch(
+    _ => app.$store.state.workplace.featuresList.videoStatus,
+    (n, o) => {
+      console.log("=====================");
+      console.log(n);
+      console.log(o);
+    },
+    { deep: true }
+  );
 }

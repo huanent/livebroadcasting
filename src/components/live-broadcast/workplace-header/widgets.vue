@@ -21,6 +21,16 @@
             >定时器</a
           >
         </li>
+        <li>
+          <a
+            @click="
+              SET_DICE_VISIBLE(true);
+              widgetVisible = false;
+            "
+            >骰子</a
+          >
+        </li>
+        
       </ul>
     </el-dialog>
     <question :visible.sync="questionVisible"></question>
@@ -44,7 +54,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations("widget", ["SET_TIMER_VISIBLE"]),
+    ...mapMutations("widget", ["SET_TIMER_VISIBLE", "SET_DICE_VISIBLE"]),
     onOpenQuestion() {
       this.questionVisible = true;
       this.closeWidgets();
@@ -69,7 +79,7 @@ export default {
   },
   components: {
     Question,
-    QuestionView
+    QuestionView,
   }
 };
 </script>

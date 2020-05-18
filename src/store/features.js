@@ -1,4 +1,5 @@
 import store from "@/store";
+import { liveBroadcastService } from "../core/live-broadcast/live-broadcast-service";
 export const initFeaturesState = function(role) {
   let isTeacher = role === "ROLE_TEACHER";
   return {
@@ -6,7 +7,10 @@ export const initFeaturesState = function(role) {
     cameraPanelVisibity: isTeacher,
     cameraPanelToggleButtonVisibity: isTeacher,
     canClickboardTabs: isTeacher,
-    canControlBoard: isTeacher
+    canControlBoard: isTeacher,
+    toolBarVisibity: true,
+    videoStatus: true,
+    audioStatus: true
   };
 };
 const state = initFeaturesState();
@@ -14,6 +18,12 @@ const state = initFeaturesState();
 const mutations = {
   SET_CAMERA_PANEL_VISIBILITY(state, status) {
     state.cameraPanelVisibity = status;
+  },
+  SET_VIDEO_STATUS(state, status) {
+    state.videoStatus = status;
+  },
+  SET_AUDIO_STATUS(state, status) {
+    state.audioStatus = status;
   },
   INIT_STATE(state, role) {
     let data = initFeaturesState(role);
@@ -27,8 +37,17 @@ const mutations = {
   }
 };
 
+const actions = {
+  manualControlFeatures({ commit }, { id, propName, value }) {
+    liveBroadcastService.timService.sendSystemMsg("STATE_SYNC", id, {
+      value: value,
+      path: ["features", propName]
+    });
+  }
+};
 export default {
   namespaced: true,
   state,
-  mutations
+  mutations,
+  actions
 };

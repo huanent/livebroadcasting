@@ -30,6 +30,7 @@ export class BoardService {
       Emitter.emit("board-data-change", data);
     });
     this.activeBoard = teduBoard;
+    this.activeBoard.setBoardContentFitMode(1);
     teduBoard.on(TEduBoard.EVENT.TEB_INIT, () => {
       setTimeout(async function() {
         let fileListInfo = teduBoard.getFileInfoList();

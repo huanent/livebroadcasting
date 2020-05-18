@@ -1,10 +1,6 @@
 <template>
   <div class="chatroom-container">
-    <chatroom-body
-      :msgList="msgList"
-      ref="chatroom-body"
-      @loadMore="loadMore"
-    />
+    <chatroom-body ref="chatroom-body" @loadMore="loadMore" />
     <chatroom-footer @send="sendMessage" />
   </div>
 </template>
@@ -12,25 +8,18 @@
 <script>
 import ChatroomBody from "./chatroom-body";
 import ChatroomFooter from "./chatroom-footer";
-
 import { Emitter } from "../../../core/emit";
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
+import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { ROLE } from "../../../models/role";
 
 export default {
   name: "Chatroom",
-  data() {
-    return {
-      msgList: []
-    };
-  },
-  mounted() {
-    Emitter.on("TIM_CUSTOM_MESSAGE", msg => {
-      this.msgList.push(msg);
-      this.$refs["chatroom-body"].scrollToBottom();
-    });
+  computed: {
+    ...mapState("account", ["userInfo", "role"])
   },
   methods: {
-    ...mapMutations("workplace", ["SEND_MESSAGE"]),
+    ...mapMutations("workplace", ["ADD_CHAT_MESSAGE"]),
     loadMore() {
       const currentScrollHeight = this.$refs["chatroom-body"].$refs[
         "message-list"
@@ -39,27 +28,17 @@ export default {
       // this.$refs["chatroom-body"].scrollToCurrent(currentScrollHeight);
       this.$refs["chatroom-body"].scrollToBottom();
     },
-    async sendMessage(msg) {
-      await this.SEND_MESSAGE(msg);
-      this.msgList.push({
-        ID: Math.ceil(Math.random() * 10000),
-        type: "TIM.TYPES.MSG_TEXT",
-        nick: "caffrey",
-        time: "10:02:52",
-        flow: "out",
-        conversationID: "",
-        conversationType: "TIM.TYPES.CONV_GROUP",
-        to: "",
-        from: "",
-        status: "success",
-        isRevoked: false,
-        avatar: "http://oa.jinrui.kooboo.site/img/avatar2.jpg",
-        payload: {
-          data: msg
-        },
-        isTeacher: true
-      });
-      this.$refs["chatroom-body"].scrollToBottom();
+    async sendMessage(content) {
+      let msg = {
+        content: content,
+        avatar: this.userInfo.avatar,
+        nickname: this.userInfo.nickname,
+        username: this.userInfo.username,
+        time: new Date().toDateString(),
+        isTeacher: this.role == ROLE.TEACHER
+      };
+      liveBroadcastService.timService.sendMessage(JSON.stringify(msg));
+      this.ADD_CHAT_MESSAGE(msg);
     }
   },
   components: {

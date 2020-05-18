@@ -18,7 +18,8 @@ const state = {
   workplaceVisibity: false,
   role: null,
   token: null,
-  featuresList: []
+  featuresList: [],
+  chatMessages: []
 };
 
 const mutations = {
@@ -30,6 +31,12 @@ const mutations = {
   },
   SET_THEME_COLOR(state, color) {
     state.themeColor = color;
+  },
+  ADD_CHAT_MESSAGE(state, msg) {
+    state.chatMessages.push(msg);
+  },
+  SET_TEACHER_ID(state, id) {
+    state.teacherId = id;
   },
   BOARD_PROFILES(state, boardProfiles) {
     state.boardProfiles = boardProfiles;
@@ -107,9 +114,6 @@ const mutations = {
       remote.id,
       remote.element
     );
-  },
-  async SEND_MESSAGE(state, msg) {
-    await liveBroadcastService.timService.sendMessage(msg);
   },
   SET_PANEL_TYPE(state, panelType) {
     state.panelType = panelType;
