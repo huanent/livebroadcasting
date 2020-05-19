@@ -1,5 +1,5 @@
 <template>
-  <div class="hand" @click="HAND_UP" v-if="!handUp">
+  <div class="hand" @click="HAND_UP" v-if="!handUp" title="举手">
     <icon name="hand" :size="20" class="hand-icon"></icon>
   </div>
 </template>
@@ -19,21 +19,33 @@ export default {
 .hand {
   width: 50px;
   height: 50px;
+  opacity: 0.5;
   @include themeify {
     background-color: themed("toolbar_bg");
   }
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 15px #000;
   border-radius: 25px;
   position: absolute;
   bottom: 50px;
-  right: 50px;
+  right: 10px;
   z-index: 100000;
-}
-
-.hand-icon {
-  @include themeify {
-    fill: themed("font_color2");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .hand-icon {
+    @include themeify {
+      fill: themed("font_color2");
+    }
   }
-  padding: 15px 15px;
+}
+.hand:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+  .svg-icon {
+    @include themeify {
+      fill: themed("font_color1");
+      transform: scale(1.1);
+    }
+  }
 }
 </style>

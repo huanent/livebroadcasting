@@ -1,8 +1,10 @@
 <template>
   <div class="hand-up-item">
-    <span class="name">{{ feature.__nickName || feature.__primaryKey }}</span>
-    <div class="speak">发言</div>
-    <div class="clear" @click="clear">清除</div>
+    <el-alert type="warning" :closable="false">
+      {{ feature.__nickName || feature.__primaryKey }} <strong>举手！</strong>
+      <el-button type="success" round size="mini">发言</el-button>
+      <el-button type="danger" round size="mini" @click="clear">忽略</el-button>
+    </el-alert>
   </div>
 </template>
 <script>
@@ -22,22 +24,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.hand-up-item {
+.el-alert {
   @include themeify {
     background-color: themed("toolbar_bg");
   }
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-  color: #fff;
-  font-size: 14px;
-  * {
-    display: inline-block;
-    padding: 5px;
-  }
-  .clear {
-    background-color: rgb(248, 89, 89);
-  }
-  .speak {
-    background-color: rgb(89, 216, 248);
+  opacity: 0.5;
+  box-shadow: 0 0 15px #000;
+  &:hover {
+    opacity: 0.8;
   }
 }
 </style>

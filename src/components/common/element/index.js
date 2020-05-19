@@ -27,7 +27,8 @@ import {
   Tabs,
   TabPane,
   Checkbox,
-  Loading
+  Loading,
+  Alert
 } from "element-ui";
 const element = {
   install: function(Vue) {
@@ -60,6 +61,7 @@ const element = {
     Vue.prototype.$notify = Notification;
     Vue.use(Checkbox);
     Vue.use(Loading);
+    Vue.use(Alert);
   }
 };
 export default element;

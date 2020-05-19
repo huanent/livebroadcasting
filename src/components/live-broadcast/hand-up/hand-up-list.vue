@@ -30,5 +30,8 @@ export default {
   bottom: 50px;
   right: 50px;
   z-index: 100000;
+  ul > li{
+    padding: 3px 0;
+  }
 }
 </style>
