@@ -54,14 +54,6 @@ const routes = [
       requireAuth: true
     },
     component: () => import("@v/workplace")
-  },
-  {
-    path: "/classform",
-    name: "Classform",
-    meta: {
-      requireAuth: true
-    },
-    component: () => import("@v/classform")
   }
 ];
 

@@ -64,12 +64,7 @@
       </div>
     </el-row>
     <template v-else>
-      <div class="nodata" v-if="!isSearching">
-        {{ nodataTips }}
-      </div>
-      <div class="nodata" v-else>
-        {{ $t("class.hasNoSearchResult") }}
-      </div>
+      <div class="nodata">{{ textTips }}</div>
     </template>
   </div>
 </template>
@@ -91,6 +86,11 @@ export default {
       return this.type === "creator"
         ? this.$t("class.noCreateClassTips")
         : this.$t("class.noJoinClassTips");
+    },
+    textTips() {
+      return this.isSearching
+        ? this.$t("class.hasNoSearchResult")
+        : this.nodataTips;
     }
   },
   filters: {

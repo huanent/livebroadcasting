@@ -37,6 +37,7 @@ export default {
   background-color: #2e333f;
   .nav-wrap {
     width: 1205px;
+    padding: 0 15px;
     height: 100%;
     margin: 0 auto;
     display: flex;
@@ -48,6 +49,7 @@ export default {
     h1 {
       font-size: 32px;
       cursor: pointer;
+      white-space: nowrap;
     }
     .serach-wrap {
       width: 320px;

@@ -51,7 +51,7 @@
           v-if="activeName === 'creator'"
           class="right"
           type="primary"
-          @click.stop="toClassForm"
+          @click.stop="openCreateForm"
           >{{ $t("class.createClass") }}</el-button
         >
       </div>
@@ -74,6 +74,11 @@
       >
       </el-pagination>
     </div>
+    <class-create
+      :createFormVisible="createFormVisible"
+      @createSuccess="createSuccess"
+      @close="createFormVisible = false"
+    />
   </div>
 </template>
 
@@ -81,11 +86,13 @@
 import classApi from "@api/class";
 import dayjs from "dayjs";
 import ClassList from "./class-list";
+import ClassCreate from "./class-create";
 
 export default {
   name: "MyClassMian",
   data() {
     return {
+      createFormVisible: false,
       searchResult: [],
       isSearching: false,
       pageSize: 9,
@@ -119,6 +126,11 @@ export default {
           this.$message.error($t("class.classDataAcquisitionFailed"));
         }
       });
+    },
+    createSuccess() {
+      this.createFormVisible = false;
+      this.pageNum = 1;
+      this.getListData(this.activeName, this.pageNum, this.pageSize);
     },
     handleTabChange() {
       this.pageNum = 1;
@@ -171,12 +183,13 @@ export default {
           console.log(err);
         });
     },
-    toClassForm() {
-      this.$router.push({ name: "Classform" });
+    openCreateForm() {
+      this.createFormVisible = true;
     }
   },
   components: {
-    ClassList
+    ClassList,
+    ClassCreate
   }
 };
 </script>
@@ -190,10 +203,11 @@ export default {
   text-align: left;
   .main-head {
     width: 1205px;
+    padding: 0 15px;
+    margin: 0 auto;
     @media screen and (max-width: 1200px) {
       width: auto;
     }
-    margin: 0 auto;
     /deep/ .el-tabs__item {
       height: 60px;
       line-height: 60px;
@@ -206,11 +220,13 @@ export default {
   .main-area {
     background-color: #f4f4f4;
     width: 1205px;
+    padding: 0 15px;
     margin: 0 auto;
     @media screen and (max-width: 1200px) {
       width: auto;
     }
     .operation-area {
+      padding-right: 20px;
       .search {
         width: 40%;
         @media screen and (max-width: 1200px) {

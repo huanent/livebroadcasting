@@ -27,7 +27,9 @@ export default {
   },
   computed: {
     avatarUrl() {
-      return this.userInfo.avatar || avatarImg;
+      return this.userInfo && this.userInfo.avatar
+        ? this.userInfo.avatar
+        : avatarImg;
     }
   },
   data() {
@@ -48,6 +50,7 @@ export default {
   color: $white;
   .head-wrap {
     width: 1205px;
+    padding: 0 15px;
     margin: 0 auto;
     height: 100%;
     display: flex;
