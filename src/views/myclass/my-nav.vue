@@ -2,9 +2,9 @@
   <div class="my-nav">
     <div class="nav-wrap">
       <router-link tag="h1" to="/">Live broadcast</router-link>
-      <div class="serach-wrap">
+      <!-- <div class="serach-wrap">
         <el-input v-model="value" suffix-icon="el-icon-search"></el-input>
-      </div>
+      </div> -->
       <my-profile :avatar="avatar" :nickname="nickname" />
     </div>
   </div>
