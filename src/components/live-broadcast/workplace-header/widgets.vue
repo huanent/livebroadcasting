@@ -30,6 +30,15 @@
             >骰子</a
           >
         </li>
+        <li>
+          <a
+            @click="
+              SET_DRAW_VISIBLE(true);
+              widgetVisible = false;
+            "
+            >幸运转盘</a
+          >
+        </li>
       </ul>
     </el-dialog>
     <question :visible.sync="questionVisible"></question>
@@ -53,7 +62,11 @@ export default {
     };
   },
   methods: {
-    ...mapMutations("widget", ["SET_TIMER_VISIBLE", "SET_DICE_VISIBLE"]),
+    ...mapMutations("widget", [
+      "SET_TIMER_VISIBLE",
+      "SET_DICE_VISIBLE",
+      "SET_DRAW_VISIBLE"
+    ]),
     onOpenQuestion() {
       this.questionVisible = true;
       this.closeWidgets();

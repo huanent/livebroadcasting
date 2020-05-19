@@ -1,6 +1,12 @@
 <template>
   <div>
-    <widget-window nameWidget="抽奖" v-if="false">
+    <widget-window
+      @close="SET_DRAW_VISIBLE(false)"
+      nameWidget="幸运转盘"
+      :position="draw.position"
+      v-if="draw.visible"
+      @moved="UPDATE_POSITION({ name: 'draw', position: $event })"
+    >
       <div class="contain">
         <div class="content">
           <div class="line"></div>
@@ -11,9 +17,10 @@
           </ul>
         </div>
         <el-button
+          v-if="role == ROLE.TEACHER"
           size="mini "
           type="primary"
-          @click="luckClick"
+          @click="start"
           class="btn"
           :disabled="disabled"
           >开始</el-button
@@ -24,6 +31,8 @@
 </template>
 <script>
 import WidgetWindow from "../widget-window";
+import { mapState, mapMutations } from "vuex";
+import { ROLE } from "../../../../models/role";
 
 export default {
   name: "App",
@@ -38,8 +47,14 @@ export default {
   components: {
     WidgetWindow
   },
+  computed: {
+    ...mapState("widget", ["draw"]),
+    ...mapState("account", ["role"]),
+    ...mapState("workplace", "featuresList")
+  },
   methods: {
-    luckClick() {
+    ...mapMutations("widget", ["SET_DRAW_VISIBLE"]),
+    start() {
       // 判断学生人数是否大于5人，不够5人随机填充人数
       if (this.students.length < 5) {
         this.reallength = this.students.length;
