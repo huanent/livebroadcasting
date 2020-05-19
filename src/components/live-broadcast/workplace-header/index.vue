@@ -6,6 +6,7 @@
           <el-switch v-model="switchStatus"> </el-switch>
         </span>
       </el-tooltip>
+      <recoder v-if="showRecoderButton"></recoder>
       <el-tooltip :content="'课件库'" placement="bottom" :open-delay="300">
         <icon
           @click.native="onCoursewareOpen"
@@ -62,6 +63,7 @@ import Widgets from "./widgets";
 import Recoder from "./recorder.vue";
 import Courseware from "./courseware";
 import FeaturesControl from "./features-control";
+import { Emitter } from "../../../core/emit";
 export default {
   name: "WorkplaceHeader",
   data() {
@@ -80,7 +82,8 @@ export default {
       userId: "jongwong",
       switchStatus: false,
       activeColor: "#48a7a8",
-      inactiveColor: "#76acc3"
+      inactiveColor: "#76acc3",
+      showRecoderButton: false
     };
   },
   watch: {
@@ -90,6 +93,11 @@ export default {
   },
   mounted() {
     this.handlerTheme();
+    Emitter.on("LIVE_READY", () => {
+      setTimeout(() => {
+        this.showRecoderButton = true;
+      }, 5000);
+    });
   },
   methods: {
     ...mapMutations("workplace", ["SET_THEME_COLOR"]),

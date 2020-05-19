@@ -5,7 +5,7 @@
       <li
         v-for="(item, index) in screenSources"
         :key="index"
-        :style="{ outlineColor: selected == item ? 'red' : '#ddd' }"
+        :class="{ 'stream-source': true, active: selected == item }"
       >
         <item :source="item" @selected="selected = $event"></item>
       </li>
@@ -15,7 +15,10 @@
       <li
         v-for="(item, index) in windowSources"
         :key="index"
-        :style="{ outlineColor: selected == item ? 'red' : '#ddd' }"
+        :class="{
+          'stream-source': true,
+          'stream-source-active': selected === item
+        }"
       >
         <item :source="item" @selected="selected = $event"></item>
       </li>
@@ -112,6 +115,18 @@ export default {
 li {
   display: inline-block;
   margin: 10px;
-  outline: 5px solid #ddd;
+}
+.stream-source {
+  box-shadow: 0 0 5px rgba(75, 75, 75, 0.5);
+}
+.stream-source:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 7px rgba(75, 75, 75, 0.5);
+}
+.stream-source-active {
+  transform: scale(1.03);
+  @include themeify {
+    box-shadow: 0 0 10px themed("primary");
+  }
 }
 </style>
