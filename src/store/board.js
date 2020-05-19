@@ -84,7 +84,7 @@ const mutations = {
     liveBroadcastService.boardService.activeBoard.undo();
   },
   ADD_BOARD() {
-    liveBroadcastService.boardService.addBoard();
+    liveBroadcastService.boardService.activeBoard.addBoard();
   },
 
   SYNC_STATE(state, data) {

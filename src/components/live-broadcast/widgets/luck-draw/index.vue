@@ -1,11 +1,13 @@
 <template>
   <div>
-    <widget-window nameWidget="抽奖">
+    <widget-window nameWidget="抽奖" v-if="false">
       <div class="contain">
         <div class="content">
           <div class="line"></div>
-          <ul ref="ul" :class="{isanimate:isexist}">
-            <li v-for="(item,index) in students" :key="index"><div class="stu_name">{{item}}</div></li>
+          <ul ref="ul" :class="{ isanimate: isexist }">
+            <li v-for="(item, index) in students" :key="index">
+              <div class="stu_name">{{ item }}</div>
+            </li>
           </ul>
         </div>
         <el-button
@@ -14,7 +16,8 @@
           @click="luckClick"
           class="btn"
           :disabled="disabled"
-        >开始</el-button>
+          >开始</el-button
+        >
       </div>
     </widget-window>
   </div>
@@ -26,7 +29,7 @@ export default {
   name: "App",
   data() {
     return {
-      students: ["小明名", "小李", "小吴", "小林","小莉","小文","小强"],
+      students: ["小明名", "小李", "小吴", "小林", "小莉", "小文", "小强"],
       isexist: false,
       disabled: false,
       reallength: 0
@@ -120,15 +123,14 @@ ul > li {
 .isanimate {
   animation: rotate 0.5s normal linear infinite backwards;
 }
- .stu_name{
-   border-radius: 2px;
+.stu_name {
+  border-radius: 2px;
   background: #eee;
   /* padding-left: 9px; */
   letter-spacing: 10px;
-  width:120px;
+  width: 120px;
   height: 30px;
   display: inline-block;
-
 }
 .pause {
   animation: none;

@@ -5,7 +5,10 @@
       <li
         v-for="(item, index) in screenSources"
         :key="index"
-        :class="{ 'stream-source': true, active: selected == item }"
+        :class="{
+          'stream-source': true,
+          'stream-source-active': selected == item
+        }"
       >
         <item :source="item" @selected="selected = $event"></item>
       </li>

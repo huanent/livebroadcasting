@@ -80,7 +80,7 @@ export class TrtcService {
       stream = this.localStream;
       if (stream && stream.play) {
         stream.play(data.el);
-        this.coverPlayStyle(stream, "fill");
+        this.coverPlayStyle(stream, "contain");
       }
     } else {
       if (role === ROLE.TEACHER) {
@@ -462,7 +462,7 @@ export class TrtcService {
       if (self.remoteStreamList[remoteStream.userId_]) {
         delete self.remoteStreamList[remoteStream.userId_];
       }
-      /*    self.remoteStreamListProfile = this.getStreamProfile();*/
+      self.remoteStreamListProfile = this.getStreamProfile();
       store.commit(
         "remoteStream/SET_REMOTE_STREAM_LIST",
         self.remoteStreamListProfile
