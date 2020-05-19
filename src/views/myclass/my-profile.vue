@@ -13,9 +13,9 @@
           <router-link :to="{ name: 'Setting' }" tag="li">{{
             $t("setting")
           }}</router-link>
-          <router-link :to="{ name: 'Login' }" tag="li" class="u-menu-bottom">{{
-            $t("logout")
-          }}</router-link>
+          <li class="u-menu-bottom" @click="handleLogout">
+            {{ $t("logout") }}
+          </li>
         </ul>
         <img slot="reference" :src="avatarUrl" :alt="$t('class.avatar')" />
       </el-popover>
@@ -25,6 +25,8 @@
 
 <script>
 import avatarImg from "../../assets/images/avatar.jpg";
+import { mapMutations } from "vuex";
+
 export default {
   name: "MyProfile",
   props: {
@@ -40,6 +42,21 @@ export default {
     return {
       visible: false
     };
+  },
+  methods: {
+    ...mapMutations("account", [
+      "SET_LB_TOKEN",
+      "SET_LB_EXPIRES",
+      "SET_TX_USERID",
+      "SET_USER_INFO"
+    ]),
+    handleLogout() {
+      this.SET_LB_TOKEN("");
+      this.SET_LB_EXPIRES("");
+      this.SET_TX_USERID("");
+      this.SET_USER_INFO(null);
+      this.$router.push({ name: "Login" });
+    }
   }
 };
 </script>
