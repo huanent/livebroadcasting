@@ -23,8 +23,12 @@ export default {
   },
   methods: {
     ...mapMutations("account", ["SET_USER_INFO"]),
-    handleUserInfoUpdate(data) {
-      this.SET_USER_INFO(data);
+    handleUserInfoUpdate() {
+      userApi.getUserInfo().then(res => {
+        if (res.data.success) {
+          this.SET_USER_INFO(res.data.model);
+        }
+      });
     }
   },
   components: {

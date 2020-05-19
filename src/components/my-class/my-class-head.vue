@@ -3,18 +3,7 @@
     <div class="head-wrap">
       <div class="head-left">
         <a>
-          <img
-            v-if="userInfo && userInfo.avatar"
-            :src="
-              'http://livebroadcasting.jinrui.kooboo.site' + userInfo.avatar
-            "
-            :alt="$t('class.avatar')"
-          />
-          <img
-            v-else
-            src="../../assets/images/avatar.jpg"
-            :alt="$t('class.avatar')"
-          />
+          <img :src="avatarUrl" :alt="$t('class.avatar')" />
         </a>
         <div class="head-text">
           <h2>{{ userInfo.nickname }}</h2>
@@ -29,10 +18,17 @@
 </template>
 
 <script>
+import avatarImg from "../../assets/images/avatar.jpg";
+
 export default {
   name: "MyClassHead",
   props: {
     userInfo: Object
+  },
+  computed: {
+    avatarUrl() {
+      return this.userInfo.avatar || avatarImg;
+    }
   },
   data() {
     return {

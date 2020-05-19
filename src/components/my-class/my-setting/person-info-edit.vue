@@ -119,7 +119,7 @@ export default {
     this.infoForm.email = this.userInfo.email;
     if (this.userInfo.avatar) {
       this.fileList.push({
-        url: "http://livebroadcasting.jinrui.kooboo.site" + this.userInfo.avatar
+        url: this.userInfo.avatar
       });
     }
   },
@@ -141,9 +141,7 @@ export default {
           }
           userApi.updateInfo(formData).then(res => {
             if (res.data.success) {
-              // console.log(res);
-              const data = res.data.model;
-              this.$emit("update", data);
+              this.$emit("update");
               // this.fileList = [];
               this.$message.success(this.$t("text.editSuccess"));
               // this.$refs["infoForm"].resetFields();

@@ -99,8 +99,6 @@ export default {
         .then(res => {
           if (res.data.success) {
             this.classInfo = res.data.model;
-            this.classInfo.url =
-              "http://livebroadcasting.jinrui.kooboo.site" + this.classInfo.url;
           } else {
             this.$message.error("没有对应的课堂信息");
           }

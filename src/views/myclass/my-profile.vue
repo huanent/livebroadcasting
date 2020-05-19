@@ -17,29 +17,24 @@
             $t("logout")
           }}</router-link>
         </ul>
-        <img
-          v-if="avatar"
-          slot="reference"
-          :src="'http://livebroadcasting.jinrui.kooboo.site' + avatar"
-          :alt="$t('class.avatar')"
-        />
-        <img
-          v-else
-          slot="reference"
-          src="../../assets/images/avatar.jpg"
-          :alt="$t('class.avatar')"
-        />
+        <img slot="reference" :src="avatarUrl" :alt="$t('class.avatar')" />
       </el-popover>
     </div>
   </div>
 </template>
 
 <script>
+import avatarImg from "../../assets/images/avatar.jpg";
 export default {
   name: "MyProfile",
   props: {
     avatar: String,
     nickname: String
+  },
+  computed: {
+    avatarUrl() {
+      return this.avatar || avatarImg;
+    }
   },
   data() {
     return {

@@ -20,10 +20,7 @@
         ></el-button>
         <div class="card-container">
           <div class="detail-image">
-            <img
-              :src="$store.state.account.site + item.url"
-              :alt="$t('class.classCover')"
-            />
+            <img :src="item.url" :alt="$t('class.classCover')" />
           </div>
           <div class="detail-content">
             <div class="field">

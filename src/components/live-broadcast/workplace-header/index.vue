@@ -149,19 +149,6 @@ export default {
     handleExceed(file) {
       console.log("文件超出");
     },
-    // onFilePreview(file) {
-    //   window.open(
-    //     "http://livebroadcasting.jinrui.kooboo.site" + file.response.model.url,
-    //     "_blank"
-    //   );
-    // },
-    // async reTranscode(row) {
-    //   let res1 = await transcodeCreate(row.url);
-    //   if (res1.data.success && res1.data.model) {
-    //     let taskId = res1.data.model;
-    //     this.getDescribe(taskId, row.id);
-    //   }
-    // },
     onCoursewareClose(done) {
       this.dialogVisible = false;
       if (done && done instanceof Function) {

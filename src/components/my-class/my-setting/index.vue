@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     update(data) {
-      this.$emit("update", data);
+      this.$emit("update");
     }
   },
   components: {
