@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { getClassList, classSearch } from "@api/class";
+import classApi from "@api/class";
 import dayjs from "dayjs";
 import ClassList from "./class-list";
 
@@ -95,7 +95,7 @@ export default {
   methods: {
     getListData(type, pageNum, pageSize) {
       this.loading = true;
-      getClassList(type, pageNum, pageSize).then(res => {
+      classApi.getClassList(type, pageNum, pageSize).then(res => {
         if (res.data.success) {
           const data = res.data.model;
           this.total = data.total;
@@ -138,12 +138,13 @@ export default {
       this.loading = true;
       this.isSearching = true;
       this.pageNum = pageNum;
-      classSearch(
-        this.searchField,
-        this.searchValue,
-        this.pageNum,
-        this.pageSize
-      )
+      classApi
+        .classSearch(
+          this.searchField,
+          this.searchValue,
+          this.pageNum,
+          this.pageSize
+        )
         .then(res => {
           if (res.data.success) {
             const data = res.data.model;

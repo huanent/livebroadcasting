@@ -79,7 +79,8 @@
 </template>
 
 <script>
-import { getUserList, classUpdate } from "@api/class";
+import classApi from "@api/class";
+
 export default {
   name: "ClassUpdate",
   data() {
@@ -129,7 +130,8 @@ export default {
       ];
     },
     getStudents() {
-      getUserList()
+      classApi
+        .getUserList()
         .then(res => {
           if (res.data.success) {
             this.studentsList = res.data.model.map(item => {
@@ -166,7 +168,7 @@ export default {
         formData.append("files", this.fileList[0].raw, this.fileList[0].name);
       }
       formData.append("students", JSON.stringify(this.selectedStudents));
-      classUpdate(formData).then(res => {
+      classApi.classUpdate(formData).then(res => {
         if (res.data.success) {
           this.$message.success("课堂信息更新成功");
           this.$emit("updateSuccess");

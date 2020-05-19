@@ -106,11 +106,6 @@ export default {
     },
     resetForm: function(formName) {
       this.$refs[formName].resetFields();
-    },
-    handleChange(userSig) {
-      const data = this.options.find(ele => ele.token === userSig);
-      this.setUserSig(data.token);
-      this.setAccount(data.user);
     }
   }
 };

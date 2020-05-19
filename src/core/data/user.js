@@ -1,9 +1,9 @@
 import axios from "axios";
 const baseUrl = "/user";
-const id = localStorage.getItem("lb_token");
 
 export default {
   getUserInfo() {
+    const id = localStorage.getItem("lb_token");
     return axios.get(`${baseUrl}/info?id=${id}`);
   },
 

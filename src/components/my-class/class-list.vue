@@ -76,7 +76,7 @@
 
 <script>
 import dayjs from "dayjs";
-import { classApply, classRemove, classQuit } from "@api/class";
+import classApi from "@api/class";
 
 export default {
   name: "ClassList",
@@ -106,7 +106,7 @@ export default {
         type: "warning"
       })
         .then(async () => {
-          const result = await classRemove(classId);
+          const result = await classApi.classRemove(classId);
           if (result.data.success) {
             this.$message.success("删除课堂成功");
             this.$emit("refresh");
@@ -121,7 +121,7 @@ export default {
         type: "warning"
       })
         .then(async () => {
-          const result = await classQuit(classId);
+          const result = await classApi.classQuit(classId);
           if (result.data.success) {
             this.$message.success("移除课堂成功");
             this.$emit("refresh");
@@ -130,7 +130,8 @@ export default {
         .catch(() => {});
     },
     handleJoinClass(id) {
-      classApply(id)
+      classApi
+        .classApply(id)
         .then(res => {
           if (res.data.success) {
             this.$message.success("加入课堂成功");

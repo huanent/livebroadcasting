@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { classGet } from "@api/class";
+import classApi from "@api/class";
 import dayjs from "dayjs";
 import ClassUpdate from "./update";
 export default {
@@ -94,7 +94,8 @@ export default {
       this.dialogFormVisible = true;
     },
     getClassInfo() {
-      classGet(this.$route.query.classId)
+      classApi
+        .classGet(this.$route.query.classId)
         .then(res => {
           if (res.data.success) {
             this.classInfo = res.data.model;
