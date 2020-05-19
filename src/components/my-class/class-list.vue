@@ -196,6 +196,12 @@ export default {
       }
       .detail-image {
         width: 30%;
+        max-height: 100px;
+        min-height: 100px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         img {
           width: 100%;
           max-height: 7rem;
