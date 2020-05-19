@@ -114,6 +114,11 @@ export default {
           tips: this.$t("toolbar.add")
         },
         {
+          iconName: "minus",
+          name: "remove",
+          tips: this.$t("toolbar.remove")
+        },
+        {
           iconName: "move2",
           name: "move",
           tips: this.$t("toolbar.move")
@@ -178,6 +183,9 @@ export default {
         case "add":
           this.ADD_BOARD();
           break;
+        case "remove":
+          this.REMOVE_BOARD();
+          break;
         case "pen":
           this.SET_TOOL_PEN();
           break;
@@ -207,6 +215,7 @@ export default {
     ...mapMutations("board", [
       "CLEAR_BOARD",
       "ADD_BOARD",
+      "REMOVE_BOARD",
       "CAN_REDO",
       "CAN_UNDO",
       "SET_TOOL_TEXT",
