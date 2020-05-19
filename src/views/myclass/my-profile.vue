@@ -10,17 +10,25 @@
         popper-class="profile-popover"
       >
         <ul class="menu">
-          <router-link :to="{ name: 'Setting' }" tag="li">设置</router-link>
-          <router-link :to="{ name: 'Login' }" tag="li" class="u-menu-bottom"
-            >退出</router-link
-          >
+          <router-link :to="{ name: 'Setting' }" tag="li">{{
+            $t("setting")
+          }}</router-link>
+          <router-link :to="{ name: 'Login' }" tag="li" class="u-menu-bottom">{{
+            $t("logout")
+          }}</router-link>
         </ul>
         <img
           v-if="avatar"
           slot="reference"
           :src="'http://livebroadcasting.jinrui.kooboo.site' + avatar"
+          :alt="$t('class.avatar')"
         />
-        <img v-else slot="reference" src="../../assets/images/avatar.jpg" />
+        <img
+          v-else
+          slot="reference"
+          src="../../assets/images/avatar.jpg"
+          :alt="$t('class.avatar')"
+        />
       </el-popover>
     </div>
   </div>

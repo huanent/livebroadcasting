@@ -7,7 +7,7 @@
           @click="handleDelete(item.classId)"
           type="text"
           class="delete-btn"
-          title="删除课堂"
+          :title="$t('class.deleteClass')"
           ><i class="el-icon-close"></i
         ></el-button>
         <el-button
@@ -15,23 +15,26 @@
           @click="handleQuit(item.classId)"
           type="text"
           class="delete-btn"
-          title="退出课堂"
+          :title="$t('class.quitClass')"
           ><i class="el-icon-close"></i
         ></el-button>
         <div class="card-container">
           <div class="detail-image">
-            <img :src="$store.state.account.site + item.url" alt="" />
+            <img
+              :src="$store.state.account.site + item.url"
+              :alt="$t('class.classCover')"
+            />
           </div>
           <div class="detail-content">
             <div class="field">
               <span>{{ item.title }}</span>
             </div>
             <div class="field">
-              <label>{{ $t("classform.startTime") }}：</label
+              <label>{{ $t("class.startTime") }}：</label
               ><span>{{ item.startTime | timeFormat }}</span>
             </div>
             <div class="field">
-              <label>{{ $t("classform.endTime") }}：</label
+              <label>{{ $t("class.endTime") }}：</label
               ><span>{{ item.endTime | timeFormat }}</span>
             </div>
             <div class="item-btn-group">
@@ -42,13 +45,13 @@
                     classId: item.classId
                   }
                 }"
-                >查看详情</router-link
+                >{{ $t("class.viewDetail") }}</router-link
               >
               <span
                 v-if="isSearching"
                 class="btn-apply"
                 @click="handleJoinClass(item.classId)"
-                >加入课堂</span
+                >{{ $t("class.joinClass") }}</span
               >
               <router-link
                 v-else
@@ -56,7 +59,7 @@
                   name: 'Liveroom',
                   query: { createUser: item.createUser, id: item.classId }
                 }"
-                >进入课堂</router-link
+                >{{ $t("class.enterClass") }}</router-link
               >
             </div>
           </div>
@@ -68,7 +71,7 @@
         {{ nodataTips }}
       </div>
       <div class="nodata" v-else>
-        没有对应的搜索结果...
+        {{ $t("class.hasNoSearchResult") }}
       </div>
     </template>
   </div>
@@ -89,8 +92,8 @@ export default {
   computed: {
     nodataTips() {
       return this.type === "creator"
-        ? this.$t("classform.noCreateClassTips")
-        : this.$t("classform.noJoinClassTips");
+        ? this.$t("class.noCreateClassTips")
+        : this.$t("class.noJoinClassTips");
     }
   },
   filters: {
@@ -100,30 +103,30 @@ export default {
   },
   methods: {
     handleDelete(classId) {
-      this.$confirm("此操作将删除所有课堂数据, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      this.$confirm(this.$t("class.deleteTips"), this.$t("text.tips"), {
+        confirmButtonText: this.$t("button.yes"),
+        cancelButtonText: this.$t("button.cancel"),
         type: "warning"
       })
         .then(async () => {
           const result = await classApi.classRemove(classId);
           if (result.data.success) {
-            this.$message.success("删除课堂成功");
+            this.$message.success(this.$t("class.deleteSuccess"));
             this.$emit("refresh");
           }
         })
         .catch(() => {});
     },
     handleQuit(classId) {
-      this.$confirm("此操作会将您从当前课堂移除, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      this.$confirm(this.$t("class.quitTips"), this.$t("text.tips"), {
+        confirmButtonText: this.$t("button.yes"),
+        cancelButtonText: this.$t("button.cancel"),
         type: "warning"
       })
         .then(async () => {
           const result = await classApi.classQuit(classId);
           if (result.data.success) {
-            this.$message.success("移除课堂成功");
+            this.$message.success(this.$t("class.quitSuccess"));
             this.$emit("refresh");
           }
         })
@@ -134,10 +137,10 @@ export default {
         .classApply(id)
         .then(res => {
           if (res.data.success) {
-            this.$message.success("加入课堂成功");
+            this.$message.success(this.$t("class.joinSuccess"));
             this.$emit("refresh");
           } else {
-            this.$message.error("加入课堂失败");
+            this.$message.error(this.$t("class.joinFailed"));
           }
         })
         .catch(err => {

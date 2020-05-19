@@ -3,23 +3,23 @@
     <div class="classlist">
       <el-row type="flex" class="detail-container">
         <div class="detail-image">
-          <img :src="classInfo.url" alt="" />
+          <img :src="classInfo.url" :alt="$t('class.classCover')" />
         </div>
         <div class="detail-content">
           <div class="detail-title">
             <span>{{ classInfo.title }}</span>
           </div>
           <div>
-            <label>{{ $t("classform.startTime") }}：</label
+            <label>{{ $t("class.startTime") }}：</label
             ><span>{{ classInfo.startTime | timeFormat }}</span>
           </div>
           <div>
-            <label>{{ $t("classform.endTime") }}：</label
+            <label>{{ $t("class.endTime") }}：</label
             ><span>{{ classInfo.endTime | timeFormat }}</span>
           </div>
 
           <div>
-            <label>{{ $t("classform.createTime") }}：</label
+            <label>{{ $t("class.createTime") }}：</label
             ><span>{{ classInfo.createDate | timeFormat }}</span>
           </div>
         </div>
@@ -28,22 +28,22 @@
           class="edit-btn"
           type="primary"
           @click="updateDialog(parseInt($route.query.classId))"
-          >{{ $t("classform.edit") }}</el-button
+          >{{ $t("class.edit") }}</el-button
         >
       </el-row>
       <div class="class-desc">
-        <label>{{ $t("classform.description") }}：</label
+        <label>{{ $t("class.description") }}：</label
         ><span>{{ classInfo.description }}</span>
       </div>
       <div class="class-desc" v-if="isCreater">
-        <label>{{ $t("classform.students") }}：</label>
+        <label>{{ $t("class.students") }}：</label>
         <span v-for="item in classInfo.students" :key="item._id">
           {{ item.userId }}、
         </span>
       </div>
     </div>
     <el-dialog
-      :title="$t('classform.edit')"
+      :title="$t('class.edit')"
       :visible.sync="dialogFormVisible"
       :close-on-click-modal="false"
     >

@@ -2,8 +2,14 @@
   <div class="my-class-main">
     <div class="main-head">
       <el-tabs v-model="activeName" @tab-click="handleTabChange">
-        <el-tab-pane label="我的开课" name="creator"></el-tab-pane>
-        <el-tab-pane label="我的课堂" name="participant"></el-tab-pane>
+        <el-tab-pane
+          :label="$t('class.theClassICreated')"
+          name="creator"
+        ></el-tab-pane>
+        <el-tab-pane
+          :label="$t('class.theClassIJoined')"
+          name="participant"
+        ></el-tab-pane>
       </el-tabs>
     </div>
     <div class="main-area">
@@ -11,7 +17,7 @@
         <div class="search right">
           <el-input
             v-if="activeName === 'participant'"
-            placeholder="搜索加入课堂"
+            :placeholder="$t('class.searchClass')"
             v-model="searchValue"
             class="input-with-select"
             clearable
@@ -20,11 +26,19 @@
               v-model="searchField"
               slot="prepend"
               @change="handleFieldChange"
-              placeholder="请选择"
             >
-              <el-option label="房间号" value="classId"></el-option>
-              <el-option label="标题" value="title"></el-option>
-              <el-option label="创建者" value="createUser"></el-option>
+              <el-option
+                :label="$t('class.classId')"
+                value="classId"
+              ></el-option>
+              <el-option
+                :label="$t('class.classTitle')"
+                value="title"
+              ></el-option>
+              <el-option
+                :label="$t('class.createUser')"
+                value="createUser"
+              ></el-option>
             </el-select>
             <el-button
               @click="handleSearch(1)"
@@ -38,7 +52,7 @@
           class="right"
           type="primary"
           @click.stop="toClassForm"
-          >{{ $t("classform.createClass") }}</el-button
+          >{{ $t("class.createClass") }}</el-button
         >
       </div>
       <keep-alive>
@@ -102,7 +116,7 @@ export default {
           this.classList = data.list;
           this.loading = false;
         } else {
-          this.$message.error("课堂数据获取失败");
+          this.$message.error($t("class.classDataAcquisitionFailed"));
         }
       });
     },
@@ -131,7 +145,7 @@ export default {
     },
     handleSearch(pageNum) {
       if (!this.searchField || !this.searchField.trim()) {
-        this.$message.info("请先选择搜索的字段");
+        this.$message.info($t("class.searchFieldRequires"));
         return;
       }
       if (!this.searchValue) return;

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form :model="classForm">
-      <el-form-item :label="$t('classform.pic')" class="img-upload-wrap">
+      <el-form-item :label="$t('class.pic')" class="img-upload-wrap">
         <el-upload
           action
           :class="[
@@ -20,44 +20,44 @@
           <icon name="add" :size="20" color="#0a818c"></icon>
         </el-upload>
       </el-form-item>
-      <el-form-item prop="title" :label="$t('classform.title')">
+      <el-form-item prop="title" :label="$t('class.title')">
         <el-input v-model="classForm.title"></el-input>
       </el-form-item>
-      <el-form-item prop="description" :label="$t('classform.description')">
+      <el-form-item prop="description" :label="$t('class.description')">
         <el-input type="textarea" v-model="classForm.description"></el-input>
       </el-form-item>
-      <el-form-item prop="startTime" :label="$t('classform.startTime')">
+      <el-form-item prop="startTime" :label="$t('class.startTime')">
         <div class="block">
           <el-date-picker
             v-model="classForm.startTime"
             type="datetime"
-            :placeholder="$t('classform.startTimetips')"
+            :placeholder="$t('class.startTimetips')"
             :editable="false"
             value-format="timestamp"
           >
           </el-date-picker>
         </div>
       </el-form-item>
-      <el-form-item prop="endTime" :label="$t('classform.endTime')">
+      <el-form-item prop="endTime" :label="$t('class.endTime')">
         <div class="block">
           <el-date-picker
             v-model="classForm.endTime"
             type="datetime"
-            :placeholder="$t('classform.endTimetips')"
+            :placeholder="$t('class.endTimetips')"
             :editable="false"
             value-format="timestamp"
           >
           </el-date-picker>
         </div>
       </el-form-item>
-      <el-form-item prop="students" :label="$t('classform.addStudents')">
+      <el-form-item prop="students" :label="$t('class.addStudents')">
         <el-select
           v-model="selectedStudents"
           multiple
           filterable
           remote
           reserve-keyword
-          :placeholder="$t('classform.keywordsTips')"
+          :placeholder="$t('class.keywordsTips')"
           :remote-method="remoteMethod"
           :loading="loading"
         >
@@ -72,7 +72,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="handleSubmit">
-        {{ $t("classform.submit") }}
+        {{ $t("button.submit") }}
       </el-button>
     </div>
   </div>

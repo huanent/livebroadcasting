@@ -1,6 +1,6 @@
 <template>
   <div class="person-info-wrap">
-    <p>完善个人资料是让别人认识你的第一步</p>
+    <p>{{ $t("setting.tips") }}</p>
     <el-form
       ref="infoForm"
       :model="infoForm"
@@ -8,10 +8,10 @@
       :rules="rules"
       class="mt20"
     >
-      <el-form-item label="昵称" prop="nickname">
+      <el-form-item :label="$t('setting.nickname')" prop="nickname">
         <el-input v-model="infoForm.nickname" class="w-200"></el-input>
       </el-form-item>
-      <el-form-item label="头像" class="img-upload-wrap">
+      <el-form-item :label="$t('setting.avatar')" class="img-upload-wrap">
         <el-upload
           action
           :class="[
@@ -30,14 +30,16 @@
           <icon name="add" :size="20" color="#0a818c"></icon>
         </el-upload>
       </el-form-item>
-      <el-form-item label="常用邮箱" prop="email">
+      <el-form-item :label="$t('setting.email')" prop="email">
         <el-input v-model="infoForm.email" class="w-320"></el-input>
       </el-form-item>
-      <el-form-item label="手机号码" prop="tel">
+      <el-form-item :label="$t('setting.tel')" prop="tel">
         <el-input v-model="infoForm.tel" class="w-320"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit('infoForm')">保存</el-button>
+        <el-button type="primary" @click="onSubmit('infoForm')">{{
+          $t("button.save")
+        }}</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -55,9 +57,9 @@ export default {
     var checkNickName = (rule, value, callback) => {
       var nicknameReg = /^[\u4E00-\u9FA5A-Za-z0-9]+$/g;
       if (!value) {
-        return callback(new Error("昵称不能为空"));
+        return callback(new Error(this.$t("setting.nicknameRequired")));
       } else if (!nicknameReg.test(value)) {
-        return callback(new Error("昵称只能包含汉字、字母或数字"));
+        return callback(new Error(this.$t("setting.nicknameRuleTips")));
       } else {
         callback();
       }
@@ -65,9 +67,9 @@ export default {
     var checkEmail = (rule, value, callback) => {
       var emailReg = /^([a-zA-Z]|[0-9])(\w|-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,3})$/g;
       if (!value) {
-        return callback(new Error("邮箱不能为空"));
+        return callback(new Error(this.$t("setting.emailRequired")));
       } else if (!emailReg.test(value)) {
-        return callback(new Error("邮箱格式错误"));
+        return callback(new Error(this.$t("setting.emailRuleTips")));
       } else {
         callback();
       }
@@ -75,10 +77,10 @@ export default {
     var checkTel = (rule, value, callback) => {
       var telReg = /^1[3,4,5,7,8]\d{9}$/g;
       if (!value) {
-        return callback(new Error("手机号码不能为空"));
+        return callback(new Error(this.$t("setting.telRequired")));
       } else {
         if (!telReg.test(value)) {
-          return callback(new Error("手机号码格式错误"));
+          return callback(new Error(this.$t("setting.telRuleTips")));
         }
         callback();
       }
@@ -143,7 +145,7 @@ export default {
               const data = res.data.model;
               this.$emit("update", data);
               // this.fileList = [];
-              this.$message.success("修改成功");
+              this.$message.success(this.$t("text.editSuccess"));
               // this.$refs["infoForm"].resetFields();
             }
           });
@@ -158,11 +160,11 @@ export default {
         file.raw.type === "image/jpeg" || file.raw.type === "image/png";
       const isLt1M = file.size / 1024 / 1024 < 1;
       if (!isIMAGE) {
-        this.$message.error("只能上传jpg/png图片!");
+        this.$message.error(this.$t("setting.avatarRuleTips"));
         return false;
       }
       if (!isLt1M) {
-        this.$message.error("上传文件大小不能超过 1MB!");
+        this.$message.error(this.$t("setting.avatarSizeLimit"));
         return false;
       }
       this.fileList.push(file);

@@ -8,13 +8,17 @@
             :src="
               'http://livebroadcasting.jinrui.kooboo.site' + userInfo.avatar
             "
-            alt="头像"
+            :alt="$t('class.avatar')"
           />
-          <img v-else src="../../assets/images/avatar.jpg" alt="头像" />
+          <img
+            v-else
+            src="../../assets/images/avatar.jpg"
+            :alt="$t('class.avatar')"
+          />
         </a>
         <div class="head-text">
-          <h2>{{ userInfo.nickname }}，下午好</h2>
-          <p>知识的价值不在于占有，而在于使用。</p>
+          <h2>{{ userInfo.nickname }}</h2>
+          <p>{{ $t("text.motto") }}</p>
         </div>
       </div>
       <!-- <a>

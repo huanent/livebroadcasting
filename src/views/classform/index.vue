@@ -7,7 +7,7 @@
         :rules="rules"
         label-width="80px"
       >
-        <el-form-item :label="$t('classform.pic')" class="img-upload-wrap">
+        <el-form-item :label="$t('class.pic')" class="img-upload-wrap">
           <el-upload
             action
             :class="[
@@ -25,34 +25,31 @@
           >
             <icon name="add" :size="20" color="#0a818c"></icon>
           </el-upload>
-          <!-- <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="" />
-          </el-dialog> -->
         </el-form-item>
-        <el-form-item prop="title" :label="$t('classform.title')">
+        <el-form-item prop="title" :label="$t('class.title')">
           <el-input v-model="classForm.title"></el-input>
         </el-form-item>
-        <el-form-item prop="description" :label="$t('classform.description')">
+        <el-form-item prop="description" :label="$t('class.description')">
           <el-input type="textarea" v-model="classForm.description"></el-input>
         </el-form-item>
-        <el-form-item prop="startTime" :label="$t('classform.startTime')">
+        <el-form-item prop="startTime" :label="$t('class.startTime')">
           <div class="block">
             <el-date-picker
               v-model="classForm.startTime"
               type="datetime"
-              placeholder="选择开始时间"
+              :placeholder="$t('class.startTimetips')"
               :editable="false"
               value-format="timestamp"
             >
             </el-date-picker>
           </div>
         </el-form-item>
-        <el-form-item prop="endTime" :label="$t('classform.endTime')">
+        <el-form-item prop="endTime" :label="$t('class.endTime')">
           <div class="block">
             <el-date-picker
               v-model="classForm.endTime"
               type="datetime"
-              placeholder="选择结束时间"
+              :placeholder="$t('class.endTimetips')"
               :editable="false"
               value-format="timestamp"
             >
@@ -61,7 +58,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit('classForm')">
-            {{ $t("classform.submit") }}
+            {{ $t("button.submit") }}
           </el-button>
         </el-form-item>
       </el-form>
@@ -125,28 +122,28 @@ export default {
         title: [
           {
             required: true,
-            message: this.$t("classform.titletips"),
+            message: this.$t("class.titletips"),
             trigger: "change"
           }
         ],
         description: [
           {
             required: true,
-            message: this.$t("classform.descriptiontips"),
+            message: this.$t("class.descriptiontips"),
             trigger: "change"
           }
         ],
         startTime: [
           {
             required: true,
-            message: this.$t("classform.startTimetips"),
+            message: this.$t("class.startTimetips"),
             trigger: "change"
           }
         ],
         endTime: [
           {
             required: true,
-            message: this.$t("classform.endTimetips"),
+            message: this.$t("class.endTimetips"),
             trigger: "change"
           }
         ]

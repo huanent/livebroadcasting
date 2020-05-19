@@ -1,7 +1,7 @@
 <template>
   <div class="my-nav">
     <div class="nav-wrap">
-      <h1 class="logo-wrap">Live broadcast</h1>
+      <router-link tag="h1" to="/">Live broadcast</router-link>
       <div class="serach-wrap">
         <el-input v-model="value" suffix-icon="el-icon-search"></el-input>
       </div>
@@ -44,6 +44,7 @@ export default {
     justify-content: space-between;
     h1 {
       font-size: 32px;
+      cursor: pointer;
     }
     .serach-wrap {
       width: 320px;
