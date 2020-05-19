@@ -43,7 +43,7 @@ export default {
 <style lang="scss" scoped>
 .my-class-head {
   background-image: linear-gradient(45deg, #6bd5c7, #dcecb1);
-  height: 190px;
+  height: 180px;
   max-width: 1920px;
   width: 100%;
   margin: 0 auto;
