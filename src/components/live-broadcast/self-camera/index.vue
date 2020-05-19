@@ -41,8 +41,10 @@
       :append-to-body="true"
     >
       <div>
-        <div>
+        <div class="dialog-item">
+          <div class="dialog-title">摄像头</div>
           <el-select
+            style="width:100%"
             v-model="activeCameraDevice"
             placeholder="请选择视频输入设备"
           >
@@ -55,8 +57,10 @@
             </el-option>
           </el-select>
         </div>
-        <div>
+        <div class="dialog-item">
+          <div class="dialog-title">麦克风</div>
           <el-select
+            style="width:100%"
             v-model="activeMicrophonesDevice"
             placeholder="请选择音频输入设备"
           >
@@ -69,8 +73,35 @@
             </el-option>
           </el-select>
         </div>
-
-        <div>
+        <div class="dialog-item">
+          <el-progress :percentage="100" :format="format"></el-progress>
+        </div>
+        <div class="dialog-item">
+          <div class="dialog-title">扬声器</div>
+          <el-select
+            style="width:100%"
+            v-model="activeLoudspeakersDevice"
+            placeholder="请选择扬声器设备"
+          >
+            <el-option
+              v-for="item in microphonesDeviceList"
+              :key="item.deviceId"
+              :label="item.label"
+              :value="item"
+            >
+            </el-option>
+          </el-select>
+        </div>
+        <div class="dialog-item loudspeaker">
+          <icon
+            name="loudspeaker"
+            color="#737882"
+            :size="18"
+            style="margin-left:8px"
+          />
+          <span>测试扬声器</span>
+        </div>
+        <div class="btn-list">
           <el-button @click="onDialogClose()">取 消</el-button>
           <el-button type="primary" @click="onDialogSave()">确 定</el-button>
         </div>
@@ -93,7 +124,8 @@ export default {
       isServiceReady: false,
       dialogVisible: false,
       activeCameraDevice: {},
-      activeMicrophonesDevice: {}
+      activeMicrophonesDevice: {},
+      activeLoudspeakersDevice: {}
     };
   },
   components: {
@@ -105,7 +137,11 @@ export default {
   },
   computed: {
     ...mapState("localStream", ["audioLevel", "isInit"]),
-    ...mapState("workplace", ["microphonesDeviceList", "cameraDeviceList"]),
+    ...mapState("workplace", [
+      "microphonesDeviceList",
+      "cameraDeviceList",
+      "themeColor"
+    ]),
     ...mapState("features", ["videoStatus", "audioStatus"]),
     microIcon() {
       return this.audioStatus ? "microphone" : "microphone-slash";
@@ -149,7 +185,9 @@ export default {
     ...mapActions("localStream", ["switchVideo", "switchAudio"]),
     ...mapMutations("features", ["SET_VIDEO_STATUS", "SET_AUDIO_STATUS"]),
     onOpenSetting() {
-      this.dialogVisible = true;
+      if (this.themeColor === "light") {
+        this.dialogVisible = true;
+      }
     },
     onDialogClose() {
       this.dialogVisible = false;
@@ -168,6 +206,9 @@ export default {
         this.ACTIVE_MICROPHONES(this.activeMicrophonesDevice);
       }
       this.dialogVisible = false;
+    },
+    format(percentage) {
+      return percentage === 100 ? "最大音量" : `${percentage}%`;
     }
   }
 };
@@ -271,4 +312,33 @@ export default {
 /*/deep/ .el-dialog__title {
   color: white;
 }*/
+
+.dialog-item {
+  margin-bottom: 15px;
+  &.loudspeaker {
+    width: 25%;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    padding: 5px;
+    > span {
+      margin-left: 10px;
+      font-size: 12px;
+    }
+  }
+  .dialog-title {
+    margin-bottom: 5px;
+  }
+  .el-progress {
+    /deep/.el-progress__text {
+      font-size: 10px !important;
+    }
+  }
+}
+.btn-list {
+  margin-top: 18px;
+  text-align: center;
+  > button {
+    margin-right: 25px;
+  }
+}
 </style>
