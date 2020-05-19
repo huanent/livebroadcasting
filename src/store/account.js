@@ -14,8 +14,7 @@ const state = {
   lb_token: "",
   userId: "",
 
-  role: ROLE.STUDENT, // student teacher
-  site: "http://livebroadcasting.jinrui.kooboo.site"
+  role: ROLE.STUDENT // student teacher
 };
 
 const mutations = {
