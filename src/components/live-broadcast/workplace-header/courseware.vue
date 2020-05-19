@@ -118,6 +118,9 @@ import {
   transcodeDescribe,
   setCourseFile
 } from "../../../core/data/data-service";
+
+import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+
 export default {
   name: "Courseware",
   data() {
@@ -225,12 +228,12 @@ export default {
       });
     },
     rowclick(file) {
-      this.$store.commit("workplace/ADD_BOARD_FILE", {
-        resultUrl: file.resultUrl,
-        title: file.title,
-        pages: file.pages,
-        resolution: file.resolution
-      });
+      liveBroadcastService.boardService.addBoardFiles(
+        file.resultUrl,
+        file.title,
+        file.pages,
+        file.resolution
+      );
     },
     closeDialog() {
       this.$emit("close-dialogStatus", true);

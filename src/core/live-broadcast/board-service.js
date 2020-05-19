@@ -42,7 +42,9 @@ export class BoardService {
 
     Emitter.on("remote-board-data-change", data => {
       this.getActiveBoard().addSyncData(data);
-      this.syncState();
+      setTimeout(() => {
+        this.syncState();
+      }, 100);
     });
     return teduBoard;
   }
@@ -53,15 +55,21 @@ export class BoardService {
   getActiveBoard() {
     return this.activeBoard;
   }
+
   setActiveBoard(activeBoard) {
     this.activeBoard = activeBoard;
   }
+
   switchFile(file) {
     this.activeBoard.switchFile(
       file.fid,
       file.currentPageIndex,
       file.currentPageStep
     );
+  }
+
+  deleteFile(value) {
+    this.activeBoard.deleteFile(value);
   }
 
   scale(value) {
@@ -85,6 +93,7 @@ export class BoardService {
     let fileList = this.activeBoard.getFileInfoList();
     let fid = this.activeBoard.getCurrentFile();
     let currentFile = this.activeBoard.getFileInfo(fid);
+    currentFile.scale = this.activeBoard.getBoardScale();
     store.commit("board/SYNC_STATE", {
       fileList,
       currentFile

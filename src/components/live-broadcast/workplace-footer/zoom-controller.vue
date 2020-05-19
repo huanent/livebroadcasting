@@ -32,20 +32,20 @@ export default {
   },
   computed: {
     ...mapState("features", ["canControlBoard"]),
-    ...mapState("board", ["currentFile"]),
-    zoomParam() {
-      return this.$store.state.workplace.boardScale;
-    }
+    ...mapState("board", ["currentFile"])
   },
   methods: {
-    ...mapMutations("board", ["SCALE_BOARD"]),
     handleMinus() {
       if (this.currentFile.scale <= this.min) return;
-      this.SCALE_BOARD(this.currentFile.scale - 100);
+      liveBroadcastService.boardService.activeBoard.setBoardScale(
+        this.currentFile.scale - 100
+      );
     },
     handleAdd() {
       if (this.currentFile.scale >= this.max) return;
-      this.SCALE_BOARD(this.currentFile.scale + 100);
+      liveBroadcastService.boardService.activeBoard.setBoardScale(
+        this.currentFile.scale + 100
+      );
     }
   }
 };

@@ -113,7 +113,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations("board", ["DELETE_BOARD"]),
     switchTab(item) {
       if (!this.canClickboardTabs) return;
       liveBroadcastService.boardService.switchFile(item);
@@ -126,7 +125,7 @@ export default {
       });
     },
     onClose(item) {
-      this.DELETE_BOARD(item);
+      liveBroadcastService.boardService.deleteFile(item.fid);
     },
     toggle() {
       this.$refs.select.isOpen = !this.$refs.select.isOpen;

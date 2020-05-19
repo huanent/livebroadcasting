@@ -90,6 +90,7 @@ const mutations = {
   ADD_BOARD() {
     liveBroadcastService.boardService.addBoard();
   },
+
   SYNC_STATE(state, data) {
     for (const key in data) {
       state[key] = data[key];
@@ -99,19 +100,6 @@ const mutations = {
   SCALE_BOARD(state, value) {
     liveBroadcastService.boardService.activeBoard.setBoardScale(value);
     state.currentFile.scale = value;
-  },
-  PAGING(state, index) {
-    if (index > state.currentFile.currentPageIndex) {
-      liveBroadcastService.boardService.activeBoard.nextBoard(true);
-    } else if (index < state.currentFile.currentPageIndex) {
-      liveBroadcastService.boardService.activeBoard.prevBoard(true);
-    }
-    state.currentFile.currentPageIndex = index;
-  },
-  DELETE_BOARD(state, file) {
-    state.fileList = state.fileList.filter(f => f != file);
-    state.currentFile = state.fileList[state.fileList.length - 1];
-    liveBroadcastService.boardService.activeBoard.deleteFile(file.fid);
   }
 };
 

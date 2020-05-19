@@ -24,6 +24,8 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 
+import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+
 export default {
   name: "PageController",
   computed: {
@@ -32,15 +34,14 @@ export default {
     ...mapState("board", ["currentFile"])
   },
   methods: {
-    ...mapMutations("board", ["PAGING"]),
     async handleMinus() {
       if (this.currentFile.currentPageIndex <= 0) return;
-      this.PAGING(this.currentFile.currentPageIndex - 1);
+      liveBroadcastService.boardService.activeBoard.prevBoard(true);
     },
     async handleAdd() {
       if (this.currentFile.currentPageIndex >= this.currentFile.pageCount - 1)
         return;
-      this.PAGING(this.currentFile.currentPageIndex + 1);
+      liveBroadcastService.boardService.activeBoard.nextBoard(true);
     }
   }
 };
