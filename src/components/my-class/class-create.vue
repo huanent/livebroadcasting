@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="收货地址"
+    :title="$t('class.createClass')"
     :visible.sync="createFormVisible"
     v-loading="loading"
   >
@@ -74,9 +74,6 @@ import classApi from "@api/class";
 
 export default {
   name: "ClassCreate",
-  props: {
-    createFormVisible: Boolean
-  },
   data() {
     var validateEmail = (rule, value, callback) => {
       const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
@@ -111,6 +108,7 @@ export default {
     };
     return {
       loading: false,
+      createFormVisible: false,
       classForm: {
         avatar: "",
         title: "",
@@ -152,14 +150,19 @@ export default {
     };
   },
   methods: {
+    open() {
+      this.createFormVisible = true;
+    },
     onSubmit(formName) {
       const userId = localStorage.getItem("lb_userId");
-      this.loading = true;
+
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.loading = true;
           if (this.classForm.startTime >= this.classForm.endTime) {
             this.$message.error("结束时间不得早于开始时间");
             this.classForm.endTime = "";
+            this.loading = false;
             return;
           }
           var formData = new FormData();
@@ -180,6 +183,7 @@ export default {
             .then(res => {
               if (res.data.success) {
                 this.$message.success(res.data.message);
+                this.createFormVisible = false;
                 this.$emit("createSuccess");
                 this.loading = false;
               } else {
@@ -200,7 +204,7 @@ export default {
     },
     handleCancel() {
       this.resetForm("classCreateForm");
-      this.$emit("close");
+      this.createFormVisible = false;
     },
     resetForm: function(formName) {
       this.$refs[formName].resetFields();
