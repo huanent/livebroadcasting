@@ -8,6 +8,7 @@ export default {
   },
 
   updateInfo(model) {
+    const id = localStorage.getItem("lb_token");
     model.append("id", id);
     return axios.post(`${baseUrl}/update`, model);
   }
