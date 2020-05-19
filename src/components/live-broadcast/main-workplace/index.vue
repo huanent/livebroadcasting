@@ -35,6 +35,8 @@
       :visible.sync="showStreamSelectdialog"
       @selected="onSelected"
     />
+    <hand />
+    <hand-up-list />
   </div>
 </template>
 
@@ -47,9 +49,18 @@ import { mapState, mapMutations } from "vuex";
 import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";
 import { ROLE } from "../../../store/account";
+import Hand from "../hand-up/hand";
+import HandUpList from "../hand-up/hand-up-list";
 export default {
   name: "MainWorkplace",
-  components: { Toolbar, BoardTabs, WorkplaceFooter, StreamSourceDialog },
+  components: {
+    Toolbar,
+    BoardTabs,
+    WorkplaceFooter,
+    StreamSourceDialog,
+    Hand,
+    HandUpList
+  },
   data() {
     return {
       showToolbar: true,

@@ -7,13 +7,21 @@
     class="features-control"
   >
     <div class="features-control-content">
-      <el-card class="box-card" v-for="(item, index) in featuresList">
+      <el-card
+        class="box-card"
+        v-for="(item, index) in featuresList"
+        :key="index"
+      >
         <el-form ref="form" label-width="300px">
           <el-form-item label="name">
             <span>{{ item.__primaryKey }}</span>
           </el-form-item>
 
-          <el-form-item v-for="feature in featureList" :label="feature.name">
+          <el-form-item
+            v-for="(feature, i) in featureList"
+            :label="feature.name"
+            :key="index + '_' + i"
+          >
             <el-switch
               v-if="feature.kind === 'boolean'"
               :value="item[feature.propName]"

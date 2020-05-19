@@ -71,6 +71,7 @@ import {
   initLiveBroadcastService,
   liveBroadcastService
 } from "../../core/live-broadcast/live-broadcast-service";
+
 export default {
   name: "workplace",
   data: function() {
