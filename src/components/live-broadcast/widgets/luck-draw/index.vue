@@ -16,6 +16,8 @@
             </li>
           </ul>
         </div>
+      </div>
+      <div class="btnClick">
         <el-button
           v-if="role == ROLE.TEACHER"
           size="mini "
@@ -23,8 +25,7 @@
           @click="start"
           class="btn"
           :disabled="disabled"
-          >开始</el-button
-        >
+        >开始</el-button>
       </div>
     </widget-window>
   </div>
@@ -83,72 +84,70 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .contain {
   width: 200px;
-  height: 150px;
+  height: 100px;
   background: #54555d;
-  color: red;
   position: relative;
   box-sizing: border-box;
   padding-top: 36px;
+  .content {
+    height: 30px;
+    font-weight: 500;
+    background: #54555d;
+    color: #000;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    .line {
+      width: 120px;
+      left: 0;
+      right: 0;
+      position: absolute;
+      height: 1px;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      opacity: 0.2;
+      background: #000;
+    }
+    .stu_name {
+      border-radius: 2px;
+      background: #eee;
+      letter-spacing: 10px;
+      width: 120px;
+      height: 30px;
+      display: inline-block;
+    }
+  }
 }
 
-.content {
-  width: 200px;
-  height: 30px;
-  font-weight: 500;
-  background: #54555d;
-  color: #000;
-  position: relative;
-  overflow: hidden;
-  text-align: center;
-}
-.content .line {
-  width: 120px;
-  left: 0;
-  right: 0;
-  position: absolute;
-  height: 1px;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  opacity: 0.2;
-  background: #000;
-}
 ul {
   height: 30px;
   list-style: none;
   margin: 0;
   padding: 0;
-}
-.contain .btn {
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-  margin: auto;
-}
-ul > li {
-  font-size: 20px;
-  height: 30px;
-  width: 100%;
+  li {
+    font-size: 20px;
+    height: 30px;
+    width: 100%;
+  }
 }
 
+.btnClick {
+  text-align: center;
+  background: #54555d;
+  padding-bottom: 10px;
+  .el-button {
+    background: #018a8c;
+    width: 160px;
+    padding-bottom: 5px;
+    font-size: 14px;
+  }
+}
 .isanimate {
   animation: rotate 0.5s normal linear infinite backwards;
-}
-.stu_name {
-  border-radius: 2px;
-  background: #eee;
-  /* padding-left: 9px; */
-  letter-spacing: 10px;
-  width: 120px;
-  height: 30px;
-  display: inline-block;
-}
-.pause {
-  animation: none;
 }
 
 @keyframes rotate {
@@ -161,11 +160,5 @@ ul > li {
   100% {
     margin-top: -120px;
   }
-}
-.el-button {
-  background: #018a8c;
-  width: 160px;
-  padding-bottom: 5px;
-  font-size: 14px;
 }
 </style>
