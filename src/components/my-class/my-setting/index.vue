@@ -31,6 +31,9 @@ export default {
 .setting-wrap {
   width: 1205px;
   margin: 20px auto;
+  @media screen and (max-width: 1200px) {
+    width: auto;
+  }
   .setting-tabs {
     /deep/ .el-tabs__item {
       height: 44px;

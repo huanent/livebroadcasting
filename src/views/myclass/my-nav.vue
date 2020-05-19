@@ -42,6 +42,9 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    @media screen and (max-width: 1200px) {
+      width: auto;
+    }
     h1 {
       font-size: 32px;
       cursor: pointer;

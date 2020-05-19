@@ -190,6 +190,9 @@ export default {
   text-align: left;
   .main-head {
     width: 1205px;
+    @media screen and (max-width: 1200px) {
+      width: auto;
+    }
     margin: 0 auto;
     /deep/ .el-tabs__item {
       height: 60px;
@@ -204,9 +207,15 @@ export default {
     background-color: #f4f4f4;
     width: 1205px;
     margin: 0 auto;
+    @media screen and (max-width: 1200px) {
+      width: auto;
+    }
     .operation-area {
       .search {
         width: 40%;
+        @media screen and (max-width: 1200px) {
+          width: auto;
+        }
         /deep/ .el-input .el-input--suffix {
           width: 6rem;
         }

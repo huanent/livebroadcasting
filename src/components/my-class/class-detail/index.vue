@@ -116,6 +116,9 @@ export default {
   background-color: #f4f4f4;
   width: 1205px;
   margin: 0 auto;
+  @media screen and (max-width: 1200px) {
+    width: auto;
+  }
   .edit-btn {
     height: 2.5rem;
     position: absolute;

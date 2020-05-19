@@ -167,6 +167,9 @@ export default {
   .class-container {
     flex-wrap: wrap;
     width: 100%;
+    @media screen and (max-width: 767px) {
+      justify-content: center;
+    }
     .delete-btn {
       position: absolute;
       z-index: 99;
@@ -182,6 +185,12 @@ export default {
     .class-card {
       position: relative;
       width: 32%;
+      @media screen and (max-width: 1200px) {
+        width: 48%;
+      }
+      @media screen and (max-width: 767px) {
+        width: 92%;
+      }
       height: fit-content;
       background: white;
       margin: 0.5%;
