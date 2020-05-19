@@ -8,7 +8,6 @@ const state = {
   textSize: 320,
   canRedo: 0,
   canUndo: 0,
-  drawEnable: false,
   fileList: [],
   currentFile: {
     pageCount: 0,
@@ -18,9 +17,6 @@ const state = {
 };
 
 const mutations = {
-  SET_DRAW_ENABLE(state, status) {
-    state.drawEnable = Boolean(status);
-  },
   // 设置画笔颜色
   SET_BRUSH_COLOR(state, color) {
     state.brushColor = this.color;

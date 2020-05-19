@@ -91,7 +91,6 @@ export default {
   },
   computed: {
     ...mapState("account", ["role", "userInfo"]),
-    ...mapState("board", ["drawEnable"]),
     ...mapState("workplace", []),
     ...mapState("features", [
       "cameraPanelVisibity",
@@ -107,8 +106,8 @@ export default {
         ? ROLE.TEACHER
         : ROLE.STUDENT;
     this.SET_ROLE(role);
-    this.SET_DRAW_ENABLE(this.canControlBoard);
     await initLiveBroadcastService();
+
     if (role == ROLE.TEACHER) {
       setTimeout(() => {
         Emitter.emit("SYS_PULL_STATE", ROLE.STUDENT);
@@ -209,6 +208,11 @@ export default {
       setTimeout(() => {
         Emitter.emit("split-change");
       }, 300);
+    }
+  },
+  watch: {
+    canControlBoard(value) {
+      liveBroadcastService.boardService.activeBoard.setDrawEnable(value);
     }
   }
 };
