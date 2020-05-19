@@ -3,7 +3,14 @@
     <div class="head-wrap">
       <div class="head-left">
         <a>
-          <img :src="userInfo.avatar" alt="头像" />
+          <img
+            v-if="userInfo && userInfo.avatar"
+            :src="
+              'http://livebroadcasting.jinrui.kooboo.site' + userInfo.avatar
+            "
+            alt="头像"
+          />
+          <img v-else src="../../assets/images/avatar.jpg" alt="头像" />
         </a>
         <div class="head-text">
           <h2>{{ userInfo.nickname }}，下午好</h2>
@@ -22,9 +29,6 @@ export default {
   name: "MyClassHead",
   props: {
     userInfo: Object
-    // default: () => {
-    //   return { avatar: "", nickname: "" };
-    // }
   },
   data() {
     return {

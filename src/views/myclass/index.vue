@@ -10,41 +10,21 @@
 
 <script>
 import MyNav from "./my-nav";
+import { mapState, mapMutations } from "vuex";
 import userApi from "@api/user";
 
 export default {
   name: "MyClass",
   data() {
-    return {
-      userInfo: {
-        avatar: "",
-        nickname: "",
-        tel: "",
-        email: ""
-      }
-    };
+    return {};
   },
-  created() {
-    userApi.getUserInfo().then(res => {
-      if (res.data.success) {
-        const data = res.data.model;
-        if (data.avatar) {
-          this.userInfo.avatar =
-            "http://livebroadcasting.jinrui.kooboo.site" + data.avatar;
-        }
-        this.userInfo.nickname = data.nickname;
-        this.userInfo.tel = data.tel;
-        this.userInfo.email = data.email;
-      }
-    });
+  computed: {
+    ...mapState("account", ["userInfo"])
   },
   methods: {
+    ...mapMutations("account", ["SET_USER_INFO"]),
     handleUserInfoUpdate(data) {
-      this.userInfo.avatar =
-        "http://livebroadcasting.jinrui.kooboo.site" + data.avatar;
-      this.userInfo.email = data.email;
-      this.userInfo.tel = data.tel;
-      this.userInfo.nickname = data.nickname;
+      this.SET_USER_INFO(data);
     }
   },
   components: {

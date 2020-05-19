@@ -1,46 +1,40 @@
 /* eslint-disable*/
 import axios from "axios";
 
-export const removeClassImg = function (classId) {
-  return axios.post("/liveroom/remove", { classId });
-};
-export const detailInit = function (classId) {
-  return axios.get("/classform/list?classId=" + classId);
-};
-export const updateDataInit = function (classId) {
-  return axios.get("/classform/list?classId=" + classId);
-};
-export const getStudentsList = function () {
-  return axios.get("/classform/list?students=true");
-};
-export const formatDate = function (timeStamp) {
-  timeStamp = new Date(parseInt(timeStamp)).toLocaleString();
-  return timeStamp;
-};
-export const classUpdate = function (formData) {
-  return axios.post("/classform/update", formData);
-};
-export const classApply = function (formData) {
-  return axios.post("/classform/apply", formData);
-};
-export const classCreate = function (formData) {
-  return axios.post("liveRoom/create", formData);
-};
-export const searchClass = function (searchQuery, searchContent, pageNum) {
-  if (searchQuery && searchContent) {
-    return axios.get("classform/list?searchQuery=" + searchQuery + "&searchContent=" + searchContent + "&pageNum=" + pageNum);
+export default {
+  getClassList(type, pageNum, pageSize) {
+    const id = localStorage.getItem("lb_token");
+    return axios.get(
+      `/class/list?id=${id}&type=${type}&pageNum=${pageNum}&pageSize=${pageSize}`
+    );
+  },
+  classApply(classId) {
+    const userId = localStorage.getItem("lb_userId");
+    return axios.post("/class/apply", { userId, classId });
+  },
+  classSearch(field, value, pageNum, pageSize) {
+    return axios.get(
+      `/class/search?field=${field}&value=${value}&pageNum=${pageNum}&pageSize=${pageSize}`
+    );
+  },
+  classRemove(classId) {
+    const id = localStorage.getItem("lb_token");
+    return axios.post("/class/remove", { classId, id });
+  },
+  classQuit(classId) {
+    const userId = localStorage.getItem("lb_userId");
+    return axios.post("/class/quit", { classId, userId });
+  },
+  classGet(classId) {
+    return axios.get(`/class/get?classId=${classId}`);
+  },
+  getUserList() {
+    return axios.get("/user/list");
+  },
+  classUpdate(formData) {
+    return axios.post("/class/update", formData);
+  },
+  classCreate(formData) {
+    return axios.post("liveRoom/create", formData);
   }
-};
-export const classListInit = function (activeName, pageNum) {
-  var apiurl = "";
-  pageNum = pageNum || 1;
-  const userId = localStorage.getItem("lb_userId");
-  if (!userId) return;
-  if (activeName == "student") {
-    apiurl = "/classform/list?isstudent=" + userId + "&pageNum=" + pageNum;
-  }
-  if (activeName == "teacher") {
-    apiurl = "/classform/list?createUser=" + userId + "&pageNum=" + pageNum;
-  }
-  return axios.get(apiurl);
 };

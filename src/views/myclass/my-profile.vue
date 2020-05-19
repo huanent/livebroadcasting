@@ -15,7 +15,12 @@
             >退出</router-link
           >
         </ul>
-        <img slot="reference" :src="avatar" />
+        <img
+          v-if="avatar"
+          slot="reference"
+          :src="'http://livebroadcasting.jinrui.kooboo.site' + avatar"
+        />
+        <img v-else slot="reference" src="../../assets/images/avatar.jpg" />
       </el-popover>
     </div>
   </div>

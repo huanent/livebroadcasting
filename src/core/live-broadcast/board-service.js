@@ -11,7 +11,7 @@ export class BoardService {
     textColor: store.state.board.textColor,
     textSize: store.state.board.textSize,
     toolType: store.state.board.toolType,
-    drawEnable: store.state.board.drawEnable
+    drawEnable: store.state.features.canControlBoard
   };
 
   async init(token) {
@@ -28,19 +28,23 @@ export class BoardService {
     );
     teduBoard.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
       Emitter.emit("board-data-change", data);
+      this.syncState();
     });
     this.activeBoard = teduBoard;
-    teduBoard.on(TEduBoard.EVENT.TEB_INIT, () => {
-      setTimeout(async function() {
-        let fileListInfo = teduBoard.getFileInfoList();
-        store.commit("workplace/BOARD_PROFILES", fileListInfo);
-        let lastindex = fileListInfo.length - 1;
-        store.commit("workplace/BOARD_INDEX", lastindex);
-        Emitter.emit("board-init");
-      }, 3000);
-    });
+    this.activeBoard.setBoardContentFitMode(1);
+    teduBoard.on(TEduBoard.EVENT.TEB_HISTROYDATA_SYNCCOMPLETED, () =>
+      this.syncState()
+    );
+
     Emitter.on("split-change", () => {
       this.getActiveBoard().resize();
+    });
+
+    Emitter.on("remote-board-data-change", data => {
+      this.getActiveBoard().addSyncData(data);
+      setTimeout(() => {
+        this.syncState();
+      }, 100);
     });
     return teduBoard;
   }
@@ -51,23 +55,27 @@ export class BoardService {
   getActiveBoard() {
     return this.activeBoard;
   }
+
   setActiveBoard(activeBoard) {
     this.activeBoard = activeBoard;
   }
-  switchFile(fid) {
-    let activeBoard = this.getActiveBoard();
-    let info = activeBoard.getFileInfo(fid);
-    if (!info) return;
-    activeBoard.switchFile(
-      info.fid,
-      info.currentPageIndex,
-      info.currentPageStep
+
+  switchFile(file) {
+    this.activeBoard.switchFile(
+      file.fid,
+      file.currentPageIndex,
+      file.currentPageStep
     );
-    let scale = info.scale;
-    store.commit("workplace/BOARD_TOTAL_PAGE", info.pageCount);
-    store.commit("workplace/BOARD_NUMBER", info.currentPageIndex + 1);
-    store.commit("workplace/BOARD_SCALE", scale);
   }
+
+  deleteFile(value) {
+    this.activeBoard.deleteFile(value);
+  }
+
+  scale(value) {
+    this.activeBoard.setBoardScale(value);
+  }
+
   resetBoard(activeBoard) {
     activeBoard.reset();
   }
@@ -78,44 +86,17 @@ export class BoardService {
       pages: pages,
       resolution: resolution
     });
-    this.getBoardFiles();
   }
-  addBoard() {
-    this.activeBoard.addBoard();
-    store.commit("workplace/BOARD_INDEX", 0);
-  }
-  getBoardFiles() {
-    let self = this;
-    setTimeout(function() {
-      let fileListInfo = self.activeBoard.getFileInfoList();
-      let id = self.activeBoard.getCurrentFile();
-      let index = self.getIndexByFid(fileListInfo, id);
-      store.commit("workplace/BOARD_PROFILES", fileListInfo);
-      store.commit("workplace/BOARD_INDEX", index);
-    }, 3000);
-  }
-  clearAllBoardFiles() {
-    let list = this.activeBoard.getFileInfoList();
-    // let id = this.activeBoard.getCurrentFile();
-    list.forEach(file => {
-      this.activeBoard.deleteFile(file.fid);
+
+  syncState() {
+    if (!this.activeBoard) return;
+    let fileList = this.activeBoard.getFileInfoList();
+    let fid = this.activeBoard.getCurrentFile();
+    let currentFile = this.activeBoard.getFileInfo(fid);
+    currentFile.scale = this.activeBoard.getBoardScale();
+    store.commit("board/SYNC_STATE", {
+      fileList,
+      currentFile
     });
-  }
-  getIndexByFid(fileListInfo, fid) {
-    let result;
-    fileListInfo.find((item, index) => {
-      if (item.fid === fid) {
-        result = index;
-      }
-    });
-    return result;
-  }
-  deleteCurrentFile() {
-    let id = this.activeBoard.getCurrentFile();
-    this.activeBoard.deleteFile(id);
-  }
-  deleteBoardFile(fid) {
-    this.getActiveBoard().deleteFile(fid);
-    this.getBoardFiles();
   }
 }

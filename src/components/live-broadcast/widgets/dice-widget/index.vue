@@ -1,5 +1,6 @@
 <template>
   <widget-window
+    @close="SET_DICE_VISIBLE(false)"
     nameWidget="骰子"
     :position="dice.position"
     v-if="dice.visible"
@@ -7,7 +8,7 @@
   >
     <transition>
       <div class="dice">
-        <div id="content" ref="dice" @click="start" :class="changepoint">
+        <div id="content" ref="dice" @click="start" :class="point">
           <!-- 第一个筛子 -->
           <div>
             <span></span>
@@ -76,48 +77,43 @@ import WidgetWindow from "../widget-window";
 import { mapState, mapMutations, mapGetters } from "vuex";
 import { ROLE } from "@/store/account";
 export default {
-  data() {
-    return {
-      changepoint: "",
-      num: 0
-    };
-  },
   components: {
     WidgetWindow
+  },
+  data() {
+    return {
+      point: ""
+    };
   },
   computed: {
     ...mapState("widget", ["dice"]),
     ...mapState("account", ["role"])
   },
   methods: {
-    ...mapMutations("widget", ["UPDATE_POSITION"]),
+    ...mapMutations("widget", [
+      "UPDATE_POSITION",
+      "SET_DICE_VALUE",
+      "SET_DICE_VISIBLE"
+    ]),
     start() {
-      var num = parseInt(1 + Math.random() * 6);
-      function better() {
-        return (num = parseInt(1 + Math.random() * 6));
-      }
-      if (this.num == num) {
-        num = better();
-      }
-      this.num = num;
-      if (num == 1) {
-        this.changepoint = "pointone";
-      } else if (num == 2) {
-        this.changepoint = "pointtwo";
-      } else if (num == 3) {
-        this.changepoint = "pointthree";
-      } else if (num == 4) {
-        this.changepoint = "pointfour";
-      } else if (num == 5) {
-        this.changepoint = "pointfive";
-      } else {
-        this.changepoint = "pointsix";
-      }
-    },
-    ...mapMutations("workplace", ["SET_DICE_VISIBLE"])
+      let num = parseInt(1 + Math.random() * 6);
+      this.SET_DICE_VALUE(num);
+    }
   },
-  watch: {},
-  created() {}
+  watch: {
+    "dice.value"(value) {
+      this.point == "";
+      this.$nextTick(() => {
+        if (value == 1) this.point = "pointone";
+        else if (value == 2) this.point = "pointtwo";
+        else if (value == 3) this.point = "pointthree";
+        else if (value == 4) this.point = "pointfour";
+        else if (value == 5) this.point = "pointfive";
+        else if (value == 6) this.point = "pointsix";
+        else this.point = "";
+      });
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

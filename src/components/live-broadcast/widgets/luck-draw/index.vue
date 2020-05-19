@@ -65,7 +65,7 @@ export default {
   }
 };
 </script>
-<style  scoped>
+<style scoped>
 .contain {
   width: 200px;
   height: 150px;

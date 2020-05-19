@@ -4,50 +4,44 @@
       name="chevron-circle-left"
       color="#737882"
       :size="14"
-      :class="{ 'no-drop': role === ROLE.STUDENT }"
       @click.native.stop="handleMinus"
+      v-if="canControlBoard"
     />
-    <span
-      >{{ pageNum + "/" }}<em>{{ pageTotal }}</em></span
-    >
+    <span>
+      {{ currentFile.currentPageIndex + 1 + "/" }}
+      {{ currentFile.pageCount }}
+    </span>
     <icon
       name="chevron-circle-right"
       color="#737882"
       :size="14"
-      :class="{ 'no-drop': role === ROLE.STUDENT }"
       @click.native.stop="handleAdd"
+      v-if="canControlBoard"
     />
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
+
+import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
 
 export default {
   name: "PageController",
-  props: {},
   computed: {
     ...mapState("account", ["role"]),
     ...mapState("features", ["canControlBoard"]),
-    pageTotal() {
-      return this.$store.state.workplace.boardTotalPage;
-    },
-    pageNum() {
-      return this.$store.state.workplace.boardNumber;
-    }
+    ...mapState("board", ["currentFile"])
   },
   methods: {
     async handleMinus() {
-      if (this.pageNum <= 1 || !this.canControlBoard) {
-        return;
-      }
-      this.$store.commit("workplace/BOARD_NUMBER_DECREASE");
+      if (this.currentFile.currentPageIndex <= 0) return;
+      liveBroadcastService.boardService.activeBoard.prevBoard(true);
     },
     async handleAdd() {
-      if (this.pageNum === this.pageTotal || !this.canControlBoard) {
+      if (this.currentFile.currentPageIndex >= this.currentFile.pageCount - 1)
         return;
-      }
-      this.$store.commit("workplace/BOARD_NUMBER_INCREASE");
+      liveBroadcastService.boardService.activeBoard.nextBoard(true);
     }
   }
 };
@@ -74,15 +68,14 @@ export default {
       color: #4f5359;
     }
   }
-  > svg {
-    &:hover {
-      fill: #dcebeb !important;
-    }
+}
+.svg-icon {
+  @include themeify {
+    fill: themed("font_color2") !important;
   }
-  > svg.no-drop {
-    cursor: no-drop !important;
-    &:hover {
-      fill: rgb(115, 120, 130) !important;
+  :hover {
+    @include themeify {
+      fill: mix(themed("font_color2"), themed("color_opposite"), 70%);
     }
   }
 }

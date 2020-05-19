@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { classCreate } from "@api/class";
+import classApi from "@api/class";
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 
 export default {
@@ -179,7 +179,8 @@ export default {
             this.classForm.file.raw,
             this.classForm.file.name
           );
-          classCreate(formData)
+          classApi
+            .classCreate(formData)
             .then(res => {
               if (res.data.success) {
                 this.$message.success(res.data.message);

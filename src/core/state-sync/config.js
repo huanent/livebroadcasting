@@ -7,32 +7,7 @@ export default [
     sender: ROLE.TEACHER
   },
   {
-    path: ["workplace", "activeBoardIndex"],
-    listener: ROLE.STUDENT,
-    sender: ROLE.TEACHER
-  },
-  {
-    path: ["workplace", "boardProfiles"],
-    listener: ROLE.STUDENT,
-    sender: ROLE.TEACHER
-  },
-  {
     path: ["widget", "timer"],
-    listener: ROLE.STUDENT,
-    sender: ROLE.TEACHER
-  },
-  {
-    path: ["workplace", "boardTotalPage"],
-    listener: ROLE.STUDENT,
-    sender: ROLE.TEACHER
-  },
-  {
-    path: ["workplace", "boardNumber"],
-    listener: ROLE.STUDENT,
-    sender: ROLE.TEACHER
-  },
-  {
-    path: ["workplace", "boardScale"],
     listener: ROLE.STUDENT,
     sender: ROLE.TEACHER
   },

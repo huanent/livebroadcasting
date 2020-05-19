@@ -3,6 +3,9 @@ import store from "@/store";
 import { Emitter } from "../emit";
 import { ROLE } from "../../store/account";
 import { enterRoom } from "../data/data-service.js";
+import config from "../state-sync/config";
+import { liveBroadcastService } from "./live-broadcast-service";
+import { getStateValue } from "../state-sync";
 
 export class TrtcService {
   localStream;
@@ -34,7 +37,12 @@ export class TrtcService {
     });
     this.localStream = localStream;
     await localStream.initialize();
-    localStream.setVideoProfile("1080p");
+    localStream.setVideoProfile({
+      width: 1920,
+      height: 1080,
+      frameRate: 5,
+      bitrate: 1600
+    });
     await client.publish(localStream);
     store.commit("localStream/IS_INIT");
   }
@@ -72,7 +80,7 @@ export class TrtcService {
       stream = this.localStream;
       if (stream && stream.play) {
         stream.play(data.el);
-        this.coverPlayStyle(stream);
+        this.coverPlayStyle(stream, "fill");
       }
     } else {
       if (role === ROLE.TEACHER) {
@@ -119,7 +127,7 @@ export class TrtcService {
 
     let createStreamOptions = { mirror: false };
     if (!options) {
-      options = { video: true, audio: false };
+      options = { video: true, audio: true };
     }
     if (options.video) {
       const videoTrack = mediaStream.getVideoTracks()[0];
@@ -133,15 +141,25 @@ export class TrtcService {
     }
     let newStream = TRTC.createStream(createStreamOptions);
     await newStream.initialize();
+    newStream.setVideoProfile({
+      width: 1920,
+      height: 1080,
+      frameRate: 5,
+      bitrate: 1600
+    });
     this.streamCopy[id] = newStream;
     this.streamCopy[id].play(elmentOrId);
     this.coverPlayStyle(this.streamCopy[id]);
-    return true;
+    return newStream;
   }
   copyStreamStopPlay(id) {
     let stream = this.streamCopy[id];
     if (stream) {
+      let parent = stream.div_.parentElement;
       stream.stop();
+      if (parent) {
+        parent.innerHTML = "";
+      }
     }
   }
   teacherStreamPlay(elmentOrId) {
@@ -172,14 +190,14 @@ export class TrtcService {
       }
     }
   }
-  remoteStreamPlay(id, elmentOrId) {
-    let stream = this.getRemoteStreamByUserId(id);
-    if (stream) {
-      this.copyStreamPlay(stream, elmentOrId, "v_" + stream.userId_, {
-        video: true,
-        audio: true
-      });
+  remoteStreamPlay(id, elmentOrId, options) {
+    elmentOrId.innerHTML = "";
+    if (!options) {
+      options = { video: true, audio: true };
     }
+    let stream = this.getRemoteStreamByUserId(id);
+    stream.play(elmentOrId);
+    this.coverPlayStyle(stream, "fill");
   }
 
   async shareScreenStreamPlay(data, role) {
@@ -206,10 +224,13 @@ export class TrtcService {
       }
     }
   }
-  coverPlayStyle(stream) {
+  coverPlayStyle(stream, objectFit) {
+    if (!objectFit) {
+      objectFit = "contain";
+    }
     stream.div_.style.backgroundColor = "";
     if (stream.div_.children[0]) {
-      stream.div_.children[0].style.objectFit = "contain";
+      stream.div_.children[0].style.objectFit = objectFit;
     }
   }
   getElectronStream() {
@@ -275,11 +296,27 @@ export class TrtcService {
       ? this.remoteStreamList[id].hasVideo()
       : false;
   }
-  subscribeRemoteStream(userId) {
-    if (this.remoteStreamList[userId].status === "added") {
-      this.remoteStreamList[userId].status = "subscribed";
+  async subscribeRemoteStream(rawUserId, options) {
+    if (!options) {
+      options = {
+        video: store.state.features.subscribeVideo,
+        audio: store.state.features.subscribeAudio
+      };
+    }
+
+    let stream = this.getRemoteStreamByUserId(rawUserId);
+    let regex = /.*(share_screen)$/;
+    if (regex.test(stream.userId_)) {
+      options.audio = false;
+    }
+    if (
+      removeUserIdPrefix(stream.userId_) === store.state.workplace.teacherId
+    ) {
+      options.audio = true;
+    }
+    if (stream) {
       let client = this.clientList["default"];
-      client.subscribe(this.remoteStreamList[userId].stream);
+      await client.subscribe(stream, options);
     }
   }
   getStreamProfile() {
@@ -323,6 +360,7 @@ export class TrtcService {
   }
   async joinroom() {
     let client = this.clientList["default"];
+
     client
       .join({ roomId: this.token.classId.toString() })
       .catch(error => {
@@ -337,7 +375,7 @@ export class TrtcService {
   }
   listenHandler(client) {
     let self = this;
-    client.on("stream-added", event => {
+    client.on("stream-added", async event => {
       const remoteStream = event.stream;
       console.log("远端流增加: " + remoteStream.id_);
       //role是学生只订阅分享屏幕流和老师端语音视频流
@@ -346,7 +384,8 @@ export class TrtcService {
         stream: remoteStream,
         status: "added"
       };
-      this.subscribeRemoteStream(remoteStream.userId_);
+
+      await this.subscribeRemoteStream(remoteStream.userId_);
       /*      if (store.state.account.role === ROLE.STUDENT) {
         let regex = /.*(share_screen)$/;
         let con = regex.test(remoteStream.userId_);
@@ -367,14 +406,13 @@ export class TrtcService {
 
     client.on("stream-subscribed", event => {
       var self = this;
-      this.remoteStreamListProfile = this.getStreamProfile();
       const remoteStream = event.stream;
-      console.log("远端流订阅成功：" + remoteStream.id_);
-
+      this.remoteStreamListProfile = this.getStreamProfile();
       store.commit(
         "remoteStream/SET_REMOTE_STREAM_LIST",
         self.remoteStreamListProfile
       );
+      console.log("远端流订阅成功：" + remoteStream.id_);
     });
 
     // 监听‘stream-updated’事件
@@ -464,3 +502,14 @@ const removeUserIdPrefix = function(userId) {
   }
   return userId;
 };
+export function watchFeaturesListState(app) {
+  app.$watch(
+    _ => app.$store.state.workplace.featuresList.videoStatus,
+    (n, o) => {
+      console.log("=====================");
+      console.log(n);
+      console.log(o);
+    },
+    { deep: true }
+  );
+}

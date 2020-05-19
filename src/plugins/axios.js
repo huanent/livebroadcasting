@@ -1,5 +1,6 @@
 import Vue from "vue";
 import axios from "axios";
+import router from "../router";
 
 axios.defaults.baseURL = "/api";
 axios.defaults.timeout = 60 * 1000;
@@ -22,13 +23,13 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function(response) {
     // Do something with response data  响应
-    // if (!response.data.success) {
-    //   const isServerLogin = (response.headers.islogin && response.headers.islogin === 'True')
-    //   console.log(isServerLogin)
-    //   if (!isServerLogin && router.history.current.path !== '/login') {
-    //     router.push('/login')
-    //   }
-    // }
+    if (!response.data.success) {
+      const isServerLogin =
+        response.headers.islogin && response.headers.islogin === "True";
+      if (!isServerLogin && router.history.current.path !== "/login") {
+        router.push("/login");
+      }
+    }
     return response;
   },
   function(error) {

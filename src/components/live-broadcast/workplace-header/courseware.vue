@@ -4,6 +4,7 @@
     :visible.sync="dialogVisible"
     :before-close="onCoursewareClose"
     :append-to-body="true"
+    :width="dialogWidth"
     @close="closeDialog"
     class="courseware"
   >
@@ -16,6 +17,7 @@
           :on-preview="onFilePreview"
           :before-upload="beforeUpload"
           ref="upload"
+          :lock-scroll="false"
           :on-success="onUploadSuccess"
           :before-remove="beforeRemove"
         >
@@ -33,15 +35,15 @@
           stripe=""
           style="width: 100%"
           empty-text="No data"
-          @row-dblclick="rowDblclick"
+          @row-click="rowclick"
         >
           <el-table-column prop="filename" label="fileName"> </el-table-column>
-          <el-table-column prop="userId" label="upper"> </el-table-column>
+          <!--          <el-table-column prop="userId" label="upper"> </el-table-column>
           <el-table-column prop="resolution" label="resolution	">
           </el-table-column>
-          <el-table-column prop="pages" label="pages"> </el-table-column>
-          <el-table-column prop="hasTranscode" label="hasTranscode">
-          </el-table-column>
+          <el-table-column prop="pages" label="pages"> </el-table-column>-->
+          <!--      <el-table-column prop="hasTranscode" label="hasTranscode">
+          </el-table-column>-->
           <el-table-column
             fixed="right"
             label="操作"
@@ -49,24 +51,28 @@
             prop="hasTranscode"
           >
             <template slot-scope="scope">
+              <el-button class="btns" type="text" size="small">
+                <el-tooltip :content="$t('courseware.toboard')" placement="top"
+                  ><icon name="fileimport" :size="16"></icon></el-tooltip
+              ></el-button>
+
+              <el-button
+                @click="downloadCourseFile(scope.row)"
+                class="btns"
+                type="text"
+                size="small"
+              >
+                <el-tooltip :content="$t('courseware.download')" placement="top"
+                  ><icon name="download" :size="16"></icon></el-tooltip
+              ></el-button>
               <el-button
                 class="btns"
                 type="text"
                 size="small"
                 @click="reTranscode(scope.row)"
               >
-                <el-tooltip
-                  :effect="$store.state.workplace.themeColor"
-                  :content="$t('courseware.recode')"
-                  placement="top"
+                <el-tooltip :content="$t('courseware.recode')" placement="top"
                   ><icon name="recode" :size="16"></icon></el-tooltip
-              ></el-button>
-              <el-button class="btns" type="text" size="small">
-                <el-tooltip
-                  :effect="$store.state.workplace.themeColor"
-                  :content="$t('courseware.toboard')"
-                  placement="top"
-                  ><icon name="fileimport" :size="16"></icon></el-tooltip
               ></el-button>
               <el-button
                 @click="deleteCourseFile(scope.row)"
@@ -74,10 +80,7 @@
                 type="text"
                 size="small"
               >
-                <el-tooltip
-                  :effect="$store.state.workplace.themeColor"
-                  :content="$t('courseware.del')"
-                  placement="top"
+                <el-tooltip :content="$t('courseware.del')" placement="top"
                   ><icon name="trash" :size="16"></icon
                 ></el-tooltip>
               </el-button>
@@ -115,6 +118,9 @@ import {
   transcodeDescribe,
   setCourseFile
 } from "../../../core/data/data-service";
+
+import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+
 export default {
   name: "Courseware",
   data() {
@@ -139,11 +145,18 @@ export default {
   },
   watch: {
     visible() {
-      console.log("变化");
       this.dialogVisible = this.visible;
     }
   },
   mounted() {},
+  computed: {
+    dialogWidth() {
+      if (innerWidth < 768) {
+        return "80%";
+      }
+      return "50%";
+    }
+  },
   created() {
     this.getCourseData(this.pageNum, this.pageSize, this.userId);
   },
@@ -163,6 +176,9 @@ export default {
           console.log(this.total, this.courseFileList);
         }
       });
+    },
+    downloadCourseFile(row) {
+      window.open(row.url, "_blank");
     },
     onCoursewareOpen() {
       //   this.visible = true;
@@ -211,13 +227,13 @@ export default {
         this.getCourseData(this.pageNum, this.pageSize, this.userId);
       });
     },
-    rowDblclick(file) {
-      this.$store.commit("workplace/ADD_BOARD_FILE", {
-        resultUrl: file.resultUrl,
-        title: file.title,
-        pages: file.pages,
-        resolution: file.resolution
-      });
+    rowclick(file) {
+      liveBroadcastService.boardService.addBoardFiles(
+        file.resultUrl,
+        file.title,
+        file.pages,
+        file.resolution
+      );
     },
     closeDialog() {
       this.$emit("close-dialogStatus", true);

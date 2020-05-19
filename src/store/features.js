@@ -8,8 +8,11 @@ export const initFeaturesState = function(role) {
     cameraPanelToggleButtonVisibity: isTeacher,
     canClickboardTabs: isTeacher,
     canControlBoard: isTeacher,
+    toolBarVisibity: isTeacher,
     videoStatus: true,
-    audioStatus: true
+    audioStatus: true,
+    subscribeVideo: true,
+    subscribeAudio: true
   };
 };
 const state = initFeaturesState();

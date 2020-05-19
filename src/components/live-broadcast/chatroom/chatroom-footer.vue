@@ -49,14 +49,15 @@ export default {
   background: #292b2e;
 */
 
-  border-top: 1px solid #6e7b8b;
+  @include themeify {
+    border-top: 1px solid themedOpacity("color_opposite", 0.1);
+  }
+
   /deep/ .el-input__inner {
-    background-color: #38393f;
-    border-color: #6e7b8b;
-    color: #dcebeb;
     @include themeify {
-      background: themed("background_color3");
-      color: themed("color_opposite");
+      border-color: themedOpacity("color_opposite", 0.1);
+      background: themedOpacity("color_like", 0.1);
+      color: themedOpacity("color_opposite", 0.9);
     }
   }
 }

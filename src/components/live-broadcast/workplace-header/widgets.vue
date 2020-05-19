@@ -6,12 +6,12 @@
       :append-to-body="true"
     >
       <ul class="widgets-content">
-        <li>
+        <!-- <li>
           <a @click="onOpenQuestion">题库</a>
         </li>
         <li>
           <a @click="onOpenQuestionView">答题器</a>
-        </li>
+        </li> -->
         <li>
           <a
             @click="
@@ -30,7 +30,6 @@
             >骰子</a
           >
         </li>
-        
       </ul>
     </el-dialog>
     <question :visible.sync="questionVisible"></question>
@@ -79,7 +78,7 @@ export default {
   },
   components: {
     Question,
-    QuestionView,
+    QuestionView
   }
 };
 </script>

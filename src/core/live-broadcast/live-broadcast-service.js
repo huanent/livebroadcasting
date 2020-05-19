@@ -9,8 +9,6 @@ import { syncConfig, getStateValue } from "../state-sync";
 class LiveBroadcastService {
   config;
   mode = "live";
-  userId = localStorage.getItem("lb_userId");
-  teacherStreamUserId = store.state.workplace.teacherId;
   trtcService;
   timService;
   boardService;
@@ -38,7 +36,7 @@ class LiveBroadcastService {
         let data = item.payload.data;
         switch (type) {
           case "TIW_DATA":
-            this.boardService.getActiveBoard().addSyncData(data);
+            Emitter.emit("remote-board-data-change", data);
             break;
           case "TIM_TEXT":
             store.commit("workplace/ADD_CHAT_MESSAGE", JSON.parse(data));
@@ -46,7 +44,7 @@ class LiveBroadcastService {
           case "SYSTEM_COMMAND":
             data = JSON.parse(data);
             if (!this.isListener(data.listeners)) break;
-            Emitter.emit("SYS_" + data.type, data);
+            Emitter.emit("SYS_" + data.type, data.data);
             break;
           default:
             break;
@@ -55,7 +53,7 @@ class LiveBroadcastService {
     });
 
     Emitter.on("SYS_STATE_SYNC", data => {
-      store.commit("SYNC_STATE", data.data);
+      store.commit("SYNC_STATE", data);
     });
 
     Emitter.on("SYS_PULL_STATE", data => {
@@ -71,15 +69,6 @@ class LiveBroadcastService {
         });
       }
     });
-
-    const currentRole = store.state.account.role;
-    if (currentRole == ROLE.STUDENT) {
-      this.timService.sendSystemMsg(
-        "PULL_STATE",
-        ROLE.TEACHER,
-        store.state.account.userInfo.username
-      );
-    }
 
     return true;
   }

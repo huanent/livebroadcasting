@@ -117,7 +117,7 @@ export default {
     this.infoForm.email = this.userInfo.email;
     if (this.userInfo.avatar) {
       this.fileList.push({
-        url: this.userInfo.avatar
+        url: "http://livebroadcasting.jinrui.kooboo.site" + this.userInfo.avatar
       });
     }
   },
@@ -145,7 +145,6 @@ export default {
               // this.fileList = [];
               this.$message.success("修改成功");
               // this.$refs["infoForm"].resetFields();
-              this.infoForm = data;
             }
           });
         }

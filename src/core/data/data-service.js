@@ -1,7 +1,6 @@
 /* eslint-disable*/
 import axios from "axios";
 
-
 export const getClassByRoomID = function(roomId) {
   return axios.get("/getClass?classId=1");
 };
@@ -22,9 +21,6 @@ export const getCourseData = function(pageNum, pageSize, userId) {
 export const removeCourseFile = function(id) {
   return axios.post("/courseFile/remove", { id });
 };
-export const removeClassImg = function(classId) {
-  return axios.post("/liveroom/remove", { classId });
-};
 export const transcodeCreate = function(rawFileUrl) {
   return axios.post("/transcode/create", { url: rawFileUrl });
 };
@@ -34,4 +30,3 @@ export const transcodeDescribe = function(taskId) {
 export const setCourseFile = function(body) {
   return axios.post("/setCourseFile", body);
 };
-

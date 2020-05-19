@@ -6,7 +6,7 @@
           action
           :class="[
             {
-              'class-upload': fileList.length > 0 || showUpload
+              'class-upload': fileList.length > 0
             }
           ]"
           list-type="picture-card"
@@ -71,15 +71,16 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="updateClass">{{
-        $t("classform.submit")
-      }}</el-button>
+      <el-button type="primary" @click="handleSubmit">
+        {{ $t("classform.submit") }}
+      </el-button>
     </div>
   </div>
 </template>
 
 <script>
-import { updateDataInit, getStudentsList, classUpdate } from "@api/class";
+import classApi from "@api/class";
+
 export default {
   name: "ClassUpdate",
   data() {
@@ -89,23 +90,17 @@ export default {
         title: "",
         description: "",
         startTime: "",
-        endTime: "",
-        file: ""
+        endTime: ""
       },
       showUpload: false,
-      fileList: [
-        {
-          url: "",
-          name: ""
-        }
-      ],
+      fileList: [],
       selectedStudents: [],
       studentsList: [],
       loading: false
     };
   },
   props: {
-    classId: Number
+    classInfo: Object
   },
   watch: {
     classId(newValue) {
@@ -114,52 +109,37 @@ export default {
   },
   created() {
     this.getStudents();
-    (this.classForm = {
-      _id: "",
-      title: "",
-      description: "",
-      startTime: "",
-      endTime: "",
-      file: ""
-    }),
-      (this.fileList = [
-        {
-          name: "",
-          url: ""
-        }
-      ]);
     this.dataInit();
   },
   methods: {
     dataInit() {
-      updateDataInit(this._props.classId)
-        .then(res => {
-          if (res.data.success) {
-            if (res.data.data[0].students) {
-              this.selectedStudents = JSON.parse(res.data.data[0].students);
-            } else {
-              this.selectedStudents = [];
-            }
-            this.classForm = res.data.data[0];
-            this.fileList[0].url =
-              "http://livebroadcasting.jinrui.kooboo.site" +
-              res.data.data[0].url;
-            this.fileList[0].name = res.data.data[0].pathname;
-          } else {
-            this.$message.error(res.data.message);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      this.classInfo.students.forEach(element => {
+        this.selectedStudents.push(element.userId);
+      });
+      this.classForm = {
+        _id: this.classInfo._id,
+        title: this.classInfo.title,
+        description: this.classInfo.description,
+        startTime: this.classInfo.startTime,
+        endTime: this.classInfo.endTime
+      };
+      this.fileList = [
+        {
+          url: this.classInfo.url
+        }
+      ];
     },
     getStudents() {
-      getStudentsList()
+      classApi
+        .getUserList()
         .then(res => {
           if (res.data.success) {
-            this.studentsList = res.data.data;
-            this.studentsList = this.studentsList.map(item => {
-              return { value: `${item}` };
+            this.studentsList = res.data.model.map(item => {
+              return { value: item.username };
+            });
+            const userId = localStorage.getItem("lb_userId");
+            this.studentsList = this.studentsList.filter(ele => {
+              return ele.value !== userId;
             });
           } else {
             this.$message.error(res.data.message);
@@ -169,48 +149,38 @@ export default {
           console.log(err);
         });
     },
-    updateClass() {
-      const userId = localStorage.getItem("lb_userId");
-      var formData = new FormData();
-      formData.append("_id", this.classForm._id);
-      formData.append("userId", this.classForm.userId);
-      formData.append("title", this.classForm.title);
-      formData.append("description", this.classForm.description);
-      formData.append("startTime", this.classForm.startTime);
-      formData.append("endTime", this.classForm.endTime);
-      if (this.classForm.file) {
-        formData.append(
-          "file",
-          this.classForm.file.raw,
-          this.classForm.file.name
-        );
-      }
-      if (this.selectedStudents) {
-        formData.append("students", this.selectedStudents);
-      }
+    handleSubmit() {
       if (this.classForm.startTime >= this.classForm.endTime) {
         this.$message.error("结束时间不得早于开始时间");
         this.classForm.endTime = "";
         return;
       }
-      classUpdate(formData)
-        .then(res => {
-          if (res.data.success) {
-            this.$emit("setActivityBtn", false);
-            this.$message.success(res.data.message);
-          } else {
-            this.$message.error(res.data.message);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      const userId = localStorage.getItem("lb_userId");
+      var formData = new FormData();
+      formData.append("_id", this.classForm._id);
+      formData.append("classId", this.classInfo.classId);
+      formData.append("userId", userId);
+      formData.append("title", this.classForm.title);
+      formData.append("description", this.classForm.description);
+      formData.append("startTime", this.classForm.startTime);
+      formData.append("endTime", this.classForm.endTime);
+      if (this.fileList[0] && this.fileList[0].raw) {
+        formData.append("files", this.fileList[0].raw, this.fileList[0].name);
+      }
+      formData.append("students", JSON.stringify(this.selectedStudents));
+      classApi.classUpdate(formData).then(res => {
+        if (res.data.success) {
+          this.$message.success("课堂信息更新成功");
+          this.$emit("updateSuccess");
+        } else {
+          this.$message.error("课堂信息更新失败");
+        }
+      });
     },
     handleRemove(file, fileList) {
-      this.showUpload = false;
       this.fileList = [];
     },
-    onFileSelected(file, filelist) {
+    onFileSelected(file, fileList) {
       const isIMAGE =
         file.raw.type === "image/jpeg" || file.raw.type === "image/png";
       const isLt1M = file.size / 1024 / 1024 < 1;
@@ -222,27 +192,16 @@ export default {
         this.$message.error("上传文件大小不能超过 1MB!");
         return false;
       }
-      if (file) {
-        let reader = new FileReader();
-        reader.addEventListener(
-          "load",
-          () => {
-            this.showUpload = true;
-            this.classForm.file = file;
-          },
-          false
-        );
-        reader.readAsDataURL(file.raw);
-      }
+      this.fileList.push(file);
     },
     remoteMethod(query) {
       if (query !== "") {
         this.loading = true;
         setTimeout(() => {
-          this.loading = false;
           this.studentsList = this.studentsList.filter(item => {
             return item.value.toLowerCase().indexOf(query.toLowerCase()) > -1;
           });
+          this.loading = false;
         }, 200);
       } else {
         this.studentsList = [];

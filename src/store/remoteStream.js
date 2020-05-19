@@ -13,10 +13,10 @@ const mutations = {
     state.remoteStreamList.push(remoteStreamList);
   },
   REMOTE_STREAM_PLAY(state, remote) {
-    if (account.state.role === ROLE.STUDENT) return;
     liveBroadcastService.trtcService.remoteStreamPlay(
       remote.id,
-      remote.element
+      remote.element,
+      remote.options && remote.options
     );
   },
   MUTE_AUDIO(state, data) {
