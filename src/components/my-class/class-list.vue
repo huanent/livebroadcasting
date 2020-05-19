@@ -185,6 +185,7 @@ export default {
     .class-card {
       position: relative;
       width: 32%;
+      min-width: 320px;
       @media screen and (max-width: 1200px) {
         width: 48%;
       }

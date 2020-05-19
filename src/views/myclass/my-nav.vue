@@ -50,6 +50,9 @@ export default {
       font-size: 32px;
       cursor: pointer;
       white-space: nowrap;
+      @media screen and (max-width: 575px) {
+        font-size: 24px;
+      }
     }
     .serach-wrap {
       width: 320px;

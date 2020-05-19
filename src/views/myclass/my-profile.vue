@@ -76,6 +76,9 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: center;
+    @media screen and (max-width: 575px) {
+      display: none;
+    }
     // box-sizing: border-box;
     &:hover {
       color: #6dbcc2;

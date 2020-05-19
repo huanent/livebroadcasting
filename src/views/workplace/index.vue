@@ -221,6 +221,7 @@ export default {
 <style scoped lang="scss">
 .workplace-panel {
   height: 100vh;
+  overflow: hidden;
   margin: 0;
   padding: 0;
   @include themeify {

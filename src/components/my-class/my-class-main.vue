@@ -74,11 +74,7 @@
       >
       </el-pagination>
     </div>
-    <class-create
-      :createFormVisible="createFormVisible"
-      @createSuccess="createSuccess"
-      @close="createFormVisible = false"
-    />
+    <class-create ref="createDialog" @createSuccess="createSuccess" />
   </div>
 </template>
 
@@ -92,7 +88,6 @@ export default {
   name: "MyClassMian",
   data() {
     return {
-      createFormVisible: false,
       searchResult: [],
       isSearching: false,
       pageSize: 9,
@@ -128,7 +123,6 @@ export default {
       });
     },
     createSuccess() {
-      this.createFormVisible = false;
       this.pageNum = 1;
       this.getListData(this.activeName, this.pageNum, this.pageSize);
     },
@@ -184,7 +178,7 @@ export default {
         });
     },
     openCreateForm() {
-      this.createFormVisible = true;
+      this.$refs["createDialog"].open();
     }
   },
   components: {
