@@ -73,7 +73,8 @@ export default {
     ...mapMutations("account", [
       "SET_LB_TOKEN",
       "SET_LB_EXPIRES",
-      "SET_TX_USERID"
+      "SET_TX_USERID",
+      "SET_USER_INFO"
     ]),
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
@@ -87,9 +88,11 @@ export default {
               if (res.data.success) {
                 this.$message.success(this.$t("login.successTips"));
                 const data = res.data.model;
-                this.SET_LB_TOKEN(data.token);
+                this.SET_LB_TOKEN(data._id);
                 this.SET_LB_EXPIRES(data.expires);
                 this.SET_TX_USERID(data.username);
+
+                this.SET_USER_INFO(data);
                 this.$router.push({ name: "Classlist" });
               } else {
                 this.$message.error(res.data.message);
