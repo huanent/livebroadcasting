@@ -4,7 +4,6 @@
       <li
         v-for="(item, index) in chatMessages"
         :key="index"
-        class="chatroom-msg"
         :class="{
           'own-msg': item.username == userInfo.username,
           'teacher-msg': item.isTeacher
@@ -72,24 +71,21 @@ export default {
   .chatroom-msg-list {
     height: calc(100% - 60px);
     overflow: auto;
+    padding: 0.4rem 0.6rem;
     scroll-behavior: smooth;
-  }
-}
-
-.chatroom-msg-list {
-  height: calc(100% - 60px);
-  .load-more {
-    color: #839494;
-    margin-top: 15px;
-    padding: 0 10px 10px;
-    > div {
-      cursor: pointer;
-      display: flex;
-      width: 100px;
-      align-items: center;
-      justify-content: space-around;
-      margin: 0 auto;
-    }
+    // .load-more {
+    //   color: #839494;
+    //   margin-top: 15px;
+    //   padding: 0 10px 10px;
+    //   > div {
+    //     cursor: pointer;
+    //     display: flex;
+    //     width: 100px;
+    //     align-items: center;
+    //     justify-content: space-around;
+    //     margin: 0 auto;
+    //   }
+    // }
   }
 }
 </style>

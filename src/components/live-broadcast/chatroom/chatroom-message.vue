@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="chatroom-msg">
     <div class="chatroom-msg-head">
       <img class="chatroom-msg__avatar" :src="avatar" />
       <div class="chatroom-msg-user">
@@ -34,8 +34,6 @@ export default {
 
 <style lang="scss" scoped>
 .chatroom-msg {
-  margin-top: 10px;
-  padding: 0 10px 10px;
   .chatroom-msg-head {
     display: flex;
     align-items: center;

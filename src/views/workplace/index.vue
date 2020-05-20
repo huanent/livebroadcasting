@@ -41,6 +41,7 @@
         <div></div>
       </div>
       <div id="workplace-panel-right">
+        <!-- <icon name="angle-right" class="sidebar-close-btn" /> -->
         <self-camera />
         <div class="gutter gutter-row">
           <div></div>
@@ -256,7 +257,7 @@ export default {
 .workplace-panel-content {
   display: grid;
   width: 100%;
-  grid-template-columns: 83% 0 17%;
+  grid-template-columns: auto 0 290px;
   height: 100%;
   overflow: hidden;
 }
@@ -275,6 +276,7 @@ export default {
 }
 #workplace-panel-right {
   display: grid;
+  position: relative;
   grid-template-rows: 23.5% 0.5% 76%;
   height: calc(100vh - 2rem);
   width: 100%;
@@ -285,8 +287,6 @@ export default {
   & > * {
     overflow: hidden;
   }
-}
-.gutter {
 }
 
 .gutter-row {
@@ -360,4 +360,18 @@ export default {
     }
   }
 }
+
+// .sidebar-close-btn.svg-icon {
+//   position: absolute;
+//   top: 50%;
+//   z-index: 99;
+//   @include themeify {
+//     fill: themed("font_color2");
+//   }
+//   &:hover {
+//     @include themeify {
+//       fill: mix(themed("font_color2"), themed("color_opposite"), 70%);
+//     }
+//   }
+// }
 </style>

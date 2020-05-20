@@ -35,6 +35,7 @@
     </div>
     <LocalstreamSetting
       :visibility.sync="settingDialogVisible"
+      v-if="settingDialogVisible"
     ></LocalstreamSetting>
   </div>
 </template>
