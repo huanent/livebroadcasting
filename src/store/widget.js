@@ -15,6 +15,15 @@ const state = {
     },
     visible: false,
     value: 0
+  },
+  draw: {
+    position: {
+      x: 0,
+      y: 0
+    },
+    visible: false,
+    list: [],
+    started: false
   }
 };
 
@@ -37,7 +46,11 @@ const mutations = {
   },
   SET_DICE_VALUE(state, value) {
     state.dice.value = value;
-  }
+  },
+  SET_DRAW_VISIBLE(state, visible) {
+    state.draw.visible = visible;
+  },
+  STAR_DRAW(state) {}
 };
 
 export default {

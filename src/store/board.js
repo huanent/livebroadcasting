@@ -86,13 +86,14 @@ const mutations = {
   ADD_BOARD() {
     liveBroadcastService.boardService.activeBoard.addBoard();
   },
-
+  REMOVE_BOARD() {
+    liveBroadcastService.boardService.activeBoard.deleteBoard();
+  },
   SYNC_STATE(state, data) {
     for (const key in data) {
       state[key] = data[key];
     }
   },
-
   SCALE_BOARD(state, value) {
     liveBroadcastService.boardService.activeBoard.setBoardScale(value);
     state.currentFile.scale = value;

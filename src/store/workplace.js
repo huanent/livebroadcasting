@@ -10,10 +10,8 @@ const state = {
   boardTotalPage: 1,
   boardNumber: 1,
   boardScale: 100,
-  cameraDeviceList: [],
-  microphonesDeviceList: [],
-  activeCamera: {},
-  activeMicrophones: {},
+  activeCamera: null,
+  activeMicrophones: null,
   panelType: "board",
   workplaceVisibity: false,
   role: null,
@@ -21,11 +19,11 @@ const state = {
   featuresList: [],
   chatMessages: []
 };
-
 const mutations = {
   SET_TOKEN(state, token) {
     state.token = token;
   },
+
   SET_ROLE(state, role) {
     state.role = role;
   },
@@ -43,18 +41,10 @@ const mutations = {
       file.resolution
     );
   },
-  CAMERA_DEVICE_LIST(state, list) {
-    state.cameraDeviceList = list;
-  },
-  MICROPHONES_DEVICE_LIST(state, list) {
-    state.microphonesDeviceList = list;
-  },
   ACTIVE_CAMERA(state, device) {
-    liveBroadcastService.trtcService.setCamerasDevice(device.deviceId);
     state.activeCamera = device;
   },
   ACTIVE_MICROPHONES(state, device) {
-    liveBroadcastService.trtcService.setMicrophonesDevice(device.deviceId);
     state.activeMicrophones = device;
   },
   SET_PANEL_TYPE(state, panelType) {
@@ -75,6 +65,16 @@ const actions = {
     commit("SET_ROLE", role);
     let res = await enterRoom(rootState.account.userInfo.username, query.id);
     commit("SET_TOKEN", res.data);
+  },
+  switchCamera({ commit }, device) {
+    if (!device.deviceId) return;
+    commit("ACTIVE_CAMERA", device);
+    liveBroadcastService.trtcService.setCamerasDevice(device.deviceId);
+  },
+  switchMicrophones({ commit }, device) {
+    if (!device.deviceId) return;
+    commit("ACTIVE_MICROPHONES", device);
+    liveBroadcastService.trtcService.setMicrophonesDevice(device.deviceId);
   }
 };
 

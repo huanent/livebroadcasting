@@ -27,6 +27,7 @@ export function autoSyncState(app) {
 
           if (i.primaryKey) {
             payload.primaryKey = value.account.userInfo.username;
+            payload.nickName = value.account.userInfo.nickname;
             if (value.workplace.token)
               payload.streamId = value.workplace.token.id;
           }
