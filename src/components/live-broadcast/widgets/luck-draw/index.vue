@@ -25,7 +25,8 @@
           @click="start"
           class="btn"
           :disabled="disabled"
-        >开始</el-button>
+          >开始</el-button
+        >
       </div>
     </widget-window>
   </div>
@@ -36,7 +37,7 @@ import { mapState, mapMutations } from "vuex";
 import { ROLE } from "../../../../models/role";
 
 export default {
-  name: "App",
+  name: "LuckDraw",
   data() {
     return {
       students: ["小明名", "小李", "小吴", "小林", "小莉", "小文", "小强"],
