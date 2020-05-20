@@ -87,7 +87,7 @@ export default {
           tips: this.$t("toolbar.eraser")
         },
         {
-          iconName: "hand",
+          iconName: "hand-paper",
           name: "hand",
           type: "switch",
           tips: this.$t("toolbar.hand"),
@@ -104,7 +104,7 @@ export default {
           tips: this.$t("toolbar.recovery")
         },
         {
-          iconName: "clear3",
+          iconName: "square",
           name: "clear",
           tips: this.$t("toolbar.clear")
         },
@@ -345,7 +345,7 @@ export default {
   .svg-icon {
     @include themeify {
       fill: themed("font_color1");
-      transform: scale(1.3);
+      transform: scale(1.2);
     }
   }
 }
@@ -356,7 +356,7 @@ export default {
   .svg-icon {
     @include themeify {
       fill: themed("font_color1");
-      transform: scale(1.3);
+      transform: scale(1.2);
     }
   }
 }
