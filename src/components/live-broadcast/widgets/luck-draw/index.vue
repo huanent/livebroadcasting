@@ -10,8 +10,8 @@
       <div class="contain">
         <div class="content">
           <div class="line"></div>
-          <ul ref="ul" :class="{ isanimate: isexist }">
-            <li v-for="(item, index) in students" :key="index">
+          <ul ref="ul" :class="{ isanimate: isanimate }">
+            <li v-for="(item, index) in draw.list" :key="index">
               <div class="stu_name">{{ item }}</div>
             </li>
           </ul>
@@ -19,12 +19,11 @@
       </div>
       <div class="btnClick">
         <el-button
-          v-if="role == ROLE.TEACHER"
+          v-if="role == ROLE.TEACHER && !drawing"
           size="mini "
           type="primary"
           @click="start"
           class="btn"
-          :disabled="disabled"
           >开始</el-button
         >
       </div>
@@ -40,10 +39,8 @@ export default {
   name: "LuckDraw",
   data() {
     return {
-      students: ["小明名", "小李", "小吴", "小林", "小莉", "小文", "小强"],
-      isexist: false,
-      disabled: false,
-      reallength: 0
+      drawing: false,
+      isanimate: false
     };
   },
   components: {
@@ -52,35 +49,40 @@ export default {
   computed: {
     ...mapState("widget", ["draw"]),
     ...mapState("account", ["role"]),
-    ...mapState("workplace", "featuresList")
+    ...mapState("workplace", ["featuresList"])
   },
   methods: {
-    ...mapMutations("widget", ["SET_DRAW_VISIBLE"]),
+    ...mapMutations("widget", [
+      "SET_DRAW_VISIBLE",
+      "UPDATE_POSITION",
+      "SET_DRAW_LIST",
+      "STAR_DRAW"
+    ]),
     start() {
-      // 判断学生人数是否大于5人，不够5人随机填充人数
-      if (this.students.length < 5) {
-        this.reallength = this.students.length;
-        for (let i = 0; i < 5; i++) {
-          if (!this.students[i])
-            this.students[i] = this.students[
-              Math.floor(Math.random() * this.reallength)
-            ];
-        }
-      }
-      let ul = this.$refs.ul;
-      this.isexist = true;
-      this.disabled = true;
+      this.SET_DRAW_LIST(
+        this.featuresList.map(m => m.__nickName || m.__primaryKey)
+      );
+      this.STAR_DRAW(true);
+    }
+  },
+  watch: {
+    "draw.visible"(value) {
+      if (this.role == ROLE.STUDENT) return;
+      this.SET_DRAW_LIST(
+        this.featuresList.map(m => m.__nickName || m.__primaryKey)
+      );
+    },
+    "draw.started"(value) {
+      if (!this.draw.started || !value) return;
+      this.isanimate = false;
+      this.$nextTick(() => {
+        this.isanimate = true;
+      });
+      this.drawing = true;
       setTimeout(() => {
-        this.disabled = false;
-        this.isexist = false;
-        ul.style.marginTop =
-          -Math.floor(
-            Math.random() *
-              (this.reallength ? this.reallength : this.students.length)
-          ) *
-            30 +
-          "px";
-      }, 2000);
+        this.drawing = false;
+        this.STAR_DRAW(false);
+      }, 2500);
     }
   }
 };
@@ -148,18 +150,15 @@ ul {
   }
 }
 .isanimate {
-  animation: rotate 0.5s normal linear infinite backwards;
+  animation: rotate 2s normal ease-in-out backwards;
 }
 
 @keyframes rotate {
   0% {
     margin-top: 0;
   }
-  50% {
-    margin-top: -60px;
-  }
   100% {
-    margin-top: -120px;
+    margin-top: -600px;
   }
 }
 </style>

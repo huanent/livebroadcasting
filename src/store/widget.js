@@ -49,8 +49,19 @@ const mutations = {
   },
   SET_DRAW_VISIBLE(state, visible) {
     state.draw.visible = visible;
+    state.draw.started = false;
   },
-  STAR_DRAW(state) {}
+  SET_DRAW_LIST(state, list) {
+    var rendomList = [];
+    for (let i = 0; i < 20; i++) {
+      let rendomItem = list[Math.floor(Math.random() * list.length)];
+      rendomList.push(rendomItem);
+    }
+    state.draw.list = rendomList;
+  },
+  STAR_DRAW(state, value) {
+    state.draw.started = value;
+  }
 };
 
 export default {
