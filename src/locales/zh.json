@@ -1,6 +1,7 @@
 {
   "button.submit": "提交",
   "button.yes": "确定",
+  "button.edit": "编辑",
   "button.save": "保存",
   "button.cancel": "取消",
   "button.send": "发送",
@@ -30,6 +31,8 @@
   "login.failedTips": "登录失败",
 
   "signup": "注册",
+  "signup.signupSuccess": "注册成功，请登录",
+  "signup.signupFailed": "注册失败",
   "signup.username": "用户名",
   "signup.nickname": "昵称",
   "signup.password": "密码",
@@ -67,6 +70,7 @@
   "class.classTitle": "房间名",
   "class.createUser": "创建人",
   "class.viewDetail": "查看详情",
+  "class.classDetail": "课堂详情",
   "class.joinClass": "加入课堂",
   "class.enterClass": "进入课堂",
   "class.deleteClass": "删除课堂",

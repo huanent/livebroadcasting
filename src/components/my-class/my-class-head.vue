@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import avatarImg from "../../assets/images/avatar.jpg";
+import avatarImg from "../../assets/images/avatar-L.png";
 
 export default {
   name: "MyClassHead",

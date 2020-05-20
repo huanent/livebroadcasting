@@ -114,11 +114,11 @@ export default {
             .then(res => {
               console.log(res);
               if (res.data.success) {
-                this.$message.success(res.data.message);
+                this.$message.success(this.$t("signup.signupSuccess"));
                 this.$router.push({ path: "/login" });
               } else {
                 this.$refs[formName].resetFields();
-                this.$message.error(res.data.message);
+                this.$message.error(this.$t("signup.signupFailed"));
               }
             })
             .catch(err => {

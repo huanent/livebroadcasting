@@ -35,15 +35,9 @@
               ><span>{{ item.endTime | timeFormat }}</span>
             </div>
             <div class="item-btn-group">
-              <router-link
-                :to="{
-                  name: 'Classdetail',
-                  query: {
-                    classId: item.classId
-                  }
-                }"
-                >{{ $t("class.viewDetail") }}</router-link
-              >
+              <span class="btn-apply" @click="viewDetail(item.classId)">{{
+                $t("class.viewDetail")
+              }}</span>
               <span
                 v-if="isSearching"
                 class="btn-apply"
@@ -99,6 +93,9 @@ export default {
     }
   },
   methods: {
+    viewDetail(classId) {
+      this.$emit("detail", classId);
+    },
     handleDelete(classId) {
       this.$confirm(this.$t("class.deleteTips"), this.$t("text.tips"), {
         confirmButtonText: this.$t("button.yes"),
@@ -238,8 +235,11 @@ export default {
           justify-content: space-between;
           margin: 0.5rem 0.5rem 0;
           .btn-apply {
-            color: #0a818c;
+            color: #409eff;
             cursor: pointer;
+            &:hover {
+              color: #66b1ff;
+            }
           }
         }
       }

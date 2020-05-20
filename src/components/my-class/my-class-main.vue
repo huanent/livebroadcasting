@@ -58,6 +58,7 @@
       <keep-alive>
         <class-list
           :classList="list"
+          @detail="viewDetail"
           v-loading="loading"
           :type="activeName"
           :isSearching="isSearching"
@@ -75,6 +76,16 @@
       </el-pagination>
     </div>
     <class-create ref="createDialog" @createSuccess="createSuccess" />
+    <class-detail
+      ref="detailDialog"
+      :classInfo="classInfo"
+      @handleEdit="handleEdit"
+    />
+    <class-edit
+      ref="editDialog"
+      :classInfo="classInfo"
+      @success="handleEditSuccess"
+    />
   </div>
 </template>
 
@@ -83,12 +94,15 @@ import classApi from "@api/class";
 import dayjs from "dayjs";
 import ClassList from "./class-list";
 import ClassCreate from "./class-create";
+import ClassDetail from "./class-detail";
+import ClassEdit from "./class-edit";
 
 export default {
   name: "MyClassMian",
   data() {
     return {
       searchResult: [],
+      classInfo: {},
       isSearching: false,
       pageSize: 9,
       pageNum: 1,
@@ -109,6 +123,40 @@ export default {
     this.getListData(this.activeName, this.pageNum, this.pageSize);
   },
   methods: {
+    viewDetail(classId) {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
+      classApi
+        .classGet(classId)
+        .then(res => {
+          if (res.data.success) {
+            this.classInfo = res.data.model;
+            this.$refs["detailDialog"].open();
+            loading.close();
+          } else {
+            this.$message.error("没有对应的课堂信息");
+            loading.close();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          loading.close();
+        });
+    },
+    handleEdit() {
+      this.$refs["detailDialog"].close();
+      this.$refs["editDialog"].init();
+      this.$refs["editDialog"].open();
+    },
+    handleEditSuccess(data) {
+      this.classInfo = data;
+      this.handleRefresh();
+      this.$refs["editDialog"].close();
+    },
     getListData(type, pageNum, pageSize) {
       this.loading = true;
       classApi.getClassList(type, pageNum, pageSize).then(res => {
@@ -183,7 +231,9 @@ export default {
   },
   components: {
     ClassList,
-    ClassCreate
+    ClassCreate,
+    ClassDetail,
+    ClassEdit
   }
 };
 </script>
