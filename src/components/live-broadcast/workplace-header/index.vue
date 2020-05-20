@@ -100,7 +100,7 @@ export default {
     });
   },
   methods: {
-    ...mapMutations("workplace", ["SET_THEME_COLOR"]),
+    ...mapMutations("workplace", ["SET_THEME_COLOR", "QUIT_SERVICE"]),
     close_dialog(val) {
       this.dialogVisible = false;
     },
@@ -109,6 +109,7 @@ export default {
     //   this.getCourseData(this.pageNum, this.pageSize, this.userId);
     // },
     liveroomLogout() {
+      this.QUIT_SERVICE();
       this.$router.push({ name: "Classlist" });
     },
     handlerTheme() {

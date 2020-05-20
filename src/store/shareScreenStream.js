@@ -15,6 +15,9 @@ const mutations = {
       data,
       account.state.role
     );
+  },
+  INIT_STATE(state) {
+    state = {};
   }
 };
 

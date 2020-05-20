@@ -23,7 +23,6 @@ const mutations = {
   SET_TOKEN(state, token) {
     state.token = token;
   },
-
   SET_ROLE(state, role) {
     state.role = role;
   },
@@ -32,6 +31,9 @@ const mutations = {
   },
   ADD_CHAT_MESSAGE(state, msg) {
     state.chatMessages.push(msg);
+  },
+  QUIT_SERVICE() {
+    liveBroadcastService && liveBroadcastService.destroy();
   },
   async ADD_BOARD_FILE(state, file) {
     await liveBroadcastService.boardService.addBoardFiles(
@@ -52,6 +54,24 @@ const mutations = {
   },
   SET_WORKPLACE_VISIBILITY(state, status) {
     state.workplaceVisibity = status;
+  },
+  INIT_STATE(state) {
+    state = {
+      themeColor: "dark",
+      activeBoardIndex: 0,
+      boardProfiles: [],
+      boardTotalPage: 1,
+      boardNumber: 1,
+      boardScale: 100,
+      activeCamera: null,
+      activeMicrophones: null,
+      panelType: "board",
+      workplaceVisibity: false,
+      role: null,
+      token: null,
+      featuresList: [],
+      chatMessages: []
+    };
   }
 };
 

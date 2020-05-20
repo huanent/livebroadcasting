@@ -51,6 +51,10 @@ export class TrtcService {
     this.listenHandler(client);
     store.commit("localStream/IS_INIT");
   }
+  quit() {
+    let client = this.clientList["default"];
+    client && client.leave();
+  }
   async getDefaultDevice() {
     let cameraDeviceList = await TRTC.getCameras();
 

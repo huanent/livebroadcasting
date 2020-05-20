@@ -47,6 +47,11 @@ const mutations = {
         });
       });
   },
+  INIT_STATE(state) {
+    state = {
+      remoteStreamList: []
+    };
+  },
   SET_REMOTE_VIDEO(state, data) {
     liveBroadcastService.timService
       .sendSystemMsg("SET_REMOTE_VIDEO", [data.userId], data.status)

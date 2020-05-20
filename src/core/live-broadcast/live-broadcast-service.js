@@ -73,8 +73,20 @@ class LiveBroadcastService {
     return true;
   }
   async destroy() {
-    if (this.timService) await this.timService.logout();
     if (this.boardService) this.boardService.destroy();
+    if (this.timService) await this.timService.logout();
+    if (this.trtcService) this.trtcService.quit();
+    this.initStatus();
+    liveBroadcastService = null;
+  }
+  initStatus() {
+    store.commit("workplace/INIT_STATE");
+    store.commit("account/INIT_STATE", ROLE.STUDENT);
+    store.commit("board/INIT_STATE");
+    store.commit("features/INIT_STATE", ROLE.STUDENT);
+    store.commit("localStream/INIT_STATE");
+    store.commit("remoteStream/INIT_STATE");
+    store.commit("shareScreenStream/INIT_STATE");
   }
 
   isListener(listeners) {

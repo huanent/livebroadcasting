@@ -97,6 +97,23 @@ const mutations = {
   SCALE_BOARD(state, value) {
     liveBroadcastService.boardService.activeBoard.setBoardScale(value);
     state.currentFile.scale = value;
+  },
+  INIT_STATE(state) {
+    state = {
+      toolType: 1,
+      brushThin: 20,
+      brushColor: "#ba3136", // 画笔颜色
+      textColor: "#222222",
+      textSize: 320,
+      canRedo: 0,
+      canUndo: 0,
+      fileList: [],
+      currentFile: {
+        pageCount: 0,
+        currentPageIndex: 1,
+        scale: 100
+      }
+    };
   }
 };
 
