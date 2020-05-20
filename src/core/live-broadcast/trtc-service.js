@@ -56,9 +56,12 @@ export class TrtcService {
     client && client.leave();
   }
   async getDefaultDevice() {
+    let mediaDevices = await navigator.mediaDevices.enumerateDevices();
+
     let cameraDeviceList = await TRTC.getCameras();
 
     let microphonesDeviceList = await TRTC.getMicrophones();
+
     if (cameraDeviceList[0] && microphonesDeviceList[0]) {
       let activeCameraDevice = JSON.parse(
         JSON.stringify({
