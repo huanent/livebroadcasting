@@ -48,9 +48,7 @@ const mutations = {
       });
   },
   INIT_STATE(state) {
-    state = {
-      remoteStreamList: []
-    };
+    state.remoteStreamList = [];
   },
   SET_REMOTE_VIDEO(state, data) {
     liveBroadcastService.timService

@@ -31,10 +31,8 @@ const mutations = {
     Emitter.emit("selected-stream", stream);
   },
   INIT_STATE(state) {
-    state = {
-      audioLevel: 0.0,
-      isInit: false
-    };
+    state.audioLevel = 0.0;
+    state.isInit = false;
   }
 };
 

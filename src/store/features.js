@@ -49,7 +49,6 @@ const mutations = {
     for (let i in data) {
       state[i] = data[i];
     }
-    console.log(state);
   },
   SET_TIMESTAMP(state, data) {
     state.timestamp = data;

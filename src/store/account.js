@@ -41,13 +41,7 @@ const mutations = {
     state.userInfo = data;
   },
   INIT_STATE(state) {
-    state = {
-      userInfo: null,
-      lb_expires: "",
-      lb_token: "",
-      userId: "",
-      role: ROLE.STUDENT
-    };
+    state.role = ROLE.STUDENT;
   }
 };
 

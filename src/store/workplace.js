@@ -56,7 +56,7 @@ const mutations = {
     state.workplaceVisibity = status;
   },
   INIT_STATE(state) {
-    state = {
+    const data = {
       themeColor: "dark",
       activeBoardIndex: 0,
       boardProfiles: [],
@@ -72,6 +72,9 @@ const mutations = {
       featuresList: [],
       chatMessages: []
     };
+    for (let i in data) {
+      state[i] = data[i];
+    }
   }
 };
 

@@ -99,21 +99,17 @@ const mutations = {
     state.currentFile.scale = value;
   },
   INIT_STATE(state) {
-    state = {
-      toolType: 1,
-      brushThin: 20,
-      brushColor: "#ba3136", // 画笔颜色
-      textColor: "#222222",
-      textSize: 320,
-      canRedo: 0,
-      canUndo: 0,
-      fileList: [],
-      currentFile: {
-        pageCount: 0,
-        currentPageIndex: 1,
-        scale: 100
-      }
-    };
+    state.toolType = 1;
+    state.brushThin = 20;
+    state.brushColor = "#ba3136";
+    state.textColor = "#222222";
+    state.textSize = 320;
+    state.canRedo = 0;
+    state.canUndo = 0;
+    state.fileList = [];
+    state.currentFile.pageCount = 0;
+    state.currentFile.currentPageIndex = 1;
+    state.currentFile.scale = 100;
   }
 };
 
