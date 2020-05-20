@@ -1,6 +1,6 @@
 <template>
   <div class="my-class">
-    <my-nav :avatar="userInfo.avatar" :nickname="userInfo.nickname" />
+    <my-nav :avatar="userInfo.avatar || ''" :nickname="userInfo.nickname" />
     <router-view
       @update="handleUserInfoUpdate"
       :userInfo="userInfo"

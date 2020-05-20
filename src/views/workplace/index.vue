@@ -213,7 +213,13 @@ export default {
   },
   watch: {
     canControlBoard(value) {
-      liveBroadcastService.boardService.activeBoard.setDrawEnable(value);
+      if (
+        liveBroadcastService &&
+        liveBroadcastService.boardService &&
+        liveBroadcastService.boardService.activeBoard
+      ) {
+        liveBroadcastService.boardService.activeBoard.setDrawEnable(value);
+      }
     }
   }
 };
