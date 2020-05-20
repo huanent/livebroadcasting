@@ -24,6 +24,10 @@ const state = {
     visible: false,
     list: [],
     started: false
+  },
+  clicker: {
+    question: null,
+    statistics: []
   }
 };
 

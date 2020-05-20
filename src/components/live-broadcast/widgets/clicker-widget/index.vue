@@ -1,5 +1,10 @@
 <template>
-  <widget-window class="clicker" @close="visible = false" v-if="visible">
+  <widget-window
+    class="clicker"
+    @close="visible = false"
+    v-if="visible"
+    nameWidget="随堂测试"
+  >
     <question />
   </widget-window>
 </template>
@@ -10,7 +15,7 @@ export default {
   data() {
     return {
       title: "",
-      visible: false
+      visible: true
     };
   },
   components: {

@@ -1,36 +1,39 @@
 <template>
-  <div>
-    <el-input type="textarea" :rows="2" placeholder="题目" v-model="title" />
-    <div>
-      <question-item
-        v-for="(item, index) in items"
+  <div class="question">
+    <el-form label-width="60px">
+      <el-form-item label="题目">
+        <el-input
+          v-model="question.title"
+          type="textarea"
+          placeholder="请输入题目"
+          :autosize="{ minRows: 2, maxRows: 4 }"
+        ></el-input>
+      </el-form-item>
+      <el-form-item
+        v-for="(item, index) in question.items"
         :key="index"
-        :label="labels[index]"
-        :detail.sync="item.detail"
-        :is-true.sync="item.isTrue"
-        :erasable="items.length > 2"
-        @remove="remove(item)"
-      />
-    </div>
-    <el-button type="info" round size="mini" @click="add">+</el-button>
-    <el-button class="start-btn" type="primary" size="mini" @click="start">
-      开始答题
-    </el-button>
+        :label="itemLabel(index)"
+      >
+        <question-item @remove="remove(item)" />
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script>
 import QuestionItem from "./question-item";
+import { mapState } from "vuex";
 
 export default {
   data() {
     return {
-      labels: ["A", "B", "C", "D", "E", "F", "G", "H"],
-      title: "正确答案是？",
-      items: [
-        { detail: "是", isTrue: true },
-        { detail: "否", isTrue: false }
-      ]
+      question: {
+        title: "",
+        items: [
+          { detail: "是", isTrue: true },
+          { detail: "否", isTrue: false }
+        ]
+      }
     };
   },
   methods: {
@@ -38,11 +41,14 @@ export default {
       this.items.push({ detail: "", isTrue: false });
     },
     remove(item) {
-      this.items = this.items.filter(f => f != item);
+      this.question.items = this.question.items.filter(f => f != item);
     },
     start() {
       const keys = this.items.filter(f => f.isTrue);
       this.$$emit("start");
+    },
+    itemLabel(index) {
+      return `${String.fromCharCode(index + 65)} :`;
     }
   },
   components: {
@@ -52,9 +58,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.start-btn {
-  width: 100%;
-  border-radius: 0;
-  margin: 0;
+.question {
+  padding: 10px;
 }
 </style>
