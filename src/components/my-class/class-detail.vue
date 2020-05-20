@@ -99,6 +99,9 @@ export default {
       label {
         font-weight: bold;
       }
+      span {
+        white-space: pre;
+      }
     }
   }
 }

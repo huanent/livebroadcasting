@@ -39,6 +39,7 @@ module.exports = {
     devtool: "source-map"
   },
   chainWebpack: config => {
+    config.resolve.symlinks(true);
     config.resolve.alias
       .set("@", resolve("./src"))
       .set("@c", resolve("./src/components"))

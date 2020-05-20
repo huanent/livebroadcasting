@@ -28,7 +28,8 @@ import {
   TabPane,
   Checkbox,
   Loading,
-  Alert
+  Alert,
+  PageHeader
 } from "element-ui";
 const element = {
   install: function(Vue) {
@@ -62,6 +63,7 @@ const element = {
     Vue.use(Checkbox);
     Vue.use(Loading);
     Vue.use(Alert);
+    Vue.use(PageHeader);
   }
 };
 export default element;
