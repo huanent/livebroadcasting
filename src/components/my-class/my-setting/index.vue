@@ -1,5 +1,10 @@
 <template>
   <div class="setting-wrap">
+    <el-page-header
+      class="mb20"
+      @back="toHomePage"
+      :content="$t('setting.settingPage')"
+    ></el-page-header>
     <el-tabs type="border-card" class="setting-tabs">
       <el-tab-pane :label="$t('setting.personInfoEdit')">
         <person-info-edit @update="update" :userInfo="userInfo" />
@@ -19,6 +24,9 @@ export default {
   methods: {
     update(data) {
       this.$emit("update");
+    },
+    toHomePage() {
+      this.$router.push({ name: "Home" });
     }
   },
   components: {

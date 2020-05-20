@@ -52,6 +52,11 @@ li {
 a {
   text-decoration: none;
   display: block;
+  color: #409eff;
+}
+
+a:hover {
+  color: #66b1ff;
 }
 
 img {

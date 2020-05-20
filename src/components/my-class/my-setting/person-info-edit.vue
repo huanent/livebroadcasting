@@ -94,12 +94,12 @@ export default {
       fileList: [],
       rules: {
         nickname: [
-          { required: true, validator: checkNickName, trigger: "change" }
+          { required: true, validator: checkNickName, trigger: "blur" }
         ],
         email: [
           {
             required: true,
-            trigger: "change",
+            trigger: "blur",
             validator: checkEmail
           }
         ],
@@ -107,7 +107,7 @@ export default {
           {
             required: true,
             validator: checkTel,
-            trigger: "change"
+            trigger: "blur"
           }
         ]
       }

@@ -114,7 +114,7 @@ export default {
           tips: this.$t("toolbar.add")
         },
         {
-          iconName: "minus",
+          iconName: "trash2",
           name: "remove",
           tips: this.$t("toolbar.remove")
         },
