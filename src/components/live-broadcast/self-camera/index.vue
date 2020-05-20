@@ -16,7 +16,7 @@
         />
       </div>
       <a @click.stop="onOpenSetting()">
-        <icon name="settings" size="16" class="camera-setting"></icon>
+        <icon name="settings" size="16" class="settings-icon"></icon>
       </a>
     </div>
     <div
@@ -33,80 +33,9 @@
         <voice-intensity :intensity="Number(audioLevel)" />
       </div>
     </div>
-    <el-dialog
-      title="设置"
-      :visible.sync="dialogVisible"
-      width="40%"
-      :before-close="onDialogClose"
-      :append-to-body="true"
-    >
-      <div>
-        <div class="dialog-item">
-          <div class="dialog-title">摄像头</div>
-          <el-select
-            style="width:100%"
-            v-model="activeCameraDevice"
-            placeholder="请选择视频输入设备"
-          >
-            <el-option
-              v-for="item in cameraDeviceList"
-              :key="item.deviceId"
-              :label="item.label"
-              :value="item"
-            >
-            </el-option>
-          </el-select>
-        </div>
-        <div class="dialog-item">
-          <div class="dialog-title">麦克风</div>
-          <el-select
-            style="width:100%"
-            v-model="activeMicrophonesDevice"
-            placeholder="请选择音频输入设备"
-          >
-            <el-option
-              v-for="item in microphonesDeviceList"
-              :key="item.deviceId"
-              :label="item.label"
-              :value="item"
-            >
-            </el-option>
-          </el-select>
-        </div>
-        <div class="dialog-item">
-          <el-progress :percentage="100" :format="format"></el-progress>
-        </div>
-        <div class="dialog-item">
-          <div class="dialog-title">扬声器</div>
-          <el-select
-            style="width:100%"
-            v-model="activeLoudspeakersDevice"
-            placeholder="请选择扬声器设备"
-          >
-            <el-option
-              v-for="item in microphonesDeviceList"
-              :key="item.deviceId"
-              :label="item.label"
-              :value="item"
-            >
-            </el-option>
-          </el-select>
-        </div>
-        <div class="dialog-item loudspeaker">
-          <icon
-            name="loudspeaker"
-            color="#737882"
-            :size="18"
-            style="margin-left:8px"
-          />
-          <span>测试扬声器</span>
-        </div>
-        <div class="btn-list">
-          <el-button @click="onDialogClose()">取 消</el-button>
-          <el-button type="primary" @click="onDialogSave()">确 定</el-button>
-        </div>
-      </div>
-    </el-dialog>
+    <LocalstreamSetting
+      :visibility.sync="settingDialogVisible"
+    ></LocalstreamSetting>
   </div>
 </template>
 
@@ -115,33 +44,22 @@ import VoiceIntensity from "./voice-intensity";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { Emitter } from "../../../core/emit";
 import { ROLE } from "../../../store/account";
-
+import LocalstreamSetting from "./localstream-setting";
 export default {
   name: "SelfCamera",
   data() {
     return {
       visibility: false,
       isServiceReady: false,
-      dialogVisible: false,
-      activeCameraDevice: {},
-      activeMicrophonesDevice: {},
-      activeLoudspeakersDevice: {}
+      settingDialogVisible: true
     };
   },
   components: {
-    VoiceIntensity
-  },
-  created() {
-    this.activeMicrophonesDevice = this.$store.state.workplace.activeMicrophones;
-    this.activeCameraDevice = this.$store.state.workplace.activeCamera;
+    VoiceIntensity,
+    LocalstreamSetting
   },
   computed: {
     ...mapState("localStream", ["audioLevel", "isInit"]),
-    ...mapState("workplace", [
-      "microphonesDeviceList",
-      "cameraDeviceList",
-      "themeColor"
-    ]),
     ...mapState("features", ["videoStatus", "audioStatus"]),
     microIcon() {
       return this.audioStatus ? "microphone" : "microphone-slash";
@@ -176,7 +94,6 @@ export default {
     });
   },
   methods: {
-    ...mapMutations("workplace", ["ACTIVE_CAMERA", "ACTIVE_MICROPHONES"]),
     ...mapMutations("localStream", [
       "SET_AUDIOLEVEL",
       "LOCAL_STREAM_PLAY",
@@ -185,30 +102,14 @@ export default {
     ...mapActions("localStream", ["switchVideo", "switchAudio"]),
     ...mapMutations("features", ["SET_VIDEO_STATUS", "SET_AUDIO_STATUS"]),
     onOpenSetting() {
-      if (this.themeColor === "light") {
-        this.dialogVisible = true;
-      }
+      this.settingDialogVisible = true;
     },
-    onDialogClose() {
-      this.dialogVisible = false;
-    },
+
     onVideoStateChange() {
       this.SET_VIDEO_STATUS(!this.videoStatus);
     },
     onMicroStateChange() {
       this.SET_AUDIO_STATUS(!this.audioStatus);
-    },
-    onDialogSave() {
-      if (this.activeCameraDevice) {
-        this.ACTIVE_CAMERA(this.activeCameraDevice);
-      }
-      if (this.activeMicrophonesDevice) {
-        this.ACTIVE_MICROPHONES(this.activeMicrophonesDevice);
-      }
-      this.dialogVisible = false;
-    },
-    format(percentage) {
-      return percentage === 100 ? "最大音量" : `${percentage}%`;
     }
   }
 };
@@ -294,51 +195,14 @@ export default {
   height: 100% !important;
   background-color: #202224;
 }
-.camera-setting {
+.settings-icon {
   position: absolute;
   bottom: 0;
   right: 0;
   padding: 10px;
   fill: #979da7 !important;
 }
-.camera-setting:hover {
+.settings-icon:hover {
   fill: #dcebeb !important;
-}
-
-/deep/ .el-dialog {
-  /* background: #212224;*/
-  min-height: 400px;
-}
-/*/deep/ .el-dialog__title {
-  color: white;
-}*/
-
-.dialog-item {
-  margin-bottom: 15px;
-  &.loudspeaker {
-    width: 25%;
-    border: 1px solid #ccc;
-    border-radius: 7px;
-    padding: 5px;
-    > span {
-      margin-left: 10px;
-      font-size: 12px;
-    }
-  }
-  .dialog-title {
-    margin-bottom: 5px;
-  }
-  .el-progress {
-    /deep/.el-progress__text {
-      font-size: 10px !important;
-    }
-  }
-}
-.btn-list {
-  margin-top: 18px;
-  text-align: center;
-  > button {
-    margin-right: 25px;
-  }
 }
 </style>

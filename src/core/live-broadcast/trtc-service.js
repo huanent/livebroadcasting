@@ -29,13 +29,17 @@ export class TrtcService {
       this.token.userSig
     );
     await this.joinroom();
+    let { cameraId, microphoneId } = await this.getDefaultDevice();
     const localStream = TRTC.createStream({
       userId: this.token.id,
       audio: store.state.features.videoStatus,
       video: store.state.features.audioStatus,
+      microphoneId: microphoneId,
+      cameraId: cameraId,
       mirror: false
     });
     this.localStream = localStream;
+
     await localStream.initialize();
     localStream.setVideoProfile({
       width: 1920,
@@ -44,19 +48,36 @@ export class TrtcService {
       bitrate: 1600
     });
     await client.publish(localStream);
+    this.listenHandler(client);
     store.commit("localStream/IS_INIT");
   }
-  async initCameraDeviceList() {
-    TRTC.getCameras().then(devices => {
-      store.commit("workplace/CAMERA_DEVICE_LIST", devices);
-    });
-  }
-  async initMicrophonesDeviceList() {
-    TRTC.getMicrophones().then(devices => {
-      store.commit("workplace/MICROPHONES_DEVICE_LIST", devices);
-    });
-  }
+  async getDefaultDevice() {
+    let cameraDeviceList = await TRTC.getCameras();
 
+    let microphonesDeviceList = await TRTC.getMicrophones();
+    if (cameraDeviceList[0] && microphonesDeviceList[0]) {
+      let activeCameraDevice = JSON.parse(
+        JSON.stringify({
+          kind: cameraDeviceList[0].kind,
+          deviceId: cameraDeviceList[0].deviceId,
+          label: cameraDeviceList[0].label
+        })
+      );
+
+      let activeMicrophonesDevice = JSON.parse(
+        JSON.stringify({
+          kind: microphonesDeviceList[0].kind,
+          deviceId: microphonesDeviceList[0].deviceId,
+          label: microphonesDeviceList[0].label
+        })
+      );
+      let cameraId = activeCameraDevice.deviceId;
+      let microphoneId = activeMicrophonesDevice.deviceId;
+      store.commit("workplace/ACTIVE_CAMERA", activeCameraDevice);
+      store.commit("workplace/ACTIVE_MICROPHONES", activeMicrophonesDevice);
+      return { cameraId, microphoneId };
+    }
+  }
   getAudioLevel() {
     if (this.localStream) {
       return this.localStream.getAudioLevel();
@@ -72,7 +93,18 @@ export class TrtcService {
     });
     return this.clientList[key];
   }
-
+  async setCamerasDevice(deviceId) {
+    let localStream = this.localStream;
+    localStream.switchDevice("video", deviceId).then(() => {
+      return true;
+    });
+  }
+  async setMicrophonesDevice(deviceId) {
+    let localStream = this.localStream;
+    localStream.switchDevice("'audio'", deviceId).then(() => {
+      return true;
+    });
+  }
   localStreamPlay(data) {
     let stream;
     let role = store.state.account.role;
@@ -361,17 +393,7 @@ export class TrtcService {
   async joinroom() {
     let client = this.clientList["default"];
 
-    client
-      .join({ roomId: this.token.classId.toString() })
-      .catch(error => {
-        console.error("进房失败 " + error);
-      })
-      .then(async () => {
-        console.log("进房成功");
-        await this.initCameraDeviceList();
-        await this.initMicrophonesDeviceList();
-        this.listenHandler(client);
-      });
+    await client.join({ roomId: this.token.classId.toString() });
   }
   listenHandler(client) {
     let self = this;
