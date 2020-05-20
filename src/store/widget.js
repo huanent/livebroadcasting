@@ -24,6 +24,15 @@ const state = {
     visible: false,
     list: [],
     started: false
+  },
+  answer: {
+    position: {
+      x: 0,
+      y: 0
+    },
+    visible: false,
+    list: [],
+    started: false
   }
 };
 
