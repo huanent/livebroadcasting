@@ -67,10 +67,13 @@ export default {
   },
   watch: {
     "draw.visible"(value) {
-      if (this.role == ROLE.STUDENT) return;
-      this.SET_DRAW_LIST(
-        this.featuresList.map(m => m.__nickName || m.__primaryKey)
-      );
+      this.drawing = false;
+      this.isanimate = false;
+      if (this.role == ROLE.TEACHER) {
+        this.SET_DRAW_LIST(
+          this.featuresList.map(m => m.__nickName || m.__primaryKey)
+        );
+      }
     },
     "draw.started"(value) {
       if (!this.draw.started || !value) return;
