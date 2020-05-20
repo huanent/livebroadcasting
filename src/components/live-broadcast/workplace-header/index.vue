@@ -109,7 +109,6 @@ export default {
     //   this.getCourseData(this.pageNum, this.pageSize, this.userId);
     // },
     liveroomLogout() {
-      this.QUIT_SERVICE();
       this.$router.push({ name: "Classlist" });
     },
     handlerTheme() {
@@ -156,6 +155,9 @@ export default {
         done();
       }
     }
+  },
+  beforeDestroy() {
+    this.QUIT_SERVICE();
   },
   components: {
     Widgets,
