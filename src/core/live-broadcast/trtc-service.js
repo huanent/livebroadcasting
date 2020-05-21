@@ -270,6 +270,9 @@ export class TrtcService {
     stream.div_.style.backgroundColor = "";
     if (stream.div_.children[0]) {
       stream.div_.children[0].style.objectFit = objectFit;
+      stream.div_.style.display = "flex";
+      stream.div_.style.justifyContent = "center";
+      stream.div_.style.alignItems = "center";
     }
   }
   getElectronStream() {
