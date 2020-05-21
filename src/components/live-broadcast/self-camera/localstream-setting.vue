@@ -85,10 +85,12 @@
         />
         <span>测试扬声器</span>
       </div>-->
-      <div class="btn-list">
-        <el-button @click="onDialogClose()">取 消</el-button>
-        <el-button type="primary" @click="onDialogSave()">确 定</el-button>
-      </div>
+      <span slot="footer" class="clearfix">
+        <div class="right">
+          <el-button @click="onDialogClose()">关 闭</el-button>
+          <el-button type="primary" @click="onDialogSave()">确 定</el-button>
+        </div>
+      </span>
     </div>
   </el-dialog>
 </template>
@@ -249,7 +251,9 @@ export default {
       navigator.mediaDevices.getUserMedia(options).then(testStream => {
         this.testStream = testStream;
         this.$nextTick(() => {
-          this.$refs.video.srcObject = this.testStream;
+          if (this.$refs.video.srcObject) {
+            this.$refs.video.srcObject = this.testStream;
+          }
           this.percentage = this.initWave();
         });
       });
