@@ -37,7 +37,7 @@ export default [
     path: ["features"],
     toPath: ["workplace", "featuresList"],
     primaryKey: true,
-    listener: ROLE.TEACHER,
+    listener: null,
     sender: ROLE.STUDENT
   }
 ];

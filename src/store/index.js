@@ -38,7 +38,7 @@ export default new Vuex.Store({
         payload.value.__primaryKey = payload.primaryKey;
         payload.value.__streamId = payload.streamId;
         payload.value.__nickName = payload.nickName;
-        currentValue.push(payload.value);
+        currentValue.splice(old, 0, payload.value);
       } else {
         let lastPropName = payload.path.pop();
         let currentValue = getCurrentValue(state, payload.path);
