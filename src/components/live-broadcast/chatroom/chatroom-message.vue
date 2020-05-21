@@ -64,9 +64,9 @@ export default {
         color: #212224;
         padding: 10px;
         line-height: normal;
-        @include themeify {
-          background: themed("active_icon");
-        }
+        // @include themeify {
+        //   background: themed("active_icon");
+        // }
         background: #8a9099;
         text-align: left;
         border-radius: 4px;
