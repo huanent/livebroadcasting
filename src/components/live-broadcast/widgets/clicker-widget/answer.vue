@@ -1,7 +1,7 @@
 <template>
   <div class="answer">
     <template v-if="clicker.answer.result">
-      <h1>已交卷</h1>
+      <h1 class="commited">已交卷,请等待老师检阅！</h1>
     </template>
     <template v-else>
       <h3>{{ clicker.question.title }}</h3>
@@ -59,6 +59,9 @@ export default {
     margin: 15px 0;
   }
   .btn-group {
+    text-align: center;
+  }
+  .commited {
     text-align: center;
   }
 }
