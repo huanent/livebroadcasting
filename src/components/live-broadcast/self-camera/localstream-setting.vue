@@ -28,7 +28,7 @@
           placeholder="请选择视频输入设备"
         >
           <el-option
-            v-for="(item, index) in cameraDeviceList"
+            v-for="item in cameraDeviceList"
             :key="item.deviceId"
             :label="item.label"
             :value="item"
@@ -46,7 +46,7 @@
           placeholder="请选择音频输入设备"
         >
           <el-option
-            v-for="(item, index) in microphonesDeviceList"
+            v-for="item in microphonesDeviceList"
             :key="item.deviceId"
             value-key="deviceId"
             :label="item.label"
@@ -96,7 +96,6 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
-import VoiceProgress from "./voice-progress";
 
 export default {
   name: "LocalstreamSetting",
@@ -255,9 +254,6 @@ export default {
         });
       });
     }
-  },
-  components: {
-    VoiceProgress
   }
 };
 </script>
