@@ -40,6 +40,7 @@ export default {
 <style lang="scss" scoped>
 .svg-icon {
   cursor: pointer;
+  outline: none;
   display: inline-block;
   fill: none;
   vertical-align: middle;

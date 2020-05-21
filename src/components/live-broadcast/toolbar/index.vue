@@ -1,5 +1,5 @@
 <template>
-  <div
+  <ul
     class="toolbar"
     ref="toolbar"
     :class="{ hide: isHide }"
@@ -8,7 +8,7 @@
       top: top + 'px'
     }"
   >
-    <a
+    <li
       v-show="!hideTool"
       v-for="(item, index) in toolslist"
       @mousedown="moveToolbar($event, item)"
@@ -45,11 +45,11 @@
         </el-popover>
         <icon v-else :name="item.iconName" :size="18"></icon>
       </el-tooltip>
-    </a>
-    <a class="toolbar-item" v-show="hideTool" @click="showTool">
+    </li>
+    <li class="toolbar-item" v-show="hideTool" @click="showTool">
       <icon name="outdent" :size="18" style="transform: rotate(90deg)"></icon>
-    </a>
-  </div>
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -314,6 +314,7 @@ export default {
   display: inline-block;
   margin: 0 auto;
   width: 100%;
+  outline: none;
   &:hover {
     .svg-icon {
       @include themeify {
