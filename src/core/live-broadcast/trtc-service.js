@@ -48,7 +48,6 @@ export class TrtcService {
       bitrate: 1600
     });
     await client.publish(localStream);
-    this.listenHandler(client);
     store.commit("localStream/IS_INIT");
   }
   quit() {
@@ -404,6 +403,7 @@ export class TrtcService {
     let client = this.clientList["default"];
 
     await client.join({ roomId: this.token.classId.toString() });
+    this.listenHandler(client);
   }
   listenHandler(client) {
     let self = this;
