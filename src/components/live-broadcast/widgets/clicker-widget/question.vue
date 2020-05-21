@@ -14,21 +14,31 @@
         :key="index"
         :label="itemLabel(index)"
       >
-        <question-item @remove="remove(item)" />
+        <question-item
+          @remove="remove(item)"
+          :item="item"
+          :removable="question.items.length > 2"
+        />
       </el-form-item>
     </el-form>
+    <div class="btn-group">
+      <el-button @click="add" :disabled="question.items.length > 8">
+        新增选项
+      </el-button>
+      <el-button type="primary" @click="start">开始作答</el-button>
+    </div>
   </div>
 </template>
 
 <script>
 import QuestionItem from "./question-item";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   data() {
     return {
       question: {
-        title: "",
+        title: "是正确的吗？",
         items: [
           { detail: "是", isTrue: true },
           { detail: "否", isTrue: false }
@@ -37,15 +47,15 @@ export default {
     };
   },
   methods: {
+    ...mapMutations("widget", ["START_CLICKER"]),
     add() {
-      this.items.push({ detail: "", isTrue: false });
+      this.question.items.push({ detail: "", isTrue: false });
     },
     remove(item) {
       this.question.items = this.question.items.filter(f => f != item);
     },
     start() {
-      const keys = this.items.filter(f => f.isTrue);
-      this.$$emit("start");
+      this.START_CLICKER(this.question);
     },
     itemLabel(index) {
       return `${String.fromCharCode(index + 65)} :`;
@@ -60,5 +70,9 @@ export default {
 <style lang="scss" scoped>
 .question {
   padding: 10px;
+}
+.btn-group {
+  text-align: center;
+  margin-top: 30px;
 }
 </style>

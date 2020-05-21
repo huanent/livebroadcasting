@@ -1,17 +1,18 @@
 <template>
   <div class="question-item">
-    <el-input placeholder="请输入选项内容" size="small">
-      <template slot="append">
-        <a @click="$emit('remove')">
+    <el-input placeholder="请输入选项内容" size="small" v-model="item.detail">
+      <template slot="append" v-if="removable">
+        <el-button @click="$emit('remove')">
           <icon class="svg-icon" :size="14" name="trash2"></icon>
-        </a>
+        </el-button>
       </template>
     </el-input>
+    <el-checkbox v-model="item.isTrue">正确答案</el-checkbox>
   </div>
 </template>
 <script>
 export default {
-  props: ["label", "detail", "erasable", "isTrue"]
+  props: ["item", "removable"]
 };
 </script>
 
@@ -27,5 +28,10 @@ export default {
 <style lang="scss" scoped>
 .svg-icon {
   fill: #888;
+}
+.el-checkbox {
+  position: absolute;
+  bottom: -25px;
+  left: 5px;
 }
 </style>

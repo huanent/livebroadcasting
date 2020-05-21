@@ -27,7 +27,11 @@ const state = {
   },
   clicker: {
     question: null,
-    statistics: []
+    statistics: [],
+    visible: false,
+    answer: {
+      result: null
+    }
   }
 };
 
@@ -65,6 +69,19 @@ const mutations = {
   },
   STAR_DRAW(state, value) {
     state.draw.started = value;
+  },
+  SET_CLICKER_VISIBLE(state, visible) {
+    state.clicker.visible = visible;
+    state.clicker.question = null;
+    state.clicker.statistics = [];
+  },
+  START_CLICKER(state, question) {
+    state.clicker.question = question;
+  },
+  SET_CLICKER_ANSWER(state, result) {
+    state.clicker.answer = {
+      result: result
+    };
   }
 };
 

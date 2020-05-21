@@ -1,7 +1,7 @@
 <template>
   <div class="window" :style="{ top: top + '%', left: left + '%' }">
     <header
-      :draggable="role == ROLE.TEACHER"
+      :draggable="role == ROLE.TEACHER && !notdrag"
       @dragstart="dragstart"
       @drag="drag"
       ref="header"
@@ -22,7 +22,7 @@ import { mapState } from "vuex";
 import { ROLE } from "../../../store/account";
 
 export default {
-  props: ["position", "nameWidget"],
+  props: ["position", "nameWidget", "notdrag"],
   data() {
     return {
       top: 0,
@@ -62,7 +62,7 @@ export default {
   watch: {
     position: {
       handler(value) {
-        if (this.role == ROLE.TEACHER || !value) return;
+        if (!value) return;
         this.top = value.y;
         this.left = value.x;
       },

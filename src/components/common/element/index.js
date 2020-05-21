@@ -29,7 +29,8 @@ import {
   Checkbox,
   Loading,
   Alert,
-  PageHeader
+  PageHeader,
+  Divider
 } from "element-ui";
 const element = {
   install: function(Vue) {
@@ -64,6 +65,7 @@ const element = {
     Vue.use(Loading);
     Vue.use(Alert);
     Vue.use(PageHeader);
+    Vue.use(Divider);
   }
 };
 export default element;
