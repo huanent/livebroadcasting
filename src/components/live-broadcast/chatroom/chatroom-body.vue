@@ -108,6 +108,9 @@ export default {
     overflow: auto;
     padding: 0.4rem 0.6rem;
     scroll-behavior: smooth;
+    li {
+      margin-top: 0.5rem;
+    }
   }
 }
 </style>
