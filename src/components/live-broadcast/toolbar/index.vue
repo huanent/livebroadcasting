@@ -18,7 +18,7 @@
       :key="index"
       :class="[
         {
-          'toolbar-item-active': activeTool && activeTool.name === item.name
+          active: activeTool && activeTool.name === item.name
         },
         item.singleclass
       ]"
@@ -52,7 +52,7 @@
 import { mapMutations } from "vuex";
 import ShapeBox from "./shape-box";
 import TextBox from "./text-box";
-import { Emitter } from "../../../core/emit";
+import { Emitter } from "@/core/emit";
 export default {
   name: "toolbar",
   data() {
@@ -91,7 +91,7 @@ export default {
           name: "hand",
           type: "switch",
           tips: this.$t("toolbar.hand"),
-          singleclass: "toolbar-item-disabled"
+          singleclass: "disabled"
         },
         {
           iconName: "undo",
@@ -199,14 +199,14 @@ export default {
           this.SET_TOOL_ERASER();
           break;
         case "hand":
-          if (this.$store.state.workplace.boardScale > 100) {
+          if (this.$store.state.board.currentFile.scale > 100) {
             this.SET_TOOL_DRAG();
           }
           break;
       }
     },
-    "$store.state.workplace.boardScale": function() {
-      if (this.$store.state.workplace.boardScale <= 100) {
+    "$store.state.board.currentFile.scale": function() {
+      if (this.$store.state.board.currentFile.scale <= 100) {
         this.activeTool = this.toolslist[0];
       }
     }
@@ -266,7 +266,7 @@ export default {
       if (item.type === "switch") {
         if (
           item.name === "hand" &&
-          this.$store.state.workplace.boardScale <= 100
+          this.$store.state.board.currentFile.scale <= 100
         ) {
           return;
         }
@@ -303,9 +303,9 @@ export default {
     judgeScale(item, index) {
       if (
         item.name == "hand" &&
-        this.$store.state.workplace.boardScale <= 100
+        this.$store.state.board.currentFile.scale <= 100
       ) {
-        item.singleclass = "toolbar-item-disabled";
+        item.singleclass = "disabled";
       } else {
         item.singleclass = "";
       }
@@ -316,7 +316,6 @@ export default {
 <style lang="scss" scoped>
 .toolbar {
   z-index: 99;
-
   width: 2rem;
   color: #eee;
   @include themeify {
@@ -337,19 +336,16 @@ export default {
   display: inline-block;
   margin: 0 auto;
   width: 100%;
-}
-.toolbar-item:hover {
-  /*  @include themeify {
-    background-color: rgba(themed("color_opposite"), 0.1);
-  }*/
-  .svg-icon {
-    @include themeify {
-      fill: themed("font_color1");
-      transform: scale(1.2);
+  &:hover {
+    .svg-icon {
+      @include themeify {
+        fill: themed("font_color1");
+        transform: scale(1.2);
+      }
     }
   }
 }
-.toolbar-item-active {
+.toolbar-item.active {
   @include themeify {
     background-color: rgba(themed("color_opposite"), 0.1);
   }
@@ -360,7 +356,7 @@ export default {
     }
   }
 }
-.toolbar-item-disabled svg {
+.toolbar-item.disabled svg {
   cursor: not-allowed !important;
 }
 </style>

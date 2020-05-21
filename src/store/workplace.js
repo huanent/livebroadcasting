@@ -5,11 +5,6 @@ import { ROLE } from "../models/role";
 
 const state = {
   themeColor: "dark",
-  activeBoardIndex: 0,
-  boardProfiles: [],
-  boardTotalPage: 1,
-  boardNumber: 1,
-  boardScale: 100,
   activeCamera: null,
   activeMicrophones: null,
   panelType: "board",
@@ -55,14 +50,10 @@ const mutations = {
   SET_WORKPLACE_VISIBILITY(state, status) {
     state.workplaceVisibity = status;
   },
+
   INIT_STATE(state) {
     const data = {
       themeColor: "dark",
-      activeBoardIndex: 0,
-      boardProfiles: [],
-      boardTotalPage: 1,
-      boardNumber: 1,
-      boardScale: 100,
       activeCamera: null,
       activeMicrophones: null,
       panelType: "board",

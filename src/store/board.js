@@ -94,9 +94,9 @@ const mutations = {
       state[key] = data[key];
     }
   },
-  SCALE_BOARD(state, value) {
-    liveBroadcastService.boardService.activeBoard.setBoardScale(value);
+  SET_BOARD_SCALE(state, value) {
     state.currentFile.scale = value;
+    liveBroadcastService.boardService.activeBoard.setBoardScale(value);
   },
   INIT_STATE(state) {
     state.toolType = 1;
