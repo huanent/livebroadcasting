@@ -39,7 +39,9 @@ class LiveBroadcastService {
             Emitter.emit("remote-board-data-change", data);
             break;
           case "TIM_TEXT":
-            store.commit("workplace/ADD_CHAT_MESSAGE", JSON.parse(data));
+            let msg = JSON.parse(data);
+            msg.time = new Date(item.time * 1000);
+            store.commit("workplace/ADD_CHAT_MESSAGE", msg);
             break;
           case "SYSTEM_COMMAND":
             data = JSON.parse(data);

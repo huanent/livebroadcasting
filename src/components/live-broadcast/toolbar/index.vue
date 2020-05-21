@@ -1,5 +1,5 @@
 <template>
-  <div
+  <ul
     class="toolbar"
     ref="toolbar"
     :class="{ hide: isHide }"
@@ -8,15 +8,17 @@
       top: top + 'px'
     }"
   >
-    <a
-      class="toolbar-item"
+    <li
       v-show="!hideTool"
       v-for="(item, index) in toolslist"
-      @mouseenter="judgeScale(item, index)"
       @mousedown="moveToolbar($event, item)"
       @click="toggerTool(item, index)"
       :key="index"
       :class="[
+        'toolbar-item',
+        {
+          disabled: isScaleLimit && item.name === 'hand'
+        },
         {
           active: activeTool && activeTool.name === item.name
         },
@@ -28,6 +30,7 @@
           placement="left"
           trigger="click"
           :visible-arrow="false"
+          v-if="item.name === 'pen' || item.name === 'text'"
           popper-class="popper"
         >
           <div v-show="item.name === 'pen'">
@@ -40,12 +43,13 @@
           </div>
           <icon :name="item.iconName" :size="18" slot="reference"></icon>
         </el-popover>
+        <icon v-else :name="item.iconName" :size="18"></icon>
       </el-tooltip>
-    </a>
-    <a class="toolbar-item" v-show="hideTool" @click="showTool">
+    </li>
+    <li class="toolbar-item" v-show="hideTool" @click="showTool">
       <icon name="outdent" :size="18" style="transform: rotate(90deg)"></icon>
-    </a>
-  </div>
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -58,7 +62,6 @@ export default {
   data() {
     return {
       activeTool: undefined,
-      lastActiveSwitchTool: undefined,
       hideTool: false,
       toolHight: 0,
       toolslist: [
@@ -90,8 +93,7 @@ export default {
           iconName: "hand-paper",
           name: "hand",
           type: "switch",
-          tips: this.$t("toolbar.hand"),
-          singleclass: "disabled"
+          tips: this.$t("toolbar.hand")
         },
         {
           iconName: "undo",
@@ -133,9 +135,13 @@ export default {
     ShapeBox,
     TextBox
   },
+  computed: {
+    isScaleLimit() {
+      return this.$store.state.board.currentFile.scale <= 100;
+    }
+  },
   mounted() {
     this.activeTool = this.toolslist[0];
-    this.lastActiveSwitchTool = this.activeTool;
     setTimeout(() => {
       this.initToolBarPosition();
       this.isHide = false;
@@ -147,7 +153,7 @@ export default {
       if (this.toolHight < el.clientHeight) {
         this.toolHight = el.clientHeight;
       }
-      if (this.toolHight > parentEl.clientHeight) {
+      if (parentEl && this.toolHight > parentEl.clientHeight) {
         this.hideTool = true;
         this.initToolBarPosition("bottom", true);
       } else {
@@ -155,61 +161,6 @@ export default {
         this.initToolBarPosition(null, true);
       }
     });
-  },
-  watch: {
-    "activeTool.name": function(name) {
-      switch (name) {
-        case "clear":
-          this.$confirm("此操作将清空所有记录, 是否继续?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
-          })
-            .then(() => {
-              this.CLEAR_BOARD();
-              this.$message({
-                type: "success",
-                message: "删除成功!"
-              });
-            })
-            .catch(() => {});
-          break;
-        case "revoke":
-          this.CAN_UNDO();
-          break;
-        case "recovery":
-          this.CAN_REDO();
-          break;
-        case "add":
-          this.ADD_BOARD();
-          break;
-        case "remove":
-          this.REMOVE_BOARD();
-          break;
-        case "pen":
-          this.SET_TOOL_PEN();
-          break;
-        case "text":
-          this.SET_TOOL_TEXT();
-          break;
-        case "laserPen":
-          this.SET_TOOL_LASERPEN();
-          break;
-        case "eraser":
-          this.SET_TOOL_ERASER();
-          break;
-        case "hand":
-          if (this.$store.state.board.currentFile.scale > 100) {
-            this.SET_TOOL_DRAG();
-          }
-          break;
-      }
-    },
-    "$store.state.board.currentFile.scale": function() {
-      if (this.$store.state.board.currentFile.scale <= 100) {
-        this.activeTool = this.toolslist[0];
-      }
-    }
   },
   methods: {
     ...mapMutations("board", [
@@ -264,19 +215,56 @@ export default {
     },
     toggerTool(item, index) {
       if (item.type === "switch") {
-        if (
-          item.name === "hand" &&
-          this.$store.state.board.currentFile.scale <= 100
-        ) {
-          return;
-        }
-        this.lastActiveSwitchTool = item;
-      } else {
-        setTimeout(() => {
-          this.activeTool = this.lastActiveSwitchTool;
-        }, 300);
+        if (item.name === "hand" && this.isScaleLimit) return;
+        this.activeTool = item;
       }
-      this.activeTool = item;
+      this.handleSetting(item.name);
+    },
+    handleSetting(name) {
+      switch (name) {
+        case "clear":
+          this.$confirm("此操作将清空所有记录, 是否继续?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+            .then(() => {
+              this.CLEAR_BOARD();
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+            })
+            .catch(() => {});
+          break;
+        case "revoke":
+          this.CAN_UNDO();
+          break;
+        case "recovery":
+          this.CAN_REDO();
+          break;
+        case "add":
+          this.ADD_BOARD();
+          break;
+        case "remove":
+          this.REMOVE_BOARD();
+          break;
+        case "pen":
+          this.SET_TOOL_PEN();
+          break;
+        case "text":
+          this.SET_TOOL_TEXT();
+          break;
+        case "laserPen":
+          this.SET_TOOL_LASERPEN();
+          break;
+        case "eraser":
+          this.SET_TOOL_ERASER();
+          break;
+        case "hand":
+          this.SET_TOOL_DRAG();
+          break;
+      }
     },
     moveToolbar(e, tool) {
       if (tool.name !== "move") return;
@@ -299,16 +287,6 @@ export default {
         document.onmousemove = null;
         document.onmouseup = null;
       };
-    },
-    judgeScale(item, index) {
-      if (
-        item.name == "hand" &&
-        this.$store.state.board.currentFile.scale <= 100
-      ) {
-        item.singleclass = "disabled";
-      } else {
-        item.singleclass = "";
-      }
     }
   }
 };
@@ -336,7 +314,19 @@ export default {
   display: inline-block;
   margin: 0 auto;
   width: 100%;
+  outline: none;
   &:hover {
+    .svg-icon {
+      @include themeify {
+        fill: themed("font_color1");
+        transform: scale(1.2);
+      }
+    }
+  }
+  &:active {
+    @include themeify {
+      background-color: rgba(themed("color_opposite"), 0.1);
+    }
     .svg-icon {
       @include themeify {
         fill: themed("font_color1");

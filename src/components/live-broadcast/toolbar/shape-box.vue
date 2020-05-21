@@ -16,9 +16,8 @@
           :class="[{ active: toolitemscurrent == item.shape }]"
           @click="addToolitemClass(index, item)"
         >
-          <a
-            >{{ item.index }}<icon :name="item.name" :size="18" color="#b4b4b5"
-          /></a>
+          {{ item.index }}
+          <icon :name="item.name" :size="18" color="#b4b4b5" />
         </li>
       </ul>
     </div>
