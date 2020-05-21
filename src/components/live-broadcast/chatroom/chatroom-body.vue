@@ -2,14 +2,19 @@
   <div class="chatroom-body">
     <ul class="chatroom-msg-list roll-scroll" ref="messageList">
       <li
-        v-for="(item, index) in chatMessages"
+        v-for="(item, index) in messages"
         :key="index"
         :class="{
-          'own-msg': item.username == userInfo.username,
-          'teacher-msg': item.isTeacher
+          'own-msg': item.username == userInfo.username
         }"
       >
-        <ChatroomMessage :message="item"></ChatroomMessage>
+        <ChatroomMessage
+          :name="item.name"
+          :content="item.content"
+          :time="item.time"
+          :avatar="item.avatar"
+          :is-teacher="item.isTeacher"
+        ></ChatroomMessage>
       </li>
     </ul>
   </div>
@@ -18,12 +23,35 @@
 <script>
 import ChatroomMessage from "./chatroom-message";
 import { mapState } from "vuex";
+import avatarImg from "../../../assets/images/avatar.jpg";
 
 export default {
   name: "ChatroomBody",
   computed: {
     ...mapState("workplace", ["chatMessages"]),
-    ...mapState("account", ["userInfo"])
+    ...mapState("account", ["userInfo"]),
+    messages() {
+      let list = [];
+      let lastDateTime = null;
+
+      for (const i of this.chatMessages) {
+        let dateTime = this.getDateTime(i.time);
+        let showDate = !lastDateTime || lastDateTime.date != dateTime.date;
+
+        list.push({
+          avatar: i.avatar || avatarImg,
+          content: i.content,
+          name: i.nickname || i.username,
+          username: i.username,
+          time: showDate ? `${dateTime.date} ${dateTime.time}` : dateTime.time,
+          isTeacher: i.isTeacher
+        });
+
+        lastDateTime = dateTime;
+      }
+
+      return list;
+    }
   },
   methods: {
     scrollToCurrent(height) {
@@ -49,6 +77,13 @@ export default {
           });
         }
       }
+    },
+    getDateTime(current) {
+      current = new Date(current);
+      return {
+        date: `${current.getMonth() + 1}/${current.getDate()}`,
+        time: `${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`
+      };
     }
   },
   components: {
@@ -73,19 +108,6 @@ export default {
     overflow: auto;
     padding: 0.4rem 0.6rem;
     scroll-behavior: smooth;
-    // .load-more {
-    //   color: #839494;
-    //   margin-top: 15px;
-    //   padding: 0 10px 10px;
-    //   > div {
-    //     cursor: pointer;
-    //     display: flex;
-    //     width: 100px;
-    //     align-items: center;
-    //     justify-content: space-around;
-    //     margin: 0 auto;
-    //   }
-    // }
   }
 }
 </style>

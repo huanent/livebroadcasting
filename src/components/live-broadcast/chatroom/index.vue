@@ -34,7 +34,7 @@ export default {
         avatar: this.userInfo.avatar,
         nickname: this.userInfo.nickname,
         username: this.userInfo.username,
-        time: new Date().toLocaleString(),
+        time: new Date(),
         isTeacher: this.role == ROLE.TEACHER
       };
 

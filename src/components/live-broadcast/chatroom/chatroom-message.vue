@@ -3,16 +3,15 @@
     <div class="chatroom-msg-head">
       <img class="chatroom-msg__avatar" :src="avatar" />
       <div class="chatroom-msg-user">
-        <span class="chatroom-msg__name">{{
-          message.nickname || message.username
-        }}</span>
-        <span class="chatroom-msg__time">{{ message.time }}</span>
+        <span v-if="isTeacher" class="teacher-tag">老师</span>
+        <span class="chatroom-msg__name">{{ name }}</span>
+        <span class="chatroom-msg__time">{{ time }}</span>
       </div>
     </div>
     <div class="chatroom-msg-body">
       <div class="chatroom-msg__detail">
         <div class="chatroom-msg__inner">
-          {{ message.content }}
+          {{ content }}
         </div>
       </div>
     </div>
@@ -23,12 +22,7 @@
 import avatarImg from "../../../assets/images/avatar.jpg";
 export default {
   name: "ChatroomMessage",
-  props: ["message"],
-  computed: {
-    avatar() {
-      return this.message.avatar || avatarImg;
-    }
-  }
+  props: ["avatar", "name", "content", "time", "isTeacher"]
 };
 </script>
 
@@ -105,10 +99,6 @@ export default {
   .chatroom-msg-body {
     direction: rtl;
     text-align: right;
-  }
-}
-.teacher-msg {
-  .chatroom-msg-body {
     .chatroom-msg__detail {
       &:before {
         border-bottom-color: #0a818c !important;
@@ -122,5 +112,13 @@ export default {
       }
     }
   }
+}
+
+.teacher-tag {
+  background-color: rgb(253, 87, 87);
+  color: #fff;
+  margin: 0 5px;
+  border-radius: 3px;
+  padding: 0px 3px;
 }
 </style>
