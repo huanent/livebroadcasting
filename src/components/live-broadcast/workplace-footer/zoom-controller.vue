@@ -20,7 +20,7 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 
 export default {
   name: "ZoomController",
@@ -35,17 +35,16 @@ export default {
     ...mapState("board", ["currentFile"])
   },
   methods: {
+    ...mapMutations("board", ["SET_BOARD_SCALE"]),
     handleMinus() {
       if (this.currentFile.scale <= this.min) return;
-      liveBroadcastService.boardService.activeBoard.setBoardScale(
-        this.currentFile.scale - 100
-      );
+      const scale = this.currentFile.scale - 100;
+      this.SET_BOARD_SCALE(scale);
     },
     handleAdd() {
       if (this.currentFile.scale >= this.max) return;
-      liveBroadcastService.boardService.activeBoard.setBoardScale(
-        this.currentFile.scale + 100
-      );
+      const scale = this.currentFile.scale + 100;
+      this.SET_BOARD_SCALE(scale);
     }
   }
 };

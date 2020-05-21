@@ -39,6 +39,15 @@
             >幸运转盘</a
           >
         </li>
+        <li>
+          <a
+            @click="
+              SET_CLICKER_VISIBLE(true);
+              widgetVisible = false;
+            "
+            >随堂测试</a
+          >
+        </li>
       </ul>
     </el-dialog>
     <question :visible.sync="questionVisible"></question>
@@ -65,7 +74,8 @@ export default {
     ...mapMutations("widget", [
       "SET_TIMER_VISIBLE",
       "SET_DICE_VISIBLE",
-      "SET_DRAW_VISIBLE"
+      "SET_DRAW_VISIBLE",
+      "SET_CLICKER_VISIBLE"
     ]),
     onOpenQuestion() {
       this.questionVisible = true;

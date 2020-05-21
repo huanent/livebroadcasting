@@ -34,11 +34,13 @@ export default {
         avatar: this.userInfo.avatar,
         nickname: this.userInfo.nickname,
         username: this.userInfo.username,
-        time: new Date().toLocaleString(),
         isTeacher: this.role == ROLE.TEACHER
       };
 
-      liveBroadcastService.timService.sendMessage(JSON.stringify(msg));
+      let res = await liveBroadcastService.timService.sendMessage(
+        JSON.stringify(msg)
+      );
+      msg.time = new Date(res.data.message.time * 1000);
       this.ADD_CHAT_MESSAGE(msg);
     }
   },

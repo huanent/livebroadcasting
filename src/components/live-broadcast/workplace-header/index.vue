@@ -100,7 +100,7 @@ export default {
     });
   },
   methods: {
-    ...mapMutations("workplace", ["SET_THEME_COLOR"]),
+    ...mapMutations("workplace", ["SET_THEME_COLOR", "QUIT_SERVICE"]),
     close_dialog(val) {
       this.dialogVisible = false;
     },
@@ -155,6 +155,9 @@ export default {
         done();
       }
     }
+  },
+  beforeDestroy() {
+    this.QUIT_SERVICE();
   },
   components: {
     Widgets,

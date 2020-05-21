@@ -94,9 +94,22 @@ const mutations = {
       state[key] = data[key];
     }
   },
-  SCALE_BOARD(state, value) {
-    liveBroadcastService.boardService.activeBoard.setBoardScale(value);
+  SET_BOARD_SCALE(state, value) {
     state.currentFile.scale = value;
+    liveBroadcastService.boardService.activeBoard.setBoardScale(value);
+  },
+  INIT_STATE(state) {
+    state.toolType = 1;
+    state.brushThin = 20;
+    state.brushColor = "#ba3136";
+    state.textColor = "#222222";
+    state.textSize = 320;
+    state.canRedo = 0;
+    state.canUndo = 0;
+    state.fileList = [];
+    state.currentFile.pageCount = 0;
+    state.currentFile.currentPageIndex = 1;
+    state.currentFile.scale = 100;
   }
 };
 

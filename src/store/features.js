@@ -16,7 +16,20 @@ export const initFeaturesState = function(role) {
     handUp: isTeacher
   };
 };
-const state = initFeaturesState();
+
+const state = {
+  timestamp: 1,
+  cameraPanelVisibity: false,
+  cameraPanelToggleButtonVisibity: false,
+  canClickboardTabs: false,
+  canControlBoard: false,
+  toolBarVisibity: false,
+  videoStatus: true,
+  audioStatus: true,
+  subscribeVideo: true,
+  subscribeAudio: true,
+  handUp: false
+};
 
 const mutations = {
   SET_CAMERA_PANEL_VISIBILITY(state, status) {
@@ -36,7 +49,6 @@ const mutations = {
     for (let i in data) {
       state[i] = data[i];
     }
-    console.log(state);
   },
   SET_TIMESTAMP(state, data) {
     state.timestamp = data;

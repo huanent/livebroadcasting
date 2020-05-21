@@ -1,7 +1,7 @@
 <template>
-  <div class="window" :style="{ top: top + 'px', left: left + 'px' }">
+  <div class="window" :style="{ top: top + '%', left: left + '%' }">
     <header
-      :draggable="role == ROLE.TEACHER"
+      :draggable="role == ROLE.TEACHER && !notdrag"
       @dragstart="dragstart"
       @drag="drag"
       ref="header"
@@ -22,7 +22,7 @@ import { mapState } from "vuex";
 import { ROLE } from "../../../store/account";
 
 export default {
-  props: ["position", "nameWidget"],
+  props: ["position", "nameWidget", "notdrag"],
   data() {
     return {
       top: 0,
@@ -38,27 +38,31 @@ export default {
     dragstart(e) {
       e.dataTransfer.setDragImage(document.createElement("div"), 0, 0);
       let rect = this.$refs.header.getBoundingClientRect();
-      this.top = rect.top;
-      this.left = rect.left;
+      this.top = this.getPercentage(rect.top);
+      this.left = this.getPercentage(rect.left, "width");
       this.topOffset = e.y - rect.top;
       this.leftOffset = e.x - rect.left;
     },
     drag(e) {
       let rect = this.$refs.header.getBoundingClientRect();
-      this.top = e.y - this.topOffset;
-      this.left = e.x - this.leftOffset;
+      this.top = this.getPercentage(e.y - this.topOffset);
+      this.left = this.getPercentage(e.x - this.leftOffset, "width");
     },
     dragend(e) {
       let rect = this.$refs.header.getBoundingClientRect();
-      this.top = e.y - this.topOffset;
-      this.left = e.x - this.leftOffset;
+      this.top = this.getPercentage(e.y - this.topOffset);
+      this.left = this.getPercentage(e.x - this.leftOffset, "width");
       this.$emit("moved", { x: this.left, y: this.top });
+    },
+    getPercentage(num, type) {
+      if (type == "width") return (num / document.body.clientWidth) * 100;
+      else return (num / document.body.clientHeight) * 100;
     }
   },
   watch: {
     position: {
       handler(value) {
-        if (this.role == ROLE.TEACHER || !value) return;
+        if (!value) return;
         this.top = value.y;
         this.left = value.x;
       },

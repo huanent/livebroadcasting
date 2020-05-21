@@ -33,6 +33,14 @@ const state = {
     visible: false,
     list: [],
     started: false
+  },
+  clicker: {
+    question: null,
+    statistics: [],
+    visible: false,
+    answer: {
+      result: null
+    }
   }
 };
 
@@ -58,8 +66,32 @@ const mutations = {
   },
   SET_DRAW_VISIBLE(state, visible) {
     state.draw.visible = visible;
+    state.draw.started = false;
   },
-  STAR_DRAW(state) {}
+  SET_DRAW_LIST(state, list) {
+    var rendomList = [];
+    for (let i = 0; i < 20; i++) {
+      let rendomItem = list[Math.floor(Math.random() * list.length)];
+      rendomList.push(rendomItem);
+    }
+    state.draw.list = rendomList;
+  },
+  STAR_DRAW(state, value) {
+    state.draw.started = value;
+  },
+  SET_CLICKER_VISIBLE(state, visible) {
+    state.clicker.visible = visible;
+    state.clicker.question = null;
+    state.clicker.statistics = [];
+  },
+  START_CLICKER(state, question) {
+    state.clicker.question = question;
+  },
+  SET_CLICKER_ANSWER(state, result) {
+    state.clicker.answer = {
+      result: result
+    };
+  }
 };
 
 export default {

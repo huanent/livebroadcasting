@@ -3,7 +3,12 @@
     <div class="workplace-header">
       <WorkplacePanelHeader></WorkplacePanelHeader>
     </div>
-    <div class="workplace-panel-content">
+    <div
+      :class="{
+        'workplace-panel-content': true,
+        'sidebar-hide': !isSidebarShow
+      }"
+    >
       <div
         id="workplace-panel-left"
         ref="left"
@@ -13,7 +18,7 @@
           <CameraPanel></CameraPanel>
         </div>
         <div
-          ref="gutter1"
+          ref="gutterEle"
           :class="{
             gutter: true,
             'gutter-row': role !== ROLE.STUDENT,
@@ -26,13 +31,16 @@
           <div
             v-if="cameraPanelToggleButtonVisibity"
             @click="toggleCameraPanel"
-            class="camera-icon-box"
+            class="headview-toggle"
           >
             <icon
               :name="cameraPanelVisibity ? 'indent' : 'outdent'"
-              class="panel-icon"
               :size="18"
             ></icon>
+          </div>
+
+          <div class="sidebar-toggle" @click="toggleSidebar">
+            <icon :name="isSidebarShow ? 'indent' : 'outdent'" :size="18" />
           </div>
           <MainWorkplace></MainWorkplace>
         </div>
@@ -56,14 +64,13 @@
 
 <script>
 import Split from "split-grid";
-// import Toolbar from "@c/common/Toolbar";
 import WorkplacePanelHeader from "@c/live-broadcast/workplace-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { Emitter } from "../../core/emit";
-import { mapState, mapMutations, mapGetters, mapActions } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import { ROLE } from "../../store/account";
 import Widgets from "../../components/live-broadcast/widgets";
 import { initFeaturesState } from "../../store/features";
@@ -79,16 +86,9 @@ export default {
       gridStyle: undefined,
       originPosition: [0, 0],
       total: 0,
-      audioLevelTimer: undefined
+      audioLevelTimer: undefined,
+      isSidebarShow: true
     };
-  },
-  components: {
-    MainWorkplace,
-    Chatroom,
-    SelfCamera,
-    WorkplacePanelHeader,
-    CameraPanel,
-    Widgets
   },
   computed: {
     ...mapState("account", ["role", "userInfo"]),
@@ -134,21 +134,12 @@ export default {
     });
     if (this.role !== "ROLE_STUDENT") {
       Split({
-        columnGutters: [
-          // {
-          //   track: 1,
-          //   element: document.querySelector("#gutter")
-          // }
-        ],
+        columnGutters: [],
         rowGutters: [
           {
             track: 1,
-            element: this.$refs.gutter1
+            element: this.$refs.gutterEle
           }
-          // {
-          //   track: 1,
-          //   element: document.querySelector("#gutter2-1")
-          // }
         ],
         dragInterval: 10,
         onDrag: (direction, track, gridTemplateStyle) => {
@@ -187,6 +178,9 @@ export default {
     ...mapMutations("account", ["SET_ROLE"]),
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
     ...mapActions("workplace", ["enterRoom"]),
+    toggleSidebar() {
+      this.isSidebarShow = !this.isSidebarShow;
+    },
     toggleCameraPanel() {
       if (!this.cameraPanelVisibity) {
         let el = this.$refs.left;
@@ -221,6 +215,14 @@ export default {
         liveBroadcastService.boardService.activeBoard.setDrawEnable(value);
       }
     }
+  },
+  components: {
+    MainWorkplace,
+    Chatroom,
+    SelfCamera,
+    WorkplacePanelHeader,
+    CameraPanel,
+    Widgets
   }
 };
 </script>
@@ -234,8 +236,6 @@ export default {
   @include themeify {
     background: themed("background_color1");
   }
-  /*  display: grid;
-  grid-template-rows: 2rem auto;*/
 }
 .workplace-header {
   @include themeify {
@@ -248,7 +248,6 @@ export default {
     border-bottom: 1px solid themed("border_color1");
   }
   box-sizing: border-box;
-  /*  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.44);*/
   & > * {
     overflow: hidden;
   }
@@ -256,9 +255,12 @@ export default {
 .workplace-panel-content {
   display: grid;
   width: 100%;
-  grid-template-columns: 83% 0 17%;
+  grid-template-columns: auto 0 290px;
   height: 100%;
   overflow: hidden;
+}
+.sidebar-hide {
+  grid-template-columns: auto 0;
 }
 #workplace-panel-left {
   display: grid;
@@ -275,6 +277,7 @@ export default {
 }
 #workplace-panel-right {
   display: grid;
+  position: relative;
   grid-template-rows: 23.5% 0.5% 76%;
   height: calc(100vh - 2rem);
   width: 100%;
@@ -285,8 +288,6 @@ export default {
   & > * {
     overflow: hidden;
   }
-}
-.gutter {
 }
 
 .gutter-row {
@@ -335,12 +336,12 @@ export default {
   background: #292b2e;
 }
 
-.camera-icon-box {
+.headview-toggle,
+.sidebar-toggle {
   cursor: pointer;
   height: auto !important;
   z-index: 999;
   position: absolute;
-  top: calc(28px);
   @include themeify {
     background-color: themed("toolbar_bg");
   }
@@ -349,15 +350,27 @@ export default {
     @include themeify {
       fill: themed("font_color2");
       padding: 5px;
-      transform: rotate(-90deg);
+    }
+  }
+  &:hover {
+    .svg-icon {
+      @include themeify {
+        fill: mix(themed("font_color2"), themed("color_opposite"), 70%);
+      }
     }
   }
 }
-.camera-icon-box:hover {
+
+.headview-toggle {
+  left: 0.25rem;
+  top: 2.2rem;
   .svg-icon {
-    @include themeify {
-      fill: themed("font_color1");
-    }
+    transform: rotate(-90deg);
   }
+}
+
+.sidebar-toggle {
+  right: 0.25rem;
+  top: 2.2rem;
 }
 </style>

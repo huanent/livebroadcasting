@@ -160,12 +160,14 @@ export default {
   height: 1.2rem;
   display: inline-block;
   cursor: pointer;
-}
-.tab-item:hover {
-  @include themeify {
-    background: themed("background_color4");
+  &:hover {
+    @include themeify {
+      background: themed("background_color4");
+    }
   }
-  background-color: #141414;
+  &:not(:first-child) {
+    margin-left: 0.2rem;
+  }
 }
 .board-tabs-header {
   @include themeify {
@@ -173,6 +175,7 @@ export default {
   }
   border-bottom: rgba(30, 33, 37, 0.19) 1px solid;
   width: 100%;
+  padding-bottom: 0.2rem;
   height: 1.8rem;
 }
 .board-tab-icon {

@@ -1,25 +1,18 @@
 <template>
-  <li>
-    <div class="question-item">
-      <span
-        :style="{ color: isTrue ? 'green' : 'red' }"
-        @click="$emit('update:is-true', !isTrue)"
-        >{{ label }}:</span
-      >
-      <template>
-        <el-input
-          size="mini"
-          :value="detail"
-          @input="$emit('update:detail', e.value)"
-        />
-        <span @click="$emit('remove')" v-if="erasable">-</span>
+  <div class="question-item">
+    <el-input placeholder="请输入选项内容" size="small" v-model="item.detail">
+      <template slot="append" v-if="removable">
+        <el-button @click="$emit('remove')">
+          <icon class="svg-icon" :size="14" name="trash2"></icon>
+        </el-button>
       </template>
-    </div>
-  </li>
+    </el-input>
+    <el-checkbox v-model="item.isTrue">正确答案</el-checkbox>
+  </div>
 </template>
 <script>
 export default {
-  props: ["label", "detail", "erasable", "isTrue"]
+  props: ["item", "removable"]
 };
 </script>
 
@@ -30,5 +23,15 @@ export default {
   span {
     font-size: 20px;
   }
+}
+</style>
+<style lang="scss" scoped>
+.svg-icon {
+  fill: #888;
+}
+.el-checkbox {
+  position: absolute;
+  bottom: -25px;
+  left: 5px;
 }
 </style>

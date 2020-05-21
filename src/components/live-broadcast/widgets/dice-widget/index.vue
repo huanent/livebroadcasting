@@ -118,12 +118,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .dice {
-  width: 200px;
+  width: 210px;
   height: 200px;
   background: #54555d;
   padding-left: 36px;
   box-sizing: border-box;
-  padding-top: 23px;
+  padding-top: 28px;
   #content {
     width: 134px;
     height: 134px;

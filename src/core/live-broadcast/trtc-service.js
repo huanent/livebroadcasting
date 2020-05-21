@@ -51,10 +51,17 @@ export class TrtcService {
     this.listenHandler(client);
     store.commit("localStream/IS_INIT");
   }
+  quit() {
+    let client = this.clientList["default"];
+    client && client.leave();
+  }
   async getDefaultDevice() {
+    let mediaDevices = await navigator.mediaDevices.enumerateDevices();
+
     let cameraDeviceList = await TRTC.getCameras();
 
     let microphonesDeviceList = await TRTC.getMicrophones();
+
     if (cameraDeviceList[0] && microphonesDeviceList[0]) {
       let activeCameraDevice = JSON.parse(
         JSON.stringify({
@@ -263,6 +270,9 @@ export class TrtcService {
     stream.div_.style.backgroundColor = "";
     if (stream.div_.children[0]) {
       stream.div_.children[0].style.objectFit = objectFit;
+      stream.div_.style.display = "flex";
+      stream.div_.style.justifyContent = "center";
+      stream.div_.style.alignItems = "center";
     }
   }
   getElectronStream() {
