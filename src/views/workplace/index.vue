@@ -340,7 +340,7 @@ export default {
 .sidebar-toggle {
   cursor: pointer;
   height: auto !important;
-  z-index: 999;
+  z-index: 9;
   position: absolute;
   @include themeify {
     background-color: themed("toolbar_bg");
