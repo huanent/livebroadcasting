@@ -30,12 +30,11 @@ export default new Vuex.Store({
     SYNC_STATE(state, payload) {
       if (payload.primaryKey) {
         let currentValue = getCurrentValue(state, payload.toPath);
-
         let old = currentValue.findIndex(
           f => f.__primaryKey == payload.primaryKey
         );
 
-        currentValue.splice(old, 1);
+        if (old > -1) currentValue.splice(old, 1);
         payload.value.__primaryKey = payload.primaryKey;
         payload.value.__streamId = payload.streamId;
         payload.value.__nickName = payload.nickName;
