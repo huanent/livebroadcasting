@@ -4,11 +4,7 @@ export const initFeaturesState = function(role) {
   let isTeacher = role === "ROLE_TEACHER";
   return {
     timestamp: 1,
-    cameraPanelVisibity: isTeacher,
-    cameraPanelToggleButtonVisibity: isTeacher,
-    canClickboardTabs: isTeacher,
     canControlBoard: isTeacher,
-    toolBarVisibity: isTeacher,
     videoStatus: true,
     audioStatus: true,
     subscribeVideo: true,
@@ -19,22 +15,15 @@ export const initFeaturesState = function(role) {
 
 const state = {
   timestamp: 1,
-  cameraPanelVisibity: false,
-  cameraPanelToggleButtonVisibity: false,
-  canClickboardTabs: false,
   canControlBoard: false,
-  toolBarVisibity: false,
   videoStatus: true,
   audioStatus: true,
   subscribeVideo: true,
-  subscribeAudio: true,
+  subscribeAudio: false,
   handUp: false
 };
 
 const mutations = {
-  SET_CAMERA_PANEL_VISIBILITY(state, status) {
-    state.cameraPanelVisibity = status;
-  },
   SET_VIDEO_STATUS(state, status) {
     state.videoStatus = status;
   },
