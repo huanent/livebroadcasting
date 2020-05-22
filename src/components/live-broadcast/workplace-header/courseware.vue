@@ -9,7 +9,7 @@
     class="courseware"
   >
     <div class="courseware-content">
-      <div>
+      <div v-show="role === ROLE.TEACHER">
         <el-upload
           :action="'/api/courseFile/upload?userId=' + userId"
           :file-list="fileList"
@@ -37,7 +37,7 @@
           empty-text="No data"
           @row-click="rowclick"
         >
-          <el-table-column prop="filename" label="fileName"> </el-table-column>
+          <el-table-column prop="filename" label="文件名"> </el-table-column>
           <!--          <el-table-column prop="userId" label="upper"> </el-table-column>
           <el-table-column prop="resolution" label="resolution	">
           </el-table-column>
@@ -51,7 +51,12 @@
             prop="hasTranscode"
           >
             <template slot-scope="scope">
-              <el-button class="btns" type="text" size="small">
+              <el-button
+                class="btns"
+                type="text"
+                size="small"
+                v-show="role === ROLE.TEACHER"
+              >
                 <el-tooltip :content="$t('courseware.toboard')" placement="top"
                   ><icon name="fileimport" :size="16"></icon></el-tooltip
               ></el-button>
@@ -70,6 +75,7 @@
                 type="text"
                 size="small"
                 @click="reTranscode(scope.row)"
+                v-show="role === ROLE.TEACHER"
               >
                 <el-tooltip :content="$t('courseware.recode')" placement="top"
                   ><icon name="recode" :size="16"></icon></el-tooltip
@@ -79,6 +85,7 @@
                 class="btns"
                 type="text"
                 size="small"
+                v-show="role === ROLE.TEACHER"
               >
                 <el-tooltip :content="$t('courseware.del')" placement="top"
                   ><icon name="trash" :size="16"></icon
@@ -120,6 +127,7 @@ import {
 } from "../../../core/data/data-service";
 
 import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { mapState } from "vuex";
 
 export default {
   name: "Courseware",
@@ -150,6 +158,7 @@ export default {
   },
   mounted() {},
   computed: {
+    ...mapState("account", ["role"]),
     dialogWidth() {
       if (innerWidth < 768) {
         return "80%";
@@ -228,12 +237,14 @@ export default {
       });
     },
     rowclick(file) {
-      liveBroadcastService.boardService.addBoardFiles(
-        file.resultUrl,
-        file.title,
-        file.pages,
-        file.resolution
-      );
+      if (this.role === this.ROLE.TEACHER) {
+        liveBroadcastService.boardService.addBoardFiles(
+          file.resultUrl,
+          file.title,
+          file.pages,
+          file.resolution
+        );
+      }
     },
     closeDialog() {
       this.$emit("close-dialogStatus", true);
