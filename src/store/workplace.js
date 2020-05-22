@@ -12,9 +12,13 @@ const state = {
   role: null,
   token: null,
   featuresList: [],
-  chatMessages: []
+  chatMessages: [],
+  cameraPanelVisibity: false
 };
 const mutations = {
+  SET_CAMERA_PANEL_VISIBILITY(state, status) {
+    state.cameraPanelVisibity = status;
+  },
   SET_TOKEN(state, token) {
     state.token = token;
   },

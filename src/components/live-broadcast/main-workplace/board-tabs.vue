@@ -13,7 +13,7 @@
         <span
           @click="onClose(item)"
           class="board-tab-icon-container"
-          v-if="canClickboardTabs"
+          v-if="canControlBoard"
         >
           <icon class="board-tab-icon" name="times" :size="12"></icon>
         </span>
@@ -96,7 +96,7 @@ export default {
   },
   computed: {
     ...mapState("account", ["role"]),
-    ...mapState("features", ["canClickboardTabs"]),
+    ...mapState("features", ["canControlBoard"]),
     ...mapState("board", ["fileList", "currentFile"])
   },
   mounted() {
@@ -114,7 +114,7 @@ export default {
   },
   methods: {
     switchTab(item) {
-      if (!this.canClickboardTabs) return;
+      if (!this.canControlBoard) return;
       liveBroadcastService.boardService.switchFile(item);
     },
     selectOptionByType(type) {
