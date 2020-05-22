@@ -6,7 +6,10 @@
         :active-index.sync="index"
         @index-change="indexChange($event)"
         @type-change="onChange"
+        @head-toggle="$emit('head-toggle')"
+        @sidebar-toggle="$emit('sidebar-toggle')"
         :panel-type="panelType"
+        :isSidebarShow="isSidebarShow"
         class="workplace-content"
         :show-lable="panelType === 'board'"
       >
@@ -68,7 +71,9 @@ export default {
       showStreamSelectdialog: false
     };
   },
-
+  props: {
+    isSidebarShow: Boolean
+  },
   async mounted() {
     this.showStreamSelectdialog = this.streamSelectVisibility;
     this.SET_WORKPLACE_VISIBILITY(true);

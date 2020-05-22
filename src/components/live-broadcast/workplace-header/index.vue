@@ -1,13 +1,13 @@
 <template>
   <div class="workplace-header-component">
     <div class="menu-operation">
-      <el-tooltip :content="'切换主题'" placement="bottom" :open-delay="300">
+      <el-tooltip :content="'切换主题'" placement="bottom" :open-delay="200">
         <span style="padding: 0 20px">
           <el-switch v-model="switchStatus"> </el-switch>
         </span>
       </el-tooltip>
       <recoder v-if="showRecoderButton"></recoder>
-      <el-tooltip :content="'课件库'" placement="bottom" :open-delay="300">
+      <el-tooltip :content="'课件库'" placement="bottom" :open-delay="200">
         <icon
           @click.native="onCoursewareOpen"
           name="import_contacts"
@@ -15,20 +15,20 @@
         ></icon>
       </el-tooltip>
 
-      <el-tooltip :content="'应用中心'" placement="bottom" :open-delay="300">
+      <el-tooltip :content="'应用中心'" placement="bottom" :open-delay="200">
         <icon @click.native="onWidgetsOpen" name="widgets" :size="20"></icon>
       </el-tooltip>
-      <el-tooltip :content="'控制面板'" placement="bottom" :open-delay="300">
+      <el-tooltip :content="'控制面板'" placement="bottom" :open-delay="200">
         <icon
           name="settings"
           :size="20"
           @click.native="onShowFeaturesControlVisible"
         ></icon>
       </el-tooltip>
-      <!--    <el-tooltip :content="'个人设置'" placement="bottom" :open-delay="300">
+      <!--    <el-tooltip :content="'个人设置'" placement="bottom" :open-delay="200">
         <icon name="settings" :size="20"></icon>
       </el-tooltip>-->
-      <el-tooltip :content="'退出'" placement="bottom" :open-delay="300">
+      <el-tooltip :content="'退出'" placement="bottom" :open-delay="200">
         <icon
           @click.native="liveroomLogout"
           name="exit_to_app"

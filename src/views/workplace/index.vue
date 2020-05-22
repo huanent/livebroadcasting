@@ -27,23 +27,11 @@
         >
           <div></div>
         </div>
-        <div class="main-workplace-panel">
-          <div
-            v-if="role === ROLE.TEACHER"
-            @click="toggleCameraPanel"
-            class="headview-toggle"
-          >
-            <icon
-              :name="cameraPanelVisibity ? 'indent' : 'outdent'"
-              :size="18"
-            ></icon>
-          </div>
-
-          <div class="sidebar-toggle" @click="toggleSidebar">
-            <icon :name="isSidebarShow ? 'indent' : 'outdent'" :size="18" />
-          </div>
-          <MainWorkplace></MainWorkplace>
-        </div>
+        <MainWorkplace
+          :isSidebarShow="isSidebarShow"
+          @head-toggle="toggleCameraPanel"
+          @sidebar-toggle="toggleSidebar"
+        ></MainWorkplace>
       </div>
       <div class="gutter gutter-col">
         <div></div>
@@ -260,9 +248,6 @@ export default {
   grid-template-rows: 23.5% 0.5% 76%;
   height: calc(100vh - 2rem);
   width: 100%;
-  div {
-    height: 100%;
-  }
   overflow: hidden;
   & > * {
     overflow: hidden;
@@ -316,54 +301,10 @@ export default {
   }
   position: relative;
 }
-.main-workplace-panel {
-  position: relative;
-  @include themeify {
-    background: themed("background_color1");
-  }
-}
 .workplace-panel-left-hide {
   grid-template-rows: 0 3px 1fr !important;
 }
 .message-panel {
   background: #292b2e;
-}
-
-.headview-toggle,
-.sidebar-toggle {
-  cursor: pointer;
-  height: auto !important;
-  z-index: 9;
-  position: absolute;
-  @include themeify {
-    background-color: themed("toolbar_bg");
-  }
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-  .svg-icon {
-    @include themeify {
-      fill: themed("font_color2");
-      padding: 5px;
-    }
-  }
-  &:hover {
-    .svg-icon {
-      @include themeify {
-        fill: mix(themed("font_color2"), themed("color_opposite"), 70%);
-      }
-    }
-  }
-}
-
-.headview-toggle {
-  left: 0.25rem;
-  top: 2.2rem;
-  .svg-icon {
-    transform: rotate(-90deg);
-  }
-}
-
-.sidebar-toggle {
-  right: 0.25rem;
-  top: 2.2rem;
 }
 </style>

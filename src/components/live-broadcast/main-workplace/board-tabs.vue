@@ -18,36 +18,63 @@
           <icon class="board-tab-icon" name="times" :size="12"></icon>
         </span>
       </div>
-      <div class="workplace-settings">
-        <multiselect
-          v-if="role !== ROLE.STUDENT"
-          v-model="selected"
-          ref="select"
-          :searchable="false"
-          :options="options"
-          :allow-empty="false"
-          @select="onSelect"
+      <div class="head-right">
+        <div
+          v-if="role === ROLE.TEACHER"
+          @click="$emit('head-toggle')"
+          class="headview-toggle"
         >
-          <template slot="singleLabel" slot-scope="props"
-            ><div class="select-header">
-              <span>{{ props.option.title }}</span>
+          <el-tooltip
+            :content="$t('workplace.cameraPanel')"
+            placement="bottom"
+            :open-delay="200"
+          >
+            <icon
+              :name="cameraPanelVisibity ? 'indent' : 'outdent'"
+              :size="18"
+            ></icon>
+          </el-tooltip>
+        </div>
+        <div class="sidebar-toggle" @click="$emit('sidebar-toggle')">
+          <el-tooltip
+            :content="$t('workplace.sidebar')"
+            placement="bottom"
+            :open-delay="200"
+          >
+            <icon :name="isSidebarShow ? 'indent' : 'outdent'" :size="18" />
+          </el-tooltip>
+        </div>
+        <div class="workplace-settings">
+          <multiselect
+            v-if="role !== ROLE.STUDENT"
+            v-model="selected"
+            ref="select"
+            :searchable="false"
+            :options="options"
+            :allow-empty="false"
+            @select="onSelect"
+          >
+            <template slot="singleLabel" slot-scope="props"
+              ><div class="select-header">
+                <span>{{ props.option.title }}</span>
 
-              <div
-                @mousedown.prevent.stop="toggle()"
-                class="multiselect__select"
-              >
-                <icon :name="caretIconName" size="14"></icon>
+                <div
+                  @mousedown.prevent.stop="toggle()"
+                  class="multiselect__select"
+                >
+                  <icon :name="caretIconName" size="14"></icon>
+                </div>
               </div>
-            </div>
-          </template>
-          <template slot="option" slot-scope="props">
-            <div class="select-option">
-              {{ props.option.title }}
-            </div>
-          </template>
-        </multiselect>
-        <div v-else class="type-text">
-          {{ selected && selected.title }}
+            </template>
+            <template slot="option" slot-scope="props">
+              <div class="select-option">
+                {{ props.option.title }}
+              </div>
+            </template>
+          </multiselect>
+          <div v-else class="type-text">
+            {{ selected && selected.title }}
+          </div>
         </div>
       </div>
     </div>
@@ -62,6 +89,7 @@ export default {
   name: "BoardTabs",
   props: {
     datas: {},
+    isSidebarShow: Boolean,
     activeIndex: {
       type: Number,
       default: 0
@@ -96,6 +124,7 @@ export default {
   },
   computed: {
     ...mapState("account", ["role"]),
+    ...mapState("workplace", ["cameraPanelVisibity"]),
     ...mapState("features", ["canControlBoard"]),
     ...mapState("board", ["fileList", "currentFile"])
   },
@@ -196,7 +225,6 @@ export default {
 }
 
 .workplace-settings {
-  float: right;
   width: 7.5rem;
   margin-right: 0.25rem;
   line-height: 1.8rem;
@@ -262,5 +290,39 @@ cover component Multiselect style
 /deep/ .multiselect__select {
   float: right;
   line-height: 1.8rem;
+}
+.headview-toggle,
+.sidebar-toggle {
+  margin-right: 0.25rem;
+  cursor: pointer;
+  @include themeify {
+    background-color: themed("toolbar_bg");
+  }
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  .svg-icon {
+    @include themeify {
+      fill: themed("font_color2");
+      padding: 5px;
+    }
+  }
+  &:hover {
+    .svg-icon {
+      @include themeify {
+        fill: mix(themed("font_color2"), themed("color_opposite"), 70%);
+      }
+    }
+  }
+}
+
+.headview-toggle {
+  .svg-icon {
+    transform: rotate(-90deg);
+  }
+}
+
+.head-right {
+  float: right;
+  display: flex;
+  align-items: center;
 }
 </style>

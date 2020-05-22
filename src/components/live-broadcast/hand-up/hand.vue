@@ -23,7 +23,7 @@ export default {
   @include themeify {
     background-color: themed("toolbar_bg");
   }
-  box-shadow: 0 0 15px #000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.45);
   border-radius: 25px;
   position: absolute;
   bottom: 50px;
