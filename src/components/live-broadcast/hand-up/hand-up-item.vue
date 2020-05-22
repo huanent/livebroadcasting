@@ -77,7 +77,8 @@ export default {
         id: this.feature.__primaryKey,
         value: [
           { propName: "canControlBoard", value: false },
-          { propName: "subscribeAudio", value: false }
+          { propName: "subscribeAudio", value: false },
+          { propName: "handUp", value: false }
         ]
       });
     }
