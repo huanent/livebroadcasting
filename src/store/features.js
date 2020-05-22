@@ -8,7 +8,7 @@ export const initFeaturesState = function(role) {
     videoStatus: true,
     audioStatus: true,
     subscribeVideo: true,
-    subscribeAudio: true,
+    subscribeAudio: isTeacher,
     handUp: isTeacher
   };
 };

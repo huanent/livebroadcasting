@@ -127,9 +127,7 @@ export class TrtcService {
           this.copyStreamPlay(stream, data.el, stream.userId_);
         }
       } else {
-        stream = this.getRemoteStreamByUserId(
-          this.liveBroadcastService.teacherStreamUserId
-        );
+        stream = this.getRemoteStreamByUserId(store.state.workplace.teachId);
         if (stream && stream.userId_) {
           this.copyStreamPlay(stream, data.el, stream.userId_);
         }
@@ -201,18 +199,14 @@ export class TrtcService {
     }
   }
   teacherStreamPlay(elmentOrId) {
-    let stream = this.getRemoteStreamByUserId(
-      this.liveBroadcastService.teacherStreamUserId
-    );
+    let stream = this.getRemoteStreamByUserId(store.state.workplace.teachId);
     if (stream && stream.play) {
       stream.play(elmentOrId);
       this.coverPlayStyle(stream);
     }
   }
   teacherStreamStopPlay() {
-    let stream = this.getRemoteStreamByUserId(
-      this.liveBroadcastService.teacherStreamUserId
-    );
+    let stream = this.getRemoteStreamByUserId(store.state.workplace.teachId);
     if (stream && stream.stop) {
       stream.stop();
     }
@@ -341,18 +335,15 @@ export class TrtcService {
     if (!options) {
       options = {
         video: store.state.features.subscribeVideo,
-        audio: store.state.features.subscribeAudio
+        audio: false
       };
     }
-
     let stream = this.getRemoteStreamByUserId(rawUserId);
     let regex = /.*(share_screen)$/;
     if (regex.test(stream.userId_)) {
       options.audio = false;
     }
-    if (
-      removeUserIdPrefix(stream.userId_) === store.state.workplace.teacherId
-    ) {
+    if (removeUserIdPrefix(stream.userId_) === store.state.workplace.teachId) {
       options.audio = true;
     }
     if (stream) {

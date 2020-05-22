@@ -11,11 +11,15 @@ const state = {
   workplaceVisibity: false,
   role: null,
   token: null,
+  teachId: null,
   featuresList: [],
   chatMessages: [],
   cameraPanelVisibity: false
 };
 const mutations = {
+  SET_TEACHER_ID(state, id) {
+    state.teachId = id;
+  },
   SET_CAMERA_PANEL_VISIBILITY(state, status) {
     state.cameraPanelVisibity = status;
   },
@@ -79,7 +83,7 @@ const actions = {
       query.createUser == rootState.account.username
         ? ROLE.TEACHER
         : ROLE.STUDENT;
-
+    commit("SET_TEACHER_ID", query.createUser);
     commit("SET_ROLE", role);
     let res = await enterRoom(rootState.account.userInfo.username, query.id);
     commit("SET_TOKEN", res.data);
