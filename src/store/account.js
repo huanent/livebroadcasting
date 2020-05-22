@@ -34,9 +34,6 @@ const mutations = {
     state.userId = id;
     localStorage.setItem("lb_userId", id);
   },
-  setTXPrivateMapKey(state, tx_privateMapKey) {
-    state.tx_privateMapKey = tx_privateMapKey;
-  },
   SET_USER_INFO(state, data) {
     state.userInfo = data;
   },

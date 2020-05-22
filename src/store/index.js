@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import account, { ROLE } from "./account";
+import account from "./account";
 import board from "./board";
 import device from "./device";
 import workplace from "./workplace";
@@ -28,23 +28,32 @@ export default new Vuex.Store({
   },
   mutations: {
     SYNC_STATE(state, payload) {
-      if (payload.primaryKey) {
-        let currentValue = getCurrentValue(state, payload.toPath);
+      function sync(data) {
+        if (data.primaryKey) {
+          let currentValue = getCurrentValue(state, data.toPath);
+          let old = currentValue.findIndex(
+            f => f.__primaryKey == data.primaryKey
+          );
 
-        let old = currentValue.findIndex(
-          f => f.__primaryKey == payload.primaryKey
-        );
+          if (old > -1) currentValue.splice(old, 1);
+          data.value.__primaryKey = data.primaryKey;
+          data.value.__streamId = data.streamId;
+          data.value.__nickName = data.nickName;
+          currentValue.splice(old, 0, data.value);
+        } else {
+          let lastPropName = data.path.pop();
+          let currentValue = getCurrentValue(state, data.path);
+          if (!currentValue) return;
+          currentValue[lastPropName] = data.value;
+        }
+      }
 
-        currentValue.splice(old, 1);
-        payload.value.__primaryKey = payload.primaryKey;
-        payload.value.__streamId = payload.streamId;
-        payload.value.__nickName = payload.nickName;
-        currentValue.push(payload.value);
+      if (payload instanceof Array) {
+        for (const i of payload) {
+          sync(i);
+        }
       } else {
-        let lastPropName = payload.path.pop();
-        let currentValue = getCurrentValue(state, payload.path);
-        if (!currentValue) return;
-        currentValue[lastPropName] = payload.value;
+        sync(payload);
       }
     }
   }

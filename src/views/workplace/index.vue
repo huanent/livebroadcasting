@@ -29,7 +29,7 @@
         </div>
         <div class="main-workplace-panel">
           <div
-            v-if="cameraPanelToggleButtonVisibity"
+            v-if="role=== ROLE.TEACHER"
             @click="toggleCameraPanel"
             class="headview-toggle"
           >
@@ -87,15 +87,13 @@ export default {
       originPosition: [0, 0],
       total: 0,
       audioLevelTimer: undefined,
-      isSidebarShow: true
+      isSidebarShow: true,
     };
   },
   computed: {
     ...mapState("account", ["role", "userInfo"]),
-    ...mapState("workplace", []),
+    ...mapState("workplace", ["cameraPanelVisibity"]),
     ...mapState("features", [
-      "cameraPanelVisibity",
-      "cameraPanelToggleButtonVisibity",
       "canControlBoard"
     ])
   },
@@ -172,11 +170,11 @@ export default {
   },
   methods: {
     ...mapMutations("features", [
-      "SET_CAMERA_PANEL_VISIBILITY",
       "SET_TIMESTAMP"
     ]),
     ...mapMutations("account", ["SET_ROLE"]),
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
+    ...mapMutations("workplace", ["SET_CAMERA_PANEL_VISIBILITY"]),
     ...mapActions("workplace", ["enterRoom"]),
     toggleSidebar() {
       this.isSidebarShow = !this.isSidebarShow;
@@ -340,7 +338,7 @@ export default {
 .sidebar-toggle {
   cursor: pointer;
   height: auto !important;
-  z-index: 999;
+  z-index: 9;
   position: absolute;
   @include themeify {
     background-color: themed("toolbar_bg");

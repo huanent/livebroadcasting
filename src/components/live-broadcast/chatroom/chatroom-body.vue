@@ -99,7 +99,6 @@ export default {
 
 <style lang="scss" scoped>
 .chatroom-body {
-  padding-bottom: 20px;
   height: 100%;
   overflow: auto;
   scroll-behavior: smooth;
@@ -107,7 +106,11 @@ export default {
     height: calc(100% - 60px);
     overflow: auto;
     padding: 0.4rem 0.6rem;
+    box-sizing: border-box;
     scroll-behavior: smooth;
+    li {
+      margin-top: 0.5rem;
+    }
   }
 }
 </style>

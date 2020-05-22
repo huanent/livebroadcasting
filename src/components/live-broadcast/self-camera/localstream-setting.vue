@@ -85,10 +85,12 @@
         />
         <span>测试扬声器</span>
       </div>-->
-      <div class="btn-list">
-        <el-button @click="onDialogClose()">取 消</el-button>
-        <el-button type="primary" @click="onDialogSave()">确 定</el-button>
-      </div>
+      <span slot="footer" class="clearfix">
+        <div class="right">
+          <el-button @click="onDialogClose()">关 闭</el-button>
+          <el-button type="primary" @click="onDialogSave()">确 定</el-button>
+        </div>
+      </span>
     </div>
   </el-dialog>
 </template>
@@ -150,7 +152,6 @@ export default {
       this.microphonesDeviceList = [];
       this.speakerDeviceList = [];
       navigator.mediaDevices.enumerateDevices().then(mediaDevices => {
-        console.log(mediaDevices);
         mediaDevices.forEach(item => {
           let devices = {
             kind: item.kind,
@@ -246,13 +247,15 @@ export default {
       } else {
         options.video = false;
       }
-      navigator.mediaDevices.getUserMedia(options).then(testStream => {
-        this.testStream = testStream;
-        this.$nextTick(() => {
-          this.$refs.video.srcObject = this.testStream;
-          this.percentage = this.initWave();
+      if (options.video || options.audio) {
+        navigator.mediaDevices.getUserMedia(options).then(testStream => {
+          this.testStream = testStream;
+          this.$nextTick(() => {
+            this.$refs.video.srcObject = this.testStream;
+            this.percentage = this.initWave();
+          });
         });
-      });
+      }
     }
   }
 };

@@ -19,14 +19,14 @@
           {{ item.index }}
           <icon :name="item.name" :size="18" color="#b4b4b5" />
         </li>
+        <li ref="colorpck">
+          <el-color-picker
+            v-model="shapecolor"
+            size="mini"
+            @change="onColorPicked"
+          ></el-color-picker>
+        </li>
       </ul>
-    </div>
-    <div ref="colorpck">
-      <el-color-picker
-        v-model="shapecolor"
-        size="mini"
-        @change="onColorPicked"
-      ></el-color-picker>
     </div>
   </div>
 </template>
@@ -120,21 +120,24 @@ export default {
   }
   background-color: rgba(48, 49, 51, 0.79);
   .shape-select {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     li {
-      text-align: center;
-      float: left;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
       width: 1.1rem;
       height: 1.1rem;
-      line-height: 1.1rem;
-      padding: 0.2rem 0.25rem 0.25rem 0.25rem;
-      margin-top: 0.1rem;
-      margin-left: 0.15rem;
-      margin-right: 0.15rem;
+      padding: 0.2rem;
       &:hover svg {
         @include themeify {
           fill: themed("toolbar_icon") !important;
         }
+      }
+      &:not(:first-child) {
+        margin-left: 0.2rem;
       }
     }
   }
