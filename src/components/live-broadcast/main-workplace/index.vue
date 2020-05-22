@@ -36,7 +36,7 @@
       @selected="onSelected"
     />
     <hand />
-    <hand-up-list />
+    <hand-up-list v-if="role == ROLE.TEACHER" />
   </div>
 </template>
 
@@ -48,7 +48,7 @@ import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-servi
 import { mapState, mapMutations } from "vuex";
 import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";
-import { ROLE } from "../../../store/account";
+import { ROLE } from "../../../models/role";
 import Hand from "../hand-up/hand";
 import HandUpList from "../hand-up/hand-up-list";
 export default {
