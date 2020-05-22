@@ -120,13 +120,13 @@ export default {
     ...mapState("localStream", []),
     ...mapState("workplace", ["panelType", "workplaceVisibity"]),
     ...mapState("electron", ["streamSelectVisibility"]),
-    ...mapState("features", ["toolBarVisibity"]),
+    ...mapState("features", ["canControlBoard"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
     },
     isToolBarShow() {
       return (
-        this.showToolbar && this.panelType === "board" && this.toolBarVisibity
+        this.showToolbar && this.panelType === "board" && this.canControlBoard
       );
     },
     index() {
