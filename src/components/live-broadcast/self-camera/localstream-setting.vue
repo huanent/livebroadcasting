@@ -1,94 +1,73 @@
 <template>
   <el-dialog
-    title="设置"
+    :title="$t('setting')"
     :visible.sync="visibility"
-    width="40%"
+    :width="dialogWidth"
     :before-close="onDialogClose"
     :append-to-body="true"
   >
-    <div v-if="visibility">
-      <div class="dialog-item">
-        <div class="media-container">
-          <video ref="video" autoplay="autoplay"></video>
-          <audio ref="audio"></audio>
-        </div>
-      </div>
+    <div class="dialog-item">
+      <el-row :gutter="20">
+        <el-col :xs="24" :sm="24" :md="12">
+          <div class="select-item">
+            <div class="dialog-title">{{ $t("setting.micro") }}</div>
+            <el-select
+              style="width:100%"
+              :value="activeMicrophones"
+              value-key="label"
+              @change="onactiveMicrophonesChange"
+              :placeholder="$t('setting.chooseMicro')"
+            >
+              <el-option
+                v-for="item in microphonesDeviceList"
+                :key="item.deviceId"
+                value-key="deviceId"
+                :label="item.label"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select-item">
+            <div class="dialog-title">{{ $t("setting.camera") }}</div>
+            <el-select
+              style="width:100%"
+              :value="activeCamera"
+              value-key="deviceId"
+              @change="onActiveCameraChange"
+              :placeholder="$t('setting.chooseCamera')"
+            >
+              <el-option
+                v-for="item in cameraDeviceList"
+                :key="item.deviceId"
+                :label="item.label"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+          </div>
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="12">
+          <div class="media-container">
+            <video ref="video" autoplay="autoplay"></video>
+          </div>
+        </el-col>
+      </el-row>
+
       <div class="dialog-item">
         <div class="wave-container">
           <canvas id="oscilloscope"></canvas>
         </div>
       </div>
-      <div class="dialog-item">
-        <div class="dialog-title">摄像头</div>
-        <el-select
-          style="width:100%"
-          :value="activeCamera"
-          value-key="deviceId"
-          @change="onActiveCameraChange"
-          placeholder="请选择视频输入设备"
-        >
-          <el-option
-            v-for="item in cameraDeviceList"
-            :key="item.deviceId"
-            :label="item.label"
-            :value="item"
-          >
-          </el-option>
-        </el-select>
-      </div>
-      <div class="dialog-item">
-        <div class="dialog-title">麦克风</div>
-        <el-select
-          style="width:100%"
-          :value="activeMicrophones"
-          value-key="label"
-          @change="onactiveMicrophonesChange"
-          placeholder="请选择音频输入设备"
-        >
-          <el-option
-            v-for="item in microphonesDeviceList"
-            :key="item.deviceId"
-            value-key="deviceId"
-            :label="item.label"
-            :value="item"
-          >
-          </el-option>
-        </el-select>
-      </div>
-      <!--     <div class="dialog-item">
-        <div class="dialog-title"></div>
-        <div class="dialog-title">麦克风测试</div>
-        &lt;!&ndash; <VoiceProgress :percentage="percentage" style="height: 3rem" />&ndash;&gt;
-      </div>-->
-      <!--      <div class="dialog-item">
-        <div class="dialog-title">扬声器</div>
-        <el-select
-          style="width:100%"
-          :value="activeSpeaker"
-          placeholder="请选择扬声器设备"
-        >
-          <el-option
-            v-for="item in speakerDeviceList"
-            :key="item.deviceId"
-            :label="item.label"
-            :value="item"
-          >
-          </el-option>
-        </el-select>
-      </div>
-      <div class="dialog-item loudspeaker">
-        <icon
-          name="loudspeaker"
-          color="#737882"
-          :size="18"
-          style="margin-left:8px"
-        />
-        <span>测试扬声器</span>
-      </div>-->
+
       <span slot="footer" class="clearfix">
         <div class="right">
-          <el-button @click="onDialogClose()">关 闭</el-button>
-          <el-button type="primary" @click="onDialogSave()">确 定</el-button>
+          <el-button @click="onDialogClose()">{{
+            $t("button.close")
+          }}</el-button>
+          <el-button type="primary" @click="onDialogSave()">{{
+            $t("button.yes")
+          }}</el-button>
         </div>
       </span>
     </div>
@@ -96,7 +75,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
 
 export default {
@@ -130,7 +109,11 @@ export default {
   },
 
   computed: {
-    ...mapState("workplace", ["activeCamera", "activeMicrophones"])
+    ...mapState("workplace", ["activeCamera", "activeMicrophones"]),
+    ...mapState("device", ["isMobile"]),
+    dialogWidth() {
+      return this.isMobile ? "80%" : "40%";
+    }
   },
   watch: {
     activeCamera() {
@@ -266,12 +249,15 @@ export default {
   /* background: #212224;*/
   min-height: 400px;
 }
-/*/deep/ .el-dialog__title {
-      color: white;
-    }*/
 
 .dialog-item {
   margin-bottom: 15px;
+  .select-item {
+    margin-bottom: 1.4rem;
+    @media screen and (max-width: 1440px) {
+      margin-bottom: 0.5rem;
+    }
+  }
   &.loudspeaker {
     width: 25%;
     border: 1px solid #ccc;
@@ -299,8 +285,9 @@ export default {
   }
 }
 .media-container {
-  width: 20rem;
-  height: 15rem;
+  width: 80%;
+  height: auto;
+  margin: 0 aut;
   video {
     width: 100%;
     height: 100%;

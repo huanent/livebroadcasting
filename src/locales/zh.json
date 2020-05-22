@@ -5,6 +5,7 @@
   "button.save": "保存",
   "button.cancel": "取消",
   "button.send": "发送",
+  "button.close": "关闭",
 
   "text.tips": "提示",
   "text.editSuccess": "编辑成功",
@@ -108,6 +109,10 @@
   "class.noJoinClassTips": "您还未加入相关课堂",
 
   "setting": "设置",
+  "setting.camera": "摄像头",
+  "setting.chooseCamera": "请选择视频输入设备",
+  "setting.micro": "麦克风",
+  "setting.chooseMicro": "请选择音频输入设备",
   "setting.settingPage": "设置页面",
   "setting.personInfoEdit": "资料设置",
   "setting.tips": "完善个人资料是让别人认识你的第一步",
