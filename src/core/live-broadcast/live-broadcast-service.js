@@ -63,13 +63,17 @@ class LiveBroadcastService {
         f => f.sender == ROLE.TEACHER && f.listener == ROLE.STUDENT
       );
 
+      let msgs = [];
+
       for (const i of config) {
         let value = getStateValue(store.state, i.path);
-        this.timService.sendSystemMsg("STATE_SYNC", data, {
+        msgs.push({
           value: value,
           path: i.path
         });
       }
+
+      this.timService.sendSystemMsg("STATE_SYNC", data, msgs);
     });
 
     return true;

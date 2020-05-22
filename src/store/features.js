@@ -56,11 +56,24 @@ const mutations = {
 };
 
 const actions = {
-  manualControlFeatures({ commit }, { id, propName, value }) {
-    liveBroadcastService.timService.sendSystemMsg("STATE_SYNC", id, {
-      value: value,
-      path: ["features", propName]
-    });
+  manualControlFeatures({ commit }, payload) {
+    if (payload.propName) {
+      liveBroadcastService.timService.sendSystemMsg("STATE_SYNC", payload.id, {
+        value: payload.value,
+        path: ["features", payload.propName]
+      });
+    } else {
+      let value = payload.value.map(m => ({
+        value: m.value,
+        path: ["features", m.propName]
+      }));
+
+      liveBroadcastService.timService.sendSystemMsg(
+        "STATE_SYNC",
+        payload.id,
+        value
+      );
+    }
   }
 };
 export default {
