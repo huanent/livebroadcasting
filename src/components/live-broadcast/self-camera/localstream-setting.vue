@@ -49,7 +49,11 @@
         </el-col>
         <el-col :xs="24" :sm="24" :md="12">
           <div class="media-container">
-            <video ref="video" autoplay="autoplay"></video>
+            <video
+              ref="video"
+              autoplay="autoplay"
+              id="test-stream-video"
+            ></video>
           </div>
         </el-col>
       </el-row>
@@ -234,8 +238,12 @@ export default {
         navigator.mediaDevices.getUserMedia(options).then(testStream => {
           this.testStream = testStream;
           this.$nextTick(() => {
-            this.$refs.video.srcObject = this.testStream;
-            this.percentage = this.initWave();
+            try {
+              this.$refs.video.srcObject = testStream;
+              this.percentage = this.initWave();
+            } catch (e) {
+              console.error(e);
+            }
           });
         });
       }

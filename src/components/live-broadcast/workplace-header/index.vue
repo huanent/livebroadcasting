@@ -127,18 +127,8 @@ export default {
       }
       console.log(this.$store.state.workplace.themeColor);
     },
-    // getCourseData(pageNum, pageSize, userId) {
-    //   getCourseData(pageNum, pageSize, userId).then(res => {
-    //     if (res.data.success) {
-    //       this.total = res.data.model.total;
-    //       this.courseFileList = res.data.model.list;
-    //       console.log(this.total, this.courseFileList);
-    //     }
-    //   });
-    // },
     onCoursewareOpen() {
       this.dialogVisible = true;
-      // this.getCourseData(this.pageNum, this.pageSize, this.userId);
     },
     onWidgetsOpen() {
       this.widegtsVisible = true;

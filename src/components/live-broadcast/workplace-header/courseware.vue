@@ -11,8 +11,10 @@
     <div class="courseware-content">
       <div v-show="role === ROLE.TEACHER">
         <el-upload
-          :action="'/api/courseFile/upload?userId=' + userId"
-          :file-list="fileList"
+          :action="
+            '/api/courseFile/upload?userId=' + userId + '&classId=' + classId
+          "
+          accept=".ppt"
           :limit="3"
           :on-preview="onFilePreview"
           :before-upload="beforeUpload"
@@ -24,9 +26,9 @@
           <el-button size="small" type="primary">点击上传</el-button>
         </el-upload>
       </div>
-      <div v-show="showProgressDialog">
-        ppt 转码中...
+      <div v-show="showProgressDialog" class="progress-wrap">
         <el-progress :percentage="transcodeProgress"></el-progress>
+        ppt 转码中...
       </div>
 
       <div class="table-container">
@@ -38,12 +40,6 @@
           @row-click="rowclick"
         >
           <el-table-column prop="filename" label="文件名"> </el-table-column>
-          <!--          <el-table-column prop="userId" label="upper"> </el-table-column>
-          <el-table-column prop="resolution" label="resolution	">
-          </el-table-column>
-          <el-table-column prop="pages" label="pages"> </el-table-column>-->
-          <!--      <el-table-column prop="hasTranscode" label="hasTranscode">
-          </el-table-column>-->
           <el-table-column
             fixed="right"
             label="操作"
@@ -124,9 +120,9 @@ import {
   transcodeCreate,
   transcodeDescribe,
   setCourseFile
-} from "../../../core/data/data-service";
+} from "@/core/data/data-service";
 
-import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { mapState } from "vuex";
 
 export default {
@@ -135,14 +131,14 @@ export default {
     return {
       dialogVisible: false,
       addFileVisible: false,
-      fileList: [],
       pageSize: 6,
       pageNum: 1,
       total: 0,
       courseFileList: [],
       transcodeProgress: 0,
       showProgressDialog: false,
-      userId: "jongwong",
+      userId: "",
+      classId: "",
       switchStatus: false,
       activeColor: "#48a7a8",
       inactiveColor: "#76acc3"
@@ -156,7 +152,11 @@ export default {
       this.dialogVisible = this.visible;
     }
   },
-  mounted() {},
+  created() {
+    this.userId = this.$route.query.createUser;
+    this.classId = this.$route.query.id;
+    this.getCourseData(this.pageNum, this.pageSize, this.classId);
+  },
   computed: {
     ...mapState("account", ["role"]),
     dialogWidth() {
@@ -166,19 +166,16 @@ export default {
       return "50%";
     }
   },
-  created() {
-    this.getCourseData(this.pageNum, this.pageSize, this.userId);
-  },
   methods: {
     pageChange(index) {
       this.pageNum = index;
-      this.getCourseData(this.pageNum, this.pageSize, this.userId);
+      this.getCourseData(this.pageNum, this.pageSize, this.classId);
     },
     liveroomLogout() {
       this.$router.push({ name: "Classlist" });
     },
-    getCourseData(pageNum, pageSize, userId) {
-      getCourseData(pageNum, pageSize, userId).then(res => {
+    getCourseData(pageNum, pageSize, classId) {
+      getCourseData(pageNum, pageSize, classId).then(res => {
         if (res.data.success) {
           this.total = res.data.model.total;
           this.courseFileList = res.data.model.list;
@@ -191,7 +188,7 @@ export default {
     },
     onCoursewareOpen() {
       //   this.visible = true;
-      this.getCourseData(this.pageNum, this.pageSize, this.userId);
+      this.getCourseData(this.pageNum, this.pageSize, this.classId);
     },
     onCoursewareClose(done) {
       //   this.visible = false;
@@ -215,8 +212,8 @@ export default {
       }
       return isLt100M && !isLt0M;
     },
-    async onUploadSuccess(res) {
-      console.log("成功upload");
+    onUploadSuccess(res) {
+      this.$refs.upload.clearFiles();
       if (res.success && res.model.url) {
         this.reTranscode(res.model);
       }
@@ -233,7 +230,7 @@ export default {
       console.log(scope._id);
       removeCourseFile(scope._id).then(res => {
         console.log("删除课件成功");
-        this.getCourseData(this.pageNum, this.pageSize, this.userId);
+        this.getCourseData(this.pageNum, this.pageSize, this.classId);
       });
     },
     rowclick(file) {
@@ -283,7 +280,7 @@ export default {
             };
             let res1 = await setCourseFile(body);
             if (res1) {
-              self.getCourseData(this.pageNum, this.pageSize, this.userId);
+              self.getCourseData(this.pageNum, this.pageSize, this.classId);
               self.closeProgressDialogFun();
             }
           }
@@ -306,5 +303,8 @@ export default {
   svg {
     fill: #0a818c;
   }
+}
+.progress-wrap {
+  margin: 10px 0 10px 5px;
 }
 </style>

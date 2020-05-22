@@ -12,9 +12,9 @@ export const enterRoom = function(userId, roomId) {
   return axios.get(`/liveRoom/enter?userId=${userId}&classId=${roomId}`);
 };
 
-export const getCourseData = function(pageNum, pageSize, userId) {
+export const getCourseData = function(pageNum, pageSize, classId) {
   return axios.get(
-    `/courseFile/list?pageNum=${pageNum}&pageSize=${pageSize}&userId=${userId}`
+    `/courseFile/list?pageNum=${pageNum}&pageSize=${pageSize}&classId=${classId}`
   );
 };
 

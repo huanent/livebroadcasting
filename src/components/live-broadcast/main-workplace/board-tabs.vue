@@ -24,11 +24,7 @@
           @click="$emit('head-toggle')"
           class="headview-toggle"
         >
-          <el-tooltip
-            :content="$t('workplace.cameraPanel')"
-            placement="bottom"
-            :open-delay="200"
-          >
+          <el-tooltip :content="$t('workplace.cameraPanel')" placement="bottom">
             <icon
               :name="cameraPanelVisibity ? 'indent' : 'outdent'"
               :size="18"
@@ -36,11 +32,7 @@
           </el-tooltip>
         </div>
         <div class="sidebar-toggle" @click="$emit('sidebar-toggle')">
-          <el-tooltip
-            :content="$t('workplace.sidebar')"
-            placement="bottom"
-            :open-delay="200"
-          >
+          <el-tooltip :content="$t('workplace.sidebar')" placement="bottom">
             <icon :name="isSidebarShow ? 'indent' : 'outdent'" :size="18" />
           </el-tooltip>
         </div>
