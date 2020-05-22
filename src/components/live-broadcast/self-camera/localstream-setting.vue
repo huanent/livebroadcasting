@@ -152,7 +152,6 @@ export default {
       this.microphonesDeviceList = [];
       this.speakerDeviceList = [];
       navigator.mediaDevices.enumerateDevices().then(mediaDevices => {
-        console.log(mediaDevices);
         mediaDevices.forEach(item => {
           let devices = {
             kind: item.kind,
@@ -248,15 +247,15 @@ export default {
       } else {
         options.video = false;
       }
-      navigator.mediaDevices.getUserMedia(options).then(testStream => {
-        this.testStream = testStream;
-        this.$nextTick(() => {
-          if (this.$refs.video.srcObject) {
+      if (options.video || options.audio) {
+        navigator.mediaDevices.getUserMedia(options).then(testStream => {
+          this.testStream = testStream;
+          this.$nextTick(() => {
             this.$refs.video.srcObject = this.testStream;
-          }
-          this.percentage = this.initWave();
+            this.percentage = this.initWave();
+          });
         });
-      });
+      }
     }
   }
 };
