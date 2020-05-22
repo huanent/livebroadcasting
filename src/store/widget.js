@@ -41,6 +41,11 @@ const state = {
     answer: {
       result: null
     }
+  },
+  rush: {
+    visible: false,
+    started: false,
+    name: null
   }
 };
 
@@ -91,6 +96,11 @@ const mutations = {
     state.clicker.answer = {
       result: result
     };
+  },
+  SET_RUSH_VISIBLE(state, visible) {
+    state.rush.visible = visible;
+    state.rush.started = visible;
+    state.rush.queue = [];
   }
 };
 

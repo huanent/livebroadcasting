@@ -48,6 +48,15 @@
             >随堂测试</a
           >
         </li>
+        <li>
+          <a
+            @click="
+              SET_RUSH_VISIBLE(true);
+              widgetVisible = false;
+            "
+            >抢答器</a
+          >
+        </li>
       </ul>
     </el-dialog>
     <question :visible.sync="questionVisible"></question>
@@ -75,7 +84,8 @@ export default {
       "SET_TIMER_VISIBLE",
       "SET_DICE_VISIBLE",
       "SET_DRAW_VISIBLE",
-      "SET_CLICKER_VISIBLE"
+      "SET_CLICKER_VISIBLE",
+      "SET_RUSH_VISIBLE"
     ]),
     onOpenQuestion() {
       this.questionVisible = true;

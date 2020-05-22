@@ -1,50 +1,47 @@
 <template>
-  <div class="content" :style="{ top: top + 'px', left: left + 'px' }">
+  <div
+    class="content"
+    :style="{ top: top + 'px', left: left + 'px' }"
+    v-if="rush.visible"
+  >
     <div
       class="contain"
-      :draggable="true"
+      :draggable="role == ROLE.TEACHER"
       @dragstart="dragstart"
       @drag="drag"
       ref="header"
       @dragend="dragend"
     >
       <div class="leftarea">
-        <div class="leftcircle" id="sa" :class="{addLeftAnimation:isleftAnimation}"></div>
+        <div
+          class="leftcircle"
+          id="sa"
+          :class="{ addLeftAnimation: isleftAnimation }"
+        ></div>
       </div>
       <div class="rightarea">
-        <div class="rightcircle" id="ss" :class="{addRightAnimation:isrightAnimation}"></div>
+        <div
+          class="rightcircle"
+          id="ss"
+          :class="{ addRightAnimation: isrightAnimation }"
+        ></div>
       </div>
       <div class="backyi"></div>
       <div class="backer"></div>
       <div class="backsan">
-        <!-- 开始抢答 -->
-        <span class="beginRushAnswer" @click="beginRush" v-if="beginTextVis">开始抢答</span>
-        <!-- 抢答中 -->
-        <div v-else class="continueRushAnswer">
-          <span>抢答中</span>
-          <div>
-            <span>0</span>
-            <span style=" color:#fff">/0</span>
-          </div>
-        </div>
-        <!-- 无人抢答 -->
-        <div class="continueRushAnswer withoutRushPeroson">
-          <span>无人抢答</span>
-        </div>
-
-        <!-- 重新开始，关闭按钮 -->
-        <div class="oncebegin">
-          <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-            <ellipse cx="70" cy="40" rx="70" ry="40" class="hover" style="fill:#077b76" />
-            <text x="43" y="17" fill="white" class="begin">重新开始</text>
-          </svg>
-        </div>
-        <div class="closebtn">关闭</div>
+        <controller @start="beginRush" v-if="role == ROLE.TEACHER" />
+        <answer v-else />
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapState, mapMutations } from "vuex";
+
+import Controller from "./controller";
+import Answer from "./answer";
+import { ROLE } from "../../../../models/role";
+
 export default {
   name: "App",
   data() {
@@ -55,10 +52,25 @@ export default {
       leftOffset: 0,
       isleftAnimation: false,
       isrightAnimation: false,
-      beginTextVis: true
+      showRestart: false
     };
   },
+  components: {
+    Controller,
+    Answer
+  },
+  computed: {
+    ...mapState("widget", ["rush"]),
+    ...mapState("account", ["role"]),
+    visible() {
+      if (role == ROLE.TEACHER) return this.rush.visible;
+      else {
+        return this.rush.stared;
+      }
+    }
+  },
   methods: {
+    ...mapMutations("widget", ["SET_RUSH_VISIBLE"]),
     dragstart(e) {
       e.dataTransfer.setDragImage(document.createElement("div"), 0, 0);
       let rect = this.$refs.header.getBoundingClientRect();
@@ -76,36 +88,33 @@ export default {
       let rect = this.$refs.header.getBoundingClientRect();
       this.top = e.y - this.topOffset;
       this.left = e.x - this.leftOffset;
-      //   this.$emit("moved", { x: this.left, y: this.top });
     },
 
-    remind() {
-      // 动画完成后dosomething
-      console.log("success");
-    },
     async animationSuccess() {
-      let a = await new Promise(res => {
+      await new Promise(res => {
         document.addEventListener("animationend", () => {
           this.isleftAnimation = true;
           res();
         });
       });
-      let b = await new Promise(res => {
+      await new Promise(res => {
         document.addEventListener("animationend", () => {
           res();
-          this.remind();
         });
       });
     },
-    beginRush() {
+
+    async beginRush(callback) {
       this.isrightAnimation = true;
-      this.beginTextVis = false;
-      this.animationSuccess();
+      await this.animationSuccess();
+      this.isleftAnimation = false;
+      this.isrightAnimation = false;
+      callback();
     }
   }
 };
 </script>
-<style  scoped lang="scss">
+<style scoped lang="scss">
 .content {
   z-index: 1000;
   position: fixed;
@@ -201,55 +210,6 @@ export default {
     text-align: center;
     color: rgb(219, 213, 213);
     font-size: 20px;
-    .beginRushAnswer {
-      height: 140px;
-      line-height: 140px;
-      text-shadow: 2px 5px 8px #fff;
-      &:hover {
-        box-shadow: 0px 0px 1 rgb(78, 67, 67);
-      }
-    }
-    .continueRushAnswer {
-      height: 140px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      color: #0a818c;
-      &:hover {
-        box-shadow: 0px 0px 1 rgb(78, 67, 67);
-      }
-    }
-    .withoutRushPeroson {
-      color: #fff;
-      text-shadow: 2px 5px 8px #fff;
-    }
-    
-    .oncebegin {
-      position: absolute;
-      width: 140px;
-      height: 40px;
-      bottom: 6px;
-      .hover:hover {
-        fill: #18908a !important;
-      }
-      .begin {
-        font-size: 12px;
-      }
-    }
-    .closebtn {
-      position: absolute;
-      bottom: 0px;
-      width: 140px;
-      text-align: center;
-      color: #fff;
-      height: 24px;
-      background: #2a6469;
-      font-size: 14px;
-
-      &:hover {
-        background: #0f9ca9;
-      }
-    }
   }
 }
 .addRightAnimation {
