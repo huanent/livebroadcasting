@@ -288,9 +288,8 @@ cover component Multiselect style
   margin-right: 0.25rem;
   cursor: pointer;
   @include themeify {
-    background-color: themed("toolbar_bg");
+    background: themed("background_color4");
   }
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   .svg-icon {
     @include themeify {
       fill: themed("font_color2");
