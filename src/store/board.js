@@ -19,7 +19,7 @@ const state = {
 const mutations = {
   // 设置画笔颜色
   SET_BRUSH_COLOR(state, color) {
-    state.brushColor = this.color;
+    state.brushColor = color;
     liveBroadcastService.boardService.activeBoard.setBrushColor(color);
   },
   SET_BRUSH_THIN(state, num) {
