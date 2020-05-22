@@ -29,7 +29,7 @@
         </div>
         <div class="main-workplace-panel">
           <div
-            v-if="role=== ROLE.TEACHER"
+            v-if="role === ROLE.TEACHER"
             @click="toggleCameraPanel"
             class="headview-toggle"
           >
@@ -87,15 +87,13 @@ export default {
       originPosition: [0, 0],
       total: 0,
       audioLevelTimer: undefined,
-      isSidebarShow: true,
+      isSidebarShow: true
     };
   },
   computed: {
     ...mapState("account", ["role", "userInfo"]),
     ...mapState("workplace", ["cameraPanelVisibity"]),
-    ...mapState("features", [
-      "canControlBoard"
-    ])
+    ...mapState("features", ["canControlBoard"])
   },
 
   async mounted() {
@@ -159,7 +157,6 @@ export default {
         },
         writeStyle: (grid, gridTemplateProp, gridTemplateStyle) => {
           if (this.cameraPanelVisibity) {
-            console.log(gridTemplateStyle);
             grid.style[gridTemplateProp] = gridTemplateStyle;
           }
         }
@@ -169,9 +166,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations("features", [
-      "SET_TIMESTAMP"
-    ]),
+    ...mapMutations("features", ["SET_TIMESTAMP"]),
     ...mapMutations("account", ["SET_ROLE"]),
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
     ...mapMutations("workplace", ["SET_CAMERA_PANEL_VISIBILITY"]),

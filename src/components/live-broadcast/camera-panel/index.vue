@@ -75,6 +75,8 @@ export default {
   },
   mounted() {
     this.render();
+  },
+  updated() {
     Emitter.on("split-change", () => {
       let el = this.$refs.swiper.parentElement;
       if (!el) return;
@@ -168,7 +170,7 @@ export default {
       });
     },
     render() {
-      let el = this.$refs.swiper;
+      let el = this.$refs["swiper"];
       if (!el) return;
       this.perColumnWidth = el.clientWidth / this.slidesPerView;
     },
