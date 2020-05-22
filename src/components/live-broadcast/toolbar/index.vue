@@ -274,9 +274,10 @@ export default {
       let el = this.$refs.toolbar;
       if (!el) return;
       let parentEl = el.parentElement;
+      let toolbarWidth = el.getBoundingClientRect().width;
       let pw = parentEl.getBoundingClientRect().width;
       document.onmousemove = e => {
-        let right = pw - (e.clientX - disX);
+        let right = pw - (e.clientX + toolbarWidth - disX);
         let top = e.clientY - disY;
         if (!this.checkEdge(right, top)) {
           this.right = right;

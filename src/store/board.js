@@ -27,12 +27,6 @@ const mutations = {
     liveBroadcastService.boardService.activeBoard.setBrushThin(num);
   },
   SET_TOOL_PEN(state) {
-    if (
-      !liveBroadcastService ||
-      !liveBroadcastService.boardService.activeBoard
-    ) {
-      return;
-    }
     state.toolType = 1;
     liveBroadcastService.boardService.activeBoard.setToolType(1);
   },
@@ -66,7 +60,7 @@ const mutations = {
     liveBroadcastService.boardService.activeBoard.setToolType(12);
   },
   SET_TEXT_COLOR(state, color) {
-    state.textColor = this.color;
+    state.textColor = color;
     liveBroadcastService.boardService.activeBoard.setTextColor(color);
   },
   SET_TEXT_SIZE(state, num) {
