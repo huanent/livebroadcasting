@@ -20,6 +20,10 @@
   "courseware.toboard": "加载白板",
   "courseware.download": "下载课件",
 
+  "workplace.whiteBoard": "白板展示",
+  "workplace.shareScreen": "共享屏幕",
+  "workplace.pushCamera": "摄像推送",
+
   "login": "登录",
   "logout": "退出",
   "login.title": "Live boardcasting",

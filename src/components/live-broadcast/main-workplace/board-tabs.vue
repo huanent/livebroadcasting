@@ -76,19 +76,19 @@ export default {
     return {
       tabItemList: [],
       d_activeIndex: this.activeIndex,
-      caretIconName: "settings",
+      caretIconName: "angle-down",
       selected: undefined,
       options: [
         {
-          title: "White board",
+          title: this.$t("workplace.whiteBoard"),
           type: "board"
         },
         {
-          title: "Share screen",
+          title: this.$t("workplace.shareScreen"),
           type: "screen"
         },
         {
-          title: "Push camera",
+          title: this.$t("workplace.pushCamera"),
           type: "camera"
         }
       ]
@@ -191,17 +191,14 @@ export default {
 .tab-item-active {
   @include themeify {
     background: themed("background_color4");
-    color: themed("color_opposite");
+    color: themed("font_color1");
   }
-  background-color: #1a1b1d;
 }
 
 .workplace-settings {
   float: right;
-  justify-content: center;
-  text-align: left;
   width: 7.5rem;
-  margin-right: 2rem;
+  margin-right: 0.25rem;
   line-height: 1.8rem;
   .type-text {
     color: #ffffff;
@@ -209,18 +206,23 @@ export default {
     width: 100%;
   }
   .select-header {
-    text-align: left;
+    text-align: center;
     z-index: 100;
-    background-color: none;
+    @include themeify {
+      background: themed("background_color4");
+      color: themed("font_color1");
+    }
     padding: 0 0.5rem;
     cursor: pointer;
     span {
       padding-right: 0.5rem;
+      font-size: 0.9rem;
+      letter-spacing: 0.02rem;
     }
   }
   .select-option {
     z-index: 100;
-    padding: 0 1.5rem 0 0.5rem;
+    padding: 0 1rem 0 1.2rem;
     cursor: pointer;
     @include themeify {
       background-color: themed("toolbar_bg");

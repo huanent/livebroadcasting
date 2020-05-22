@@ -75,11 +75,9 @@ export default {
   },
   mounted() {
     this.render();
-  },
-  updated() {
     Emitter.on("split-change", () => {
+      if (!this.$refs.swiper || !this.$refs.swiper.parentElement) return;
       let el = this.$refs.swiper.parentElement;
-      if (!el) return;
       let slidesPerColumn = Math.floor(el.clientHeight / this.perColumnHeight);
       if (slidesPerColumn !== this.slidesPerColumn && slidesPerColumn >= 1) {
         this.slidesPerColumn = slidesPerColumn;

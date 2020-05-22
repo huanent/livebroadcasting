@@ -148,6 +148,7 @@ export default {
     }, 500);
 
     Emitter.on("split-change", () => {
+      if (!this.$refs.toolbar) return;
       let el = this.$refs.toolbar;
       let parentEl = el.parentElement;
       if (this.toolHight < el.clientHeight) {
