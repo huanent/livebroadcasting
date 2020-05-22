@@ -121,7 +121,8 @@ export default {
     .stu_name {
       border-radius: 2px;
       background: #eee;
-      letter-spacing: 10px;
+      text-align: center;
+      overflow: hidden;
       width: 120px;
       height: 30px;
       display: inline-block;
