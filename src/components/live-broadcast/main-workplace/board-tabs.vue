@@ -221,8 +221,12 @@ export default {
   margin-right: 0.25rem;
   line-height: 1.8rem;
   .type-text {
-    color: #ffffff;
-    font-size: 14px;
+    @include themeify {
+      color: themed("font_color1");
+    }
+    font-size: 0.9rem;
+    letter-spacing: 0.02rem;
+    text-align: center;
     width: 100%;
   }
   .select-header {
