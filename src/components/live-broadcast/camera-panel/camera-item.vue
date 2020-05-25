@@ -22,8 +22,8 @@
       ref="video"
       class="remote-video-view"
     ></div>
-    <div :id="item.id" class="remote-video-view">
-      <icon v-show="!video" class="no-video" name="person" color="#34363b" />
+    <div v-show="!video" :id="item.id" class="remote-video-view">
+      <icon class="no-video" name="person" color="#34363b" />
     </div>
     <div class="self-camera-footer">
       <div>
