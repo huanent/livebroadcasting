@@ -23,7 +23,7 @@
             <img :src="item.url" :alt="$t('class.classCover')" />
           </div>
           <div class="detail-content">
-            <div class="field">
+            <div class="field" :title="item.title">
               <span>{{ item.title }}</span>
             </div>
             <div class="field">
@@ -222,13 +222,14 @@ export default {
         width: 60%;
         .field {
           margin: 0.5rem 0.5rem 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         .field:nth-child(1) {
           margin: 0 0.5rem;
-          font-size: 1.5rem;
-          overflow: hidden;
+          font-size: 1.4rem;
           height: 2rem;
-          text-overflow: ellipsis;
         }
         .item-btn-group {
           display: flex;
