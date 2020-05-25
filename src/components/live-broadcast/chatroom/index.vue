@@ -24,8 +24,6 @@ export default {
       const currentScrollHeight = this.$refs["chatroom-body"].$refs[
         "message-list"
       ].$el.scrollHeight;
-      console.log(currentScrollHeight);
-      // this.$refs["chatroom-body"].scrollToCurrent(currentScrollHeight);
       this.$refs["chatroom-body"].scrollToBottom();
     },
     async sendMessage(content) {

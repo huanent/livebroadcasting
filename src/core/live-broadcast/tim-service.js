@@ -1,6 +1,5 @@
 import TIM from "tim-js-sdk";
 import COS from "cos-js-sdk-v5";
-import store from "@/store";
 import { Emitter } from "../emit";
 window["COS"] = COS;
 

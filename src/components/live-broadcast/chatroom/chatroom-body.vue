@@ -59,7 +59,6 @@ export default {
       if (ele) {
         this.$nextTick(() => {
           const scrollHeight = ele.scrollHeight;
-          console.log(height, scrollHeight);
           this.$nextTick(() => {
             ele.scrollTop = scrollHeight - height;
           });

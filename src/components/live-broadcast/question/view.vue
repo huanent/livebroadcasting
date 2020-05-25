@@ -116,7 +116,6 @@ export default {
     },
     async handleSubmit() {
       this.submiting = true;
-      console.log(this.questions);
       await this.sendExamAnsers(this.questions);
       this.submiting = false;
       this.$notify({

@@ -81,7 +81,7 @@ class LiveBroadcastService {
   async destroy() {
     if (this.boardService) this.boardService.destroy();
     if (this.timService) await this.timService.logout();
-    if (this.trtcService) this.trtcService.quit();
+    if (this.trtcService) this.trtcService.destroy();
     this.initStatus();
     liveBroadcastService = null;
   }

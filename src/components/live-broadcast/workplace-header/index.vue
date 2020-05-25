@@ -125,7 +125,6 @@ export default {
           this.$store.state.workplace.themeColor
         );
       }
-      console.log(this.$store.state.workplace.themeColor);
     },
     onCoursewareOpen() {
       this.dialogVisible = true;
@@ -137,7 +136,6 @@ export default {
       this.featuresControlVisible = true;
     },
     handleExceed(file) {
-      console.log("文件超出");
     },
     onCoursewareClose(done) {
       this.dialogVisible = false;
