@@ -178,6 +178,7 @@ export default {
   height: 1.2rem;
   display: inline-block;
   cursor: pointer;
+  border-bottom: rgba(0, 0, 0, 0.1) 2px solid;
   &:hover {
     @include themeify {
       background: themed("background_color4");
@@ -210,6 +211,7 @@ export default {
   @include themeify {
     background: themed("background_color4");
     color: themed("font_color1");
+    border-bottom: #0a818c 2px solid;
   }
 }
 
