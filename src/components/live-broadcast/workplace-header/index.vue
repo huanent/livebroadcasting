@@ -49,6 +49,7 @@
     </div>
     <Courseware
       :visible="dialogVisible"
+      :creator="creator"
       :before-close="onCoursewareClose"
       :append-to-body="true"
       @close-dialogStatus="close_dialog"
@@ -95,6 +96,9 @@ export default {
       inactiveColor: "#76acc3",
       showRecoderButton: false
     };
+  },
+  props: {
+    creator: String
   },
   computed: {
     ...mapState("account", ["role"])

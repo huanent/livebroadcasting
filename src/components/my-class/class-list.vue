@@ -48,7 +48,7 @@
                 v-else
                 :to="{
                   name: 'Liveroom',
-                  query: { createUser: item.createUser, id: item.classId }
+                  query: { id: item.classId }
                 }"
                 >{{ $t("class.enterClass") }}</router-link
               >

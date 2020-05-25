@@ -145,7 +145,8 @@ export default {
     };
   },
   props: {
-    visible: Boolean
+    visible: Boolean,
+    creator: String
   },
   watch: {
     visible() {
@@ -153,7 +154,7 @@ export default {
     }
   },
   created() {
-    this.userId = this.$route.query.createUser;
+    this.userId = this.creator;
     this.classId = this.$route.query.id;
     this.getCourseData(this.pageNum, this.pageSize, this.classId);
   },

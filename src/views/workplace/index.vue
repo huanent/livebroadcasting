@@ -1,7 +1,7 @@
 <template>
   <div class="workplace-panel">
     <div class="workplace-header">
-      <WorkplacePanelHeader></WorkplacePanelHeader>
+      <WorkplacePanelHeader :creator="classCreator"></WorkplacePanelHeader>
     </div>
     <div
       :class="{
@@ -52,6 +52,7 @@
 
 <script>
 import Split from "split-grid";
+import classApi from "@api/class";
 import WorkplacePanelHeader from "@c/live-broadcast/workplace-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
@@ -74,6 +75,7 @@ export default {
       gridStyle: undefined,
       originPosition: [0, 0],
       total: 0,
+      classCreator: "",
       audioLevelTimer: undefined,
       isSidebarShow: true
     };
@@ -85,11 +87,20 @@ export default {
   },
 
   async mounted() {
-    await this.enterRoom(this.$route.query);
+    const classId = this.$route.query.id;
+    const res = await classApi.classGet(classId);
+    if (res.data.success) {
+      this.classCreator = res.data.model.createUser;
+    } else {
+      this.$message.error("没有对应的课堂信息");
+    }
+    const roomData = {
+      createUser: this.classCreator,
+      id: this.$route.query.id
+    };
+    await this.enterRoom(roomData);
     const role =
-      this.$route.query.createUser == this.userInfo.username
-        ? ROLE.TEACHER
-        : ROLE.STUDENT;
+      this.classCreator == this.userInfo.username ? ROLE.TEACHER : ROLE.STUDENT;
     this.SET_ROLE(role);
     await initLiveBroadcastService();
 
