@@ -75,6 +75,7 @@ import Recoder from "./recorder.vue";
 import Courseware from "./courseware";
 import FeaturesControl from "./features-control";
 import { Emitter } from "../../../core/emit";
+import { ROLE } from "../../../models/role";
 export default {
   name: "WorkplaceHeader",
   data() {

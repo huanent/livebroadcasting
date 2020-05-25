@@ -19,7 +19,6 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { ROLE } from "../../../store/account";
 
 export default {
   props: ["position", "nameWidget", "notdrag"],

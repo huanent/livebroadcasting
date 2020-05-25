@@ -1,7 +1,7 @@
 import TRTC from "trtc-js-sdk";
 import store from "@/store";
 import { Emitter } from "../emit";
-import { ROLE } from "../../store/account";
+import { ROLE } from "../../models/role";
 import { enterRoom } from "../data/data-service.js";
 import config from "../state-sync/config";
 import { liveBroadcastService } from "./live-broadcast-service";
