@@ -139,3 +139,8 @@ body {
 .hide {
   visibility: hidden;
 }
+.tx_board_canvas_wrap {
+  @include themeify {
+    background-color: themed("board_bg");
+  }
+}

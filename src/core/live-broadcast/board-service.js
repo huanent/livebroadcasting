@@ -11,7 +11,8 @@ export class BoardService {
     textColor: store.state.board.textColor,
     textSize: store.state.board.textSize,
     toolType: store.state.board.toolType,
-    drawEnable: store.state.features.canControlBoard
+    drawEnable: store.state.features.canControlBoard,
+    globalBackgroundColor: "rgba(0, 0, 0, 0)"
   };
 
   async init(token) {

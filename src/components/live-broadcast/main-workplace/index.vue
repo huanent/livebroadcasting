@@ -178,7 +178,7 @@ export default {
   width: 100%;
   position: relative;
   @include themeify {
-    background: themedOpacity("color_opposite", 0.005);
+    background: mix(themed("background_color4"), themed("color_like"), 90%);
   }
 }
 
