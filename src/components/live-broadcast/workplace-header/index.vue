@@ -15,16 +15,26 @@
         ></icon>
       </el-tooltip>
 
-      <el-tooltip :content="'应用中心'" placement="bottom" :open-delay="200">
+      <el-tooltip
+        v-if="role === ROLE.TEACHER"
+        :content="'应用中心'"
+        placement="bottom"
+        :open-delay="200"
+      >
         <icon @click.native="onWidgetsOpen" name="widgets" :size="20"></icon>
       </el-tooltip>
-      <el-tooltip :content="'控制面板'" placement="bottom" :open-delay="200">
+      <!--      <el-tooltip
+        v-if="role === ROLE.TEACHER"
+        :content="'控制面板'"
+        placement="bottom"
+        :open-delay="200"
+      >
         <icon
           name="settings"
           :size="20"
           @click.native="onShowFeaturesControlVisible"
         ></icon>
-      </el-tooltip>
+      </el-tooltip>-->
       <!--    <el-tooltip :content="'个人设置'" placement="bottom" :open-delay="200">
         <icon name="settings" :size="20"></icon>
       </el-tooltip>-->
@@ -50,7 +60,7 @@
 
 <script>
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 // import {
 //   getCourseData,
 //   removeCourseFile,
@@ -85,6 +95,9 @@ export default {
       inactiveColor: "#76acc3",
       showRecoderButton: false
     };
+  },
+  computed: {
+    ...mapState("account", ["role"])
   },
   watch: {
     switchStatus(value) {
@@ -135,8 +148,7 @@ export default {
     onShowFeaturesControlVisible() {
       this.featuresControlVisible = true;
     },
-    handleExceed(file) {
-    },
+    handleExceed(file) {},
     onCoursewareClose(done) {
       this.dialogVisible = false;
       if (done && done instanceof Function) {
