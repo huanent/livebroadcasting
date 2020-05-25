@@ -61,7 +61,7 @@
 
 <script>
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-import { mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 // import {
 //   getCourseData,
 //   removeCourseFile,
@@ -117,14 +117,18 @@ export default {
     });
   },
   methods: {
+    ...mapActions("features", ["manualControlFeatures"]),
     ...mapMutations("workplace", ["SET_THEME_COLOR", "QUIT_SERVICE"]),
     close_dialog(val) {
       this.dialogVisible = false;
     },
-    // pageChange(index) {
-    //   this.pageNum = index;
-    //   this.getCourseData(this.pageNum, this.pageSize, this.userId);
-    // },
+    classFinish() {
+      this.manualControlFeatures({
+        id: ROLE.STUDENT,
+        propName: "classing",
+        value: false
+      });
+    },
     liveroomLogout() {
       this.$router.push({ name: "Classlist" });
     },

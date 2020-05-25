@@ -9,7 +9,8 @@ export const initFeaturesState = function(role) {
     audioStatus: true,
     subscribeVideo: true,
     subscribeAudio: isTeacher,
-    handUp: isTeacher
+    handUp: isTeacher,
+    classing: true
   };
 };
 
@@ -20,7 +21,8 @@ const state = {
   audioStatus: true,
   subscribeVideo: true,
   subscribeAudio: false,
-  handUp: false
+  handUp: false,
+  classing: true
 };
 
 const mutations = {

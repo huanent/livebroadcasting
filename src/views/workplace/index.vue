@@ -83,7 +83,7 @@ export default {
   computed: {
     ...mapState("account", ["role", "userInfo"]),
     ...mapState("workplace", ["cameraPanelVisibity"]),
-    ...mapState("features", ["canControlBoard"])
+    ...mapState("features", ["canControlBoard", "classing"])
   },
 
   async mounted() {
@@ -205,6 +205,18 @@ export default {
         liveBroadcastService.boardService.activeBoard
       ) {
         liveBroadcastService.boardService.activeBoard.setDrawEnable(value);
+      }
+    },
+    classing(value) {
+      if (value === false) {
+        this.$notify({
+          title: "下课啦",
+          message: "5分钟后将会离开这个页面",
+          type: "warning"
+        });
+        setTimeout(() => {
+          this.$router.push("/");
+        }, 1000 * 60 * 5);
       }
     }
   },
