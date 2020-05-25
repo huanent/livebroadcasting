@@ -109,18 +109,27 @@ export default {
       total: 0,
       searchValue: "",
       searchField: "title",
-      classList: [],
       loading: false,
-      activeName: "creator"
+      activeName: "creator",
+      createdDataCache: false,
+      classCreatedList: [],
+      joinedDataCache: false,
+      classJoinedList: []
     };
   },
   computed: {
     list() {
       return this.isSearching ? this.searchResult : this.classList;
+    },
+    classList() {
+      return this.activeName === "creator"
+        ? this.classCreatedList
+        : this.joinedDataCache;
     }
   },
   created() {
     this.getListData(this.activeName, this.pageNum, this.pageSize);
+    this.handleDataCache(this.activeName);
   },
   methods: {
     viewDetail(classId) {
@@ -152,6 +161,14 @@ export default {
       this.$refs["editDialog"].init();
       this.$refs["editDialog"].open();
     },
+    handleDataCache(activeName) {
+      if (activeName === "creator") {
+        this.createdDataCache = true;
+      }
+      if (activeName === "participant") {
+        this.joinedDataCache = true;
+      }
+    },
     handleEditSuccess(data) {
       this.classInfo = data;
       this.handleRefresh();
@@ -163,7 +180,11 @@ export default {
         if (res.data.success) {
           const data = res.data.model;
           this.total = data.total;
-          this.classList = data.list;
+          if (type === "creator") {
+            this.classCreatedList = data.list;
+          } else {
+            this.joinedDataCache = data.list;
+          }
           this.loading = false;
         } else {
           this.$message.error($t("class.classDataAcquisitionFailed"));
@@ -177,7 +198,10 @@ export default {
     handleTabChange() {
       this.pageNum = 1;
       this.isSearching = false;
+      if (this.activeName === "creator" && this.createdDataCache) return;
+      if (this.activeName === "participant" && this.joinedDataCache) return;
       this.getListData(this.activeName, this.pageNum, this.pageSize);
+      this.handleDataCache(this.activeName);
     },
     handlePageChange(index) {
       this.pageNum = index;

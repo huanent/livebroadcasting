@@ -1,13 +1,7 @@
 import Vue from "vue";
 import features from "./features";
 import store from "@/store";
-export const ROLE = {
-  STUDENT: "ROLE_STUDENT",
-  TEACHER: "ROLE_TEACHER"
-};
-
-Vue.prototype.ROLE = ROLE;
-
+import { ROLE } from "../models/role";
 const state = {
   userInfo: null,
   lb_expires: "",

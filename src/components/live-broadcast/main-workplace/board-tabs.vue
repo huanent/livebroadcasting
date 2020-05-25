@@ -25,15 +25,12 @@
           class="headview-toggle"
         >
           <el-tooltip :content="$t('workplace.cameraPanel')" placement="bottom">
-            <icon
-              :name="cameraPanelVisibity ? 'indent' : 'outdent'"
-              :size="18"
-            ></icon>
+            <icon name="monitor" :size="18"></icon>
           </el-tooltip>
         </div>
         <div class="sidebar-toggle" @click="$emit('sidebar-toggle')">
           <el-tooltip :content="$t('workplace.sidebar')" placement="bottom">
-            <icon :name="isSidebarShow ? 'indent' : 'outdent'" :size="18" />
+            <icon name="comments" :size="18" />
           </el-tooltip>
         </div>
         <div class="workplace-settings">
@@ -233,7 +230,7 @@ export default {
     text-align: center;
     z-index: 100;
     @include themeify {
-      background: themed("background_color4");
+      background: themed("background_color2");
       color: themed("font_color1");
     }
     padding: 0 0.5rem;
@@ -292,7 +289,7 @@ cover component Multiselect style
   margin-right: 0.25rem;
   cursor: pointer;
   @include themeify {
-    background: themed("background_color4");
+    background: themed("background_color2");
   }
   .svg-icon {
     @include themeify {
@@ -310,9 +307,9 @@ cover component Multiselect style
 }
 
 .headview-toggle {
-  .svg-icon {
+  /*  .svg-icon {
     transform: rotate(-90deg);
-  }
+  }*/
 }
 
 .head-right {

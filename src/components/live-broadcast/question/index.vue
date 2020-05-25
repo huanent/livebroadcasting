@@ -157,7 +157,6 @@ export default {
       });
     },
     async handleSend() {
-      console.log(this.selects);
       this.sending = true;
       await this.sendExamination(this.selects);
       this.handleReset();

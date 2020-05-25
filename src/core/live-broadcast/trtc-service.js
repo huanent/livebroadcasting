@@ -1,7 +1,7 @@
 import TRTC from "trtc-js-sdk";
 import store from "@/store";
 import { Emitter } from "../emit";
-import { ROLE } from "../../store/account";
+import { ROLE } from "../../models/role";
 import { enterRoom } from "../data/data-service.js";
 import config from "../state-sync/config";
 import { liveBroadcastService } from "./live-broadcast-service";
@@ -17,10 +17,11 @@ export class TrtcService {
   liveBroadcastService;
   localStreamTypeCache;
   streamCopy = {};
+  token;
   constructor() {}
 
-  token;
   async init(roomId, liveBroadcastService) {
+    TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.ERROR);
     this.liveBroadcastService = liveBroadcastService;
     this.token = store.state.workplace.token;
     let client = this.createClient(
@@ -50,9 +51,11 @@ export class TrtcService {
     await client.publish(localStream);
     store.commit("localStream/IS_INIT");
   }
-  quit() {
-    let client = this.clientList["default"];
-    client && client.leave();
+  destroy() {
+    for (let i in this.clientList) {
+      let client = this.clientList[i];
+      client && client.leave();
+    }
   }
   async getDefaultDevice() {
     let mediaDevices = await navigator.mediaDevices.enumerateDevices();
@@ -112,6 +115,7 @@ export class TrtcService {
     });
   }
   localStreamPlay(data) {
+    data.el.innerHTML = "";
     let stream;
     let role = store.state.account.role;
     if (!data.isCopy) {
@@ -133,22 +137,6 @@ export class TrtcService {
         }
       }
     }
-    /*    if (role === ROLE.TEACHER) {
-      stream = this.localStream;
-      if (stream && stream.userId_) {
-        this.copyStreamPlay(stream, data.el, stream.userId_, {
-          video: true,
-          audio: true
-        });
-      }
-    } else {
-      stream = this.getRemoteStreamByUserId(
-        this.liveBroadcastService.teacherStreamUserId
-      );
-      if (stream && stream.userId_) {
-        this.copyStreamPlay(stream, data.el, stream.userId_);
-      }
-    }*/
   }
   localStreamStopPlay(data) {
     if (!data.isCopy) {
@@ -158,7 +146,8 @@ export class TrtcService {
       this.copyStreamStopPlay(this.localStream.userId_);
     }
   }
-  async copyStreamPlay(stream, elmentOrId, id, options) {
+  async copyStreamPlay(stream, elmentOrId, id, options, videoProfile) {
+    elmentOrId.innerHTML = "";
     let mediaStream = stream.mediaStream_;
 
     let createStreamOptions = { mirror: false };
@@ -177,12 +166,15 @@ export class TrtcService {
     }
     let newStream = TRTC.createStream(createStreamOptions);
     await newStream.initialize();
-    newStream.setVideoProfile({
-      width: 1920,
-      height: 1080,
-      frameRate: 5,
-      bitrate: 1600
-    });
+    if (!videoProfile) {
+      videoProfile = {
+        width: 1920,
+        height: 1080,
+        frameRate: 5,
+        bitrate: 1600
+      };
+    }
+    newStream.setVideoProfile(videoProfile);
     this.streamCopy[id] = newStream;
     this.streamCopy[id].play(elmentOrId);
     this.coverPlayStyle(this.streamCopy[id]);
@@ -199,6 +191,8 @@ export class TrtcService {
     }
   }
   teacherStreamPlay(elmentOrId) {
+    elmentOrId.innerHTML = "";
+
     let stream = this.getRemoteStreamByUserId(store.state.workplace.teachId);
     if (stream && stream.play) {
       stream.play(elmentOrId);
@@ -212,8 +206,11 @@ export class TrtcService {
     }
   }
   getRemoteStreamByUserId(id) {
-    if (!this.remoteStreamList[id] && this.remoteStreamList["kblive_" + id]) {
-      id = "kblive_" + id;
+    if (
+      !this.remoteStreamList[id] &&
+      this.remoteStreamList[addUserIdPrefix(id)]
+    ) {
+      id = addUserIdPrefix(id);
     }
     if (this.remoteStreamList[id] && this.remoteStreamList[id].stream) {
       let stream = this.remoteStreamList[id].stream;
@@ -238,7 +235,18 @@ export class TrtcService {
       let stream;
       stream = this.getShareStream();
       if (stream && stream.play) {
-        stream.play(data.el);
+        this.copyStreamPlay(
+          stream,
+          data.el,
+          stream.userId_,
+          { video: true, audio: false },
+          {
+            width: 1920,
+            height: 1080,
+            frameRate: 30,
+            bitrate: 3200
+          }
+        );
         this.coverPlayStyle(stream);
       } else {
         setTimeout(() => {
@@ -280,9 +288,8 @@ export class TrtcService {
     if (role && role === ROLE.STUDENT) {
       let stream = this.getShareStream();
       if (stream && stream.stop) {
-        stream.stop();
+        this.copyStreamStopPlay(stream.userId_);
         this.clearShareStream();
-        data.el.innerHTML = "";
       }
     } else {
       let stream = this.localShareScreenStream;
@@ -316,7 +323,7 @@ export class TrtcService {
       });
     }
 
-    this.localShareScreenStream.setScreenProfile("1080p");
+    this.localShareScreenStream.setScreenProfile("4k");
     await this.localShareScreenStream.initialize();
     await this.shareScreenClient.publish(this.localShareScreenStream);
     return this.localShareScreenStream;
@@ -400,86 +407,30 @@ export class TrtcService {
     let self = this;
     client.on("stream-added", async event => {
       const remoteStream = event.stream;
-      console.log("远端流增加: " + remoteStream.id_);
-      //role是学生只订阅分享屏幕流和老师端语音视频流
-      console.log(remoteStream);
       self.remoteStreamList[remoteStream.userId_] = {
         stream: remoteStream,
         status: "added"
       };
-
       await this.subscribeRemoteStream(remoteStream.userId_);
-      /*      if (store.state.account.role === ROLE.STUDENT) {
-        let regex = /.*(share_screen)$/;
-        let con = regex.test(remoteStream.userId_);
-        if (con) {
-          client.subscribe(remoteStream);
-        }
-        if (
-          remoteStream.userId_ ===
-          "kblive_" + this.liveBroadcastService.teacherStreamUserId
-        ) {
-          client.subscribe(remoteStream);
-        }
-      } else {
-        client.subscribe(remoteStream);
-      }*/
-      /*client.subscribe(remoteStream);*/
     });
 
     client.on("stream-subscribed", event => {
-      var self = this;
       const remoteStream = event.stream;
       this.remoteStreamListProfile = this.getStreamProfile();
       store.commit(
         "remoteStream/SET_REMOTE_STREAM_LIST",
         self.remoteStreamListProfile
       );
-      console.log("远端流订阅成功：" + remoteStream.id_);
     });
 
     // 监听‘stream-updated’事件
-    client.on("stream-updated", event => {
-      const remoteStream = event.stream;
-      console.log(
-        "remoteStream ID: " +
-          remoteStream.getId() +
-          " was updated hasAudio: " +
-          remoteStream.hasAudio() +
-          " hasVideo: " +
-          remoteStream.hasVideo()
-      );
-    });
+    client.on("stream-updated", event => {});
     // 远端用户启用/关闭音频通知
-    client.on("mute-audio", event => {
-      const userId = event.userId;
-      store.commit("remoteStream/MUTE_AUDIO", {
-        userId: userId,
-        status: false
-      });
-    });
-    client.on("unmute-audio", event => {
-      const userId = event.userId;
-      store.commit("remoteStream/MUTE_AUDIO", {
-        userId: userId,
-        status: true
-      });
-    });
+    client.on("mute-audio", event => {});
+    client.on("unmute-audio", event => {});
     // 远端用户启用/关闭视频通知
-    client.on("mute-video", event => {
-      const userId = event.userId;
-      store.commit("remoteStream/MUTE_VIDEO", {
-        userId: userId,
-        status: false
-      });
-    });
-    client.on("unmute-video", event => {
-      const userId = event.userId;
-      store.commit("remoteStream/MUTE_VIDEO", {
-        userId: userId,
-        status: true
-      });
-    });
+    client.on("mute-video", event => {});
+    client.on("unmute-video", event => {});
     client.on("stream-removed", event => {
       const remoteStream = event.stream;
       if (self.remoteStreamList[remoteStream.userId_]) {
@@ -491,16 +442,8 @@ export class TrtcService {
         self.remoteStreamListProfile
       );
     });
-    client.on("peer-join", event => {
-      console.log("peer-join===================");
-      const userId = event.userId;
-      console.log(userId);
-    });
-    client.on("peer-leave", event => {
-      console.log("peer-leave===================");
-      const userId = event.userId;
-      console.log(userId);
-    });
+    client.on("peer-join", event => {});
+    client.on("peer-leave", event => {});
   }
   async createShareClient() {
     let res = await enterRoom(
@@ -525,14 +468,9 @@ const removeUserIdPrefix = function(userId) {
   }
   return userId;
 };
-export function watchFeaturesListState(app) {
-  app.$watch(
-    _ => app.$store.state.workplace.featuresList.videoStatus,
-    (n, o) => {
-      console.log("=====================");
-      console.log(n);
-      console.log(o);
-    },
-    { deep: true }
-  );
-}
+const addUserIdPrefix = function(userId) {
+  if (userId.indexOf("kblive_") !== 0) {
+    return "kblive_" + userId;
+  }
+  return userId;
+};

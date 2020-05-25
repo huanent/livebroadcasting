@@ -44,7 +44,6 @@
 import VoiceIntensity from "./voice-intensity";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { Emitter } from "../../../core/emit";
-import { ROLE } from "../../../store/account";
 import LocalstreamSetting from "./localstream-setting";
 export default {
   name: "SelfCamera",

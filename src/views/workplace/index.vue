@@ -1,7 +1,7 @@
 <template>
   <div class="workplace-panel">
     <div class="workplace-header">
-      <WorkplacePanelHeader></WorkplacePanelHeader>
+      <WorkplacePanelHeader :creator="classCreator"></WorkplacePanelHeader>
     </div>
     <div
       :class="{
@@ -52,6 +52,7 @@
 
 <script>
 import Split from "split-grid";
+import classApi from "@api/class";
 import WorkplacePanelHeader from "@c/live-broadcast/workplace-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
@@ -59,7 +60,7 @@ import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { Emitter } from "../../core/emit";
 import { mapState, mapMutations, mapActions } from "vuex";
-import { ROLE } from "../../store/account";
+import { ROLE } from "@/models/role";
 import Widgets from "../../components/live-broadcast/widgets";
 import { initFeaturesState } from "../../store/features";
 import {
@@ -74,6 +75,7 @@ export default {
       gridStyle: undefined,
       originPosition: [0, 0],
       total: 0,
+      classCreator: "",
       audioLevelTimer: undefined,
       isSidebarShow: true
     };
@@ -81,15 +83,24 @@ export default {
   computed: {
     ...mapState("account", ["role", "userInfo"]),
     ...mapState("workplace", ["cameraPanelVisibity"]),
-    ...mapState("features", ["canControlBoard"])
+    ...mapState("features", ["canControlBoard", "classing"])
   },
 
   async mounted() {
-    await this.enterRoom(this.$route.query);
+    const classId = this.$route.query.id;
+    const res = await classApi.classGet(classId);
+    if (res.data.success) {
+      this.classCreator = res.data.model.createUser;
+    } else {
+      this.$message.error("没有对应的课堂信息");
+    }
+    const roomData = {
+      createUser: this.classCreator,
+      id: this.$route.query.id
+    };
+    await this.enterRoom(roomData);
     const role =
-      this.$route.query.createUser == this.userInfo.username
-        ? ROLE.TEACHER
-        : ROLE.STUDENT;
+      this.classCreator == this.userInfo.username ? ROLE.TEACHER : ROLE.STUDENT;
     this.SET_ROLE(role);
     await initLiveBroadcastService();
 
@@ -194,6 +205,18 @@ export default {
         liveBroadcastService.boardService.activeBoard
       ) {
         liveBroadcastService.boardService.activeBoard.setDrawEnable(value);
+      }
+    },
+    classing(value) {
+      if (value === false) {
+        this.$notify({
+          title: "下课啦",
+          message: "5分钟后将会离开这个页面",
+          type: "warning"
+        });
+        setTimeout(() => {
+          this.$router.push("/");
+        }, 1000 * 60 * 5);
       }
     }
   },

@@ -75,7 +75,7 @@
 <script>
 import WidgetWindow from "../widget-window";
 import { mapState, mapMutations, mapGetters } from "vuex";
-import { ROLE } from "@/store/account";
+import { ROLE } from "@/models/role";
 export default {
   components: {
     WidgetWindow

@@ -35,11 +35,9 @@ export default {
   methods: {
     ...mapMutations("board", ["SET_TEXT_COLOR", "SET_TEXT_SIZE"]),
     onColorPicked(color) {
-      console.log(color);
       this.SET_TEXT_COLOR(color);
     },
     onSlider(num) {
-      console.log(num);
       this.SET_TEXT_SIZE(num);
     }
   }

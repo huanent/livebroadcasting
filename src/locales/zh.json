@@ -111,6 +111,7 @@
   "class.quitSuccess": "移除课堂成功",
   "class.createClass": "创建课堂",
   "class.searchClass": "搜索课堂",
+  "class.searchResult": "搜索结果",
   "class.noCreateClassTips": "您还未创建课堂,请点击‘创建课堂’按钮创建",
   "class.noJoinClassTips": "您还未加入相关课堂",
 

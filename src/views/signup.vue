@@ -112,7 +112,6 @@ export default {
           this.axios
             .post("/user/signup", this.signUpForm)
             .then(res => {
-              console.log(res);
               if (res.data.success) {
                 this.$message.success(this.$t("signup.signupSuccess"));
                 this.$router.push({ path: "/login" });
@@ -122,7 +121,6 @@ export default {
               }
             })
             .catch(err => {
-              console.log(err);
             });
         }
       });

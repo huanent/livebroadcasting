@@ -145,7 +145,8 @@ export default {
     };
   },
   props: {
-    visible: Boolean
+    visible: Boolean,
+    creator: String
   },
   watch: {
     visible() {
@@ -153,7 +154,7 @@ export default {
     }
   },
   created() {
-    this.userId = this.$route.query.createUser;
+    this.userId = this.creator;
     this.classId = this.$route.query.id;
     this.getCourseData(this.pageNum, this.pageSize, this.classId);
   },
@@ -179,7 +180,6 @@ export default {
         if (res.data.success) {
           this.total = res.data.model.total;
           this.courseFileList = res.data.model.list;
-          console.log(this.total, this.courseFileList);
         }
       });
     },
@@ -222,14 +222,11 @@ export default {
       var id = file.response.model.id;
       removeCourseFile(id).then(res => {
         if (res.data.success) {
-          console.log("删除成功");
         }
       });
     },
     deleteCourseFile(scope) {
-      console.log(scope._id);
       removeCourseFile(scope._id).then(res => {
-        console.log("删除课件成功");
         this.getCourseData(this.pageNum, this.pageSize, this.classId);
       });
     },
@@ -264,8 +261,6 @@ export default {
           }
           if (self.transcodeProgress >= 100) {
             clearInterval(interval);
-            console.log(res);
-
             let model = res.data.model;
             let body = {
               id: fileId,

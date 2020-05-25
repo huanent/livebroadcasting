@@ -15,7 +15,9 @@ module.exports = {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-unused-vars": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-undef": process.env.NODE_ENV === "production" ? "warn" : "off"
+    "no-undef": process.env.NODE_ENV === "production" ? "warn" : "off",
+    "no-case-declarations":
+      process.env.NODE_ENV === "production" ? "warn" : "off"
   },
 
   overrides: [

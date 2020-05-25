@@ -10,6 +10,24 @@
       <el-row :gutter="20">
         <el-col :xs="24" :sm="24" :md="12">
           <div class="select-item">
+            <div class="dialog-title">{{ $t("setting.camera") }}</div>
+            <el-select
+              style="width:100%"
+              :value="activeCamera"
+              value-key="deviceId"
+              @change="onActiveCameraChange"
+              :placeholder="$t('setting.chooseCamera')"
+            >
+              <el-option
+                v-for="item in cameraDeviceList"
+                :key="item.deviceId"
+                :label="item.label"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select-item">
             <div class="dialog-title">{{ $t("setting.micro") }}</div>
             <el-select
               style="width:100%"
@@ -22,24 +40,6 @@
                 v-for="item in microphonesDeviceList"
                 :key="item.deviceId"
                 value-key="deviceId"
-                :label="item.label"
-                :value="item"
-              >
-              </el-option>
-            </el-select>
-          </div>
-          <div class="select-item">
-            <div class="dialog-title">{{ $t("setting.camera") }}</div>
-            <el-select
-              style="width:100%"
-              :value="activeCamera"
-              value-key="deviceId"
-              @change="onActiveCameraChange"
-              :placeholder="$t('setting.chooseCamera')"
-            >
-              <el-option
-                v-for="item in cameraDeviceList"
-                :key="item.deviceId"
                 :label="item.label"
                 :value="item"
               >

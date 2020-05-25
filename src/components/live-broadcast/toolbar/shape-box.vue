@@ -90,7 +90,6 @@ export default {
       }
     },
     onColorPicked(color) {
-      console.log(color);
       this.SET_BRUSH_COLOR(color);
     },
     onSlider(num) {

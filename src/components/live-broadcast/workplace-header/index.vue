@@ -15,16 +15,26 @@
         ></icon>
       </el-tooltip>
 
-      <el-tooltip :content="'应用中心'" placement="bottom" :open-delay="200">
+      <el-tooltip
+        v-if="role === ROLE.TEACHER"
+        :content="'应用中心'"
+        placement="bottom"
+        :open-delay="200"
+      >
         <icon @click.native="onWidgetsOpen" name="widgets" :size="20"></icon>
       </el-tooltip>
-      <el-tooltip :content="'控制面板'" placement="bottom" :open-delay="200">
+      <!--      <el-tooltip
+        v-if="role === ROLE.TEACHER"
+        :content="'控制面板'"
+        placement="bottom"
+        :open-delay="200"
+      >
         <icon
           name="settings"
           :size="20"
           @click.native="onShowFeaturesControlVisible"
         ></icon>
-      </el-tooltip>
+      </el-tooltip>-->
       <!--    <el-tooltip :content="'个人设置'" placement="bottom" :open-delay="200">
         <icon name="settings" :size="20"></icon>
       </el-tooltip>-->
@@ -39,6 +49,7 @@
     </div>
     <Courseware
       :visible="dialogVisible"
+      :creator="creator"
       :before-close="onCoursewareClose"
       :append-to-body="true"
       @close-dialogStatus="close_dialog"
@@ -50,7 +61,7 @@
 
 <script>
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-import { mapMutations } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 // import {
 //   getCourseData,
 //   removeCourseFile,
@@ -64,6 +75,7 @@ import Recoder from "./recorder.vue";
 import Courseware from "./courseware";
 import FeaturesControl from "./features-control";
 import { Emitter } from "../../../core/emit";
+import { ROLE } from "../../../models/role";
 export default {
   name: "WorkplaceHeader",
   data() {
@@ -86,6 +98,12 @@ export default {
       showRecoderButton: false
     };
   },
+  props: {
+    creator: String
+  },
+  computed: {
+    ...mapState("account", ["role"])
+  },
   watch: {
     switchStatus(value) {
       this.handlerTheme();
@@ -100,14 +118,18 @@ export default {
     });
   },
   methods: {
+    ...mapActions("features", ["manualControlFeatures"]),
     ...mapMutations("workplace", ["SET_THEME_COLOR", "QUIT_SERVICE"]),
     close_dialog(val) {
       this.dialogVisible = false;
     },
-    // pageChange(index) {
-    //   this.pageNum = index;
-    //   this.getCourseData(this.pageNum, this.pageSize, this.userId);
-    // },
+    classFinish() {
+      this.manualControlFeatures({
+        id: ROLE.STUDENT,
+        propName: "classing",
+        value: false
+      });
+    },
     liveroomLogout() {
       this.$router.push({ name: "Classlist" });
     },
@@ -125,7 +147,6 @@ export default {
           this.$store.state.workplace.themeColor
         );
       }
-      console.log(this.$store.state.workplace.themeColor);
     },
     onCoursewareOpen() {
       this.dialogVisible = true;
@@ -136,9 +157,7 @@ export default {
     onShowFeaturesControlVisible() {
       this.featuresControlVisible = true;
     },
-    handleExceed(file) {
-      console.log("文件超出");
-    },
+    handleExceed(file) {},
     onCoursewareClose(done) {
       this.dialogVisible = false;
       if (done && done instanceof Function) {

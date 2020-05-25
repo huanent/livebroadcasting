@@ -49,9 +49,6 @@ export default {
   data() {
     return {};
   },
-  mounted() {
-    console.log(this.featuresList);
-  },
   filters: {
     transform(value) {}
   },
