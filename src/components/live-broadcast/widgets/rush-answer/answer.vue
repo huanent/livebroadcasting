@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div class="rush-answer"></div>
 </template>
 
 <script>
@@ -10,3 +10,11 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.rush-answer {
+  z-index: 1000;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+</style>

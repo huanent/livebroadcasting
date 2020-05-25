@@ -76,7 +76,8 @@ export default {
       }
     },
     "draw.started"(value) {
-      if (!this.draw.started || !value) return;
+      if (!value) return;
+      this.$forceUpdate();
       this.isanimate = false;
       this.$nextTick(() => {
         this.isanimate = true;
