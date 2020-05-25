@@ -60,7 +60,7 @@ import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { Emitter } from "../../core/emit";
 import { mapState, mapMutations, mapActions } from "vuex";
-import { ROLE } from "../../models/role";
+import { ROLE } from "@/models/role";
 import Widgets from "../../components/live-broadcast/widgets";
 import { initFeaturesState } from "../../store/features";
 import {
