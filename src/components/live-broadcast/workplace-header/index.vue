@@ -6,6 +6,15 @@
           <el-switch v-model="switchStatus"> </el-switch>
         </span>
       </el-tooltip>
+
+      <el-button
+        @click="classFinish"
+        class="class-btn"
+        size="mini"
+        type="primary"
+        >{{ classType === 2 ? "下课" : "上课" }}</el-button
+      >
+
       <recoder v-if="showRecoderButton"></recoder>
       <el-tooltip :content="'课件库'" placement="bottom" :open-delay="200">
         <icon
@@ -95,7 +104,8 @@ export default {
       switchStatus: false,
       activeColor: "#48a7a8",
       inactiveColor: "#76acc3",
-      showRecoderButton: false
+      showRecoderButton: false,
+      classType: 0
     };
   },
   props: {
@@ -130,8 +140,29 @@ export default {
         value: false
       });
     },
+    async hanlderStatus() {
+      if (this.classType === 2) {
+        this.classFinish();
+      }
+    },
     liveroomLogout() {
-      this.$router.push({ name: "Classlist" });
+      let vm = this;
+      this.$confirm("您的退出操作是？", "退出", {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "离开一会",
+        cancelButtonText: "直接下课",
+        type: "warning"
+      })
+        .then(() => {
+          //离开一会
+          vm.$router.push({ name: "Classlist" });
+        })
+        .catch(action => {
+          //直接下课
+          if (action === "cancel") {
+            vm.$router.push({ name: "Classlist" });
+          }
+        });
     },
     handlerTheme() {
       if (this.switchStatus) {
@@ -157,7 +188,6 @@ export default {
     onShowFeaturesControlVisible() {
       this.featuresControlVisible = true;
     },
-    handleExceed(file) {},
     onCoursewareClose(done) {
       this.dialogVisible = false;
       if (done && done instanceof Function) {
@@ -226,5 +256,10 @@ export default {
     border-color: #acacac;
     background-color: #b2b2b2;
   }
+}
+
+.class-btn {
+  padding: 2px 4px;
+  margin: 0 10px;
 }
 </style>

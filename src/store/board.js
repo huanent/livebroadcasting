@@ -4,8 +4,8 @@ const state = {
   toolType: 1,
   brushThin: 20,
   brushColor: "#ba3136", // 画笔颜色
-  textColor: "#222222",
-  textSize: 320,
+  textColor: "#0a818c",
+  textSize: 450,
   canRedo: 0,
   canUndo: 0,
   fileList: [],
@@ -96,8 +96,8 @@ const mutations = {
     state.toolType = 1;
     state.brushThin = 20;
     state.brushColor = "#ba3136";
-    state.textColor = "#222222";
-    state.textSize = 320;
+    state.textColor = "#0a818c";
+    state.textSize = 450;
     state.canRedo = 0;
     state.canUndo = 0;
     state.fileList = [];
