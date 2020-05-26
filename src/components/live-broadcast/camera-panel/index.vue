@@ -129,6 +129,12 @@ export default {
                 }
               }
             }
+          } else {
+            if (features.subscribeAudio) {
+              Emitter.emit("ADD_AUDIO_TRACK", features.__primaryKey);
+            } else {
+              Emitter.emit("REMOVE_AUDIO_TRACK", features.__primaryKey);
+            }
           }
         });
         this.oldFeaturesList = JSON.parse(JSON.stringify(this.featuresList));
