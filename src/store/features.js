@@ -48,6 +48,7 @@ const mutations = {
 
 const actions = {
   manualControlFeatures({ commit }, payload) {
+    debugger;
     if (payload.propName) {
       liveBroadcastService.timService.sendSystemMsg("STATE_SYNC", payload.id, {
         value: payload.value,

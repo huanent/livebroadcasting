@@ -97,6 +97,8 @@ export default {
       featuresControlVisible: false,
       fileList: [],
       pageSize: 6,
+      timer: null,
+      redirectTimer: null,
       pageNum: 1,
       total: 0,
       courseFileList: [],
@@ -143,17 +145,37 @@ export default {
         type: "warning"
       })
         .then(() => {
-          classApi.classFinish(this.$route.query.id).then(res => {
-            if (res.data.success) {
-              this.manualControlFeatures({
-                id: ROLE.STUDENT,
-                propName: "classing",
-                value: false
-              });
-              this.$router.push({ name: "Classlist" });
-            } else {
-              this.$message.error(this.$t("text.errorOccurred"));
-            }
+          this.manualControlFeatures({
+            id: ROLE.STUDENT,
+            propName: "classing",
+            value: false
+          });
+
+          this.timer = setTimeout(() => {
+            classApi.classFinish(this.$route.query.id).then(res => {
+              if (res.data.success) {
+                this.$notify.success({
+                  title: "已下课",
+                  message: "即将返回课堂列表"
+                });
+
+                this.redirectTimer = setTimeout(() => {
+                  this.$router.pish({ name: "Classlist" });
+                }, 1000 * 5);
+
+                this.$once("hook:beforeDestroy", () => {
+                  clearTimeout(this.redirectTimer);
+                  this.redirectTimer = null;
+                });
+              } else {
+                this.$message.error(this.$t("text.errorOccurred"));
+              }
+            });
+          }, 1000 * 3);
+
+          this.$once("hook:beforeDestroy", () => {
+            clearTimeout(this.timer);
+            this.timer = null;
           });
         })
         .catch(action => {
