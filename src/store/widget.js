@@ -99,8 +99,15 @@ const mutations = {
   },
   SET_RUSH_VISIBLE(state, visible) {
     state.rush.visible = visible;
-    state.rush.started = visible;
     state.rush.queue = [];
+  },
+  SET_RUSH_START(state, value) {
+    state.rush.started = value;
+    state.rush.name = null;
+  },
+  SET_RUSH_NAME(state, value) {
+    state.rush.name = value;
+    state.rush.started = false;
   }
 };
 

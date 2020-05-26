@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" ref="rushController">
     <div class="contain" ref="header">
       <div class="leftarea">
         <div
@@ -29,6 +29,13 @@
 import RestartButton from "./restart-button";
 import { mapState, mapMutations } from "vuex";
 export default {
+  mounted() {
+    let rect = this.$refs.rushController.getBoundingClientRect();
+    this.$refs.rushController.style.left =
+      (document.body.clientWidth - rect.width) / 2 + "px";
+    this.$refs.rushController.style.top =
+      (document.body.clientHeight - rect.height) / 2 + "px";
+  },
   data() {
     return {
       leftAnimation: false,
@@ -44,10 +51,15 @@ export default {
     RestartButton
   },
   methods: {
-    ...mapMutations("widget", ["SET_RUSH_VISIBLE"]),
+    ...mapMutations("widget", [
+      "SET_RUSH_VISIBLE",
+      "SET_RUSH_START",
+      "SET_RUSH_NAME"
+    ]),
     async start() {
       this.showRestart = false;
       this.infoText = "抢答中";
+      this.SET_RUSH_START(true);
       await this.startAnimation();
       this.showRestart = true;
       if (!this.rush.queue.length) {
@@ -56,6 +68,7 @@ export default {
         this.infoText =
           this.rush.queue[0].__userName || this.rush.queue[0].__primaryKey;
       }
+      this.SET_RUSH_NAME(this.infoText);
     },
     async startAnimation() {
       this.rightAnimation = true;
@@ -210,6 +223,7 @@ export default {
   height: 140px;
   line-height: 140px;
   text-shadow: 2px 5px 8px #fff;
+  cursor: pointer;
   &:hover {
     box-shadow: 0px 0px 1 rgb(78, 67, 67);
   }
