@@ -221,7 +221,7 @@ export class TrtcService {
     }
   }
   remoteStreamPlay(id, elmentOrId, options) {
-    elmentOrId.innerHTML = "";
+/*    elmentOrId.innerHTML = "";*/
     if (!options) {
       options = { video: true, audio: true };
     }
