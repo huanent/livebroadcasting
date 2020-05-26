@@ -5,6 +5,7 @@
       ref="header"
       v-loading="loading"
       element-loading-background="rgba(0, 0, 0, 0)"
+      @click="onclick"
     >
       <div class="leftarea">
         <div class="leftcircle" id="sa"></div>
@@ -15,7 +16,7 @@
       <div class="backyi"></div>
       <div class="backer"></div>
       <div class="backsan">
-        <span class="beginRushAnswer" @click="onclick">{{ infoText }}</span>
+        <span class="beginRushAnswer">{{ infoText }}</span>
       </div>
     </div>
   </div>
@@ -24,6 +25,8 @@
 <script>
 import { mapState } from "vuex";
 import { delay } from "../../../../core/utils";
+import { liveBroadcastService } from "../../../../core/live-broadcast/live-broadcast-service";
+import { ROLE } from "../../../../models/role";
 export default {
   data() {
     return {
@@ -37,7 +40,8 @@ export default {
     this.rendomPosition();
   },
   computed: {
-    ...mapState("widget", ["rush"])
+    ...mapState("widget", ["rush"]),
+    ...mapState("account", ["userInfo"])
   },
   methods: {
     rendomPosition() {
@@ -48,6 +52,11 @@ export default {
       if (!this.rush.started) return;
       this.infoText = "";
       this.loading = true;
+      liveBroadcastService.timService.sendSystemMsg(
+        "RUSH_ANSWER",
+        ROLE.TEACHER,
+        this.userInfo.nickname || this.userInfo.username
+      );
     }
   },
   watch: {

@@ -62,11 +62,10 @@ export default {
       this.SET_RUSH_START(true);
       await this.startAnimation();
       this.showRestart = true;
-      if (!this.rush.queue.length) {
+      if (!this.rush.name) {
         this.infoText = "无人抢答";
       } else {
-        this.infoText =
-          this.rush.queue[0].__userName || this.rush.queue[0].__primaryKey;
+        this.infoText = this.rush.name;
       }
       this.SET_RUSH_NAME(this.infoText);
     },

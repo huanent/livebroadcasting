@@ -108,6 +108,10 @@ const mutations = {
   SET_RUSH_NAME(state, value) {
     state.rush.name = value;
     state.rush.started = false;
+  },
+  RUSH_ANSWER(state, value) {
+    if (state.rush.name || state.rush.started == false) return;
+    state.rush.name = value;
   }
 };
 
