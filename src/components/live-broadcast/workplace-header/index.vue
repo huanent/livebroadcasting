@@ -160,8 +160,8 @@ export default {
                 });
 
                 this.redirectTimer = setTimeout(() => {
-                  this.$router.pish({ name: "Classlist" });
-                }, 1000 * 5);
+                  this.$router.push({ name: "Classlist" });
+                }, 1000 * 3);
 
                 this.$once("hook:beforeDestroy", () => {
                   clearTimeout(this.redirectTimer);
@@ -171,7 +171,7 @@ export default {
                 this.$message.error(this.$t("text.errorOccurred"));
               }
             });
-          }, 1000 * 3);
+          }, 1000);
 
           this.$once("hook:beforeDestroy", () => {
             clearTimeout(this.timer);
