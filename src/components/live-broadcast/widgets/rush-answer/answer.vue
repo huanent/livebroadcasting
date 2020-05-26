@@ -49,7 +49,7 @@ export default {
       this.left = parseInt(1 + Math.random() * 80) + "%";
     },
     onclick() {
-      if (!this.rush.started) return;
+      if (!this.rush.started || this.loading) return;
       this.infoText = "";
       this.loading = true;
       liveBroadcastService.timService.sendSystemMsg(
