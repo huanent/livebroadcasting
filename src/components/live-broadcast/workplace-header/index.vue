@@ -97,7 +97,6 @@ export default {
       featuresControlVisible: false,
       fileList: [],
       pageSize: 6,
-      timer: null,
       redirectTimer: null,
       pageNum: 1,
       total: 0,
@@ -151,31 +150,24 @@ export default {
             value: false
           });
 
-          this.timer = setTimeout(() => {
-            classApi.classFinish(this.$route.query.id).then(res => {
-              if (res.data.success) {
-                this.$notify.success({
-                  title: "已下课",
-                  message: "即将返回课堂列表"
-                });
+          classApi.classFinish(this.$route.query.id).then(res => {
+            if (res.data.success) {
+              this.$notify.success({
+                title: "已下课",
+                message: "即将返回课堂列表"
+              });
 
-                this.redirectTimer = setTimeout(() => {
-                  this.$router.push({ name: "Classlist" });
-                }, 1000 * 3);
+              this.redirectTimer = setTimeout(() => {
+                this.$router.push({ name: "Classlist" });
+              }, 1000 * 3);
 
-                this.$once("hook:beforeDestroy", () => {
-                  clearTimeout(this.redirectTimer);
-                  this.redirectTimer = null;
-                });
-              } else {
-                this.$message.error(this.$t("text.errorOccurred"));
-              }
-            });
-          }, 1000);
-
-          this.$once("hook:beforeDestroy", () => {
-            clearTimeout(this.timer);
-            this.timer = null;
+              this.$once("hook:beforeDestroy", () => {
+                clearTimeout(this.redirectTimer);
+                this.redirectTimer = null;
+              });
+            } else {
+              this.$message.error(this.$t("text.errorOccurred"));
+            }
           });
         })
         .catch(action => {
