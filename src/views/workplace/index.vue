@@ -76,6 +76,7 @@ export default {
   name: "workplace",
   data: function() {
     return {
+      timer: null,
       gridStyle: undefined,
       originPosition: [0, 0],
       total: 0,
@@ -98,7 +99,7 @@ export default {
       this.classCreator = res.data.model.createUser;
       this.classStatus = Number(res.data.model.status);
     } else {
-      this.$message.error("没有对应的课堂信息");
+      this.$message.error(this.$t("class.hasNoClassInfo"));
       return;
     }
     const roomData = {
@@ -220,17 +221,23 @@ export default {
     },
     classing(value) {
       if (value === false) {
-        this.$notify({
+        this.$notify.success({
           title: "下课啦",
-          message: "5分钟后将会离开这个页面",
-          type: "warning"
+          message: "即将返回课堂列表"
         });
-        setTimeout(() => {
-          this.$router.push("/");
-        }, 1000 * 60 * 5);
+
+        this.timer = setTimeout(() => {
+          this.$router.push({ name: "Home" });
+        }, 1000 * 3);
+
+        this.$once("hook:beforeDestroy", () => {
+          clearTimeout(this.timer);
+          this.timer = null;
+        });
       }
     }
   },
+  beforeDestroy() {},
   components: {
     MainWorkplace,
     Chatroom,

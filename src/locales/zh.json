@@ -123,6 +123,7 @@
   "class.classIsExpired": "课堂已经失效",
   "class.enterClassLimitedBy30Min": "开课时间前半小时之后才能进入课堂",
   "class.quitReminder": "确认下课后，课堂直播将会关闭",
+  "class.hasNoClassInfo": "没有对应的课堂信息",
 
   "setting": "设置",
   "setting.camera": "摄像头",

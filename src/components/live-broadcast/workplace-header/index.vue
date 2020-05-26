@@ -136,11 +136,6 @@ export default {
       this.dialogVisible = false;
     },
     classFinish() {
-      // this.manualControlFeatures({
-      //   id: ROLE.STUDENT,
-      //   propName: "classing",
-      //   value: false
-      // });
       this.$confirm(this.$t("class.quitReminder"), this.$t("text.tips"), {
         distinguishCancelAndClose: true,
         confirmButtonText: this.$t("button.yes"),
@@ -150,6 +145,11 @@ export default {
         .then(() => {
           classApi.classFinish(this.$route.query.id).then(res => {
             if (res.data.success) {
+              this.manualControlFeatures({
+                id: ROLE.STUDENT,
+                propName: "classing",
+                value: false
+              });
               this.$router.push({ name: "Classlist" });
             } else {
               this.$message.error(this.$t("text.errorOccurred"));
