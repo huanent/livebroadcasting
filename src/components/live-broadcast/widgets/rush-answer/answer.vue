@@ -49,7 +49,7 @@ export default {
       this.left = parseInt(1 + Math.random() * 80) + "%";
     },
     onclick() {
-      if (!this.rush.started || this.loading) return;
+      if (this.rush.name || this.loading) return;
       this.infoText = "";
       this.loading = true;
       liveBroadcastService.timService.sendSystemMsg(
@@ -78,8 +78,10 @@ export default {
     },
     "rush.name"(value) {
       if (!value) return;
-      this.infoText = value;
-      this.loading = false;
+      this.$nextTick(() => {
+        this.infoText = value;
+        this.loading = false;
+      });
     }
   }
 };
