@@ -45,7 +45,7 @@ const state = {
   rush: {
     visible: false,
     started: false,
-    name: null
+    name: ""
   }
 };
 
