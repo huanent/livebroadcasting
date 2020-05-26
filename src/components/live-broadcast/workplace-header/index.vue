@@ -12,7 +12,7 @@
         class="class-btn"
         size="mini"
         type="primary"
-        >{{ classType === 2 ? "下课" : "上课" }}</el-button
+        >{{ status === 1 ? "下课" : "上课" }}</el-button
       >
 
       <recoder v-if="showRecoderButton"></recoder>
@@ -71,6 +71,7 @@
 <script>
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { mapActions, mapMutations, mapState } from "vuex";
+import classApi from "@api/class";
 // import {
 //   getCourseData,
 //   removeCourseFile,
@@ -104,12 +105,12 @@ export default {
       switchStatus: false,
       activeColor: "#48a7a8",
       inactiveColor: "#76acc3",
-      showRecoderButton: false,
-      classType: 0
+      showRecoderButton: false
     };
   },
   props: {
-    creator: String
+    creator: String,
+    status: Number
   },
   computed: {
     ...mapState("account", ["role"])
@@ -141,26 +142,31 @@ export default {
       });
     },
     async hanlderStatus() {
-      if (this.classType === 2) {
+      if (this.status === 1) {
         this.classFinish();
       }
     },
     liveroomLogout() {
-      let vm = this;
-      this.$confirm("您的退出操作是？", "退出", {
+      this.$confirm(this.$t("class.quitReminder"), this.$t("text.tips"), {
         distinguishCancelAndClose: true,
-        confirmButtonText: "离开一会",
-        cancelButtonText: "直接下课",
+        confirmButtonText: this.$t("class.leaveForAWhile"),
+        cancelButtonText: this.$t("class.directClass"),
         type: "warning"
       })
         .then(() => {
           //离开一会
-          vm.$router.push({ name: "Classlist" });
+          this.$router.push({ name: "Classlist" });
         })
         .catch(action => {
           //直接下课
           if (action === "cancel") {
-            vm.$router.push({ name: "Classlist" });
+            classApi.classFinish(this.$route.query.id).then(res => {
+              if (res.data.success) {
+                this.$router.push({ name: "Classlist" });
+              } else {
+                this.$message.error(this.$t("text.errorOccurred"));
+              }
+            });
           }
         });
     },

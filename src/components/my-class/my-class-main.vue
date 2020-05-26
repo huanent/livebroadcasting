@@ -118,13 +118,13 @@ export default {
     };
   },
   computed: {
-    list() {
-      return this.isSearching ? this.searchResult : this.classList;
-    },
     classList() {
       return this.activeName === "creator"
         ? this.classCreatedList
-        : this.joinedDataCache;
+        : this.classJoinedList;
+    },
+    list() {
+      return this.isSearching ? this.searchResult : this.classList;
     }
   },
   created() {
@@ -183,7 +183,7 @@ export default {
           if (type === "creator") {
             this.classCreatedList = data.list;
           } else {
-            this.joinedDataCache = data.list;
+            this.classJoinedList = data.list;
           }
           this.loading = false;
         } else {

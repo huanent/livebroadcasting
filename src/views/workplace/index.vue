@@ -1,7 +1,10 @@
 <template>
   <div class="workplace-panel">
     <div class="workplace-header">
-      <WorkplacePanelHeader :creator="classCreator"></WorkplacePanelHeader>
+      <WorkplacePanelHeader
+        :creator="classCreator"
+        :status="classStatus"
+      ></WorkplacePanelHeader>
     </div>
     <div
       :class="{
@@ -76,6 +79,7 @@ export default {
       originPosition: [0, 0],
       total: 0,
       classCreator: "",
+      classStatus: 0,
       audioLevelTimer: undefined,
       isSidebarShow: true
     };
@@ -91,8 +95,10 @@ export default {
     const res = await classApi.classGet(classId);
     if (res.data.success) {
       this.classCreator = res.data.model.createUser;
+      this.classStatus = Number(res.data.model.status);
     } else {
       this.$message.error("没有对应的课堂信息");
+      return;
     }
     const roomData = {
       createUser: this.classCreator,
