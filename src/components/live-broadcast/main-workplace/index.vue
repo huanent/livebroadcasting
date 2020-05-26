@@ -209,6 +209,6 @@ export default {
   @include themeify {
     background: themed("background_color3");
   }
-  border-top: rgba(30, 33, 37, 0.19) 1px solid;
+  border-top: 1px solid rgba(30, 33, 37, 0.19);
 }
 </style>

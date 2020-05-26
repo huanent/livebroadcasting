@@ -192,7 +192,7 @@ export default {
   @include themeify {
     background: themed("background_color2");
   }
-  border-bottom: rgba(30, 33, 37, 0.19) 1px solid;
+  border-bottom: 1px solid rgba(30, 33, 37, 0.19);
   width: 100%;
   padding-bottom: 0.2rem;
   height: 1.8rem;

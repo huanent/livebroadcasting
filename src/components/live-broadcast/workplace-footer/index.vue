@@ -24,6 +24,7 @@ export default {
 .workplace-footer-main {
   display: flex;
   justify-content: space-around;
+  border-top: 1px solid rgba(30, 33, 37, 0.19);
   align-items: center;
 }
 </style>
