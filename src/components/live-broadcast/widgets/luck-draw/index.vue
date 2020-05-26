@@ -79,9 +79,9 @@ export default {
       if (!value) return;
       this.$forceUpdate();
       this.isanimate = false;
-      this.$nextTick(() => {
+      setTimeout(() => {
         this.isanimate = true;
-      });
+      }, 100);
       this.drawing = true;
       setTimeout(() => {
         this.drawing = false;
