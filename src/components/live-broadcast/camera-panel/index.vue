@@ -101,39 +101,23 @@ export default {
     featuresList: {
       handler(featuresList) {
         let oldFeaturesList = this.oldFeaturesList;
-
-        featuresList.forEach(async (features, index) => {
-          if (
-            oldFeaturesList &&
-            oldFeaturesList[index] &&
-            oldFeaturesList[index].__primaryKey === features.__primaryKey
-          ) {
-            let oldFeatures = oldFeaturesList[index];
-            if (
-              oldFeatures.subscribeVideo !== features.subscribeVideo ||
-              oldFeatures.subscribeAudio !== features.subscribeAudio
-            ) {
-              let options = {
-                video: features.subscribeVideo,
-                audio: features.subscribeAudio
-              };
-              await liveBroadcastService.trtcService.subscribeRemoteStream(
-                features.__primaryKey,
-                options
-              );
-              if (oldFeatures.subscribeAudio !== features.subscribeAudio) {
-                if (features.subscribeAudio) {
-                  Emitter.emit("ADD_AUDIO_TRACK", features.__primaryKey);
-                } else {
-                  Emitter.emit("REMOVE_AUDIO_TRACK", features.__primaryKey);
-                }
-              }
-            }
-          } else {
-            if (features.subscribeAudio) {
-              Emitter.emit("ADD_AUDIO_TRACK", features.__primaryKey);
+        let changeResults = this.getDiff(featuresList, oldFeaturesList);
+        changeResults.forEach(async item => {
+          if (item.subscribeVideo.change || item.subscribeAudio.change) {
+            let options = {
+              video: item.subscribeVideo.value,
+              audio: item.subscribeAudio.value
+            };
+            await liveBroadcastService.trtcService.subscribeRemoteStream(
+              item.__primaryKey.value,
+              options
+            );
+          }
+          if (item.subscribeAudio.change) {
+            if (item.subscribeAudio.value) {
+              Emitter.emit("ADD_AUDIO_TRACK", item.__primaryKey.value);
             } else {
-              Emitter.emit("REMOVE_AUDIO_TRACK", features.__primaryKey);
+              Emitter.emit("REMOVE_AUDIO_TRACK", item.__primaryKey.value);
             }
           }
         });
@@ -165,6 +149,29 @@ export default {
         propName: "subscribeVideo",
         value: e
       });
+    },
+    getDiff(n, o) {
+      let diff = [];
+      function getChange(feature, oldFeature) {
+        let re = {};
+        for (let j in feature) {
+          let temp = { value: feature[j], change: false };
+          if (!oldFeature || !oldFeature[j] || oldFeature[j] !== feature[j]) {
+            temp.change = true;
+          }
+          re[j] = temp;
+        }
+        return re;
+      }
+      n.forEach(nFeature => {
+        let oldList = [];
+        if (o) oldList = o;
+        let oldFeature = oldList.find(oFeature => {
+          return oFeature.__primaryKey === nFeature.__primaryKey;
+        });
+        diff.push(getChange(nFeature, oldFeature));
+      });
+      return diff;
     },
     audioChange(e, userId) {
       this.manualControlFeatures({
