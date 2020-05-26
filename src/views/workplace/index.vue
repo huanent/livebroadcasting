@@ -196,6 +196,27 @@ export default {
     } else {
       this.SET_CAMERA_PANEL_VISIBILITY(false);
     }
+    Emitter.on("tim_kicked_out", type => {
+      let tips = "";
+      switch (type) {
+        case "MULT_ACCOUNT":
+          tips = this.$t("class.kickedOut.MULT_ACCOUNT");
+          break;
+        case "MULT_DEVICE":
+          tips = this.$t("class.kickedOut.MULT_DEVICE");
+          break;
+        case "USERSIG_EXPIRED":
+          tips = this.$t("class.kickedOut.USERSIG_EXPIRED");
+      }
+      this.$notify({
+        title: this.$t("text.tips"),
+        message: tips,
+        type: "error",
+        onClose() {
+          this.$router.push({ name: "Classlist" });
+        }
+      });
+    });
   },
   methods: {
     ...mapMutations("features", ["SET_TIMESTAMP"]),

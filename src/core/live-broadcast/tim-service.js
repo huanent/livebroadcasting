@@ -46,6 +46,21 @@ export class TimService {
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, e => {
       Emitter.emit("tim_message_received", e.data);
     });
+    this.tim.on(TIM.EVENT.KICKED_OUT, e => {
+      let type = e.data.type;
+      let emitType = "";
+      switch (type) {
+        case TIM.TYPES.KICKED_OUT_MULT_ACCOUNT:
+          emitType = "MULT_ACCOUNT";
+          break;
+        case TIM.TYPES.KICKED_OUT_MULT_DEVICE:
+          emitType = "MULT_DEVICE";
+          break;
+        default:
+          emitType = "USERSIG_EXPIRED";
+      }
+      Emitter.emit("tim_kicked_out", emitType);
+    });
   }
 
   logout() {
