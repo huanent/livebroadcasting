@@ -452,13 +452,13 @@ export class TrtcService {
     );
     const shareClient = TRTC.createClient({
       mode: "live",
-      sdkAppId: res.data.appId,
-      userId: res.data.id,
-      userSig: res.data.userSig
+      sdkAppId: res.data.model.appId,
+      userId: res.data.model.id,
+      userSig: res.data.model.userSig
     });
     // 指明该 shareClient 默认不接收任何远端流 （它只负责发送屏幕分享流）
     shareClient.setDefaultMuteRemoteStreams(true);
-    await shareClient.join({ roomId: res.data.classId });
+    await shareClient.join({ roomId: res.data.model.classId });
     return shareClient;
   }
 }

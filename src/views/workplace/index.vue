@@ -98,7 +98,11 @@ export default {
       createUser: this.classCreator,
       id: this.$route.query.id
     };
-    await this.enterRoom(roomData);
+    const enterResult = await this.enterRoom(roomData);
+    if (!enterResult.data.success) {
+      this.$message.error(this.$t("class.liveFinishedTips"));
+      return;
+    }
     const role =
       this.classCreator == this.userInfo.username ? ROLE.TEACHER : ROLE.STUDENT;
     this.SET_ROLE(role);

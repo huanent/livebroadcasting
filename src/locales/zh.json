@@ -112,8 +112,13 @@
   "class.createClass": "创建课堂",
   "class.searchClass": "搜索课堂",
   "class.searchResult": "搜索结果",
+  "class.liveStreaming": "直播中",
+  "class.liveFinished": "已结束",
+  "class.liveFinishedTips": "直播已结束",
   "class.noCreateClassTips": "您还未创建课堂,请点击‘创建课堂’按钮创建",
   "class.noJoinClassTips": "您还未加入相关课堂",
+  "class.classIsOver": "课堂已经结束",
+  "class.enterClassLimitedBy30Min": "开课时间前半小时之后才能进入课堂",
 
   "setting": "设置",
   "setting.camera": "摄像头",

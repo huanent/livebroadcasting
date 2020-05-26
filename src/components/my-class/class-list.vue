@@ -19,7 +19,13 @@
           ><i class="el-icon-close"></i
         ></el-button>
         <div class="card-container">
-          <div class="detail-image">
+          <div class="card-left">
+            <div class="live-status on" v-if="Number(item.status) === 1">
+              {{ $t("class.liveStreaming") }}
+            </div>
+            <div class="live-status close" v-if="Number(item.status) === 2">
+              {{ $t("class.liveFinished") }}
+            </div>
             <img :src="item.url" :alt="$t('class.classCover')" />
           </div>
           <div class="detail-content">
@@ -42,16 +48,12 @@
                 v-if="isSearching"
                 class="btn-apply"
                 @click="handleJoinClass(item.classId)"
-                >{{ $t("class.joinClass") }}</span
               >
-              <router-link
-                v-else
-                :to="{
-                  name: 'Liveroom',
-                  query: { id: item.classId }
-                }"
-                >{{ $t("class.enterClass") }}</router-link
-              >
+                {{ $t("class.joinClass") }}
+              </span>
+              <span @click="toLiveRoomPage(item)" v-else class="btn-apply">{{
+                $t("class.enterClass")
+              }}</span>
             </div>
           </div>
         </div>
@@ -125,6 +127,27 @@ export default {
           }
         })
         .catch(() => {});
+    },
+    toLiveRoomPage(classInfo) {
+      // 课堂已经结束
+      if (Number(classInfo.status) === 2) {
+        this.$message.info(this.$t("class.classIsOver"));
+        return;
+      }
+      // 还没到开始时间前半个小时
+      const dateNow = new Date().getTime();
+      const startTime = Number(classInfo.startTime) - 30 * 60 * 1000;
+      if (dateNow < startTime) {
+        this.$message.info(this.$t("class.enterClassLimitedBy30Min"));
+        return;
+      }
+
+      this.$router.push({
+        name: "Liveroom",
+        query: {
+          id: classInfo.classId
+        }
+      });
     },
     handleJoinClass(id) {
       classApi
@@ -201,7 +224,8 @@ export default {
       &:hover {
         box-shadow: 0px 0px 5px -1px #888888;
       }
-      .detail-image {
+      .card-left {
+        position: relative;
         width: 30%;
         max-height: 100px;
         min-height: 100px;
@@ -209,9 +233,30 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        .live-status {
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index: 9;
+          box-sizing: border-box;
+          font-size: 12px;
+          color: #fff;
+          line-height: 18px;
+          text-align: center;
+          width: 51px;
+          height: 18px;
+          border-radius: 2px;
+          &.on {
+            background-color: #ff5e90;
+          }
+          &.close {
+            background-color: #0a818c;
+          }
+        }
         img {
           width: 100%;
           max-height: 7rem;
+          border-radius: 2px;
         }
       }
       .detail-content {

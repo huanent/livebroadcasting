@@ -86,7 +86,8 @@ const actions = {
     commit("SET_TEACHER_ID", query.createUser);
     commit("SET_ROLE", role);
     let res = await enterRoom(rootState.account.userInfo.username, query.id);
-    commit("SET_TOKEN", res.data);
+    commit("SET_TOKEN", res.data.model);
+    return res;
   },
   switchCamera({ commit }, device) {
     if (!device.deviceId) return;
