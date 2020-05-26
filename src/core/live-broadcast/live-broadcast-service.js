@@ -83,11 +83,19 @@ class LiveBroadcastService {
     return true;
   }
   async destroy() {
-    if (this.boardService) this.boardService.destroy();
-    if (this.timService) await this.timService.logout();
-    if (this.trtcService) this.trtcService.destroy();
+    try {
+      if (this.boardService) this.boardService.destroy();
+    } catch (e) {}
+    try {
+      await this.timService.destroy();
+    } catch (e) {}
+    try {
+      if (this.trtcService) await this.trtcService.destroy();
+    } catch (e) {}
     this.initStatus();
     liveBroadcastService = null;
+
+    return true;
   }
   initStatus() {
     store.commit("workplace/INIT_STATE");

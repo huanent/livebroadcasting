@@ -57,10 +57,10 @@ export class TrtcService {
     await client.publish(localStream);
     store.commit("localStream/IS_INIT");
   }
-  destroy() {
+  async destroy() {
     for (let i in this.clientList) {
       let client = this.clientList[i];
-      client && client.leave();
+      client && (await client.leave());
     }
   }
   async getDefaultDevice() {

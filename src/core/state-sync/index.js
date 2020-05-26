@@ -3,8 +3,9 @@ import { liveBroadcastService } from "../live-broadcast/live-broadcast-service";
 
 export const syncConfig = config;
 
+let unwatch;
 export function autoSyncState(app) {
-  app.$watch(
+  unwatch = app.$watch(
     _ => app.$store.state,
     value => {
       const currentRole = value.account.role;
@@ -44,7 +45,11 @@ export function autoSyncState(app) {
     { deep: true }
   );
 }
-
+export function destroySyncState() {
+  if (unwatch) {
+    unwatch();
+  }
+}
 export function getStateValue(state, path) {
   let currentValue = state;
 

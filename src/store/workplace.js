@@ -36,9 +36,6 @@ const mutations = {
   ADD_CHAT_MESSAGE(state, msg) {
     state.chatMessages.push(msg);
   },
-  QUIT_SERVICE() {
-    liveBroadcastService && liveBroadcastService.destroy();
-  },
   async ADD_BOARD_FILE(state, file) {
     await liveBroadcastService.boardService.addBoardFiles(
       file.resultUrl,
@@ -89,6 +86,11 @@ const actions = {
     let res = await enterRoom(rootState.account.userInfo.username, query.id);
     commit("SET_TOKEN", res.data.model);
     return res;
+  },
+  async destroyRoom() {
+    if (liveBroadcastService) {
+      return await liveBroadcastService.destroy();
+    }
   },
   switchCamera({ commit }, device) {
     if (!device.deviceId) return;

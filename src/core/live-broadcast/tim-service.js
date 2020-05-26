@@ -43,27 +43,33 @@ export class TimService {
       userSig: this.token.userSig
     });
 
-    this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, e => {
-      Emitter.emit("tim_message_received", e.data);
-    });
-    this.tim.on(TIM.EVENT.KICKED_OUT, e => {
-      let type = e.data.type;
-      let emitType = "";
-      switch (type) {
-        case TIM.TYPES.KICKED_OUT_MULT_ACCOUNT:
-          emitType = "MULT_ACCOUNT";
-          break;
-        case TIM.TYPES.KICKED_OUT_MULT_DEVICE:
-          emitType = "MULT_DEVICE";
-          break;
-        default:
-          emitType = "USERSIG_EXPIRED";
-      }
-      Emitter.emit("tim_kicked_out", emitType);
-    });
+    this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, this.timMessageHandler);
+    this.tim.on(TIM.EVENT.KICKED_OUT, this.timKickedOutHandler);
   }
 
-  logout() {
-    return this.tim.logout();
+  timMessageHandler(e) {
+    Emitter.emit("tim_message_received", e.data);
+  }
+
+  timKickedOutHandler(e) {
+    let type = e.data.type;
+    let emitType = "";
+    switch (type) {
+      case TIM.TYPES.KICKED_OUT_MULT_ACCOUNT:
+        emitType = "MULT_ACCOUNT";
+        break;
+      case TIM.TYPES.KICKED_OUT_MULT_DEVICE:
+        emitType = "MULT_DEVICE";
+        break;
+      default:
+        emitType = "USERSIG_EXPIRED";
+    }
+    Emitter.emit("tim_kicked_out", emitType);
+  }
+
+  async destroy() {
+    this.tim.off(TIM.EVENT.MESSAGE_RECEIVED, this.timMessageHandler);
+    this.tim.off(TIM.EVENT.KICKED_OUT, this.timKickedOutHandler);
+    return await this.tim.logout();
   }
 }

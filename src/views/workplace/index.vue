@@ -62,16 +62,17 @@ import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
-import { Emitter } from "../../core/emit";
+import { destroyEmitter, Emitter, initEmitter } from "../../core/emit";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { ROLE } from "@/models/role";
 import Widgets from "../../components/live-broadcast/widgets";
-import { initFeaturesState } from "../../store/features";
+import { app } from "../../main";
 import {
   initLiveBroadcastService,
   liveBroadcastService
 } from "../../core/live-broadcast/live-broadcast-service";
 import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
+import { autoSyncState, destroySyncState } from "../../core/state-sync";
 export const requestDeviceAccess = async function() {
   try {
     let stream = await navigator.mediaDevices.getUserMedia({
@@ -98,7 +99,8 @@ export default {
       classStatus: 0,
       audioLevelTimer: undefined,
       isSidebarShow: true,
-      visibity: false
+      visibity: false,
+      watchInstance: undefined
     };
   },
   computed: {
@@ -107,6 +109,8 @@ export default {
     ...mapState("features", ["canControlBoard", "classing"])
   },
   async mounted() {
+    initEmitter();
+    autoSyncState(app);
     let access = await requestDeviceAccess();
     if (!access) {
       return await this.notAccessDevice();
@@ -218,12 +222,18 @@ export default {
       });
     });
   },
+  async beforeRouteLeave(to, from, next) {
+    destroySyncState();
+    this.destroyRoom();
+    destroyEmitter();
+    next();
+  },
   methods: {
     ...mapMutations("features", ["SET_TIMESTAMP"]),
     ...mapMutations("account", ["SET_ROLE"]),
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
     ...mapMutations("workplace", ["SET_CAMERA_PANEL_VISIBILITY"]),
-    ...mapActions("workplace", ["enterRoom"]),
+    ...mapActions("workplace", ["enterRoom", "destroyRoom"]),
     ...mapActions("tips", ["notAccessDevice"]),
     toggleSidebar() {
       this.isSidebarShow = !this.isSidebarShow;
@@ -280,7 +290,6 @@ export default {
       }
     }
   },
-  beforeDestroy() {},
   components: {
     MainWorkplace,
     Chatroom,
