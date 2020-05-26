@@ -97,7 +97,6 @@ export default {
       featuresControlVisible: false,
       fileList: [],
       pageSize: 6,
-      redirectTimer: null,
       pageNum: 1,
       total: 0,
       courseFileList: [],
@@ -154,16 +153,10 @@ export default {
             if (res.data.success) {
               this.$notify.success({
                 title: this.$t("class.liveFinishedTips"),
-                message: this.$t("class.redirectToClassList")
-              });
-
-              this.redirectTimer = setTimeout(() => {
-                this.$router.push({ name: "Classlist" });
-              }, 1000 * 3);
-
-              this.$once("hook:beforeDestroy", () => {
-                clearTimeout(this.redirectTimer);
-                this.redirectTimer = null;
+                message: this.$t("class.redirectToClassList"),
+                onClose: () => {
+                  this.$router.push({ name: "Classlist" });
+                }
               });
             } else {
               this.$message.error(this.$t("text.errorOccurred"));

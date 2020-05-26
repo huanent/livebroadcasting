@@ -216,7 +216,7 @@ export default {
         title: this.$t("text.tips"),
         message: tips,
         type: "error",
-        onClose() {
+        onClose: () => {
           this.$router.push({ name: "Classlist" });
         }
       });
