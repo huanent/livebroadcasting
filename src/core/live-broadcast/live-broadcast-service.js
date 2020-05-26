@@ -58,7 +58,7 @@ class LiveBroadcastService {
       store.commit("SYNC_STATE", data);
     });
 
-    Emitter.on("RUSH_ANSWER", data => {
+    Emitter.on("SYS_RUSH_ANSWER", data => {
       store.commit("widget/RUSH_ANSWER", data);
     });
 
