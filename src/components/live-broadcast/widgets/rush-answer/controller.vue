@@ -191,7 +191,7 @@ export default {
 }
 
 .addRightAnimation {
-  animation: circle_right 2.5s linear 0s 1 forwards;
+  animation: circle_right 3s linear 0s 1 forwards;
 }
 
 @keyframes circle_right {
@@ -205,7 +205,7 @@ export default {
 }
 
 .addLeftAnimation {
-  animation: left_right 2.5s linear 0s 1 forwards;
+  animation: left_right 3s linear 0s 1 forwards;
 }
 
 @keyframes left_right {
