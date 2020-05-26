@@ -206,6 +206,7 @@ export class TrtcService {
     }
   }
   getRemoteStreamByUserId(id) {
+    if (!id) return;
     if (
       !this.remoteStreamList[id] &&
       this.remoteStreamList[addUserIdPrefix(id)]
