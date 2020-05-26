@@ -73,10 +73,17 @@ import {
 } from "../../core/live-broadcast/live-broadcast-service";
 import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
 export const requestDeviceAccess = async function() {
-  return await navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: true
-  });
+  try {
+    let stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true
+    });
+    if (stream) return true;
+  } catch (e) {
+    return false;
+  }
+
+  return false;
 };
 
 export default {
