@@ -125,6 +125,9 @@
   "class.quitReminder": "确认下课后，课堂直播将会关闭",
   "class.hasNoClassInfo": "没有对应的课堂信息",
   "class.redirectToClassList": "即将返回课堂列表",
+  "class.kickedOut.MULT_ACCOUNT": "账号在其它直播间登录，即将退出直播页面",
+  "class.kickedOut.MULT_DEVICE": "账号在其它设备登录，即将退出直播页面",
+  "class.kickedOut.USERSIG_EXPIRED": "用户签名过期，即将退出直播页面",
 
   "setting": "设置",
   "setting.camera": "摄像头",
