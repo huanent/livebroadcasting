@@ -14,7 +14,7 @@
           :action="
             '/api/courseFile/upload?userId=' + userId + '&classId=' + classId
           "
-          accept=".ppt"
+          accept=".ppt,.pptx"
           :limit="3"
           :on-preview="onFilePreview"
           :before-upload="beforeUpload"
