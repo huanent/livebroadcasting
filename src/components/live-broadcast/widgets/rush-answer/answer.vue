@@ -1,6 +1,12 @@
 <template>
-  <div class="content">
-    <div class="contain" ref="header">
+  <div class="content" :style="{ top: top, left: left }">
+    <div
+      class="contain"
+      ref="header"
+      v-loading="loading"
+      element-loading-background="rgba(0, 0, 0, 0)"
+      @click="onclick"
+    >
       <div class="leftarea">
         <div class="leftcircle" id="sa"></div>
       </div>
@@ -10,7 +16,7 @@
       <div class="backyi"></div>
       <div class="backer"></div>
       <div class="backsan">
-        <span class="beginRushAnswer" @click="start">{{ infoText }}</span>
+        <span class="beginRushAnswer">{{ infoText }}</span>
       </div>
     </div>
   </div>
@@ -18,18 +24,62 @@
 
 <script>
 import { mapState } from "vuex";
+import { delay } from "../../../../core/utils";
+import { liveBroadcastService } from "../../../../core/live-broadcast/live-broadcast-service";
+import { ROLE } from "../../../../models/role";
 export default {
   data() {
     return {
-      infoText: 3
+      top: "0%",
+      left: "0%",
+      infoText: "等待开始",
+      loading: false
     };
   },
+  created() {
+    this.rendomPosition();
+  },
   computed: {
-    ...mapState("widget", ["rush"])
+    ...mapState("widget", ["rush"]),
+    ...mapState("account", ["userInfo"])
+  },
+  methods: {
+    rendomPosition() {
+      this.top = parseInt(1 + Math.random() * 80) + "%";
+      this.left = parseInt(1 + Math.random() * 80) + "%";
+    },
+    onclick() {
+      if (!this.rush.started) return;
+      this.infoText = "";
+      this.loading = true;
+      liveBroadcastService.timService.sendSystemMsg(
+        "RUSH_ANSWER",
+        ROLE.TEACHER,
+        this.userInfo.nickname || this.userInfo.username
+      );
+    }
   },
   watch: {
     "rush.started"(value) {
       if (!value) return;
+      this.$nextTick(async _ => {
+        this.infoText = 3;
+        this.rendomPosition();
+        await delay(1000);
+        this.infoText = 2;
+        this.rendomPosition();
+        await delay(1000);
+        this.infoText = 1;
+        this.rendomPosition();
+        await delay(1000);
+        this.rendomPosition();
+        this.infoText = "抢答";
+      });
+    },
+    "rush.name"(value) {
+      if (!value) return;
+      this.infoText = value;
+      this.loading = false;
     }
   }
 };
@@ -132,9 +182,10 @@ export default {
   }
   .beginRushAnswer {
     height: 140px;
-    font-size: 42px;
+    font-size: 30px;
     line-height: 140px;
     text-shadow: 2px 5px 8px #fff;
+    cursor: pointer;
     &:hover {
       box-shadow: 0px 0px 1 rgb(78, 67, 67);
     }
