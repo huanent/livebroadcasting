@@ -139,20 +139,22 @@ export default {
       this.microphonesDeviceList = [];
       this.speakerDeviceList = [];
       navigator.mediaDevices.enumerateDevices().then(mediaDevices => {
-        mediaDevices.forEach(item => {
-          let devices = {
-            kind: item.kind,
-            deviceId: item.deviceId,
-            label: item.label
-          };
-          if (devices.kind === "videoinput") {
-            this.cameraDeviceList.push(devices);
-          }
-          if (devices.kind === "audioinput") {
-            this.microphonesDeviceList.push(devices);
-          }
-          if (devices.kind === "audiooutput") {
-            this.speakerDeviceList.push(devices);
+        mediaDevices.forEach((item, index) => {
+          if (item.deviceId) {
+            let devices = {
+              kind: item.kind,
+              deviceId: item.deviceId,
+              label: item.label
+            };
+            if (devices.kind === "videoinput") {
+              this.cameraDeviceList.push(devices);
+            }
+            if (devices.kind === "audioinput") {
+              this.microphonesDeviceList.push(devices);
+            }
+            if (devices.kind === "audiooutput") {
+              this.speakerDeviceList.push(devices);
+            }
           }
         });
       });

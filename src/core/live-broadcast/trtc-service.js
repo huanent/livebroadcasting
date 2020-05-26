@@ -61,9 +61,21 @@ export class TrtcService {
     let mediaDevices = await navigator.mediaDevices.enumerateDevices();
 
     let cameraDeviceList = await TRTC.getCameras();
-
+    let activeCamera = cameraDeviceList.find(device => {
+      return device.deviceId;
+    });
+    if (!activeCamera) {
+      store.dispatch("tips/cameraError");
+      return;
+    }
     let microphonesDeviceList = await TRTC.getMicrophones();
-
+    let activeMicrophones = microphonesDeviceList.find(device => {
+      return device.deviceId;
+    });
+    if (!activeMicrophones) {
+      store.dispatch("tips/microphonesError");
+      return;
+    }
     if (cameraDeviceList[0] && microphonesDeviceList[0]) {
       let activeCameraDevice = JSON.parse(
         JSON.stringify({
@@ -221,7 +233,7 @@ export class TrtcService {
     }
   }
   remoteStreamPlay(id, elmentOrId, options) {
-/*    elmentOrId.innerHTML = "";*/
+    /*    elmentOrId.innerHTML = "";*/
     if (!options) {
       options = { video: true, audio: true };
     }
