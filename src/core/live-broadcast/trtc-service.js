@@ -21,6 +21,12 @@ export class TrtcService {
   constructor() {}
 
   async init(roomId, liveBroadcastService) {
+    let isSupport = await TRTC.checkSystemRequirements();
+    let isSupportScreen = TRTC.isScreenShareSupported();
+    if (!isSupport && !isSupportScreen) {
+      return await store.dispatch("tips/browserNotSupport");
+    }
+
     TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.ERROR);
     this.liveBroadcastService = liveBroadcastService;
     this.token = store.state.workplace.token;
@@ -61,20 +67,19 @@ export class TrtcService {
     let mediaDevices = await navigator.mediaDevices.enumerateDevices();
 
     let cameraDeviceList = await TRTC.getCameras();
+
     let activeCamera = cameraDeviceList.find(device => {
       return device.deviceId;
     });
     if (!activeCamera) {
-      store.dispatch("tips/cameraError");
-      return;
+      return await store.dispatch("tips/cameraError");
     }
     let microphonesDeviceList = await TRTC.getMicrophones();
     let activeMicrophones = microphonesDeviceList.find(device => {
       return device.deviceId;
     });
     if (!activeMicrophones) {
-      store.dispatch("tips/microphonesError");
-      return;
+      return await store.dispatch("tips/microphonesError");
     }
     if (cameraDeviceList[0] && microphonesDeviceList[0]) {
       let activeCameraDevice = JSON.parse(

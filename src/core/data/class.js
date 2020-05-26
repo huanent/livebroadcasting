@@ -17,6 +17,10 @@ export default {
       `/class/search?field=${field}&value=${value}&pageNum=${pageNum}&pageSize=${pageSize}`
     );
   },
+  classFinish(classId) {
+    const id = localStorage.getItem("lb_token");
+    return axios.post("/class/finish", { classId, id });
+  },
   classRemove(classId) {
     const id = localStorage.getItem("lb_token");
     return axios.post("/class/remove", { classId, id });

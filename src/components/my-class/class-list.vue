@@ -20,11 +20,14 @@
         ></el-button>
         <div class="card-container">
           <div class="card-left">
-            <div class="live-status on" v-if="Number(item.status) === 1">
+            <div class="live-status on" v-if="item.status === 1">
               {{ $t("class.liveStreaming") }}
             </div>
-            <div class="live-status close" v-if="Number(item.status) === 2">
+            <div class="live-status close" v-if="item.status === 2">
               {{ $t("class.liveFinished") }}
+            </div>
+            <div class="live-status expired" v-if="item.status === 3">
+              {{ $t("class.liveExpired") }}
             </div>
             <img :src="item.url" :alt="$t('class.classCover')" />
           </div>
@@ -130,8 +133,13 @@ export default {
     },
     toLiveRoomPage(classInfo) {
       // 课堂已经结束
-      if (Number(classInfo.status) === 2) {
+      if (classInfo.status === 2) {
         this.$message.info(this.$t("class.classIsOver"));
+        return;
+      }
+      // 课堂已经结束
+      if (classInfo.status === 3) {
+        this.$message.info(this.$t("class.classIsExpired"));
         return;
       }
       // 还没到开始时间前半个小时
@@ -251,6 +259,9 @@ export default {
           }
           &.close {
             background-color: #0a818c;
+          }
+          &.expired {
+            background-color: #252434;
           }
         }
         img {

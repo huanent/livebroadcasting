@@ -1,7 +1,10 @@
 <template>
-  <div class="workplace-panel">
+  <div class="workplace-panel" v-if="visibity">
     <div class="workplace-header">
-      <WorkplacePanelHeader :creator="classCreator"></WorkplacePanelHeader>
+      <WorkplacePanelHeader
+        :creator="classCreator"
+        :status="classStatus"
+      ></WorkplacePanelHeader>
     </div>
     <div
       :class="{
@@ -69,6 +72,20 @@ import {
   liveBroadcastService
 } from "../../core/live-broadcast/live-broadcast-service";
 import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
+export const requestDeviceAccess = async function() {
+  try {
+    let stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true
+    });
+    if (stream) return true;
+  } catch (e) {
+    return false;
+  }
+
+  return false;
+};
+
 export default {
   name: "workplace",
   data: function() {
@@ -77,8 +94,10 @@ export default {
       originPosition: [0, 0],
       total: 0,
       classCreator: "",
+      classStatus: 0,
       audioLevelTimer: undefined,
-      isSidebarShow: true
+      isSidebarShow: true,
+      visibity: false
     };
   },
   computed: {
@@ -86,14 +105,19 @@ export default {
     ...mapState("workplace", ["cameraPanelVisibity"]),
     ...mapState("features", ["canControlBoard", "classing"])
   },
-
   async mounted() {
+    let access = await requestDeviceAccess();
+    if (!access) {
+      return await this.notAccessDevice();
+    }
     const classId = this.$route.query.id;
     const res = await classApi.classGet(classId);
     if (res.data.success) {
       this.classCreator = res.data.model.createUser;
+      this.classStatus = Number(res.data.model.status);
     } else {
       this.$message.error("没有对应的课堂信息");
+      return;
     }
     const roomData = {
       createUser: this.classCreator,
@@ -107,6 +131,9 @@ export default {
     const role =
       this.classCreator == this.userInfo.username ? ROLE.TEACHER : ROLE.STUDENT;
     this.SET_ROLE(role);
+
+    this.visibity = true;
+
     await initLiveBroadcastService();
 
     if (role == ROLE.TEACHER) {
@@ -175,6 +202,7 @@ export default {
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
     ...mapMutations("workplace", ["SET_CAMERA_PANEL_VISIBILITY"]),
     ...mapActions("workplace", ["enterRoom"]),
+    ...mapActions("tips", ["notAccessDevice"]),
     toggleSidebar() {
       this.isSidebarShow = !this.isSidebarShow;
     },
