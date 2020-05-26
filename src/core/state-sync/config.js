@@ -22,6 +22,11 @@ export default [
     sender: ROLE.TEACHER
   },
   {
+    path: ["widget", "rush"],
+    listener: ROLE.STUDENT,
+    sender: ROLE.TEACHER
+  },
+  {
     path: ["widget", "clicker", "question"],
     listener: ROLE.STUDENT,
     sender: ROLE.TEACHER

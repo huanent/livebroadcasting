@@ -50,6 +50,7 @@
       </div>
     </div>
     <widgets />
+    <hand-up-list v-if="role == ROLE.TEACHER" />
   </div>
 </template>
 
@@ -70,7 +71,7 @@ import {
   initLiveBroadcastService,
   liveBroadcastService
 } from "../../core/live-broadcast/live-broadcast-service";
-
+import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
 export default {
   name: "workplace",
   data: function() {
@@ -236,7 +237,8 @@ export default {
     SelfCamera,
     WorkplacePanelHeader,
     CameraPanel,
-    Widgets
+    Widgets,
+    HandUpList
   }
 };
 </script>

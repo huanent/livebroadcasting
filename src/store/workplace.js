@@ -3,6 +3,7 @@ import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-servi
 import { enterRoom } from "../core/data/data-service";
 import { ROLE } from "../models/role";
 
+import { app } from "../main";
 const state = {
   themeColor: "dark",
   activeCamera: null,

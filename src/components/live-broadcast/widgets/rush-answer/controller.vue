@@ -1,8 +1,28 @@
 <template>
-  <div>
-    <span class="beginRushAnswer" @click="start">{{ infoText }}</span>
-    <restart-button v-if="showRestart" @click="start"></restart-button>
-    <div class="closebtn" @click="SET_RUSH_VISIBLE(false)">关闭</div>
+  <div class="content">
+    <div class="contain" ref="header">
+      <div class="leftarea">
+        <div
+          class="leftcircle"
+          id="sa"
+          :class="{ addLeftAnimation: leftAnimation }"
+        ></div>
+      </div>
+      <div class="rightarea">
+        <div
+          class="rightcircle"
+          id="ss"
+          :class="{ addRightAnimation: rightAnimation }"
+        ></div>
+      </div>
+      <div class="backyi"></div>
+      <div class="backer"></div>
+      <div class="backsan">
+        <span class="beginRushAnswer" @click="start">{{ infoText }}</span>
+        <restart-button v-if="showRestart" @click="start"></restart-button>
+        <div class="closebtn" @click="SET_RUSH_VISIBLE(false)">关闭</div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -11,6 +31,8 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      leftAnimation: false,
+      rightAnimation: false,
       showRestart: false,
       infoText: "开始抢答"
     };
@@ -22,26 +44,168 @@ export default {
     RestartButton
   },
   methods: {
-    start() {
-      this.$emit("start", () => this.stopCallback());
+    ...mapMutations("widget", ["SET_RUSH_VISIBLE"]),
+    async start() {
       this.showRestart = false;
-      this.isrightAnimation = true;
       this.infoText = "抢答中";
+      await this.startAnimation();
       this.showRestart = true;
-    },
-    stopCallback() {
       if (!this.rush.queue.length) {
         this.infoText = "无人抢答";
       } else {
         this.infoText =
           this.rush.queue[0].__userName || this.rush.queue[0].__primaryKey;
       }
-      this.showRestart = true;
+    },
+    async startAnimation() {
+      this.rightAnimation = true;
+      await new Promise(res => {
+        document.addEventListener("animationend", e => {
+          if (e.animationName.startsWith("circle_right")) {
+            this.leftAnimation = true;
+            res();
+          }
+        });
+      });
+      await new Promise(res => {
+        document.addEventListener("animationend", e => {
+          if (e.animationName.startsWith("left_right")) {
+            res();
+          }
+        });
+      });
+      this.leftAnimation = false;
+      this.rightAnimation = false;
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+.content {
+  z-index: 1000;
+  position: fixed;
+  left: 0;
+  top: 0;
+  .contain {
+    position: relative;
+    width: 184px;
+    height: 184px;
+    box-sizing: border-box;
+    background-color: #3f424b;
+    padding: 2px;
+    display: flex;
+    border-radius: 50%;
+    .leftarea {
+      width: 90px;
+      height: 180px;
+      overflow: hidden;
+      .leftcircle {
+        box-sizing: border-box;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        border: 4px solid transparent;
+        border-left: 4px solid #0a818c;
+        border-top: 4px solid #0a818c;
+        transform: rotate(-45deg);
+        /* 旋转45度 */
+      }
+    }
+    .rightarea {
+      width: 90px;
+      height: 180px;
+      overflow: hidden;
+      .rightcircle {
+        box-sizing: border-box;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        border: 4px solid transparent;
+        border-right: 4px solid #0a818c;
+        border-bottom: 4px solid #0a818c;
+        float: right;
+        transform: rotate(-45deg);
+      }
+    }
+
+    .backyi {
+      width: 160px;
+      height: 160px;
+      background-color: #2d3037;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      border-radius: 50%;
+      /* box-shadow: 2px 2px 1px #888888; */
+      z-index: 90;
+    }
+
+    .backer {
+      width: 150px;
+      height: 150px;
+      background-color: #3f424b;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      border-radius: 50%;
+      /* box-shadow: 2px 2px 1px #888888; */
+      z-index: 90;
+    }
+
+    .backsan {
+      overflow: hidden;
+      width: 140px;
+      height: 140px;
+      background-color: #34373e;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      border-radius: 50%;
+      z-index: 90;
+      text-align: center;
+      color: rgb(219, 213, 213);
+      font-size: 20px;
+    }
+  }
+}
+
+.addRightAnimation {
+  animation: circle_right 2.5s linear 0s 1 forwards;
+}
+
+@keyframes circle_right {
+  0% {
+    transform: rotate(-45deg);
+  }
+
+  100% {
+    transform: rotate(135deg);
+  }
+}
+
+.addLeftAnimation {
+  animation: left_right 2.5s linear 0s 1 forwards;
+}
+
+@keyframes left_right {
+  0% {
+    transform: rotate(-45deg);
+  }
+
+  100% {
+    transform: rotate(135deg);
+  }
+}
+
 .beginRushAnswer {
   height: 140px;
   line-height: 140px;
