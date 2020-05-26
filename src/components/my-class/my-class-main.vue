@@ -3,12 +3,12 @@
     <div class="main-head">
       <el-tabs v-model="activeName" @tab-click="handleTabChange">
         <el-tab-pane
-          :label="$t('class.theClassICreated')"
-          name="creator"
-        ></el-tab-pane>
-        <el-tab-pane
           :label="$t('class.theClassIJoined')"
           name="participant"
+        ></el-tab-pane>
+        <el-tab-pane
+          :label="$t('class.theClassICreated')"
+          name="creator"
         ></el-tab-pane>
       </el-tabs>
     </div>
@@ -106,15 +106,16 @@ export default {
       isSearching: false,
       pageSize: 9,
       pageNum: 1,
-      total: 0,
       searchValue: "",
       searchField: "title",
       loading: false,
-      activeName: "creator",
+      activeName: "participant",
       createdDataCache: false,
       classCreatedList: [],
+      classCreatedTotal: 0,
       joinedDataCache: false,
-      classJoinedList: []
+      classJoinedList: [],
+      classJoinedTotal: 0
     };
   },
   computed: {
@@ -122,6 +123,11 @@ export default {
       return this.activeName === "creator"
         ? this.classCreatedList
         : this.classJoinedList;
+    },
+    total() {
+      return this.activeName === "creator"
+        ? this.classCreatedTotal
+        : this.classJoinedTotal;
     },
     list() {
       return this.isSearching ? this.searchResult : this.classList;
@@ -179,11 +185,12 @@ export default {
       classApi.getClassList(type, pageNum, pageSize).then(res => {
         if (res.data.success) {
           const data = res.data.model;
-          this.total = data.total;
           if (type === "creator") {
             this.classCreatedList = data.list;
+            this.classCreatedTotal = data.total;
           } else {
             this.classJoinedList = data.list;
+            this.classJoinedTotal = data.total;
           }
           this.loading = false;
         } else {

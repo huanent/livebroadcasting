@@ -153,8 +153,8 @@ export default {
           classApi.classFinish(this.$route.query.id).then(res => {
             if (res.data.success) {
               this.$notify.success({
-                title: "已下课",
-                message: "即将返回课堂列表"
+                title: this.$t("class.liveFinishedTips"),
+                message: this.$t("class.redirectToClassList")
               });
 
               this.redirectTimer = setTimeout(() => {
