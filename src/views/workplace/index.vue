@@ -66,7 +66,7 @@ import { destroyEmitter, Emitter, initEmitter } from "../../core/emit";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { ROLE } from "@/models/role";
 import Widgets from "../../components/live-broadcast/widgets";
-
+import { app } from "../../main";
 import {
   initLiveBroadcastService,
   liveBroadcastService
@@ -110,6 +110,7 @@ export default {
   },
   async mounted() {
     initEmitter();
+    autoSyncState(app);
     let access = await requestDeviceAccess();
     if (!access) {
       return await this.notAccessDevice();

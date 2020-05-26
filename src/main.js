@@ -22,7 +22,6 @@ export let app = new Vue({
   render: h => h(App)
 }).$mount("#app");
 
-autoSyncState(app);
 if (window.rtcService) {
   store.commit("electron/RTC_AVAIABLED");
 } else {
