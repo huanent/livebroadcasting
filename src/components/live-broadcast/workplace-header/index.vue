@@ -8,6 +8,7 @@
       </el-tooltip>
 
       <el-button
+        v-if="role === ROLE.TEACHER"
         @click="classFinish"
         class="class-btn"
         size="mini"
@@ -135,11 +136,29 @@ export default {
       this.dialogVisible = false;
     },
     classFinish() {
-      this.manualControlFeatures({
-        id: ROLE.STUDENT,
-        propName: "classing",
-        value: false
-      });
+      // this.manualControlFeatures({
+      //   id: ROLE.STUDENT,
+      //   propName: "classing",
+      //   value: false
+      // });
+      this.$confirm(this.$t("class.quitReminder"), this.$t("text.tips"), {
+        distinguishCancelAndClose: true,
+        confirmButtonText: this.$t("button.yes"),
+        cancelButtonText: this.$t("button.cancel"),
+        type: "warning"
+      })
+        .then(() => {
+          classApi.classFinish(this.$route.query.id).then(res => {
+            if (res.data.success) {
+              this.$router.push({ name: "Classlist" });
+            } else {
+              this.$message.error(this.$t("text.errorOccurred"));
+            }
+          });
+        })
+        .catch(action => {
+          console.log(action);
+        });
     },
     async hanlderStatus() {
       if (this.status === 1) {
@@ -147,28 +166,7 @@ export default {
       }
     },
     liveroomLogout() {
-      this.$confirm(this.$t("class.quitReminder"), this.$t("text.tips"), {
-        distinguishCancelAndClose: true,
-        confirmButtonText: this.$t("class.leaveForAWhile"),
-        cancelButtonText: this.$t("class.directClass"),
-        type: "warning"
-      })
-        .then(() => {
-          //离开一会
-          this.$router.push({ name: "Classlist" });
-        })
-        .catch(action => {
-          //直接下课
-          if (action === "cancel") {
-            classApi.classFinish(this.$route.query.id).then(res => {
-              if (res.data.success) {
-                this.$router.push({ name: "Classlist" });
-              } else {
-                this.$message.error(this.$t("text.errorOccurred"));
-              }
-            });
-          }
-        });
+      this.$router.push({ name: "Classlist" });
     },
     handlerTheme() {
       if (this.switchStatus) {
