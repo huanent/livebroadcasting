@@ -43,12 +43,14 @@ export class TimService {
       userSig: this.token.userSig
     });
 
-    this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, e => {
-      Emitter.emit("tim_message_received", e.data);
-    });
+    this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, this.timMessageHandler);
+  }
+  timMessageHandler(e) {
+    Emitter.emit("tim_message_received", e.data);
   }
 
-  logout() {
-    return this.tim.logout();
+  async destroy() {
+    this.tim.off(TIM.EVENT.MESSAGE_RECEIVED, this.timMessageHandler);
+    return await this.tim.logout();
   }
 }

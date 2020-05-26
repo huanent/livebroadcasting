@@ -132,7 +132,7 @@ export default {
   },
   methods: {
     ...mapActions("features", ["manualControlFeatures"]),
-    ...mapMutations("workplace", ["SET_THEME_COLOR", "QUIT_SERVICE"]),
+    ...mapMutations("workplace", ["SET_THEME_COLOR"]),
     close_dialog(val) {
       this.dialogVisible = false;
     },
@@ -212,9 +212,6 @@ export default {
         done();
       }
     }
-  },
-  beforeDestroy() {
-    this.QUIT_SERVICE();
   },
   components: {
     Widgets,
