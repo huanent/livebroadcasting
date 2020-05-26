@@ -39,7 +39,6 @@
       @selected="onSelected"
     />
     <hand />
-    <hand-up-list v-if="role == ROLE.TEACHER" />
   </div>
 </template>
 
