@@ -13,7 +13,7 @@
         class="class-btn"
         size="mini"
         type="primary"
-        >{{ status === 1 ? "下课" : "上课" }}</el-button
+        >下课</el-button
       >
 
       <recoder v-if="showRecoderButton"></recoder>
