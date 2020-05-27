@@ -95,6 +95,7 @@
   "class.description": "课堂描述",
   "class.addStudents": "参与学生",
   "class.students": "参与学生",
+  "class.courseFiles": "课堂文件",
   "class.noStudents": "暂无学生",
   "class.startTime": "开始时间",
   "class.endTime": "结束时间",

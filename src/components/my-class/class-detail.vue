@@ -26,6 +26,23 @@
           <label>{{ $t("class.description") }}：</label
           ><span>{{ classInfo.description }}</span>
         </div>
+        <div
+          class="detail-item"
+          v-if="classInfo.status === 1 || classInfo.status === 2"
+        >
+          <label>{{ $t("class.courseFiles") }}：</label>
+          <ul class="filelist">
+            <li
+              v-for="(item, index) in classInfo.files"
+              @click="downloadCourseFile(item.url)"
+              :key="item._id"
+              :href="item.url"
+            >
+              {{ index + 1 + ".   " + item.filename }}
+              <icon color="#0a818c" name="download" :size="16"></icon>
+            </li>
+          </ul>
+        </div>
         <div class="detail-item" v-if="isCreater">
           <label>{{ $t("class.students") }}：</label>
           <span v-for="item in classInfo.students" :key="item._id">
@@ -74,6 +91,9 @@ export default {
     handleEdit() {
       this.$emit("handleEdit");
     },
+    downloadCourseFile(url) {
+      window.open(url, "_blank");
+    },
     open() {
       this.classDetailVisible = true;
     },
@@ -101,6 +121,13 @@ export default {
       }
       span {
         white-space: pre;
+      }
+      .filelist {
+        list-style: none;
+        padding-left: 70px;
+        svg {
+          margin-left: 20px;
+        }
       }
     }
   }
