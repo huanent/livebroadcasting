@@ -10,6 +10,7 @@
 <script>
 import HandUpItem from "./hand-up-item";
 import { mapState } from "vuex";
+import { HAND_UP_STATUS } from "../../../models/handUpStatus";
 
 export default {
   components: {
@@ -18,7 +19,7 @@ export default {
   computed: {
     ...mapState("workplace", ["featuresList"]),
     list() {
-      return this.featuresList.filter(f => f.handUp);
+      return this.featuresList.filter(f => f.handUp != HAND_UP_STATUS.NONE);
     }
   }
 };
@@ -30,7 +31,7 @@ export default {
   bottom: 50px;
   right: 50px;
   z-index: 100000;
-  ul > li{
+  ul > li {
     padding: 3px 0;
   }
 }

@@ -1,5 +1,5 @@
-import store from "@/store";
 import { liveBroadcastService } from "../core/live-broadcast/live-broadcast-service";
+import { HAND_UP_STATUS } from "../models/handUpStatus";
 export const initFeaturesState = function(role) {
   let isTeacher = role === "ROLE_TEACHER";
   return {
@@ -9,7 +9,7 @@ export const initFeaturesState = function(role) {
     audioStatus: true,
     subscribeVideo: true,
     subscribeAudio: isTeacher,
-    handUp: isTeacher,
+    handUp: HAND_UP_STATUS.NONE,
     classing: true
   };
 };
@@ -21,7 +21,7 @@ const state = {
   audioStatus: true,
   subscribeVideo: true,
   subscribeAudio: false,
-  handUp: false,
+  handUp: HAND_UP_STATUS.NONE,
   classing: true
 };
 
@@ -33,7 +33,23 @@ const mutations = {
     state.audioStatus = status;
   },
   HAND_UP(state) {
-    state.handUp = true;
+    switch (state.handUp) {
+      case HAND_UP_STATUS.NONE:
+        state.handUp = HAND_UP_STATUS.UPING;
+        break;
+      case HAND_UP_STATUS.UPING:
+        state.handUp = HAND_UP_STATUS.NONE;
+        break;
+      case HAND_UP_STATUS.SPEAKING:
+        state.handUp = HAND_UP_STATUS.NONE;
+        break;
+      default:
+        break;
+    }
+  },
+  SWITCH_SPEAKING(state, value) {
+    state.subscribeAudio = value;
+    state.canControlBoard = value;
   },
   INIT_STATE(state, role) {
     let data = initFeaturesState(role);

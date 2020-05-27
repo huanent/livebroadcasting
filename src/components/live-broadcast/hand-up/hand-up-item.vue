@@ -11,8 +11,8 @@
         type="success"
         round
         size="mini"
-        v-if="!speaking"
-        @click="speak"
+        v-if="this.feature.handUp == HAND_UP_STATUS.UPING"
+        @click="manual(HAND_UP_STATUS.SPEAKING)"
       >
         发言
       </el-button>
@@ -20,8 +20,8 @@
         type="success"
         round
         size="mini"
-        v-if="speaking"
-        @click="stopSpeak"
+        v-if="this.feature.handUp == HAND_UP_STATUS.SPEAKING"
+        @click="manual(HAND_UP_STATUS.NONE)"
       >
         结束发言
       </el-button>
@@ -29,8 +29,8 @@
         type="danger"
         round
         size="mini"
-        @click="clear"
-        v-if="!speaking"
+        @click="manual(HAND_UP_STATUS.NONE)"
+        v-if="this.feature.handUp == HAND_UP_STATUS.UPING"
       >
         忽略
       </el-button>
@@ -39,6 +39,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import { HAND_UP_STATUS } from "../../../models/handUpStatus";
 export default {
   props: ["feature"],
   data() {
@@ -46,40 +47,14 @@ export default {
       loading: false
     };
   },
-  computed: {
-    speaking() {
-      return this.feature.canControlBoard && this.feature.subscribeAudio;
-    }
-  },
   methods: {
     ...mapActions("features", ["manualControlFeatures"]),
-    clear() {
+    manual(status) {
       this.loading = true;
       this.manualControlFeatures({
         id: this.feature.__primaryKey,
         propName: "handUp",
-        value: false
-      });
-    },
-    speak() {
-      this.loading = true;
-      this.manualControlFeatures({
-        id: this.feature.__primaryKey,
-        value: [
-          { propName: "canControlBoard", value: true },
-          { propName: "subscribeAudio", value: true }
-        ]
-      });
-    },
-    stopSpeak() {
-      this.loading = true;
-      this.manualControlFeatures({
-        id: this.feature.__primaryKey,
-        value: [
-          { propName: "canControlBoard", value: false },
-          { propName: "subscribeAudio", value: false },
-          { propName: "handUp", value: false }
-        ]
+        value: status
       });
     }
   },
