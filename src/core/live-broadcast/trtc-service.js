@@ -62,7 +62,6 @@ export class TrtcService {
         return await store.dispatch("tips/microphonesError");
       }
     }
-    debugger;
     const localStream = TRTC.createStream(options);
 
     this.localStream = localStream;
