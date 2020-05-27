@@ -244,7 +244,7 @@ export class TrtcService {
     }
     let stream = this.getRemoteStreamByUserId(id);
     stream.play(elmentOrId);
-    this.coverPlayStyle(stream, "fill");
+    this.coverPlayStyle(stream, "contain");
   }
 
   async shareScreenStreamPlay(data, role) {
