@@ -95,7 +95,7 @@ export default {
                 this.SET_USER_INFO(data);
                 this.$router.push({ name: "Classlist" });
               } else {
-                this.$message.error(res.data.message);
+                this.$message.error(this.$t("login.failedTips"));
               }
             })
             .catch(err => {

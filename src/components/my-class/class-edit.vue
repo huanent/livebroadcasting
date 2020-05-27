@@ -164,7 +164,7 @@ export default {
               return ele.value !== userId;
             });
           } else {
-            this.$message.error(res.data.message);
+            this.$message.error(this.$t("class.dataFailed"));
           }
         })
         .catch(err => {

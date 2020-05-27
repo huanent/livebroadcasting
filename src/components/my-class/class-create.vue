@@ -189,13 +189,13 @@ export default {
             .classCreate(formData)
             .then(res => {
               if (res.data.success) {
-                this.$message.success(res.data.message);
+                this.$message.success(this.$t("class.createSuccess"));
                 this.createFormVisible = false;
                 this.$emit("createSuccess");
                 this.loading = false;
               } else {
                 this.$refs.upload.clearFiles();
-                this.$message.error(res.data.message);
+                this.$message.error(this.$t("class.createFailed"));
                 this.loading = false;
               }
             })
