@@ -41,6 +41,8 @@
   "signup": "注册",
   "signup.signupSuccess": "注册成功，请登录",
   "signup.signupFailed": "注册失败",
+  "signup.signupFailedByRepeated": "注册失败,用户名已存在",
+  "signup.signupFailedByPassword": "注册失败,用户名已存在",
   "signup.username": "用户名",
   "signup.nickname": "昵称",
   "signup.password": "密码",

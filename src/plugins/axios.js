@@ -26,7 +26,12 @@ axios.interceptors.response.use(
     if (!response.data.success) {
       const isServerLogin =
         response.headers.islogin && response.headers.islogin === "True";
-      if (!isServerLogin && router.history.current.path !== "/login") {
+      const currentPath = router.history.current.path;
+      if (
+        !isServerLogin &&
+        currentPath !== "/login" &&
+        currentPath !== "/signup"
+      ) {
         router.push("/login");
       }
     }

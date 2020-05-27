@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import userApi from "@api/user";
 import { mapState, mapMutations } from "vuex";
 export default {
   name: "Login",
@@ -82,8 +83,8 @@ export default {
           const data = new FormData();
           data.append("username", this.loginForm.username);
           data.append("password", this.loginForm.password);
-          this.axios
-            .post("/login", data)
+          userApi
+            .login(data)
             .then(res => {
               if (res.data.success) {
                 this.$message.success(this.$t("login.successTips"));

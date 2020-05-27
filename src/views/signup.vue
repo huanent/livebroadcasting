@@ -25,7 +25,7 @@
         </el-form-item>
         <el-form-item>
           <div class="signup-btn-wrap">
-            <el-button type="primary" @click="onSubmit('signUpForm')">{{
+            <el-button type="primary" @click="onSubmit">{{
               $t("signup")
             }}</el-button>
             <router-link tag="span" :to="{ name: 'Login' }">{{
@@ -40,6 +40,8 @@
 
 <script>
 import { mapState } from "vuex";
+import userApi from "@api/user";
+
 export default {
   name: "Signup",
   data() {
@@ -107,29 +109,29 @@ export default {
   },
   methods: {
     onSubmit(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs["signUpForm"].validate(valid => {
         if (valid) {
-          this.axios
-            .post("/user/signup", this.signUpForm)
+          userApi
+            .signup(this.signUpForm)
             .then(res => {
               if (res.data.success) {
                 this.$message.success(this.$t("signup.signupSuccess"));
                 this.$router.push({ path: "/login" });
               } else {
-                this.$refs[formName].resetFields();
-                this.$message.error(this.$t("signup.signupFailed"));
+                if (res.data.code === 1) {
+                  this.$message.error(this.$t("signup.signupFailedByPassword"));
+                } else if (res.data.code === 2) {
+                  this.$message.error(this.$t("signup.signupFailedByRepeated"));
+                } else {
+                  this.$message.error(this.$t("signup.signupFailed"));
+                }
               }
             })
             .catch(err => {
+              console.log(err);
             });
         }
       });
-    },
-    resetForm: function(formName) {
-      this.$refs[formName].resetFields();
-    },
-    toLoginPage() {
-      this.$router.push({ path: "/login" });
     }
   }
 };
