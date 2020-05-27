@@ -43,7 +43,7 @@ export default {
       this.leftOffset = e.x - rect.left;
     },
     drag(e) {
-      let rect = this.$refs.header.getBoundingClientRect();
+      if (e.y == 0 && e.x == 0) return;
       this.top = this.getPercentage(e.y - this.topOffset);
       this.left = this.getPercentage(e.x - this.leftOffset, "width");
     },
