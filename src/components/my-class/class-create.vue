@@ -43,6 +43,7 @@
             :placeholder="$t('class.startTimetips')"
             :editable="false"
             value-format="timestamp"
+            :picker-options="pickerOptions"
           >
           </el-date-picker>
         </div>
@@ -55,6 +56,7 @@
             :placeholder="$t('class.endTimetips')"
             :editable="false"
             value-format="timestamp"
+            :picker-options="pickerOptions"
           >
           </el-date-picker>
         </div>
@@ -108,6 +110,11 @@ export default {
     };
     return {
       loading: false,
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7;
+        }
+      },
       createFormVisible: false,
       classForm: {
         avatar: "",
