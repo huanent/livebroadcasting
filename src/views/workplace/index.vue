@@ -31,7 +31,6 @@
           <div></div>
         </div>
         <MainWorkplace
-          :isSidebarShow="isSidebarShow"
           @head-toggle="toggleCameraPanel"
           @sidebar-toggle="toggleSidebar"
         ></MainWorkplace>
@@ -73,19 +72,7 @@ import {
 } from "../../core/live-broadcast/live-broadcast-service";
 import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
 import { autoSyncState, destroySyncState } from "../../core/state-sync";
-export const requestDeviceAccess = async function() {
-  try {
-    let stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true
-    });
-    if (stream) return true;
-  } catch (e) {
-    return false;
-  }
-
-  return false;
-};
+import { requestDeviceAccess } from "../../core/utils";
 
 export default {
   name: "workplace",
@@ -111,10 +98,7 @@ export default {
   async mounted() {
     initEmitter();
     autoSyncState(app);
-    let access = await requestDeviceAccess();
-    if (!access) {
-      return await this.notAccessDevice();
-    }
+
     const classId = this.$route.query.id;
     const res = await classApi.classGet(classId);
     if (res.data.success) {
@@ -129,15 +113,24 @@ export default {
       createUser: this.classCreator,
       id: this.$route.query.id
     };
+
+    const role =
+      this.classCreator == this.userInfo.username ? ROLE.TEACHER : ROLE.STUDENT;
+    this.SET_ROLE(role);
+    let access = await requestDeviceAccess();
+    if (!access.video || !access.video) {
+      await this.notAccessDevice();
+      if (role === ROLE.TEACHER) {
+        this.redirectIndex();
+        return;
+      }
+    }
+
     const enterResult = await this.enterRoom(roomData);
     if (!enterResult.data.success) {
       this.$message.error(this.$t("class.liveFinishedTips"));
       return;
     }
-    const role =
-      this.classCreator == this.userInfo.username ? ROLE.TEACHER : ROLE.STUDENT;
-    this.SET_ROLE(role);
-
     this.visibity = true;
 
     await initLiveBroadcastService();
@@ -235,7 +228,7 @@ export default {
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
     ...mapMutations("workplace", ["SET_CAMERA_PANEL_VISIBILITY"]),
     ...mapActions("workplace", ["enterRoom", "destroyRoom"]),
-    ...mapActions("tips", ["notAccessDevice"]),
+    ...mapActions("tips", ["notAccessDevice", "redirectIndex"]),
     toggleSidebar() {
       this.isSidebarShow = !this.isSidebarShow;
     },
@@ -331,7 +324,7 @@ export default {
 .workplace-panel-content {
   display: grid;
   width: 100%;
-  grid-template-columns: auto 0 290px;
+  grid-template-columns: auto 0 20%;
   height: 100%;
   overflow: hidden;
 }
@@ -360,6 +353,7 @@ export default {
   }
   & > * {
     overflow: hidden;
+    height: auto;
   }
 }
 

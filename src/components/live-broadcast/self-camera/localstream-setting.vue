@@ -17,6 +17,7 @@
               value-key="deviceId"
               @change="onActiveCameraChange"
               :placeholder="$t('setting.chooseCamera')"
+              v-if="access.video"
             >
               <el-option
                 v-for="item in cameraDeviceList"
@@ -26,11 +27,21 @@
               >
               </el-option>
             </el-select>
+            <el-alert
+              v-else
+              title="获取摄像头异常"
+              type="error"
+              description="可能浏览器未授权、设备被占用或者设备故障"
+              show-icon
+              :closable="false"
+            >
+            </el-alert>
           </div>
           <div class="select-item">
             <div class="dialog-title">{{ $t("setting.micro") }}</div>
             <el-select
               style="width:100%"
+              v-if="access.audio"
               :value="activeMicrophones"
               value-key="label"
               @change="onactiveMicrophonesChange"
@@ -45,6 +56,15 @@
               >
               </el-option>
             </el-select>
+            <el-alert
+              v-else
+              title="获取麦克风异常"
+              type="error"
+              description="可能浏览器未授权、设备被占用或者设备故障"
+              show-icon
+              :closable="false"
+            >
+            </el-alert>
           </div>
         </el-col>
         <el-col :xs="24" :sm="24" :md="12">
@@ -82,6 +102,7 @@
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
 import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { requestDeviceAccess } from "../../../core/utils";
 
 export default {
   name: "LocalstreamSetting",
@@ -95,7 +116,8 @@ export default {
       percentage: 0,
       testStream: undefined,
       mediaDevices: undefined,
-      audioLevelTimer: undefined
+      audioLevelTimer: undefined,
+      access: { video: false, audio: false }
     };
   },
   props: {
@@ -103,13 +125,13 @@ export default {
       type: Boolean
     }
   },
-  mounted() {
+  async mounted() {
     this.$once("hook:beforeDestroy", () => {
       if (this.audioLevelTimer) {
         clearInterval(this.audioLevelTimer);
       }
     });
-    this.getDevice();
+    await this.getDevice();
     this.play();
   },
 
@@ -135,10 +157,11 @@ export default {
       clearInterval(this.audioLevelTimer);
       this.$emit("update:visibility", false);
     },
-    getDevice() {
+    async getDevice() {
       this.cameraDeviceList = [];
       this.microphonesDeviceList = [];
       this.speakerDeviceList = [];
+      this.access = await requestDeviceAccess();
       navigator.mediaDevices.enumerateDevices().then(mediaDevices => {
         mediaDevices.forEach((item, index) => {
           if (item.deviceId) {
@@ -227,12 +250,20 @@ export default {
     },
     play() {
       let options = {};
-      if (this.activeMicrophones && this.activeMicrophones.deviceId) {
+      if (
+        this.access.audio &&
+        this.activeMicrophones &&
+        this.activeMicrophones.deviceId
+      ) {
         options.audio = { deviceId: this.activeMicrophones.deviceId };
       } else {
         options.audio = false;
       }
-      if (this.activeMicrophones && this.activeCamera.deviceId) {
+      if (
+        this.access.video &&
+        this.activeMicrophones &&
+        this.activeCamera.deviceId
+      ) {
         options.video = { deviceId: this.activeCamera.deviceId };
       } else {
         options.video = false;

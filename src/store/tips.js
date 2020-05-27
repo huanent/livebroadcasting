@@ -25,7 +25,7 @@ const actions = {
   },
   async notAccessDevice({ commit, dispatch }, preload) {
     app.$message.error("未获得设备权限，请在浏览器分别打开麦克风和摄像头权限");
-    return await dispatch("redirectIndex");
+
   },
   async redirectIndex() {
     return await setTimeoutPromise(() => {

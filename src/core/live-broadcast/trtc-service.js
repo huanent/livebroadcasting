@@ -6,6 +6,7 @@ import { enterRoom } from "../data/data-service.js";
 import config from "../state-sync/config";
 import { liveBroadcastService } from "./live-broadcast-service";
 import { getStateValue } from "../state-sync";
+import { requestDeviceAccess } from "../utils";
 
 export class TrtcService {
   localStream;
@@ -36,15 +37,33 @@ export class TrtcService {
       this.token.userSig
     );
     await this.joinroom();
-    let { cameraId, microphoneId } = await this.getDefaultDevice();
-    const localStream = TRTC.createStream({
+    let options = {
       userId: this.token.id,
-      audio: store.state.features.videoStatus,
-      video: store.state.features.audioStatus,
-      microphoneId: microphoneId,
-      cameraId: cameraId,
-      mirror: false
-    });
+      mirror: false,
+      video: false,
+      audio: false
+    };
+    let { cameraId, microphoneId } = await this.getDefaultDevice();
+    let access = await requestDeviceAccess();
+    if (access.audio) {
+      options.audio = store.state.features.audioStatus;
+      options.microphoneId = microphoneId;
+    } else {
+      if (store.state.account.role === ROLE.TEACHER) {
+        await store.dispatch("tips/cameraError");
+      }
+    }
+
+    if (access.video) {
+      options.audio = store.state.features.videoStatus;
+      options.cameraId = cameraId;
+    } else {
+      if (store.state.account.role === ROLE.TEACHER) {
+        return await store.dispatch("tips/microphonesError");
+      }
+    }
+    const localStream = TRTC.createStream(options);
+    debugger;
     this.localStream = localStream;
 
     await localStream.initialize();
@@ -64,45 +83,33 @@ export class TrtcService {
     }
   }
   async getDefaultDevice() {
-    let mediaDevices = await navigator.mediaDevices.enumerateDevices();
+    let re = {};
+    try {
+      let cameraDeviceList = await TRTC.getCameras();
 
-    let cameraDeviceList = await TRTC.getCameras();
+      let activeCamera = cameraDeviceList.find(device => {
+        return device.deviceId;
+      });
+      if (activeCamera) {
+        let cameraId = activeCamera.deviceId;
+        store.commit("workplace/ACTIVE_CAMERA", activeCamera);
+        re["cameraId"] = cameraId;
+      }
+    } catch (e) {}
 
-    let activeCamera = cameraDeviceList.find(device => {
-      return device.deviceId;
-    });
-    if (!activeCamera) {
-      return await store.dispatch("tips/cameraError");
-    }
-    let microphonesDeviceList = await TRTC.getMicrophones();
-    let activeMicrophones = microphonesDeviceList.find(device => {
-      return device.deviceId;
-    });
-    if (!activeMicrophones) {
-      return await store.dispatch("tips/microphonesError");
-    }
-    if (cameraDeviceList[0] && microphonesDeviceList[0]) {
-      let activeCameraDevice = JSON.parse(
-        JSON.stringify({
-          kind: cameraDeviceList[0].kind,
-          deviceId: cameraDeviceList[0].deviceId,
-          label: cameraDeviceList[0].label
-        })
-      );
+    try {
+      let microphonesDeviceList = await TRTC.getMicrophones();
+      let activeMicrophones = microphonesDeviceList.find(device => {
+        return device.deviceId;
+      });
+      if (activeMicrophones) {
+        let microphoneId = activeMicrophones.deviceId;
+        store.commit("workplace/ACTIVE_MICROPHONES", activeMicrophones);
+        re["microphoneId"] = microphoneId;
+      }
+    } catch (e) {}
 
-      let activeMicrophonesDevice = JSON.parse(
-        JSON.stringify({
-          kind: microphonesDeviceList[0].kind,
-          deviceId: microphonesDeviceList[0].deviceId,
-          label: microphonesDeviceList[0].label
-        })
-      );
-      let cameraId = activeCameraDevice.deviceId;
-      let microphoneId = activeMicrophonesDevice.deviceId;
-      store.commit("workplace/ACTIVE_CAMERA", activeCameraDevice);
-      store.commit("workplace/ACTIVE_MICROPHONES", activeMicrophonesDevice);
-      return { cameraId, microphoneId };
-    }
+    return re;
   }
   getAudioLevel() {
     if (this.localStream) {
