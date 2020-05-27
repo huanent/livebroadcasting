@@ -53,6 +53,7 @@
               ref="video"
               autoplay="autoplay"
               id="test-stream-video"
+              muted="true"
             ></video>
           </div>
         </el-col>
