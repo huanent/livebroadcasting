@@ -37,7 +37,7 @@
       :visible.sync="showStreamSelectdialog"
       @selected="onSelected"
     />
-    <hand />
+    <hand v-if="role == ROLE.STUDENT" />
   </div>
 </template>
 
@@ -51,7 +51,6 @@ import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";
 import { ROLE } from "../../../models/role";
 import Hand from "../hand-up/hand";
-import HandUpList from "../hand-up/hand-up-list";
 export default {
   name: "MainWorkplace",
   components: {
@@ -59,8 +58,7 @@ export default {
     BoardTabs,
     WorkplaceFooter,
     StreamSourceDialog,
-    Hand,
-    HandUpList
+    Hand
   },
   data() {
     return {
