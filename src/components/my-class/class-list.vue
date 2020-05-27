@@ -29,7 +29,12 @@
             <div class="live-status expired" v-if="item.status === 3">
               {{ $t("class.liveExpired") }}
             </div>
-            <img :src="item.url" :alt="$t('class.classCover')" />
+            <img
+              :src="
+                item.url ? item.url : require('../../assets/images/cover.png')
+              "
+              :alt="$t('class.classCover')"
+            />
           </div>
           <div class="detail-content">
             <div class="field" :title="item.title">

@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import avatarImg from "../../../assets/images/avatar.jpg";
 export default {
   name: "ChatroomMessage",
   props: ["avatar", "name", "content", "time", "isTeacher"]
