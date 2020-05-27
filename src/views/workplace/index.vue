@@ -120,6 +120,7 @@ export default {
     if (res.data.success) {
       this.classCreator = res.data.model.createUser;
       this.classStatus = Number(res.data.model.status);
+      document.title = res.data.model.title;
     } else {
       this.$message.error(this.$t("class.hasNoClassInfo"));
       return;

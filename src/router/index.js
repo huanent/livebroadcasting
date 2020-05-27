@@ -16,36 +16,50 @@ const routes = [
     name: "MyClass",
     component: () => import("@v/myclass"),
     meta: {
-      requireAuth: true
+      requireAuth: true,
+      title: "我的课堂"
     },
     children: [
       {
         path: "/",
         name: "Classlist",
-        component: () => import("@c/my-class")
+        component: () => import("@c/my-class"),
+        meta: {
+          title: "课堂列表"
+        }
       },
       {
         path: "/setting",
         name: "Setting",
-        component: () => import("@c/my-class/my-setting")
+        component: () => import("@c/my-class/my-setting"),
+        meta: {
+          title: "个人设置"
+        }
       }
     ]
   },
   {
     path: "/login",
     name: "Login",
-    component: () => import("@v/login.vue")
+    component: () => import("@v/login.vue"),
+    meta: {
+      title: "登录"
+    }
   },
   {
     path: "/signup",
     name: "SignUp",
-    component: () => import("@v/signup.vue")
+    component: () => import("@v/signup.vue"),
+    meta: {
+      title: "注册"
+    }
   },
   {
     path: "/liveroom",
     name: "Liveroom",
     meta: {
-      requireAuth: true
+      requireAuth: true,
+      title: ""
     },
     component: () => import("@v/workplace")
   }
@@ -63,6 +77,9 @@ const isExpired = () => {
 };
 
 router.beforeEach(async (to, from, next) => {
+  if (to.meta.title) {
+    document.title = to.meta.title;
+  }
   if (to.matched.some(item => item.meta.requireAuth)) {
     if (!hasToken() || isExpired()) {
       next({
