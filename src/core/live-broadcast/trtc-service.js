@@ -50,20 +50,21 @@ export class TrtcService {
       options.microphoneId = microphoneId;
     } else {
       if (store.state.account.role === ROLE.TEACHER) {
-        await store.dispatch("tips/cameraError");
+        return await store.dispatch("tips/cameraError");
       }
     }
 
     if (access.video) {
-      options.audio = store.state.features.videoStatus;
+      options.video = store.state.features.videoStatus;
       options.cameraId = cameraId;
     } else {
       if (store.state.account.role === ROLE.TEACHER) {
         return await store.dispatch("tips/microphonesError");
       }
     }
-    const localStream = TRTC.createStream(options);
     debugger;
+    const localStream = TRTC.createStream(options);
+
     this.localStream = localStream;
 
     await localStream.initialize();

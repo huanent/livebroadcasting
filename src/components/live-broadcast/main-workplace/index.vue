@@ -9,7 +9,6 @@
         @head-toggle="$emit('head-toggle')"
         @sidebar-toggle="$emit('sidebar-toggle')"
         :panel-type="panelType"
-        :isSidebarShow="isSidebarShow"
         class="workplace-content"
         :show-lable="panelType === 'board'"
       >
@@ -69,9 +68,6 @@ export default {
       isServiceReady: false,
       showStreamSelectdialog: false
     };
-  },
-  props: {
-    isSidebarShow: Boolean
   },
   async mounted() {
     this.showStreamSelectdialog = this.streamSelectVisibility;

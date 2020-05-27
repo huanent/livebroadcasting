@@ -78,7 +78,6 @@ export default {
   name: "BoardTabs",
   props: {
     datas: {},
-    isSidebarShow: Boolean,
     activeIndex: {
       type: Number,
       default: 0
