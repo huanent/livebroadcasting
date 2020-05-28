@@ -7,6 +7,11 @@ export default [
     sender: ROLE.TEACHER
   },
   {
+    path: ["features", "noTalking"],
+    listener: ROLE.STUDENT,
+    sender: ROLE.TEACHER
+  },
+  {
     path: ["widget", "timer"],
     listener: ROLE.STUDENT,
     sender: ROLE.TEACHER

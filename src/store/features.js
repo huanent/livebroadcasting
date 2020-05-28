@@ -10,6 +10,7 @@ export const initFeaturesState = function(role) {
     subscribeVideo: true,
     subscribeAudio: isTeacher,
     handUp: HAND_UP_STATUS.NONE,
+    noTalking: false,
     classing: true
   };
 };
@@ -22,6 +23,7 @@ const state = {
   subscribeVideo: true,
   subscribeAudio: false,
   handUp: HAND_UP_STATUS.NONE,
+  noTalking: false,
   classing: true
 };
 
@@ -31,6 +33,9 @@ const mutations = {
   },
   SET_AUDIO_STATUS(state, status) {
     state.audioStatus = status;
+  },
+  SET_NO_TALKING(state, status) {
+    state.noTalking = status;
   },
   HAND_UP(state) {
     switch (state.handUp) {
