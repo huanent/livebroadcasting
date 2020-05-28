@@ -7,7 +7,6 @@ import workplace from "./workplace";
 import localStream from "./localStream";
 import remoteStream from "./remoteStream";
 import shareScreenStream from "./shareScreenStream";
-import examination from "./examination";
 import electron from "./electron";
 import features from "./features";
 import widget from "./widget";
@@ -22,7 +21,6 @@ export default new Vuex.Store({
     localStream,
     remoteStream,
     shareScreenStream,
-    examination,
     electron,
     features,
     widget,

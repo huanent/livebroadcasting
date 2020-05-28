@@ -6,12 +6,6 @@
       :append-to-body="true"
     >
       <ul class="widgets-content">
-        <!-- <li>
-          <a @click="onOpenQuestion">题库</a>
-        </li>
-        <li>
-          <a @click="onOpenQuestionView">答题器</a>
-        </li> -->
         <li>
           <a
             @click="
@@ -59,25 +53,15 @@
         </li>
       </ul>
     </el-dialog>
-    <question :visible.sync="questionVisible"></question>
-    <question-view :visible.sync="questionViewVisible"></question-view>
   </div>
 </template>
 
 <script>
-import Question from "../question";
-import QuestionView from "../question/view";
 import { mapMutations } from "vuex";
 export default {
   name: "Widgets",
   props: {
     visible: Boolean
-  },
-  data() {
-    return {
-      questionVisible: false,
-      questionViewVisible: false
-    };
   },
   methods: {
     ...mapMutations("widget", [
@@ -87,14 +71,6 @@ export default {
       "SET_CLICKER_VISIBLE",
       "SET_RUSH_VISIBLE"
     ]),
-    onOpenQuestion() {
-      this.questionVisible = true;
-      this.closeWidgets();
-    },
-    onOpenQuestionView() {
-      this.questionViewVisible = true;
-      this.closeWidgets();
-    },
     closeWidgets() {
       this.$emit("update:visible", false);
     }
@@ -108,10 +84,6 @@ export default {
         this.$emit("update:visible", val);
       }
     }
-  },
-  components: {
-    Question,
-    QuestionView
   }
 };
 </script>
