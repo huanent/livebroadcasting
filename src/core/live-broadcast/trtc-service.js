@@ -74,7 +74,9 @@ export class TrtcService {
       bitrate: 1600
     });
     await client.publish(localStream);
-    store.commit("localStream/IS_INIT");
+    if (this.localStream) {
+      store.commit("localStream/LOCAL_STREAM_READY", true);
+    }
   }
   async destroy() {
     for (let i in this.clientList) {
@@ -127,33 +129,20 @@ export class TrtcService {
     return this.clientList[key];
   }
   async setCamerasDevice(deviceId) {
-    let localStream = this.localStream;
-    localStream.switchDevice("video", deviceId).then(() => {
-      return true;
-    });
+    return await this.localStream.switchDevice("video", deviceId);
   }
   async setMicrophonesDevice(deviceId) {
-    let localStream = this.localStream;
-    localStream.switchDevice("'audio'", deviceId).then(() => {
-      return true;
-    });
+    return await this.localStream.switchDevice("'audio'", deviceId);
   }
   play(videoEl, mediaStream) {
+    videoEl.srcObject = null;
     videoEl.srcObject = mediaStream;
   }
   localStreamPlay(data) {
-    data.el.innerHTML = "";
     let stream;
     let role = store.state.account.role;
-    debugger;
     if (!data.isCopy) {
-      stream = this.localStream;
-      if (stream && stream.play) {
-        this.play(data.el, stream.mediaStream_);
-
-        /*        stream.play(data.el);
-        this.coverPlayStyle(stream, "contain");*/
-      }
+      this.play(data.el, this.localStream.mediaStream_);
     } else {
       if (role === ROLE.TEACHER) {
         stream = this.localStream;
@@ -224,10 +213,7 @@ export class TrtcService {
     elmentOrId.innerHTML = "";
 
     let stream = this.getRemoteStreamByUserId(store.state.workplace.teachId);
-    if (stream && stream.play) {
-      stream.play(elmentOrId);
-      this.coverPlayStyle(stream);
-    }
+    this.play(elmentOrId, stream.mediaStream_);
   }
   teacherStreamStopPlay() {
     let stream = this.getRemoteStreamByUserId(store.state.workplace.teachId);
@@ -382,11 +368,20 @@ export class TrtcService {
       options.audio = false;
     }
     if (removeUserIdPrefix(stream.userId_) === store.state.workplace.teachId) {
+      if (!store.state.remoteStream.teacherStreamReady) {
+        store.commit("remoteStream/TEACHER_STREAM_READY", true);
+      }
       options.audio = true;
+      options.video = true;
     }
     if (stream) {
       let client = this.clientList["default"];
       await client.subscribe(stream, options);
+    }
+  }
+  async unsubscribeRemoteStream(rawUserId) {
+    if (removeUserIdPrefix(rawUserId) === store.state.workplace.teachId) {
+      store.commit("remoteStream/TEACHER_STREAM_READY", false);
     }
   }
   getStreamProfile() {
@@ -394,10 +389,12 @@ export class TrtcService {
     for (let i in this.remoteStreamList) {
       let regex = /.*(share_screen)$/;
       let stream = this.remoteStreamList[i].stream;
-      let con = regex.test(stream.userId_);
-
-      if (con) {
+      let isShareScreen = regex.test(stream.userId_);
+      let isTeacher =
+        removeUserIdPrefix(stream.userId_) === store.state.workplace.teachId;
+      if (isShareScreen) {
         this.remoteShareScreenStream = stream;
+      } else if (isTeacher) {
       } else {
         temp.push({
           userId: removeUserIdPrefix(stream.userId_),
@@ -464,6 +461,7 @@ export class TrtcService {
     client.on("unmute-video", event => {});
     client.on("stream-removed", event => {
       const remoteStream = event.stream;
+      self.unsubscribeRemoteStream(remoteStream.userId_);
       if (self.remoteStreamList[remoteStream.userId_]) {
         delete self.remoteStreamList[remoteStream.userId_];
       }

@@ -230,13 +230,15 @@ export default {
 
       draw();
     },
-    onDialogSave() {
+    async onDialogSave() {
       if (this.activeCamera) {
-        this.switchCamera(this.activeCamera);
+        await this.switchCamera(this.activeCamera);
       }
       if (this.activeMicrophones) {
-        this.switchMicrophones(this.activeMicrophones);
+        await this.switchMicrophones(this.activeMicrophones);
       }
+      this.$emit("onsave");
+
       this.onDialogClose();
     },
     onActiveCameraChange(value) {

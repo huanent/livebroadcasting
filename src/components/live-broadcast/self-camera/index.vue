@@ -2,11 +2,11 @@
   <div
     :class="{ 'self-camera-panel': true, hide: !visibility }"
     :style="{
-      width: width ? width + '%' : '100%'
+      width: width + '%'
     }"
   >
     <div class="self-camera-mask" ref="wrapper">
-      <div class="self-camera-icons">
+      <div class="self-camera-icons" v-show="selected.type === 'local'">
         <icon
           @click.native.stop="onMicroStateChange"
           :name="microIcon"
@@ -20,16 +20,32 @@
           :size="20"
         />
       </div>
+      <div class="self-camera-icons" v-show="selected.type === 'teacher'">
+        <icon
+          @click.native.stop="onMutedChange"
+          :name="!teacherAudioMuted ? 'microphone' : 'microphone-slash'"
+          color="#737882"
+          :size="20"
+        />
+      </div>
       <a @click.stop="onOpenSetting()">
         <icon name="settings" size="16" class="settings-icon"></icon>
       </a>
     </div>
     <div class="local_video">
       <video
-        ref="video"
-        v-show="$store.state.features.videoStatus"
+        ref="videoLocal"
+        style="object-fit: contain"
+        :muted="true"
+        v-show="selected.type === 'local' && $store.state.features.videoStatus"
         autoplay
-        style="height: 100%;width: 100%;background-color: #0a818c;object-fit: fill"
+      ></video>
+      <video
+        ref="videoTeacher"
+        v-show="selected.type === 'teacher'"
+        style="object-fit: contain"
+        autoplay
+        :muted="teacherAudioMuted"
       ></video>
       <icon
         v-show="!$store.state.features.videoStatus"
@@ -38,7 +54,10 @@
         color="#34363b"
       />
     </div>
-    <div class="self-camera-footer" v-show="$store.state.features.videoStatus">
+    <div
+      class="self-camera-footer"
+      v-show="$store.state.features.videoStatus && selected.type === 'local'"
+    >
       <div>
         <icon :name="microIcon" color="#0A818C" :size="18" />
         <voice-intensity :intensity="Number(audioLevel)" />
@@ -47,7 +66,16 @@
     <LocalstreamSetting
       :visibility.sync="settingDialogVisible"
       v-if="settingDialogVisible"
+      @onsave="onsave"
     ></LocalstreamSetting>
+    <div
+      style="position: absolute;right: 0;top:0.5rem;z-index: 999;cursor: pointer;min-width: 4rem"
+    >
+      <TypeSelect
+        v-show="role !== ROLE.TEACHER"
+        :selected.sync="selected"
+      ></TypeSelect>
+    </div>
   </div>
 </template>
 
@@ -55,37 +83,58 @@
 import VoiceIntensity from "./voice-intensity";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { Emitter } from "../../../core/emit";
+import TypeSelect from "./type-select";
 import LocalstreamSetting from "./localstream-setting";
+import { ROLE } from "../../../models/role";
 export default {
   name: "SelfCamera",
   data() {
     return {
       visibility: false,
-      isServiceReady: false,
-      settingDialogVisible: false,
-      width: 0
+      settingDialogVisible: true,
+      videoLocalWidth: 0,
+      videoTeacherWidth: 0,
+      teacherAudioMuted: false,
+      selected: {
+        title: "本地",
+        type: "local"
+      }
     };
   },
   components: {
     VoiceIntensity,
-    LocalstreamSetting
+    LocalstreamSetting,
+    TypeSelect
   },
   computed: {
-    ...mapState("localStream", ["audioLevel", "isInit"]),
+    ...mapState("account", ["role"]),
+    ...mapState("localStream", ["audioLevel", "localStreamReady"]),
     ...mapState("features", ["videoStatus", "audioStatus"]),
+    ...mapState("remoteStream", ["teacherStreamReady"]),
     microIcon() {
       return this.audioStatus ? "microphone" : "microphone-slash";
     },
     videoIcon() {
       return this.videoStatus ? "video" : "video-slash";
+    },
+    width() {
+      if (this.selected.type === "local" && this.videoLocalWidth > 0)
+        return this.videoLocalWidth;
+      if (this.selected.type === "teacher" && this.videoLocalWidth > 0)
+        return this.videoTeacherWidth;
+      return 100;
     }
   },
   watch: {
-    isInit(value) {
-      if (value && this.$refs.video && this.isServiceReady) {
-        this.LOCAL_STREAM_PLAY({ el: this.$refs.video });
-        this.visibility = true;
-      }
+    localStreamReady(value) {
+      this.LOCAL_STREAM_PLAY({ el: this.$refs.videoLocal });
+      this.visibility = true;
+    },
+
+    teacherStreamReady(value) {
+      if (this.role === ROLE.TEACHER) return;
+      this.TEACHER_REMOTE_STREAM_PLAY(this.$refs.videoTeacher);
+      this.visibility = true;
     },
     videoStatus(status) {
       this.switchVideo(status);
@@ -95,22 +144,30 @@ export default {
     }
   },
   mounted() {
+    if (this.role === ROLE.STUDENT) {
+      this.selected = {
+        title: "老师",
+        type: "teacher"
+      };
+    }
     const audioLevelTimer = setInterval(() => {
       this.SET_AUDIOLEVEL();
     }, 200);
     this.$once("hook:beforeDestroy", () => {
       clearInterval(audioLevelTimer);
     });
-    Emitter.on("LIVE_READY", () => {
-      this.isServiceReady = true;
-    });
-
-    let video = this.$refs.video;
+    let videoLocal = this.$refs.videoLocal;
     let vm = this;
-    video.addEventListener("canplay", ({ target }) => {
+    videoLocal.addEventListener("canplay", ({ target }) => {
       let w = target.videoWidth;
       let h = target.videoHeight;
-      vm.width = (h * 100) / w;
+      vm.videoLocalWidth = (h * 100) / w;
+    });
+    let videoTeacher = this.$refs.videoLocal;
+    videoTeacher.addEventListener("canplay", ({ target }) => {
+      let w = target.videoWidth;
+      let h = target.videoHeight;
+      vm.videoTeacherWidth = (h * 100) / w;
     });
   },
   methods: {
@@ -120,6 +177,7 @@ export default {
       "LOCAL_STREAM_STOP_PLAY"
     ]),
     ...mapActions("localStream", ["switchVideo", "switchAudio"]),
+    ...mapMutations("localStream", ["TEACHER_REMOTE_STREAM_PLAY"]),
     ...mapMutations("features", ["SET_VIDEO_STATUS", "SET_AUDIO_STATUS"]),
     onOpenSetting() {
       this.settingDialogVisible = true;
@@ -130,6 +188,15 @@ export default {
     },
     onMicroStateChange() {
       this.SET_AUDIO_STATUS(!this.audioStatus);
+    },
+    onMutedChange() {
+      this.teacherAudioMuted = !this.teacherAudioMuted;
+    },
+    onchange(selected) {
+      this.selected = selected;
+    },
+    onsave() {
+      this.LOCAL_STREAM_PLAY({ el: this.$refs.videoLocal });
     }
   }
 };
@@ -212,6 +279,11 @@ export default {
 .local_video {
   height: 100%;
   width: 100%;
+  video {
+    object-fit: fill;
+    height: 100%;
+    width: 100%;
+  }
 }
 .no-video {
   width: 100% !important;
@@ -226,5 +298,21 @@ export default {
 }
 .settings-icon:hover {
   fill: #dcebeb !important;
+}
+
+.select-header {
+  text-align: center;
+  z-index: 100;
+  @include themeify {
+    background: themed("background_color2");
+    color: themed("font_color1");
+  }
+  padding: 0 0.5rem;
+  cursor: pointer;
+  span {
+    padding-right: 0.5rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.02rem;
+  }
 }
 </style>
