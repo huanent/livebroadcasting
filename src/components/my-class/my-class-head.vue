@@ -6,7 +6,7 @@
           <img :src="avatarUrl" :alt="$t('class.avatar')" />
         </a>
         <div class="head-text">
-          <h2>{{ userInfo.nickname }}</h2>
+          <h2>{{ nickname }}</h2>
           <p>{{ $t("text.motto") }}</p>
         </div>
       </div>
@@ -30,6 +30,11 @@ export default {
       return this.userInfo && this.userInfo.avatar
         ? this.userInfo.avatar
         : avatarImg;
+    },
+    nickname() {
+      return this.userInfo && this.userInfo.nickname
+        ? this.userInfo.nickname
+        : "";
     }
   },
   data() {

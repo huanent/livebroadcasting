@@ -1,6 +1,6 @@
 <template>
   <div class="my-class">
-    <my-nav :avatar="userInfo.avatar || ''" :nickname="userInfo.nickname" />
+    <my-nav :avatar="avatar" :nickname="nickname" />
     <router-view
       @update="handleUserInfoUpdate"
       :userInfo="userInfo"
@@ -19,7 +19,15 @@ export default {
     return {};
   },
   computed: {
-    ...mapState("account", ["userInfo"])
+    ...mapState("account", ["userInfo"]),
+    avatar() {
+      return this.userInfo && this.userInfo.avatar ? this.userInfo.avatar : "";
+    },
+    nickname() {
+      return this.userInfo && this.userInfo.nickname
+        ? this.userInfo.nickname
+        : "";
+    }
   },
   methods: {
     ...mapMutations("account", ["SET_USER_INFO"]),
