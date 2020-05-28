@@ -2,17 +2,19 @@
   <div class="widgets">
     <timer-widget />
     <clicker-widget />
-    <dice-widget/>
-    <luck-draw/>
-    <rush-answer/>
+    <dice-widget />
+    <luck-draw />
+    <rush-answer />
+    <video-widget />
   </div>
 </template>
 <script>
 import TimerWidget from "./timer-widget/index";
 import ClickerWidget from "./clicker-widget/index";
 import DiceWidget from "./dice-widget/index";
-import LuckDraw from "./luck-draw/index"
-import RushAnswer from "./rush-answer/index"
+import LuckDraw from "./luck-draw/index";
+import RushAnswer from "./rush-answer/index";
+import VideoWidget from "./video-widget/index";
 
 export default {
   components: {
@@ -20,7 +22,8 @@ export default {
     ClickerWidget,
     DiceWidget,
     LuckDraw,
-    RushAnswer
+    RushAnswer,
+    VideoWidget
   }
 };
 </script>

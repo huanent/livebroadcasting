@@ -46,6 +46,14 @@ const state = {
     visible: false,
     started: false,
     name: ""
+  },
+  video: {
+    position: {
+      x: 0,
+      y: 0
+    },
+    visible: false,
+    src: ""
   }
 };
 
@@ -112,6 +120,10 @@ const mutations = {
   RUSH_ANSWER(state, value) {
     if (state.rush.name || state.rush.started == false) return;
     state.rush.name = value;
+  },
+  SET_VIDEO_VISIBLE(state, { visible, src }) {
+    state.video.visible = visible;
+    state.video.src = src;
   }
 };
 
