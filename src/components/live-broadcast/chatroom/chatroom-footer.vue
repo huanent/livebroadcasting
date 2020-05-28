@@ -55,7 +55,10 @@ export default {
     },
     onSubmit() {
       if (this.message.trim().length === 0) return;
-      if (this.role === ROLE.TEACHER && this.noTalking) return;
+      if (this.role === ROLE.TEACHER && this.noTalking) {
+        this.$message.error("老师开启了全体禁言,您暂时不能发送消息");
+        return;
+      }
       this.$emit("send", this.message);
       this.message = "";
     }
