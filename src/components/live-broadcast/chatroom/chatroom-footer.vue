@@ -55,6 +55,7 @@ export default {
     },
     onSubmit() {
       if (this.message.trim().length === 0) return;
+      if (this.role === ROLE.TEACHER && this.noTalking) return;
       this.$emit("send", this.message);
       this.message = "";
     }
