@@ -15,6 +15,13 @@
   "text.errorOccurred": "删除失败",
   "text.motto": "知识的价值不在于占有，而在于使用。",
 
+  "title.app": "Live broadcast",
+  "title.myClass": "我的课堂",
+  "title.classList": "课堂列表",
+  "title.setting": "个人设置",
+  "title.login": "登录",
+  "title.signup": "注册",
+
   "courseware.title": "课件库",
   "courseware.recode": "重新转码",
   "courseware.del": "删除课件",
