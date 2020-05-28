@@ -1,6 +1,11 @@
 <template>
-  <div :class="{ 'self-camera-panel': true, hide: !visibility }">
-    <div class="self-camera-mask">
+  <div
+    :class="{ 'self-camera-panel': true, hide: !visibility }"
+    :style="{
+      width: width ? width + '%' : '100%'
+    }"
+  >
+    <div class="self-camera-mask" ref="wrapper">
       <div class="self-camera-icons">
         <icon
           @click.native.stop="onMicroStateChange"
@@ -19,15 +24,21 @@
         <icon name="settings" size="16" class="settings-icon"></icon>
       </a>
     </div>
-    <div
-      v-show="$store.state.features.videoStatus"
-      class="local_video"
-      ref="video"
-    ></div>
-    <div v-show="!$store.state.features.videoStatus" class="local_video">
-      <icon class="no-video" name="person" color="#34363b" />
+    <div class="local_video">
+      <video
+        ref="video"
+        v-show="$store.state.features.videoStatus"
+        autoplay
+        style="height: 100%;width: 100%;background-color: #0a818c;object-fit: fill"
+      ></video>
+      <icon
+        v-show="!$store.state.features.videoStatus"
+        class="no-video"
+        name="person"
+        color="#34363b"
+      />
     </div>
-    <div class="self-camera-footer">
+    <div class="self-camera-footer" v-show="$store.state.features.videoStatus">
       <div>
         <icon :name="microIcon" color="#0A818C" :size="18" />
         <voice-intensity :intensity="Number(audioLevel)" />
@@ -51,7 +62,8 @@ export default {
     return {
       visibility: false,
       isServiceReady: false,
-      settingDialogVisible: true
+      settingDialogVisible: false,
+      width: 0
     };
   },
   components: {
@@ -92,6 +104,14 @@ export default {
     Emitter.on("LIVE_READY", () => {
       this.isServiceReady = true;
     });
+
+    let video = this.$refs.video;
+    let vm = this;
+    video.addEventListener("canplay", ({ target }) => {
+      let w = target.videoWidth;
+      let h = target.videoHeight;
+      vm.width = (h * 100) / w;
+    });
   },
   methods: {
     ...mapMutations("localStream", [
@@ -118,9 +138,9 @@ export default {
 <style scoped lang="scss">
 .self-camera-panel {
   @include themeify {
-    background: themed("background_color3");
+    background: themed("background_color2");
   }
-  margin: 10px 10px 5px;
+  margin: 0 auto;
   position: relative;
   .self-camera-mask {
     position: absolute;
@@ -160,12 +180,16 @@ export default {
     height: 32px;
     line-height: 32px;
     padding: 15px 10px 6px 10px;
-    background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.7) 0%,
-      rgba(0, 0, 0, 0.5) 35%,
-      rgba(0, 0, 0, 0) 100%
-    );
+
+    @include themeify {
+      background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.5) 35%,
+        rgba(0, 0, 0, 0) 100%
+      );
+    }
+
     > div {
       display: flex;
       align-items: center;
@@ -188,12 +212,10 @@ export default {
 .local_video {
   height: 100%;
   width: 100%;
-  background: rgb(52, 54, 58);
 }
 .no-video {
   width: 100% !important;
   height: 100% !important;
-  background-color: #202224;
 }
 .settings-icon {
   position: absolute;
