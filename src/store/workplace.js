@@ -71,6 +71,17 @@ const mutations = {
     for (let i in data) {
       state[i] = data[i];
     }
+  },
+
+  CLEAR_OFFLINE_USER(state) {
+    let timeNow = new Date().getTime();
+    var offlineUser = state.featuresList.filter(
+      f => timeNow - f.timestamp > 30000
+    );
+
+    for (const i of offlineUser) {
+      state.featuresList.splice(state.featuresList.indexOf(i), 1);
+    }
   }
 };
 

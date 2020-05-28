@@ -87,7 +87,8 @@ export default {
       audioLevelTimer: undefined,
       isSidebarShow: true,
       visibity: false,
-      watchInstance: undefined
+      watchInstance: undefined,
+      offlineUserClearer: null
     };
   },
   computed: {
@@ -98,6 +99,10 @@ export default {
   async mounted() {
     initEmitter();
     autoSyncState(app);
+
+    this.offlineUserClearer = setInterval(() => {
+      this.CLEAR_OFFLINE_USER();
+    }, 10000);
 
     const classId = this.$route.query.id;
     const res = await classApi.classGet(classId);
@@ -217,6 +222,7 @@ export default {
     });
   },
   async beforeRouteLeave(to, from, next) {
+    clearInterval(this.offlineUserClearer);
     destroySyncState();
     this.destroyRoom();
     destroyEmitter();
@@ -226,7 +232,10 @@ export default {
     ...mapMutations("features", ["SET_TIMESTAMP"]),
     ...mapMutations("account", ["SET_ROLE"]),
     ...mapMutations("board", ["SET_DRAW_ENABLE"]),
-    ...mapMutations("workplace", ["SET_CAMERA_PANEL_VISIBILITY"]),
+    ...mapMutations("workplace", [
+      "SET_CAMERA_PANEL_VISIBILITY",
+      "CLEAR_OFFLINE_USER"
+    ]),
     ...mapActions("workplace", ["enterRoom", "destroyRoom"]),
     ...mapActions("tips", ["notAccessDevice", "redirectIndex"]),
     toggleSidebar() {
