@@ -7,11 +7,9 @@
     title="举手"
   >
     <icon
-      name="hand"
+      :name="handUp == HAND_UP_STATUS.SPEAKING ? 'microphone' : 'hand'"
       :size="25"
-      :class="handUp == HAND_UP_STATUS.SPEAKING ? 'microphone' : 'hand-icon'"
     ></icon>
-    <div class="txt">{{ statusText }}</div>
   </div>
 </template>
 <script>
@@ -20,19 +18,7 @@ import { HAND_UP_STATUS } from "@/models/handUpStatus";
 
 export default {
   computed: {
-    ...mapState("features", ["handUp"]),
-    statusText() {
-      switch (this.handUp) {
-        case HAND_UP_STATUS.NONE:
-          return "举手";
-        case HAND_UP_STATUS.UPING:
-          return "举手中..";
-        case HAND_UP_STATUS.SPEAKING:
-          return "发言中..";
-        default:
-          return "";
-      }
-    }
+    ...mapState("features", ["handUp"])
   },
   methods: {
     ...mapMutations("features", ["HAND_UP", "SWITCH_SPEAKING"])
@@ -71,19 +57,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  .hand-icon {
+  .svg-icon {
     @include themeify {
       fill: themed("font_color2");
     }
-    margin-top: -10px;
-    margin-left: -5px;
-  }
-  .txt {
-    @include themeify {
-      color: themed("font_color2");
-    }
-    position: absolute;
-    bottom: 8px;
   }
 }
 .hand:hover {
