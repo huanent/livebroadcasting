@@ -31,7 +31,7 @@ export default {
       } else if (this.intensity <= 0) {
         return 0;
       } else {
-        return Math.ceil(this.intensity * 2.5 * this.lines);
+        return Math.ceil(this.intensity * 3 * this.lines);
       }
     }
   }

@@ -23,22 +23,21 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function(response) {
     // Do something with response data  响应
-    if (!response.data.success) {
-      const isServerLogin =
-        response.headers.islogin && response.headers.islogin === "True";
-      const currentPath = router.history.current.path;
-      if (
-        !isServerLogin &&
-        currentPath !== "/login" &&
-        currentPath !== "/signup"
-      ) {
-        router.push("/login");
-      }
-    }
     return response;
   },
   function(error) {
     // Do something with response error
+    const statusCode = error.response.status;
+    const isUnAuth = statusCode === 401 || statusCode === 403;
+    const currentPath = router.history.current.path;
+    if (isUnAuth && currentPath !== "/login" && currentPath !== "/signup") {
+      Vue.prototype.$message.error({
+        message: "身份失效，请重新登录",
+        type: "error"
+      });
+      router.push("/login");
+    }
+
     return Promise.reject(error);
   }
 );

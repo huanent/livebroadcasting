@@ -128,7 +128,6 @@ export default {
       this.$refs["infoForm"].validate(valid => {
         if (valid) {
           let formData = new FormData();
-          console.log(this.infoForm);
           formData.append("nickname", this.infoForm.nickname);
           formData.append("tel", this.infoForm.tel);
           formData.append("email", this.infoForm.email);
