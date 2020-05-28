@@ -68,10 +68,10 @@ export default {
   watch: {
     noTalking(val) {
       const isTeacher = this.role === ROLE.TEACHER;
-      const openTips = this.isTeacher
+      const openTips = isTeacher
         ? this.$t("class.message.muteAll")
         : this.$t("class.message.openAllMuteByTeacher");
-      const closeTips = this.isTeacher
+      const closeTips = isTeacher
         ? this.$t("class.message.liftAllBans")
         : this.$t("class.message.liftAllBansByTeacher");
       if (val) {
