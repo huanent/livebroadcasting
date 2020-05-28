@@ -39,6 +39,11 @@ export default [
     sender: ROLE.STUDENT
   },
   {
+    path: ["widget", "video"],
+    listener: ROLE.STUDENT,
+    sender: ROLE.TEACHER
+  },
+  {
     path: ["features"],
     toPath: ["workplace", "featuresList"],
     primaryKey: true,

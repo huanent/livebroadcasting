@@ -14,7 +14,7 @@
           :action="
             '/api/courseFile/upload?userId=' + userId + '&classId=' + classId
           "
-          accept=".ppt,.pptx"
+          accept=".ppt,.pptx,.mp4,.webm"
           :limit="3"
           :on-preview="onFilePreview"
           :before-upload="beforeUpload"
@@ -51,10 +51,21 @@
                 class="btns"
                 type="text"
                 size="small"
-                v-show="role === ROLE.TEACHER"
+                v-show="role === ROLE.TEACHER && !isVideo(scope.row.url)"
               >
                 <el-tooltip :content="$t('courseware.toboard')" placement="top"
                   ><icon name="fileimport" :size="16"></icon></el-tooltip
+              ></el-button>
+
+              <el-button
+                class="btns"
+                type="text"
+                size="small"
+                v-show="role === ROLE.TEACHER && isVideo(scope.row.url)"
+                @click="play(scope.row)"
+              >
+                <el-tooltip :content="$t('courseware.play')" placement="top"
+                  ><icon name="play-circle" :size="16"></icon></el-tooltip
               ></el-button>
 
               <el-button
@@ -71,7 +82,7 @@
                 type="text"
                 size="small"
                 @click="reTranscode(scope.row)"
-                v-show="role === ROLE.TEACHER"
+                v-show="role === ROLE.TEACHER && !isVideo(scope.row.url)"
               >
                 <el-tooltip :content="$t('courseware.recode')" placement="top"
                   ><icon name="recode" :size="16"></icon></el-tooltip
@@ -123,7 +134,7 @@ import {
 } from "@/core/data/data-service";
 
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "Courseware",
@@ -168,6 +179,10 @@ export default {
     }
   },
   methods: {
+    ...mapMutations("widget", ["SET_VIDEO_VISIBLE"]),
+    play(row) {
+      this.SET_VIDEO_VISIBLE({ visible: true, src: row.url });
+    },
     pageChange(index) {
       this.pageNum = index;
       this.getCourseData(this.pageNum, this.pageSize, this.classId);
@@ -184,7 +199,12 @@ export default {
       });
     },
     downloadCourseFile(row) {
-      window.open(row.url, "_blank");
+      var a = document.createElement("a");
+      a.download = row.url;
+      a.href = row.url;
+      document.body.append(a);
+      a.click();
+      document.body.removeChild(a);
     },
     onCoursewareOpen() {
       //   this.visible = true;
@@ -212,10 +232,18 @@ export default {
       }
       return isLt100M && !isLt0M;
     },
+    isVideo(url) {
+      url = url.toLowerCase();
+      return url.endsWith("mp4") || url.endsWith(".webm");
+    },
     onUploadSuccess(res) {
       this.$refs.upload.clearFiles();
       if (res.success && res.model.url) {
-        this.reTranscode(res.model);
+        if (this.isVideo(res.model.url)) {
+          this.getCourseData(this.pageNum, this.pageSize, this.classId);
+        } else {
+          this.reTranscode(res.model);
+        }
       }
     },
     beforeRemove(file, fileList) {

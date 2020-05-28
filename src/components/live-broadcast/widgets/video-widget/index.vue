@@ -10,13 +10,16 @@
 </template>
 <script>
 import WidgetWindow from "../widget-window";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   computed: {
     ...mapState("widget", ["video"])
   },
   components: {
     WidgetWindow
+  },
+  methods: {
+    ...mapMutations("widget", ["SET_VIDEO_VISIBLE", "UPDATE_POSITION"])
   }
 };
 </script>
