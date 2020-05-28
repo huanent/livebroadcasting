@@ -54,10 +54,24 @@ const state = {
     },
     visible: false,
     src: ""
+  },
+  award: {
+    name: "",
+    visible: false
+  },
+  register: {
+    visible: false,
+    position: {
+      x: 0,
+      y: 0
+    }
   }
 };
 
 const mutations = {
+  SET_VISIBLE(state, { name, visible }) {
+    state[name].visible = visible;
+  },
   SET_TIMER_VISIBLE(state, visible) {
     state.timer.visible = visible;
     state.timer.started = false;
@@ -124,6 +138,9 @@ const mutations = {
   SET_VIDEO_VISIBLE(state, { visible, src }) {
     state.video.visible = visible;
     state.video.src = src;
+  },
+  SET_AWARD(state, data) {
+    state.award = data;
   }
 };
 

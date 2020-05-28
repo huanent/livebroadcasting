@@ -6,6 +6,8 @@
     <luck-draw />
     <rush-answer />
     <video-widget />
+    <award-widget />
+    <register />
   </div>
 </template>
 <script>
@@ -15,6 +17,8 @@ import DiceWidget from "./dice-widget/index";
 import LuckDraw from "./luck-draw/index";
 import RushAnswer from "./rush-answer/index";
 import VideoWidget from "./video-widget/index";
+import AwardWidget from "./award-widget/index";
+import Register from "./register/index";
 
 export default {
   components: {
@@ -23,7 +27,9 @@ export default {
     DiceWidget,
     LuckDraw,
     RushAnswer,
-    VideoWidget
+    VideoWidget,
+    AwardWidget,
+    Register
   }
 };
 </script>

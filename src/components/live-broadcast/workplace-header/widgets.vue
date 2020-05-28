@@ -51,6 +51,15 @@
             >抢答器</a
           >
         </li>
+        <li>
+          <a
+            @click="
+              SET_VISIBLE({ name: 'register', visible: true });
+              widgetVisible = false;
+            "
+            >花名册</a
+          >
+        </li>
       </ul>
     </el-dialog>
   </div>
@@ -69,7 +78,8 @@ export default {
       "SET_DICE_VISIBLE",
       "SET_DRAW_VISIBLE",
       "SET_CLICKER_VISIBLE",
-      "SET_RUSH_VISIBLE"
+      "SET_RUSH_VISIBLE",
+      "SET_VISIBLE"
     ]),
     closeWidgets() {
       this.$emit("update:visible", false);
