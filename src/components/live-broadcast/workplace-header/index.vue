@@ -1,6 +1,7 @@
 <template>
   <div class="workplace-header-component">
     <div class="menu-operation">
+      <timer />
       <el-tooltip :content="'切换主题'" placement="bottom" :open-delay="200">
         <span style="padding: 0 20px">
           <el-switch v-model="switchStatus"> </el-switch>
@@ -87,6 +88,7 @@ import Courseware from "./courseware";
 import FeaturesControl from "./features-control";
 import { Emitter } from "../../../core/emit";
 import { ROLE } from "../../../models/role";
+import Timer from "./timer";
 export default {
   name: "WorkplaceHeader",
   data() {
@@ -210,7 +212,8 @@ export default {
     Widgets,
     Recoder,
     Courseware,
-    FeaturesControl
+    FeaturesControl,
+    Timer
   }
 };
 </script>

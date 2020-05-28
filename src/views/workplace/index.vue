@@ -105,6 +105,7 @@ export default {
     }, 10000);
 
     const classId = this.$route.query.id;
+    this.getRoomInfo(classId);
     const res = await classApi.classGet(classId);
     if (res.data.success) {
       this.classCreator = res.data.model.createUser;
@@ -236,7 +237,7 @@ export default {
       "SET_CAMERA_PANEL_VISIBILITY",
       "CLEAR_OFFLINE_USER"
     ]),
-    ...mapActions("workplace", ["enterRoom", "destroyRoom"]),
+    ...mapActions("workplace", ["enterRoom", "destroyRoom", "getRoomInfo"]),
     ...mapActions("tips", ["notAccessDevice", "redirectIndex"]),
     toggleSidebar() {
       this.isSidebarShow = !this.isSidebarShow;

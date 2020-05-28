@@ -2,6 +2,7 @@ import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-servi
 
 import { enterRoom } from "../core/data/data-service";
 import { ROLE } from "../models/role";
+import classApi from "../core/data/class";
 
 const state = {
   themeColor: "dark",
@@ -14,7 +15,8 @@ const state = {
   teachId: null,
   featuresList: [],
   chatMessages: [],
-  cameraPanelVisibity: false
+  cameraPanelVisibity: false,
+  roomInfo: null
 };
 const mutations = {
   SET_TEACHER_ID(state, id) {
@@ -82,6 +84,9 @@ const mutations = {
     for (const i of offlineUser) {
       state.featuresList.splice(state.featuresList.indexOf(i), 1);
     }
+  },
+  SET_ROOM_INFO(state, data) {
+    state.roomInfo = data;
   }
 };
 
@@ -111,6 +116,10 @@ const actions = {
     if (!device.deviceId) return;
     commit("ACTIVE_MICROPHONES", device);
     liveBroadcastService.trtcService.setMicrophonesDevice(device.deviceId);
+  },
+  async getRoomInfo({ commit }, id) {
+    let result = await classApi.classGet(id);
+    commit("SET_ROOM_INFO", result.data.model);
   }
 };
 
