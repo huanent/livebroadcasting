@@ -19,7 +19,7 @@
     </el-tooltip>
     <el-input
       v-model="message"
-      placeholder="请输入消息"
+      :placeholder="$t('class.message.placeholder')"
       size="small"
       class="mr10"
       @keyup.enter.native="onSubmit"
@@ -45,7 +45,9 @@ export default {
     ...mapState("account", ["role"]),
     ...mapState("features", ["noTalking"]),
     forbiddenTips() {
-      return this.noTalking ? "取消全体禁言" : "打开全体禁言";
+      return this.noTalking
+        ? this.$t("class.message.liftAllBans")
+        : this.$t("class.message.openAllMute");
     }
   },
   methods: {
@@ -55,8 +57,8 @@ export default {
     },
     onSubmit() {
       if (this.message.trim().length === 0) return;
-      if (this.role === ROLE.TEACHER && this.noTalking) {
-        this.$message.error("老师开启了全体禁言,您暂时不能发送消息");
+      if (this.role === ROLE.STUDENT && this.noTalking) {
+        this.$message.error(this.$t("class.message.muteTips"));
         return;
       }
       this.$emit("send", this.message);
@@ -66,8 +68,12 @@ export default {
   watch: {
     noTalking(val) {
       const isTeacher = this.role === ROLE.TEACHER;
-      const openTips = this.isTeacher ? "全体禁言" : "老师开启了全体禁言";
-      const closeTips = this.isTeacher ? "取消全体禁言" : "老师关闭了全体禁言";
+      const openTips = this.isTeacher
+        ? this.$t("class.message.muteAll")
+        : this.$t("class.message.openAllMuteByTeacher");
+      const closeTips = this.isTeacher
+        ? this.$t("class.message.liftAllBans")
+        : this.$t("class.message.liftAllBansByTeacher");
       if (val) {
         this.$message(openTips);
       } else {

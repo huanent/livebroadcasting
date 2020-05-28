@@ -143,6 +143,13 @@
   "class.kickedOut.MULT_ACCOUNT": "账号在其它直播间登录，即将退出直播页面",
   "class.kickedOut.MULT_DEVICE": "账号在其它设备登录，即将退出直播页面",
   "class.kickedOut.USERSIG_EXPIRED": "用户签名过期，即将退出直播页面",
+  "class.message.placeholder": "请输入消息",
+  "class.message.liftAllBans": "取消全体禁言",
+  "class.message.liftAllBansByTeacher": "老师关闭了全体禁言",
+  "class.message.openAllMute": "打开全体禁言",
+  "class.message.openAllMuteByTeacher": "老师开启了全体禁言",
+  "class.message.muteTips": "老师开启了全体禁言,您暂时不能发送消息",
+  "class.message.muteAll": "全体禁言",
 
   "setting": "设置",
   "setting.camera": "摄像头",
