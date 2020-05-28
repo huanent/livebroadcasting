@@ -344,12 +344,13 @@ export default {
 #workplace-panel-right {
   display: grid;
   position: relative;
-  grid-template-rows: 23.5% 0.5% 76%;
+  grid-template-rows: 23.5% 0 76%;
   height: calc(100vh - 2rem);
   width: 100%;
   overflow: hidden;
   @include themeify {
     border-left: 1px solid themed("border_color1");
+    background: themed("background_color3");
   }
   & > * {
     overflow: hidden;

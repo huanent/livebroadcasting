@@ -138,15 +138,21 @@ export class TrtcService {
       return true;
     });
   }
+  play(videoEl, mediaStream) {
+    videoEl.srcObject = mediaStream;
+  }
   localStreamPlay(data) {
     data.el.innerHTML = "";
     let stream;
     let role = store.state.account.role;
+    debugger;
     if (!data.isCopy) {
       stream = this.localStream;
       if (stream && stream.play) {
-        stream.play(data.el);
-        this.coverPlayStyle(stream, "contain");
+        this.play(data.el, stream.mediaStream_);
+
+        /*        stream.play(data.el);
+        this.coverPlayStyle(stream, "contain");*/
       }
     } else {
       if (role === ROLE.TEACHER) {
