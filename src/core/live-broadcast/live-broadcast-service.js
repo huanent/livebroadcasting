@@ -22,7 +22,7 @@ class LiveBroadcastService {
   async init() {
     let token = store.state.workplace.token;
     await this.timService.init(token);
-    this.trtcService.init("", this);
+    this.trtcService.init(token);
     await this.boardService.init(token);
 
     Emitter.on("board-data-change", data => {
