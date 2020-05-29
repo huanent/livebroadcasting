@@ -22,7 +22,7 @@
             size="small"
             @click="toggleForbiddenState(scope.row)"
           >
-            {{ scope.row.selfMessage ? "取消禁言" : "禁言" }}
+            {{ scope.row.selfMessage ? "禁言" : "取消禁言" }}
           </el-button>
         </template>
       </el-table-column>
@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     ...mapMutations("widget", ["SET_VISIBLE", "SET_AWARD"]),
-    ...mapActions("feature", ["manualControlFeatures"]),
+    ...mapActions("features", ["manualControlFeatures"]),
     toggleForbiddenState(data) {
       const userId = data.__primaryKey;
       const status = data.selfMessage;
