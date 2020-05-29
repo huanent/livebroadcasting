@@ -19,11 +19,7 @@
         </span>
       </div>
       <div class="head-right">
-        <div
-          v-if="role === ROLE.TEACHER"
-          @click="$emit('head-toggle')"
-          class="headview-toggle"
-        >
+        <div @click="$emit('head-toggle')" class="headview-toggle">
           <el-tooltip :content="$t('workplace.cameraPanel')" placement="bottom">
             <icon name="monitor" :size="18"></icon>
           </el-tooltip>

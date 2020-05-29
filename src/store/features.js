@@ -21,7 +21,7 @@ const state = {
   canControlBoard: false,
   videoStatus: true,
   audioStatus: true,
-  subscribeVideo: true,
+  subscribeVideo: false,
   subscribeAudio: false,
   handUp: HAND_UP_STATUS.NONE,
   globalMessage: true,

@@ -6,9 +6,17 @@
       </a>
     </div>
     <swiper ref="mySwiper" :options="swiperOptions">
-      <swiper-slide v-for="(item, index) in remoteStreamList" :key="index">
+      <swiper-slide
+        v-for="(item, index) in remoteStreamList"
+        :key="index"
+        v-show="
+          getFeatures(item.userId).subscribeAudio ||
+            getFeatures(item.userId).subscribeVideo
+        "
+      >
         <CameraItem
           :item="item"
+          :key="index"
           :audio="
             getFeatures(item.userId) && getFeatures(item.userId).subscribeAudio
           "
