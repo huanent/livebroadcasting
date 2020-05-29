@@ -9,10 +9,7 @@
       <swiper-slide
         v-for="(item, index) in remoteStreamList"
         :key="index"
-        v-show="
-          getFeatures(item.userId).subscribeAudio ||
-            getFeatures(item.userId).subscribeVideo
-        "
+        v-show="showItem(item.userId)"
       >
         <CameraItem
           :item="item"
@@ -120,6 +117,12 @@ export default {
         propName: "subscribeVideo",
         value: e
       });
+    },
+    showItem(id) {
+      return (
+        this.getFeatures(id).subscribeAudio ||
+        this.getFeatures(id).subscribeVideo
+      );
     },
     getDiff(n, o) {
       let diff = [];
