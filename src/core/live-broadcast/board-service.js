@@ -36,11 +36,6 @@ export class BoardService {
     teduBoard.on(TEduBoard.EVENT.TEB_HISTROYDATA_SYNCCOMPLETED, () =>
       this.syncState()
     );
-
-    Emitter.on("split-change", () => {
-      this.getActiveBoard().resize();
-    });
-
     Emitter.on("remote-board-data-change", data => {
       this.getActiveBoard().addSyncData(data);
       setTimeout(() => {

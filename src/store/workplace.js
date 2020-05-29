@@ -120,7 +120,6 @@ const actions = {
     return await liveBroadcastService.trtcService.setMicrophonesDevice(
       device.deviceId
     );
-    liveBroadcastService.trtcService.setMicrophonesDevice(device.deviceId);
   },
   async getRoomInfo({ commit }, id) {
     let result = await classApi.classGet(id);

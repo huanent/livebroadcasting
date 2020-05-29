@@ -58,7 +58,6 @@
 import CameraItem from "./camera-item";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { Emitter } from "@/core/emit";
-import { ROLE } from "../../../models/role";
 import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
 
 export default {
@@ -75,15 +74,6 @@ export default {
   },
   mounted() {
     this.render();
-    Emitter.on("split-change", () => {
-      if (!this.$refs.swiper || !this.$refs.swiper.parentElement) return;
-      let el = this.$refs.swiper.parentElement;
-      let slidesPerColumn = Math.floor(el.clientHeight / this.perColumnHeight);
-      if (slidesPerColumn !== this.slidesPerColumn && slidesPerColumn >= 1) {
-        this.slidesPerColumn = slidesPerColumn;
-        this.translateX = 0;
-      }
-    });
   },
   computed: {
     ...mapState("account", ["role"]),

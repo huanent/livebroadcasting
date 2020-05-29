@@ -107,8 +107,15 @@ const mutations = {
   }
 };
 
+const actions = {
+  boardResize() {
+    if (!liveBroadcastService.boardService) return;
+    liveBroadcastService.boardService.getActiveBoard().resize();
+  }
+};
 export default {
   namespaced: true,
   state,
-  mutations
+  mutations,
+  actions
 };

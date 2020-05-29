@@ -7,7 +7,7 @@ export const initFeaturesState = function(role) {
     canControlBoard: isTeacher,
     videoStatus: true,
     audioStatus: true,
-    subscribeVideo: true,
+    subscribeVideo: isTeacher,
     subscribeAudio: isTeacher,
     handUp: HAND_UP_STATUS.NONE,
     noTalking: false,

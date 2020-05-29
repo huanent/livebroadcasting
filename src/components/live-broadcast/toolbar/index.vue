@@ -53,10 +53,9 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import ShapeBox from "./shape-box";
 import TextBox from "./text-box";
-import { Emitter } from "@/core/emit";
 export default {
   name: "toolbar",
   data() {
@@ -136,32 +135,20 @@ export default {
     TextBox
   },
   computed: {
+    ...mapState("workplace", ["cameraPanelVisibity"]),
     isScaleLimit() {
       return this.$store.state.board.currentFile.scale <= 100;
     }
   },
+  watch: {
+    cameraPanelVisibity() {
+      this.initToolBarPosition(true);
+    }
+  },
   mounted() {
     this.activeTool = this.toolslist[0];
-    setTimeout(() => {
-      this.initToolBarPosition();
-      this.isHide = false;
-    }, 500);
-
-    Emitter.on("split-change", () => {
-      if (!this.$refs.toolbar) return;
-      let el = this.$refs.toolbar;
-      let parentEl = el.parentElement;
-      if (this.toolHight < el.clientHeight) {
-        this.toolHight = el.clientHeight;
-      }
-      if (parentEl && this.toolHight > parentEl.clientHeight) {
-        this.hideTool = true;
-        this.initToolBarPosition("bottom", true);
-      } else {
-        this.hideTool = false;
-        this.initToolBarPosition(null, true);
-      }
-    });
+    this.initToolBarPosition();
+    this.isHide = false;
   },
   methods: {
     ...mapMutations("board", [
@@ -178,9 +165,9 @@ export default {
     ]),
     showTool() {
       this.hideTool = false;
-      this.initToolBarPosition("top", true);
+      this.initToolBarPosition(true);
     },
-    initToolBarPosition(type, isFix) {
+    initToolBarPosition(isFix) {
       let el = this.$refs.toolbar;
       if (el) {
         let parentEl = el.parentElement;
@@ -193,12 +180,7 @@ export default {
 
         if (this.toolHight < el.clientHeight) {
           this.toolHight = el.clientHeight;
-        }
-        if (type === "bottom") {
-          this.top = ph - h;
-        }
-        if (type === "top") {
-          this.top = ph - this.toolHight;
+          this.top = (ph - this.toolHight) / 2;
         }
       }
     },

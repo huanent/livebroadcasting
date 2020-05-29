@@ -15,34 +15,18 @@
       <div
         id="workplace-panel-left"
         ref="left"
-        :class="{ 'workplace-panel-left-hide': !cameraPanelVisibity }"
+        :class="{ 'cameraPanel-hide': !cameraPanelVisibity }"
       >
         <div class="camera-panel">
           <CameraPanel></CameraPanel>
-        </div>
-        <div
-          ref="gutterEle"
-          :class="{
-            gutter: true,
-            'gutter-row': role !== ROLE.STUDENT,
-            'gutter-not-allowed': !cameraPanelVisibity
-          }"
-        >
-          <div></div>
         </div>
         <MainWorkplace
           @head-toggle="toggleCameraPanel"
           @sidebar-toggle="toggleSidebar"
         ></MainWorkplace>
       </div>
-      <div class="gutter gutter-col">
-        <div></div>
-      </div>
       <div id="workplace-panel-right">
         <self-camera />
-        <div class="gutter gutter-row">
-          <div></div>
-        </div>
         <div class="message-panel">
           <chatroom />
         </div>
@@ -54,7 +38,6 @@
 </template>
 
 <script>
-import Split from "split-grid";
 import classApi from "@api/class";
 import WorkplacePanelHeader from "@c/live-broadcast/workplace-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
@@ -164,42 +147,6 @@ export default {
     this.$once("hook:beforeDestroy", () => {
       clearInterval(this.audioLevelTimer);
     });
-    if (this.role !== "ROLE_STUDENT") {
-      Split({
-        columnGutters: [],
-        rowGutters: [
-          {
-            track: 1,
-            element: this.$refs.gutterEle
-          }
-        ],
-        dragInterval: 10,
-        onDrag: (direction, track, gridTemplateStyle) => {
-          let str = gridTemplateStyle;
-          if (str) {
-            let list = str.trim().split(" ");
-            if (
-              list[0] &&
-              list[2] &&
-              parseFloat(list[2]) > 0 &&
-              parseFloat(list[0]) / parseFloat(list[2]) < 0.001
-            ) {
-              this.SET_CAMERA_PANEL_VISIBILITY(false);
-            } else {
-              /* this.SET_CAMERA_PANEL__VISIBILITY(true);*/
-            }
-          }
-          Emitter.emit("split-change");
-        },
-        writeStyle: (grid, gridTemplateProp, gridTemplateStyle) => {
-          if (this.cameraPanelVisibity) {
-            grid.style[gridTemplateProp] = gridTemplateStyle;
-          }
-        }
-      });
-    } else {
-      this.SET_CAMERA_PANEL_VISIBILITY(false);
-    }
     Emitter.on("tim_kicked_out", type => {
       let tips = "";
       switch (type) {
@@ -239,30 +186,14 @@ export default {
     ]),
     ...mapActions("workplace", ["enterRoom", "destroyRoom", "getRoomInfo"]),
     ...mapActions("tips", ["notAccessDevice", "redirectIndex"]),
+    ...mapActions("board", ["boardResize"]),
     toggleSidebar() {
       this.isSidebarShow = !this.isSidebarShow;
     },
     toggleCameraPanel() {
-      if (!this.cameraPanelVisibity) {
-        let el = this.$refs.left;
-        let str = el.style.gridTemplateRows;
-        if (str) {
-          let list = str.trim().split(" ");
-          if (
-            list[0] &&
-            list[2] &&
-            parseFloat(list[2]) > 0 &&
-            parseFloat(list[0]) / parseFloat(list[2]) < 0.01
-          ) {
-            list[0] = "23.5%";
-            list[2] = "76%";
-            el.style.gridTemplateRows = list.join(" ");
-          }
-        }
-      }
       this.SET_CAMERA_PANEL_VISIBILITY(!this.cameraPanelVisibity);
       setTimeout(() => {
-        Emitter.emit("split-change");
+        this.boardResize();
       }, 300);
     }
   },
@@ -334,7 +265,7 @@ export default {
 .workplace-panel-content {
   display: grid;
   width: 100%;
-  grid-template-columns: auto 0 20%;
+  grid-template-columns: auto 20%;
   height: 100%;
   overflow: hidden;
 }
@@ -343,7 +274,7 @@ export default {
 }
 #workplace-panel-left {
   display: grid;
-  grid-template-rows: 23.5% 0.5% 76%;
+  grid-template-rows: 24% 76%;
   height: calc(100vh - 2rem);
   width: 100%;
   overflow: hidden;
@@ -354,7 +285,7 @@ export default {
 #workplace-panel-right {
   display: grid;
   position: relative;
-  grid-template-rows: 23.5% 0 76%;
+  grid-template-rows: 24% 76%;
   height: calc(100vh - 2rem);
   width: 100%;
   overflow: hidden;
@@ -367,42 +298,14 @@ export default {
     height: auto;
   }
 }
-
-.gutter-row {
-  cursor: row-resize;
-  @include themeify {
-    background: themed("background_color2");
-  }
-  > div {
-    height: 1px !important;
-    @include themeify {
-      background-color: themed("background_color1");
-    }
-
-    margin: 0 auto;
-  }
-}
-.gutter-col {
-  div {
-    width: 1px !important;
-    height: 100%;
-    @include themeify {
-      background-color: rgba(themed("border_color1"), 0.2);
-    }
-    margin: 0 auto;
-  }
-}
-.gutter-not-allowed {
-  cursor: not-allowed;
-}
 .camera-panel {
   @include themeify {
     background: themed("background_color1");
   }
   position: relative;
 }
-.workplace-panel-left-hide {
-  grid-template-rows: 0 3px 1fr !important;
+.cameraPanel-hide {
+  grid-template-rows: 0 100% !important;
 }
 .message-panel {
   background: #292b2e;
