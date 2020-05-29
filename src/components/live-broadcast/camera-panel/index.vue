@@ -28,6 +28,7 @@
             style="color: white;display: inline-block;width: 100%"
           >
             <CameraItem
+              :key="index"
               :item="item"
               :audio="
                 getFeatures(item.userId) &&
@@ -69,7 +70,8 @@ export default {
       slidesPerColumn: 1,
       perColumnWidth: 200,
       slidesPerView: 5,
-      oldFeaturesList: undefined
+      oldFeaturesList: undefined,
+      list: []
     };
   },
   mounted() {
