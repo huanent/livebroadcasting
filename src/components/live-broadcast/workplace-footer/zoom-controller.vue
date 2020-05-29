@@ -52,16 +52,17 @@ export default {
 
 <style lang="scss" scoped>
 .zoom-controller {
-  width: 80px;
-  height: 2rem;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 0 5px;
+  text-align: center;
   color: #8a9099;
   font-size: 14px;
+  user-select: none;
   > span {
-    user-select: none;
+    min-width: 2.5rem;
+    padding: 0 0.5rem;
   }
   > .svg-icon {
     @include themeify {

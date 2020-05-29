@@ -29,5 +29,6 @@ export default {
   justify-content: space-around;
   border-top: 1px solid rgba(30, 33, 37, 0.19);
   align-items: center;
+  user-select: none;
 }
 </style>

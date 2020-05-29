@@ -49,24 +49,16 @@ export default {
 
 <style lang="scss" scoped>
 .page-controller {
-  width: 80px;
-  height: 2rem;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 0 5px;
+  text-align: center;
+  padding: 0 1rem;
   color: #8a9099;
-  font-size: 14px;
   > span {
-    user-select: none;
-    display: inline-block;
-    vertical-align: middle;
-    font-size: 14px;
-    padding: 0 4px;
-    > em {
-      font-style: normal;
-      color: #4f5359;
-    }
+    min-width: 2.5rem;
+    padding: 0 0.5rem;
   }
 }
 .svg-icon {

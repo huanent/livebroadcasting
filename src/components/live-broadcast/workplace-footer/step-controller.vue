@@ -9,7 +9,7 @@
       />
     </el-tooltip>
 
-    <span style="width: 2rem"></span>
+    <span></span>
     <el-tooltip :content="'下一步'" placement="bottom" :open-delay="200">
       <icon
         @click.native.stop="handleAdd"
@@ -53,9 +53,13 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  text-align: center;
   padding: 0 5px;
   color: #8a9099;
   font-size: 14px;
+  > span {
+    min-width: 2.5rem;
+  }
 }
 .svg-icon {
   @include themeify {
