@@ -53,7 +53,7 @@
                 $t("class.viewDetail")
               }}</span>
               <span
-                v-if="isSearching"
+                v-if="isSearching && !item.isJoined"
                 class="btn-apply"
                 @click="handleJoinClass(item.classId)"
               >
