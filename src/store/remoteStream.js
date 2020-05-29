@@ -1,11 +1,14 @@
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 
-
 const state = {
-  remoteStreamList: []
+  remoteStreamList: [],
+  teacherStreamReady: false
 };
 
 const mutations = {
+  TEACHER_STREAM_READY(state, status) {
+    state.teacherStreamReady = status;
+  },
   SET_REMOTE_STREAM_LIST(state, remoteStreamList) {
     state.remoteStreamList = remoteStreamList;
   },

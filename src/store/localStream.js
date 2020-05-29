@@ -1,12 +1,17 @@
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
 import { Emitter } from "../core/emit";
+import de from "element-ui/src/locale/lang/de";
 
 const state = {
   audioLevel: 0.0,
-  isInit: false
+  isInit: false,
+  localStreamReady: false
 };
 
 const mutations = {
+  LOCAL_STREAM_READY(state, status) {
+    state.localStreamReady = status;
+  },
   SET_AUDIOLEVEL(state) {
     if (!liveBroadcastService) return;
     let level = liveBroadcastService.trtcService.getAudioLevel();
@@ -23,9 +28,6 @@ const mutations = {
   },
   TEACHER_REMOTE_STREAM_STOP_PLAY(state) {
     liveBroadcastService.trtcService.teacherStreamStopPlay();
-  },
-  IS_INIT(state) {
-    state.isInit = true;
   },
   EMIT_SELECTED_STREAM(state, stream) {
     Emitter.emit("selected-stream", stream);

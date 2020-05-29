@@ -107,14 +107,19 @@ const actions = {
       return await liveBroadcastService.destroy();
     }
   },
-  switchCamera({ commit }, device) {
+  async switchCamera({ commit }, device) {
     if (!device.deviceId) return;
     commit("ACTIVE_CAMERA", device);
-    liveBroadcastService.trtcService.setCamerasDevice(device.deviceId);
+    return await liveBroadcastService.trtcService.setCamerasDevice(
+      device.deviceId
+    );
   },
-  switchMicrophones({ commit }, device) {
+  async switchMicrophones({ commit }, device) {
     if (!device.deviceId) return;
     commit("ACTIVE_MICROPHONES", device);
+    return await liveBroadcastService.trtcService.setMicrophonesDevice(
+      device.deviceId
+    );
     liveBroadcastService.trtcService.setMicrophonesDevice(device.deviceId);
   },
   async getRoomInfo({ commit }, id) {
