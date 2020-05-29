@@ -242,9 +242,15 @@ export class TrtcService {
     if (!options) {
       options = { video: true, audio: true };
     }
-    let stream = this.getRemoteStreamByUserId(id);
-    stream.play(elmentOrId);
-    this.coverPlayStyle(stream, "contain");
+    setTimeout(() => {
+      let stream = this.getRemoteStreamByUserId(id);
+      if (!stream) {
+        this.remoteStreamPlay(id, elmentOrId, options);
+      } else {
+        stream.play(elmentOrId);
+        this.coverPlayStyle(stream, "contain");
+      }
+    }, 1000);
   }
 
   async shareScreenStreamPlay(data, role) {
@@ -283,6 +289,7 @@ export class TrtcService {
     }
   }
   coverPlayStyle(stream, objectFit) {
+    if (!stream) return;
     if (!objectFit) {
       objectFit = "contain";
     }
