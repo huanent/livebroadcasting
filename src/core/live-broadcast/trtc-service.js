@@ -264,7 +264,7 @@ export class TrtcService {
             bitrate: 3200
           }
         );
-        this.coverPlayStyle(stream);
+        //this.coverPlayStyle(stream);
       } else {
         setTimeout(() => {
           this.shareScreenStreamPlay(data, role);
