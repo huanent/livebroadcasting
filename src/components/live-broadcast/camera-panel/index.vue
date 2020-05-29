@@ -5,48 +5,22 @@
         <icon name="chevron-circle-left" size="24"></icon>
       </a>
     </div>
-    <div class="swiper-wrapper" ref="swiper">
-      <div
-        class="camera-item-list"
-        :style="{
-          width: width + 'px',
-          height: perColumnHeight * slidesPerColumn + 'px',
-          transform: 'translateX(' + translateX + 'px)'
-        }"
-      >
-        <div
-          v-for="(item, index) in remoteStreamList"
-          :key="index"
-          :style="{
-            height: perColumnHeight + 'px',
-            width: perColumnWidth + 'px'
-          }"
-          style="display: inline-block"
-        >
-          <div
-            :style="{ height: perColumnHeight + 'px' }"
-            style="color: white;display: inline-block;width: 100%"
-          >
-            <CameraItem
-              :key="index"
-              :item="item"
-              :audio="
-                getFeatures(item.userId) &&
-                  getFeatures(item.userId).subscribeAudio
-              "
-              :video="
-                getFeatures(item.userId) &&
-                  getFeatures(item.userId).subscribeVideo
-              "
-              @on-ready="play"
-              @video-change="videoChange($event, item.userId)"
-              @audio-change="audioChange($event, item.userId)"
-            ></CameraItem>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <swiper ref="mySwiper" :options="swiperOptions">
+      <swiper-slide v-for="(item, index) in remoteStreamList" :key="index">
+        <CameraItem
+          :item="item"
+          :audio="
+            getFeatures(item.userId) && getFeatures(item.userId).subscribeAudio
+          "
+          :video="
+            getFeatures(item.userId) && getFeatures(item.userId).subscribeVideo
+          "
+          @on-ready="play"
+          @video-change="videoChange($event, item.userId)"
+          @audio-change="audioChange($event, item.userId)"
+        ></CameraItem
+      ></swiper-slide>
+    </swiper>
     <div class="camera-right-ctl">
       <a @click.stop="nextCtl()">
         <icon name="chevron-circle-right" size="24"></icon>
@@ -60,36 +34,31 @@ import CameraItem from "./camera-item";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { Emitter } from "@/core/emit";
 import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
-
+import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import "swiper/css/swiper.css";
 export default {
   name: "CameraPanel",
   data() {
     return {
-      translateX: 0,
-      perColumnHeight: 210,
-      slidesPerColumn: 1,
-      perColumnWidth: 200,
-      slidesPerView: 5,
       oldFeaturesList: undefined,
-      list: []
+      swiperOptions: {
+        pagination: {
+          el: ".swiper-pagination"
+        },
+        slidesPerView: 5,
+        spaceBetween: 30
+      }
     };
-  },
-  mounted() {
-    this.render();
   },
   computed: {
     ...mapState("account", ["role"]),
     ...mapState("remoteStream", ["remoteStreamList"]),
     ...mapState("workplace", ["featuresList"]),
-    width() {
-      let temp = this.remoteStreamList.length / this.slidesPerColumn;
-      return Math.ceil(temp) * this.perColumnWidth;
+    swiper() {
+      return this.$refs.mySwiper.$swiper;
     }
   },
   watch: {
-    slidesPerColumn() {
-      this.render();
-    },
     featuresList: {
       handler(featuresList) {
         let oldFeaturesList = this.oldFeaturesList;
@@ -122,7 +91,9 @@ export default {
     format(value) {}
   },
   components: {
-    CameraItem
+    CameraItem,
+    Swiper,
+    SwiperSlide
   },
   methods: {
     ...mapMutations("remoteStream", ["REMOTE_STREAM_PLAY"]),
@@ -172,26 +143,11 @@ export default {
         value: e
       });
     },
-    render() {
-      let el = this.$refs["swiper"];
-      if (!el) return;
-      this.perColumnWidth = el.clientWidth / this.slidesPerView;
-    },
     nextCtl() {
-      let translateX =
-        this.translateX - this.slidesPerView * this.perColumnWidth;
-      if (Math.abs(translateX) >= this.width) {
-        return;
-      }
-      this.translateX = translateX;
+      this.$refs.mySwiper.$swiper.slideNext();
     },
     preCtl() {
-      let translateX =
-        this.translateX + this.slidesPerView * this.perColumnWidth;
-      if (translateX > 0) {
-        return;
-      }
-      this.translateX = translateX;
+      this.$refs.mySwiper.$swiper.slidePrev();
     },
     async play(id, element) {
       let options = { video: true, audio: true };
@@ -212,21 +168,6 @@ export default {
   display: flex;
   align-items: center;
   & > * {
-    display: inline-block;
-  }
-}
-.swiper-wrapper {
-  width: 90%;
-  overflow: hidden;
-}
-.camera-item-list {
-  /*  overflow: scroll;*/
-  transition: all 0.1s;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  & > div {
     display: inline-block;
   }
 }
@@ -258,5 +199,13 @@ export default {
       }
     }
   }
+}
+.swiper-wrapper {
+  width: 90%;
+  height: 100%;
+}
+.swiper-container {
+  height: 100%;
+  width: 100%;
 }
 </style>

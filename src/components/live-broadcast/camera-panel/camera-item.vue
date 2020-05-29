@@ -91,9 +91,9 @@ export default {
 <style scoped lang="scss">
 .self-camera-panel {
   background: #212224;
-  margin: 10px 10px 5px;
+  margin: 0 auto;
   position: relative;
-  height: calc(100% - 15px);
+  height: 100%;
   .self-camera-mask {
     position: absolute;
     visibility: hidden;
