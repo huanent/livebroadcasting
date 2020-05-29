@@ -17,6 +17,7 @@
 
     <div class="wrapper" style="height: calc(100% - 2rem)">
       <div v-show="panelType === 'board'">
+        <div class="mask" v-if="!canControlBoard"></div>
         <div id="board-el" class="roll-scroll"></div>
         <div class="workplace-footer" v-show="panelType === 'board'">
           <workplace-footer />
@@ -188,6 +189,13 @@ export default {
     width: 100%;
     height: 100%;
     position: relative;
+    .mask {
+      position: absolute;
+      width: 100%;
+      z-index: 3;
+      height: 100%;
+      cursor: default;
+    }
     div {
       height: 100%;
       width: 100%;
