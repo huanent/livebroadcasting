@@ -150,7 +150,10 @@
   "class.message.openAllMute": "打开全体禁言",
   "class.message.openAllMuteByTeacher": "老师开启了全体禁言",
   "class.message.muteTips": "老师开启了全体禁言,您暂时不能发送消息",
+  "class.message.selfMuteTips": "你已经被老师禁言，暂时不能发送消息",
   "class.message.muteAll": "全体禁言",
+  "class.message.selfUnmete": "老师已经解除对你的禁言",
+  "class.message.selfMute": "老师开启了对你的禁言",
 
   "setting": "设置",
   "setting.camera": "摄像头",

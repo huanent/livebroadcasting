@@ -13,7 +13,7 @@
         @click.native="toggleForbiddenStatus"
         :class="{
           mr10: true,
-          forbidden: noTalking
+          forbidden: !globalMessage
         }"
       />
     </el-tooltip>
@@ -43,22 +43,26 @@ export default {
   },
   computed: {
     ...mapState("account", ["role"]),
-    ...mapState("features", ["noTalking"]),
+    ...mapState("features", ["globalMessage", "selfMessage"]),
     forbiddenTips() {
-      return this.noTalking
+      return !this.globalMessage
         ? this.$t("class.message.liftAllBans")
         : this.$t("class.message.openAllMute");
     }
   },
   methods: {
-    ...mapMutations("features", ["SET_NO_TALKING"]),
+    ...mapMutations("features", ["SET_GLOBAL_MESSAGE"]),
     toggleForbiddenStatus() {
-      this.SET_NO_TALKING(!this.noTalking);
+      this.SET_GLOBAL_MESSAGE(!this.globalMessage);
     },
     onSubmit() {
       if (this.message.trim().length === 0) return;
-      if (this.role === ROLE.STUDENT && this.noTalking) {
+      if (this.role === ROLE.STUDENT && !this.globalMessage) {
         this.$message.error(this.$t("class.message.muteTips"));
+        return;
+      }
+      if (this.role === ROLE.STUDENT && !this.selfMessage) {
+        this.$message.error(this.$t("class.message.selfMuteTips"));
         return;
       }
       this.$emit("send", this.message);
@@ -66,7 +70,7 @@ export default {
     }
   },
   watch: {
-    noTalking(val) {
+    globalMessage(val) {
       const isTeacher = this.role === ROLE.TEACHER;
       const openTips = isTeacher
         ? this.$t("class.message.muteAll")
@@ -74,10 +78,17 @@ export default {
       const closeTips = isTeacher
         ? this.$t("class.message.liftAllBans")
         : this.$t("class.message.liftAllBansByTeacher");
-      if (val) {
+      if (!val) {
         this.$message(openTips);
       } else {
         this.$message(closeTips);
+      }
+    },
+    selfMessage(val) {
+      if (val) {
+        this.$message(this.$t("class.message.selfUnmete"));
+      } else {
+        this.$message(this.$t("class.message.selfMute"));
       }
     }
   }
@@ -100,9 +111,6 @@ export default {
   }
   .forbidden {
     fill: #dcebeb !important;
-    // @include themeify {
-    //   fill: themed("font_color2");
-    // }
   }
 
   /deep/ .el-input__inner {
