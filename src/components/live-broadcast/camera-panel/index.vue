@@ -119,6 +119,7 @@ export default {
       });
     },
     showItem(id) {
+      if (!this.getFeatures(id)) return false;
       return (
         this.getFeatures(id).subscribeAudio ||
         this.getFeatures(id).subscribeVideo
