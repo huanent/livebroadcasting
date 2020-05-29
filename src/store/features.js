@@ -54,6 +54,7 @@ const mutations = {
   },
   SWITCH_SPEAKING(state, value) {
     state.subscribeAudio = value;
+    state.subscribeVideo = value;
     state.canControlBoard = value;
   },
   INIT_STATE(state, role) {
