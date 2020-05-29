@@ -35,6 +35,7 @@ const mutations = {
   INIT_STATE(state) {
     state.audioLevel = 0.0;
     state.isInit = false;
+    state.localStreamReady = false;
   }
 };
 
