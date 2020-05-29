@@ -28,7 +28,7 @@
               </el-option>
             </el-select>
             <el-alert
-              v-else
+              v-if="access.video === undefined"
               title="获取摄像头异常"
               type="error"
               description="可能浏览器未授权、设备被占用或者设备故障"
@@ -57,7 +57,7 @@
               </el-option>
             </el-select>
             <el-alert
-              v-else
+              v-if="access.audio === undefined"
               title="获取麦克风异常"
               type="error"
               description="可能浏览器未授权、设备被占用或者设备故障"
@@ -117,7 +117,7 @@ export default {
       testStream: undefined,
       mediaDevices: undefined,
       audioLevelTimer: undefined,
-      access: { video: false, audio: false }
+      access: { video: null, audio: null }
     };
   },
   props: {
