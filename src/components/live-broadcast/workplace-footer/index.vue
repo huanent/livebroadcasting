@@ -2,12 +2,14 @@
   <div class="workplace-footer-main">
     <zoom-controller />
     <page-controller />
+    <StepController style="position: absolute;right: 5rem"></StepController>
   </div>
 </template>
 
 <script>
 import ZoomController from "./zoom-controller";
 import PageController from "./page-controller";
+import StepController from "./step-controller";
 export default {
   name: "WorkplaceFooter",
   data() {
@@ -15,7 +17,8 @@ export default {
   },
   components: {
     ZoomController,
-    PageController
+    PageController,
+    StepController
   }
 };
 </script>

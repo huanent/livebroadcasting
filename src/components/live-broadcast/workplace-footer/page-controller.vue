@@ -1,5 +1,5 @@
 <template>
-  <div class="page-controller">
+  <div class="page-controller" v-if="canControlBoard">
     <icon
       name="chevron-circle-left"
       color="#737882"
