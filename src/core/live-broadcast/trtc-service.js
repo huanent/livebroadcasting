@@ -264,7 +264,7 @@ export class TrtcService {
             bitrate: 3200
           }
         );
-        //this.coverPlayStyle(stream);
+        this.coverPlayStyle(stream);
       } else {
         setTimeout(() => {
           this.shareScreenStreamPlay(data, role);
@@ -363,21 +363,18 @@ export class TrtcService {
       };
     }
     let stream = this.getRemoteStreamByUserId(rawUserId);
-
+    let regex = /.*(share_screen)$/;
+    if (regex.test(stream.userId_)) {
+      options.audio = false;
+    }
+    if (removeUserIdPrefix(stream.userId_) === store.state.workplace.teachId) {
+      if (!store.state.remoteStream.teacherStreamReady) {
+        store.commit("remoteStream/TEACHER_STREAM_READY", true);
+      }
+      options.audio = true;
+      options.video = true;
+    }
     if (stream) {
-      let regex = /.*(share_screen)$/;
-      if (regex.test(stream.userId_)) {
-        options.audio = false;
-      }
-      if (
-        removeUserIdPrefix(stream.userId_) === store.state.workplace.teachId
-      ) {
-        if (!store.state.remoteStream.teacherStreamReady) {
-          store.commit("remoteStream/TEACHER_STREAM_READY", true);
-        }
-        options.audio = true;
-        options.video = true;
-      }
       let client = this.clientList["default"];
       await client.subscribe(stream, options);
     }

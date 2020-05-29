@@ -7,7 +7,7 @@ export default [
     sender: ROLE.TEACHER
   },
   {
-    path: ["features", "noTalking"],
+    path: ["features", "globalMessage"],
     listener: ROLE.STUDENT,
     sender: ROLE.TEACHER
   },
