@@ -17,13 +17,20 @@
           <el-button type="text" size="small" @click="onAward(scope.row)">
             奖励
           </el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="toggleForbiddenState(scope.row)"
+          >
+            {{ scope.row.selfMessage ? "取消禁言" : "禁言" }}
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
   </widget-window>
 </template>
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import WidgetWindow from "../widget-window";
 export default {
   computed: {
@@ -35,6 +42,16 @@ export default {
   },
   methods: {
     ...mapMutations("widget", ["SET_VISIBLE", "SET_AWARD"]),
+    ...mapActions("feature", ["manualControlFeatures"]),
+    toggleForbiddenState(data) {
+      const userId = data.__primaryKey;
+      const status = data.selfMessage;
+      this.manualControlFeatures({
+        id: userId,
+        propName: "selfMessage",
+        value: !status
+      });
+    },
     onAward(row) {
       this.SET_AWARD({
         name: row.__nickName || row.__primaryKey,
