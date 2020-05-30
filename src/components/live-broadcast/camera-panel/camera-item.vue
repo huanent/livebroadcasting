@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ 'self-camera-panel': true, hide: !visibility }">
-    <div class="self-camera-mask">
+  <div :class="{ 'self-camera-panel': true }" v-show="currentStream.value">
+    <div class="self-camera-mask" v-if="role == ROLE.TEACHER">
       <div class="self-camera-icons">
         <icon
           @click.native.stop="onMicroStateChange"
@@ -17,12 +17,12 @@
       </div>
     </div>
     <div
-      v-show="video"
+      v-show="item.subscribeVideo"
       :id="item.id"
       ref="video"
       class="remote-video-view"
     ></div>
-    <div v-show="!video" :id="item.id" class="remote-video-view">
+    <div v-show="!item.subscribeVideo" :id="item.id" class="remote-video-view">
       <icon class="no-video" name="person" color="#34363b" />
     </div>
     <div class="self-camera-footer">
@@ -38,51 +38,84 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import { Emitter } from "@/core/emit";
+import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { delay } from "../../../core/utils";
+import { ROLE } from "../../../models/role";
 
 export default {
   name: "CameraItem",
-  props: {
-    item: {
-      type: Object,
-      default: () => {
-        return { id: "", userId: "" };
-      }
-    },
-    audio: {
-      default: true
-    },
-    video: {
-      default: true
-    }
-  },
+  props: ["item"],
   data() {
     return {
-      visibility: true
+      show: false,
+      currentStream: {
+        value: null,
+        audio: null,
+        video: null
+      },
+      active: true
     };
   },
   methods: {
-    ...mapMutations("remoteStream", ["SET_REMOTE_AUDIO", "SET_REMOTE_VIDEO"]),
     ...mapActions("features", ["manualControlFeatures"]),
-    onMicroStateChange() {
-      this.$emit("audio-change", !this.audio);
+    onMicroStateChange(el) {
+      this.manualControlFeatures({
+        id: this.item.primaryKey,
+        propName: "subscribeAudio",
+        value: !this.item.subscribeAudio
+      });
     },
     onVideoStateChange() {
-      this.$emit("video-change", !this.video);
+      this.manualControlFeatures({
+        id: this.item.primaryKey,
+        propName: "subscribeVideo",
+        value: !this.item.subscribeVideo
+      });
     }
   },
-  mounted() {
-    if (this.$refs.video) {
-      this.$emit("on-ready", this.item.userId, this.$refs.video);
+  async mounted() {
+    this.active = true;
+    while (this.active) {
+      let stream = liveBroadcastService.trtcService.getRemoteStream(
+        this.item.__streamId
+      );
+      if (!stream) {
+        if (this.currentStream.value) this.currentStream.value.stop();
+        this.currentStream.value = null;
+        this.currentStream.audio = null;
+        this.currentStream.video = null;
+      } else {
+        if (
+          this.item.subscribeVideo != this.currentStream.video ||
+          this.item.subscribeAudio != this.currentStream.audio
+        ) {
+          await liveBroadcastService.trtcService.subscribe(
+            stream,
+            this.item.subscribeAudio,
+            this.item.subscribeVideo
+          );
+        }
+        if (stream != this.currentStream.value) {
+          stream.play(this.$refs.video);
+          this.currentStream.value = stream;
+        }
+      }
+
+      await delay(1000);
     }
+  },
+  beforeDestroy() {
+    this.active = false;
   },
   computed: {
+    ...mapState("account", ["role"]),
     microIcon() {
-      return this.audio ? "microphone" : "microphone-slash";
+      return this.item.subscribeAudio ? "microphone" : "microphone-slash";
     },
     videoIcon() {
-      return this.video ? "video" : "video-slash";
+      return this.item.subscribeVideo ? "video" : "video-slash";
     }
   }
 };

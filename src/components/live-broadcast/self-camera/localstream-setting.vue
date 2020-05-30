@@ -1,10 +1,10 @@
 <template>
   <el-dialog
     :title="$t('setting')"
-    :visible.sync="visibility"
+    :visible="visibility"
     :width="dialogWidth"
-    :before-close="onDialogClose"
     :append-to-body="true"
+    @close="close"
   >
     <div class="dialog-item">
       <el-row :gutter="20">
@@ -12,15 +12,15 @@
           <div class="select-item">
             <div class="dialog-title">{{ $t("setting.camera") }}</div>
             <el-select
-              style="width:100%"
-              :value="activeCamera"
-              value-key="deviceId"
-              @change="onActiveCameraChange"
-              :placeholder="$t('setting.chooseCamera')"
               v-if="access.video"
+              style="width:100%"
+              :value="selectedCamera"
+              value-key="deviceId"
+              @change="selectedCameraChanged"
+              :placeholder="$t('setting.chooseCamera')"
             >
               <el-option
-                v-for="item in cameraDeviceList"
+                v-for="item in cameras"
                 :key="item.deviceId"
                 :label="item.label"
                 :value="item"
@@ -40,15 +40,15 @@
           <div class="select-item">
             <div class="dialog-title">{{ $t("setting.micro") }}</div>
             <el-select
-              style="width:100%"
               v-if="access.audio"
-              :value="activeMicrophones"
+              style="width:100%"
+              :value="selectedMicrophone"
               value-key="label"
-              @change="onactiveMicrophonesChange"
+              @change="selectedMicrophoneChanged"
               :placeholder="$t('setting.chooseMicro')"
             >
               <el-option
-                v-for="item in microphonesDeviceList"
+                v-for="item in microphones"
                 :key="item.deviceId"
                 value-key="deviceId"
                 :label="item.label"
@@ -69,12 +69,7 @@
         </el-col>
         <el-col :xs="24" :sm="24" :md="12">
           <div class="media-container">
-            <video
-              ref="video"
-              autoplay="autoplay"
-              id="test-stream-video"
-              muted="true"
-            ></video>
+            <video ref="video" autoplay="autoplay" muted="true"></video>
           </div>
         </el-col>
       </el-row>
@@ -87,10 +82,8 @@
 
       <span slot="footer" class="clearfix">
         <div class="right">
-          <el-button @click="onDialogClose()">{{
-            $t("button.close")
-          }}</el-button>
-          <el-button type="primary" @click="onDialogSave()">{{
+          <el-button @click="close">{{ $t("button.close") }}</el-button>
+          <el-button type="primary" @click="save()">{{
             $t("button.yes")
           }}</el-button>
         </div>
@@ -108,16 +101,15 @@ export default {
   name: "LocalstreamSetting",
   data() {
     return {
-      activeLoudspeakersDevice: {},
-      microphonesDeviceList: [],
-      cameraDeviceList: [],
-      speakerDeviceList: [],
-      activeSpeaker: undefined,
-      percentage: 0,
-      testStream: undefined,
-      mediaDevices: undefined,
-      audioLevelTimer: undefined,
-      access: { video: null, audio: null }
+      microphones: [],
+      cameras: [],
+      access: {
+        video: null,
+        audio: null
+      },
+      selectedCamera: null,
+      selectedMicrophone: null,
+      percentage: 0
     };
   },
   props: {
@@ -131,65 +123,53 @@ export default {
         clearInterval(this.audioLevelTimer);
       }
     });
-    await this.getDevice();
-    this.play();
+    this.access = await requestDeviceAccess();
+    this.cameras = await liveBroadcastService.trtcService.getCameras();
+    this.microphones = await liveBroadcastService.trtcService.getMicrophones();
+    if (this.cameras.length) {
+      this.selectedCamera = this.cameras[0];
+      this.selectedCameraChanged(this.selectedCamera);
+    }
+    if (this.microphones.length) {
+      this.selectedMicrophone = this.microphones[0];
+      this.selectedMicrophoneChanged(this.selectedMicrophone);
+    }
   },
 
   computed: {
-    ...mapState("workplace", ["activeCamera", "activeMicrophones"]),
     ...mapState("device", ["isMobile"]),
     dialogWidth() {
       return this.isMobile ? "80%" : "40%";
     }
   },
-  watch: {
-    activeCamera() {
-      this.play();
-    },
-    activeMicrophones() {
-      this.play();
-    }
-  },
   methods: {
-    ...mapMutations("workplace", ["ACTIVE_CAMERA", "ACTIVE_MICROPHONES"]),
-    ...mapActions("workplace", ["switchCamera", "switchMicrophones"]),
-    onDialogClose() {
-      clearInterval(this.audioLevelTimer);
-      this.$emit("update:visibility", false);
-    },
-    async getDevice() {
-      this.cameraDeviceList = [];
-      this.microphonesDeviceList = [];
-      this.speakerDeviceList = [];
-      this.access = await requestDeviceAccess();
-      navigator.mediaDevices.enumerateDevices().then(mediaDevices => {
-        mediaDevices.forEach((item, index) => {
-          if (item.deviceId) {
-            let devices = {
-              kind: item.kind,
-              deviceId: item.deviceId,
-              label: item.label
-            };
-            if (devices.kind === "videoinput") {
-              this.cameraDeviceList.push(devices);
-            }
-            if (devices.kind === "audioinput") {
-              this.microphonesDeviceList.push(devices);
-            }
-            if (devices.kind === "audiooutput") {
-              this.speakerDeviceList.push(devices);
-            }
-          }
-        });
+    async selectedCameraChanged(e) {
+      this.selectedCamera = e;
+      let stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          deviceId: e.deviceId
+        },
+        audio: false
       });
+
+      this.$refs.video.srcObject = stream;
     },
-    initWave() {
+    async selectedMicrophoneChanged(e) {
+      this.selectedMicrophone = e;
+
+      let stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          deviceId: e.deviceId
+        }
+      });
+
+      this.initWave(stream);
+    },
+    initWave(stream) {
       let audioContext = new AudioContext();
 
       let analyser = audioContext.createAnalyser();
-      let mediaStreamSource = audioContext.createMediaStreamSource(
-        this.testStream
-      );
+      let mediaStreamSource = audioContext.createMediaStreamSource(stream);
       mediaStreamSource.connect(analyser);
       analyser.fftSize = 2048;
       let bufferLength = analyser.frequencyBinCount;
@@ -230,59 +210,23 @@ export default {
 
       draw();
     },
-    async onDialogSave() {
-      if (this.activeCamera) {
-        await this.switchCamera(this.activeCamera);
+    async save() {
+      if (this.selectedCamera) {
+        await liveBroadcastService.trtcService.setCamera(
+          this.selectedCamera.deviceId
+        );
       }
-      if (this.activeMicrophones) {
-        await this.switchMicrophones(this.activeMicrophones);
-      }
-      this.$emit("onsave");
 
-      this.onDialogClose();
-    },
-    onActiveCameraChange(value) {
-      if (value) this.ACTIVE_CAMERA(value);
-    },
-    onactiveMicrophonesChange(value) {
-      if (value) this.ACTIVE_MICROPHONES(value);
-    },
-    format(percentage) {
-      return percentage === 100 ? "最大音量" : `${percentage}%`;
-    },
-    play() {
-      let options = {};
-      if (
-        this.access.audio &&
-        this.activeMicrophones &&
-        this.activeMicrophones.deviceId
-      ) {
-        options.audio = { deviceId: this.activeMicrophones.deviceId };
-      } else {
-        options.audio = false;
+      if (this.selectedMicrophone) {
+        await liveBroadcastService.trtcService.setMicrophone(
+          this.selectedMicrophone.deviceId
+        );
       }
-      if (
-        this.access.video &&
-        this.activeMicrophones &&
-        this.activeCamera.deviceId
-      ) {
-        options.video = { deviceId: this.activeCamera.deviceId };
-      } else {
-        options.video = false;
-      }
-      if (options.video || options.audio) {
-        navigator.mediaDevices.getUserMedia(options).then(testStream => {
-          this.testStream = testStream;
-          this.$nextTick(() => {
-            try {
-              this.$refs.video.srcObject = testStream;
-              this.percentage = this.initWave();
-            } catch (e) {
-              console.error(e);
-            }
-          });
-        });
-      }
+
+      this.close();
+    },
+    async close() {
+      this.$emit("update:visibility", false);
     }
   }
 };
@@ -329,9 +273,10 @@ export default {
   }
 }
 .media-container {
-  width: 80%;
+  width: 100%;
   height: auto;
-  margin: 0 aut;
+  margin: 0 auto;
+  margin-top: 20px;
   video {
     width: 100%;
     height: 100%;

@@ -106,14 +106,6 @@ export default {
     const role =
       this.classCreator == this.userInfo.username ? ROLE.TEACHER : ROLE.STUDENT;
     this.SET_ROLE(role);
-    let access = await requestDeviceAccess();
-    if (!access.video || !access.video) {
-      await this.notAccessDevice();
-      if (role === ROLE.TEACHER) {
-        this.redirectIndex();
-        return;
-      }
-    }
 
     const enterResult = await this.enterRoom(roomData);
     if (!enterResult.data.success) {

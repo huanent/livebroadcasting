@@ -6,8 +6,6 @@ import classApi from "../core/data/class";
 
 const state = {
   themeColor: "dark",
-  activeCamera: null,
-  activeMicrophones: null,
   panelType: "board",
   workplaceVisibity: false,
   role: null,
@@ -44,12 +42,6 @@ const mutations = {
       file.pages,
       file.resolution
     );
-  },
-  ACTIVE_CAMERA(state, device) {
-    state.activeCamera = device;
-  },
-  ACTIVE_MICROPHONES(state, device) {
-    state.activeMicrophones = device;
   },
   SET_PANEL_TYPE(state, panelType) {
     state.panelType = panelType;
@@ -127,9 +119,16 @@ const actions = {
   }
 };
 
+const getters = {
+  isTeacher(state) {
+    return state.role == ROLE.TEACHER;
+  }
+};
+
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
+  getters
 };

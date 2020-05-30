@@ -1,12 +1,7 @@
 <template>
-  <div
-    :class="{ 'self-camera-panel': true, hide: !visibility }"
-    :style="{
-      width: width + '%'
-    }"
-  >
+  <div :class="{ 'self-camera-panel': true }">
     <div class="self-camera-mask" ref="wrapper">
-      <div class="self-camera-icons" v-show="selected.type === 'local'">
+      <div class="self-camera-icons">
         <icon
           @click.native.stop="onMicroStateChange"
           :name="microIcon"
@@ -20,32 +15,17 @@
           :size="20"
         />
       </div>
-      <div class="self-camera-icons" v-show="selected.type === 'teacher'">
-        <icon
-          @click.native.stop="onMutedChange"
-          :name="!teacherAudioMuted ? 'microphone' : 'microphone-slash'"
-          color="#737882"
-          :size="20"
-        />
-      </div>
-      <a @click.stop="onOpenSetting()">
+
+      <a @click.stop="showSettings = true">
         <icon name="settings" size="16" class="settings-icon"></icon>
       </a>
     </div>
     <div class="local_video">
       <video
-        ref="videoLocal"
+        ref="video"
         style="object-fit: contain"
         :muted="true"
-        v-show="selected.type === 'local' && $store.state.features.videoStatus"
         autoplay
-      ></video>
-      <video
-        ref="videoTeacher"
-        v-show="selected.type === 'teacher'"
-        style="object-fit: contain"
-        autoplay
-        :muted="teacherAudioMuted"
       ></video>
       <icon
         v-show="!$store.state.features.videoStatus"
@@ -54,149 +34,90 @@
         color="#34363b"
       />
     </div>
-    <div
-      class="self-camera-footer"
-      v-show="$store.state.features.videoStatus && selected.type === 'local'"
-    >
+    <div class="self-camera-footer">
       <div>
         <icon :name="microIcon" color="#0A818C" :size="18" />
         <voice-intensity :intensity="Number(audioLevel)" />
       </div>
     </div>
     <LocalstreamSetting
-      :visibility.sync="settingDialogVisible"
-      v-if="settingDialogVisible"
-      @onsave="onsave"
+      :visibility.sync="showSettings"
+      v-if="showSettings"
     ></LocalstreamSetting>
-    <div
-      style="position: absolute;right: 0;top:0.5rem;z-index: 999;cursor: pointer;min-width: 4rem"
-    >
-      <TypeSelect
-        v-show="role !== ROLE.TEACHER"
-        :selected.sync="selected"
-      ></TypeSelect>
-    </div>
   </div>
 </template>
 
 <script>
 import VoiceIntensity from "./voice-intensity";
-import { mapState, mapMutations, mapActions } from "vuex";
+import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import { Emitter } from "../../../core/emit";
-import TypeSelect from "./type-select";
 import LocalstreamSetting from "./localstream-setting";
 import { ROLE } from "../../../models/role";
+import { delay } from "../../../core/utils";
+import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
 export default {
   name: "SelfCamera",
   data() {
     return {
       visibility: false,
-      settingDialogVisible: true,
-      videoLocalWidth: 0,
-      videoTeacherWidth: 0,
-      teacherAudioMuted: false,
-      selected: {
-        title: "本地",
-        type: "local"
-      }
+      showSettings: true,
+      audioLevel: 0,
+      active: false,
+      stream: null
     };
   },
   components: {
     VoiceIntensity,
-    LocalstreamSetting,
-    TypeSelect
+    LocalstreamSetting
   },
   computed: {
-    ...mapState("account", ["role"]),
-    ...mapState("localStream", ["audioLevel", "localStreamReady"]),
+    ...mapGetters("workplace", ["isTeacher"]),
+    ...mapState("workplace", ["token", "teachId"]),
+    ...mapState("account", ["userInfo"]),
     ...mapState("features", ["videoStatus", "audioStatus"]),
-    ...mapState("remoteStream", ["teacherStreamReady"]),
     microIcon() {
       return this.audioStatus ? "microphone" : "microphone-slash";
     },
     videoIcon() {
       return this.videoStatus ? "video" : "video-slash";
-    },
-    width() {
-      if (this.selected.type === "local" && this.videoLocalWidth > 0)
-        return this.videoLocalWidth;
-      if (this.selected.type === "teacher" && this.videoLocalWidth > 0)
-        return this.videoTeacherWidth;
-      return 100;
     }
   },
-  watch: {
-    localStreamReady(value) {
-      this.LOCAL_STREAM_PLAY({ el: this.$refs.videoLocal });
-      this.visibility = true;
-    },
-
-    teacherStreamReady(value) {
-      if (this.role === ROLE.TEACHER) return;
-      this.TEACHER_REMOTE_STREAM_PLAY(this.$refs.videoTeacher);
-      this.visibility = true;
-    },
-    videoStatus(status) {
-      this.switchVideo(status);
-    },
-    audioStatus(status) {
-      this.switchAudio(status);
-    }
+  async mounted() {
+    this.active = true;
+    this.setStream();
+    this.setAudioLevel();
   },
-  mounted() {
-    if (this.role === ROLE.STUDENT) {
-      this.selected = {
-        title: "老师",
-        type: "teacher"
-      };
-    }
-    const audioLevelTimer = setInterval(() => {
-      this.SET_AUDIOLEVEL();
-    }, 200);
-    this.$once("hook:beforeDestroy", () => {
-      clearInterval(audioLevelTimer);
-    });
-    let videoLocal = this.$refs.videoLocal;
-    let vm = this;
-    videoLocal.addEventListener("canplay", ({ target }) => {
-      let w = target.videoWidth;
-      let h = target.videoHeight;
-      vm.videoLocalWidth = (h * 100) / w;
-    });
-    let videoTeacher = this.$refs.videoLocal;
-    videoTeacher.addEventListener("canplay", ({ target }) => {
-      let w = target.videoWidth;
-      let h = target.videoHeight;
-      vm.videoTeacherWidth = (h * 100) / w;
-    });
+  beforeDestroy() {
+    this.active = false;
   },
   methods: {
-    ...mapMutations("localStream", [
-      "SET_AUDIOLEVEL",
-      "LOCAL_STREAM_PLAY",
-      "LOCAL_STREAM_STOP_PLAY"
-    ]),
-    ...mapActions("localStream", ["switchVideo", "switchAudio"]),
-    ...mapMutations("localStream", ["TEACHER_REMOTE_STREAM_PLAY"]),
-    ...mapMutations("features", ["SET_VIDEO_STATUS", "SET_AUDIO_STATUS"]),
-    onOpenSetting() {
-      this.settingDialogVisible = true;
-    },
+    async setStream() {
+      while (this.active) {
+        let stream = this.isTeacher
+          ? liveBroadcastService.trtcService.getRemoteStream(
+              this.teacherStreamId()
+            )
+          : liveBroadcastService.trtcService.localStream;
 
-    onVideoStateChange() {
-      this.SET_VIDEO_STATUS(!this.videoStatus);
+        if (stream != this.stream) {
+          this.$refs.video.srcObject = stream.mediaStream_;
+          this.stream = stream;
+        }
+        await delay(1000);
+      }
     },
-    onMicroStateChange() {
-      this.SET_AUDIO_STATUS(!this.audioStatus);
+    async setAudioLevel() {
+      while (this.active) {
+        if (!this.stream) return;
+        this.audioLevel = this.stream.getAudioLevel();
+        console.log(this.audioLevel);
+        await delay(500);
+      }
     },
-    onMutedChange() {
-      this.teacherAudioMuted = !this.teacherAudioMuted;
-    },
-    onchange(selected) {
-      this.selected = selected;
-    },
-    onsave() {
-      this.LOCAL_STREAM_PLAY({ el: this.$refs.videoLocal });
+    teacherStreamId() {
+      let sublength = this.token.id.length - this.userInfo.username;
+      let prefix = this.token.id.substring(0, sublength);
+      return prefix + this.teacherId;
     }
   }
 };

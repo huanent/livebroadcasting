@@ -3,254 +3,111 @@ import store from "@/store";
 import { Emitter } from "../emit";
 import { ROLE } from "../../models/role";
 import { enterRoom } from "../data/data-service.js";
-import config from "../state-sync/config";
-import { liveBroadcastService } from "./live-broadcast-service";
-import { getStateValue } from "../state-sync";
-import { requestDeviceAccess } from "../utils";
 
 export class TrtcService {
   localStream;
-  remoteStreamList = {};
-  remoteStreamListProfile = {};
-  clientList = {};
-  localShareScreenStream;
+  remoteStreams = [];
+  shareScreenStream;
+  mainClient;
   shareScreenClient;
-  liveBroadcastService;
-  localStreamTypeCache;
-  streamCopy = {};
-  token;
-  constructor() {}
+  mainToken;
 
-  async init(roomId, liveBroadcastService) {
+  async checkSupported() {
     let isSupport = await TRTC.checkSystemRequirements();
     let isSupportScreen = TRTC.isScreenShareSupported();
+
     if (!isSupport && !isSupportScreen) {
       return await store.dispatch("tips/browserNotSupport");
     }
+  }
 
-    TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.ERROR);
-    this.liveBroadcastService = liveBroadcastService;
-    this.token = store.state.workplace.token;
-    let client = this.createClient(
-      "default",
-      this.token.id,
-      this.token.userSig
-    );
-    await this.joinroom();
-    let options = {
-      userId: this.token.id,
-      mirror: false,
-      video: false,
-      audio: false
-    };
-    let { cameraId, microphoneId } = await this.getDefaultDevice();
-    let access = await requestDeviceAccess();
-    if (access.audio) {
-      options.audio = store.state.features.audioStatus;
-      options.microphoneId = microphoneId;
-    } else {
-      if (store.state.account.role === ROLE.TEACHER) {
-        return await store.dispatch("tips/cameraError");
-      }
-    }
-
-    if (access.video) {
-      options.video = store.state.features.videoStatus;
-      options.cameraId = cameraId;
-    } else {
-      if (store.state.account.role === ROLE.TEACHER) {
-        return await store.dispatch("tips/microphonesError");
-      }
-    }
-    const localStream = TRTC.createStream(options);
-
-    this.localStream = localStream;
-
-    await localStream.initialize();
-    localStream.setVideoProfile({
-      width: 1920,
-      height: 1080,
-      frameRate: 5,
-      bitrate: 1600
+  listenHandler(client) {
+    client.on("stream-added", async e => {
+      let exist = this.remoteStreams.find(f => f.getId() == e.stream.getId());
+      if (!exist) this.remoteStreams.push(e.stream);
+      await client.unsubscribe(e.stream);
     });
-    await client.publish(localStream);
-    if (this.localStream) {
-      store.commit("localStream/LOCAL_STREAM_READY", true);
-    }
+
+    client.on("stream-removed", e => {
+      this.remoteStreams = this.remoteStreams.filter(
+        f => f.getId() != e.stream.getId()
+      );
+    });
   }
-  async destroy() {
-    for (let i in this.clientList) {
-      let client = this.clientList[i];
-      client && (await client.leave());
-    }
-  }
+
   async getDefaultDevice() {
-    let re = {};
+    let camera = null;
+    let microphone = null;
+
     try {
       let cameraDeviceList = await TRTC.getCameras();
-
-      let activeCamera = cameraDeviceList.find(device => {
-        return device.deviceId;
-      });
-      if (activeCamera) {
-        let cameraId = activeCamera.deviceId;
-        store.commit("workplace/ACTIVE_CAMERA", activeCamera);
-        re["cameraId"] = cameraId;
-      }
-    } catch (e) {}
-
-    try {
-      let microphonesDeviceList = await TRTC.getMicrophones();
-      let activeMicrophones = microphonesDeviceList.find(device => {
-        return device.deviceId;
-      });
-      if (activeMicrophones) {
-        let microphoneId = activeMicrophones.deviceId;
-        store.commit("workplace/ACTIVE_MICROPHONES", activeMicrophones);
-        re["microphoneId"] = microphoneId;
-      }
-    } catch (e) {}
-
-    return re;
-  }
-  getAudioLevel() {
-    if (this.localStream) {
-      return this.localStream.getAudioLevel();
+      let microphones = await TRTC.getMicrophones();
+      camera = cameraDeviceList.find(device => device.deviceId);
+      microphone = microphones.find(device => device.deviceId);
+    } catch (e) {
+      console.error(e);
     }
-    return 0.0;
+
+    return { camera, microphone };
   }
-  createClient(key, userId, userSig) {
-    this.clientList[key] = TRTC.createClient({
+
+  getCameras = () => TRTC.getCameras();
+  getMicrophones = () => TRTC.getMicrophones();
+
+  isTeacher() {
+    return store.getter.workplace.isTeacher;
+  }
+
+  createClient(token) {
+    return TRTC.createClient({
       mode: "live",
-      sdkAppId: this.token.appId,
-      userId: this.token.id,
-      userSig: this.token.userSig
+      sdkAppId: token.appId,
+      userId: token.id,
+      userSig: token.userSig
     });
-    return this.clientList[key];
   }
-  async setCamerasDevice(deviceId) {
+
+  async setCamera(deviceId) {
+    if (!this.localStream) return;
     return await this.localStream.switchDevice("video", deviceId);
   }
-  async setMicrophonesDevice(deviceId) {
-    return await this.localStream.switchDevice("'audio'", deviceId);
+  async setMicrophone(deviceId) {
+    if (!this.localStream) return;
+    return await this.localStream.switchDevice("audio", deviceId);
   }
-  play(videoEl, mediaStream) {
-    videoEl.srcObject = null;
-    videoEl.srcObject = mediaStream;
-  }
-  localStreamPlay(data) {
-    let stream;
-    let role = store.state.account.role;
-    if (!data.isCopy) {
-      this.play(data.el, this.localStream.mediaStream_);
-    } else {
-      if (role === ROLE.TEACHER) {
-        stream = this.localStream;
-        if (stream && stream.userId_) {
-          this.copyStreamPlay(stream, data.el, stream.userId_);
-        }
-      } else {
-        stream = this.getRemoteStreamByUserId(store.state.workplace.teachId);
-        if (stream && stream.userId_) {
-          this.copyStreamPlay(stream, data.el, stream.userId_);
-        }
-      }
-    }
-  }
-  localStreamStopPlay(data) {
-    if (!data.isCopy) {
-      this.localStream.stop();
-      this.localStreamTypeCache = undefined;
-    } else {
-      this.copyStreamStopPlay(this.localStream.userId_);
-    }
-  }
-  async copyStreamPlay(stream, elmentOrId, id, options, videoProfile) {
-    elmentOrId.innerHTML = "";
-    let mediaStream = stream.mediaStream_;
 
-    let createStreamOptions = { mirror: false };
-    if (!options) {
-      options = { video: true, audio: true };
-    }
-    if (options.video) {
-      const videoTrack = mediaStream.getVideoTracks()[0];
-      Object.assign(createStreamOptions, { videoSource: videoTrack });
-    }
-    if (options.audio) {
-      let audioTracks = mediaStream.getAudioTracks()[0];
-      Object.assign(createStreamOptions, {
-        audioSource: audioTracks
-      });
-    }
-    let newStream = TRTC.createStream(createStreamOptions);
-    await newStream.initialize();
-    if (!videoProfile) {
-      videoProfile = {
-        width: 1920,
-        height: 1080,
-        frameRate: 5,
-        bitrate: 1600
-      };
-    }
-    newStream.setVideoProfile(videoProfile);
-    this.streamCopy[id] = newStream;
-    this.streamCopy[id].play(elmentOrId);
-    this.coverPlayStyle(this.streamCopy[id]);
-    return newStream;
+  getRemoteStream(id) {
+    return this.remoteStreams.find(f => f.getUserId() == id);
   }
-  copyStreamStopPlay(id) {
-    let stream = this.streamCopy[id];
-    if (stream) {
-      let parent = stream.div_.parentElement;
-      stream.stop();
-      if (parent) {
-        parent.innerHTML = "";
-      }
+
+  async subscribe(stream, audio, video) {
+    await this.mainClient.subscribe(stream, {
+      audio: audio,
+      video: video
+    });
+  }
+
+  async init(token) {
+    TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.ERROR);
+    this.checkSupported();
+    this.mainToken = token;
+    this.mainClient = this.createClient(token);
+    await this.mainClient.join({ roomId: token.classId.toString() });
+    this.listenHandler(this.mainClient);
+    this.localStream = TRTC.createStream({ audio: true, video: true });
+    this.localStream.setVideoProfile(this.isTeacher ? "720p" : "480p");
+
+    try {
+      await this.localStream.initialize();
+      await this.mainClient.publish(this.localStream);
+    } catch (error) {
+      store.dispatch("tips/notAccessDevice");
     }
   }
-  teacherStreamPlay(elmentOrId) {
-    elmentOrId.innerHTML = "";
-    let stream = this.getRemoteStreamByUserId(store.state.workplace.teachId);
-    if (stream && stream.mediaStream_) {
-      this.play(elmentOrId, stream.mediaStream_);
-    }
-  }
-  teacherStreamStopPlay() {
-    let stream = this.getRemoteStreamByUserId(store.state.workplace.teachId);
-    if (stream && stream.stop) {
-      stream.stop();
-    }
-  }
-  getRemoteStreamByUserId(id) {
-    if (!id) return;
-    if (
-      !this.remoteStreamList[id] &&
-      this.remoteStreamList[addUserIdPrefix(id)]
-    ) {
-      id = addUserIdPrefix(id);
-    }
-    if (this.remoteStreamList[id] && this.remoteStreamList[id].stream) {
-      let stream = this.remoteStreamList[id].stream;
-      if (stream && stream.play) {
-        return stream;
-      }
-    }
-  }
-  remoteStreamPlay(id, elmentOrId, options) {
-    /*    elmentOrId.innerHTML = "";*/
-    if (!options) {
-      options = { video: true, audio: true };
-    }
-    setTimeout(() => {
-      let stream = this.getRemoteStreamByUserId(id);
-      if (!stream) {
-        this.remoteStreamPlay(id, elmentOrId, options);
-      } else {
-        stream.play(elmentOrId);
-        this.coverPlayStyle(stream, "contain");
-      }
-    }, 1000);
+
+  async destroy() {
+    if (this.mainClient) await this.mainClient.leave();
+    if (this.shareScreenClient) await this.shareScreenClient.leave();
   }
 
   async shareScreenStreamPlay(data, role) {
@@ -289,7 +146,6 @@ export class TrtcService {
     }
   }
   coverPlayStyle(stream, objectFit) {
-    if (!stream) return;
     if (!objectFit) {
       objectFit = "contain";
     }
@@ -371,20 +227,18 @@ export class TrtcService {
       };
     }
     let stream = this.getRemoteStreamByUserId(rawUserId);
+    let regex = /.*(share_screen)$/;
+    if (regex.test(stream.userId_)) {
+      options.audio = false;
+    }
+    if (removeUserIdPrefix(stream.userId_) === store.state.workplace.teachId) {
+      if (!store.state.remoteStream.teacherStreamReady) {
+        store.commit("remoteStream/TEACHER_STREAM_READY", true);
+      }
+      options.audio = true;
+      options.video = true;
+    }
     if (stream) {
-      let regex = /.*(share_screen)$/;
-      if (regex.test(stream.userId_)) {
-        options.audio = false;
-      }
-      if (
-        removeUserIdPrefix(stream.userId_) === store.state.workplace.teachId
-      ) {
-        if (!store.state.remoteStream.teacherStreamReady) {
-          store.commit("remoteStream/TEACHER_STREAM_READY", true);
-        }
-        options.audio = true;
-        options.video = true;
-      }
       let client = this.clientList["default"];
       await client.subscribe(stream, options);
     }
@@ -393,27 +247,6 @@ export class TrtcService {
     if (removeUserIdPrefix(rawUserId) === store.state.workplace.teachId) {
       store.commit("remoteStream/TEACHER_STREAM_READY", false);
     }
-  }
-  getStreamProfile() {
-    let temp = [];
-    for (let i in this.remoteStreamList) {
-      let regex = /.*(share_screen)$/;
-      let stream = this.remoteStreamList[i].stream;
-      let isShareScreen = regex.test(stream.userId_);
-      let isTeacher =
-        removeUserIdPrefix(stream.userId_) === store.state.workplace.teachId;
-      if (isShareScreen) {
-        this.remoteShareScreenStream = stream;
-      } else if (isTeacher) {
-      } else {
-        temp.push({
-          userId: removeUserIdPrefix(stream.userId_),
-          rawUserId: stream.userId_,
-          id: stream.id_
-        });
-      }
-    }
-    return temp;
   }
   getShareStream() {
     let keys = Object.keys(this.remoteStreamList);
@@ -435,55 +268,7 @@ export class TrtcService {
       }
     });
   }
-  async joinroom() {
-    let client = this.clientList["default"];
 
-    await client.join({ roomId: this.token.classId.toString() });
-    this.listenHandler(client);
-  }
-  listenHandler(client) {
-    let self = this;
-    client.on("stream-added", async event => {
-      const remoteStream = event.stream;
-      self.remoteStreamList[remoteStream.userId_] = {
-        stream: remoteStream,
-        status: "added"
-      };
-      await this.subscribeRemoteStream(remoteStream.userId_);
-    });
-
-    client.on("stream-subscribed", event => {
-      const remoteStream = event.stream;
-      this.remoteStreamListProfile = this.getStreamProfile();
-      store.commit(
-        "remoteStream/SET_REMOTE_STREAM_LIST",
-        self.remoteStreamListProfile
-      );
-    });
-
-    // 监听‘stream-updated’事件
-    client.on("stream-updated", event => {});
-    // 远端用户启用/关闭音频通知
-    client.on("mute-audio", event => {});
-    client.on("unmute-audio", event => {});
-    // 远端用户启用/关闭视频通知
-    client.on("mute-video", event => {});
-    client.on("unmute-video", event => {});
-    client.on("stream-removed", event => {
-      const remoteStream = event.stream;
-      self.unsubscribeRemoteStream(remoteStream.userId_);
-      if (self.remoteStreamList[remoteStream.userId_]) {
-        delete self.remoteStreamList[remoteStream.userId_];
-      }
-      self.remoteStreamListProfile = this.getStreamProfile();
-      store.commit(
-        "remoteStream/SET_REMOTE_STREAM_LIST",
-        self.remoteStreamListProfile
-      );
-    });
-    client.on("peer-join", event => {});
-    client.on("peer-leave", event => {});
-  }
   async createShareClient() {
     let res = await enterRoom(
       store.state.account.userInfo.username + "_share_screen",
@@ -501,15 +286,3 @@ export class TrtcService {
     return shareClient;
   }
 }
-const removeUserIdPrefix = function(userId) {
-  if (userId.indexOf("kblive_") === 0) {
-    return userId.substring(7);
-  }
-  return userId;
-};
-const addUserIdPrefix = function(userId) {
-  if (userId.indexOf("kblive_") !== 0) {
-    return "kblive_" + userId;
-  }
-  return userId;
-};
