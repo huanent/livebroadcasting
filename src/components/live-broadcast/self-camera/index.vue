@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'self-camera-panel': true }">
     <div class="self-camera-mask" ref="wrapper">
-      <div class="self-camera-icons" v-if="isTeacher">
+      <div class="self-camera-icons">
         <icon
           @click.native.stop="audioChanged"
           :name="microIcon"

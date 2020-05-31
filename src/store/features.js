@@ -7,7 +7,7 @@ export const initFeaturesState = function(role) {
     canControlBoard: isTeacher,
     videoStatus: true,
     audioStatus: true,
-    subscribeVideo: isTeacher,
+    subscribeVideo: true,
     subscribeAudio: isTeacher,
     handUp: HAND_UP_STATUS.NONE,
     globalMessage: true,
@@ -21,7 +21,7 @@ const state = {
   canControlBoard: false,
   videoStatus: true,
   audioStatus: true,
-  subscribeVideo: false,
+  subscribeVideo: true,
   subscribeAudio: false,
   handUp: HAND_UP_STATUS.NONE,
   globalMessage: true,
@@ -59,7 +59,6 @@ const mutations = {
   },
   SWITCH_SPEAKING(state, value) {
     state.subscribeAudio = value;
-    state.subscribeVideo = value;
     state.canControlBoard = value;
   },
   INIT_STATE(state, role) {

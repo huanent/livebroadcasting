@@ -6,6 +6,9 @@
       </a>
     </div>
     <swiper ref="mySwiper" :options="swiperOptions">
+      <swiper-slide v-if="!isTeacher">
+        <SelfCameraItem></SelfCameraItem>
+      </swiper-slide>
       <swiper-slide v-for="(item, index) in list" :key="index">
         <CameraItem :item="item" :key="index"></CameraItem>
       </swiper-slide>
@@ -20,7 +23,8 @@
 
 <script>
 import CameraItem from "./camera-item";
-import { mapState, mapMutations, mapActions } from "vuex";
+import SelfCameraItem from "./self-camera-item";
+import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import { Emitter } from "@/core/emit";
 import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
@@ -41,6 +45,7 @@ export default {
   computed: {
     ...mapState("account", ["role"]),
     ...mapState("workplace", ["featuresList"]),
+    ...mapGetters("workplace", ["isTeacher"]),
     swiper() {
       return this.$refs.mySwiper.$swiper;
     },
@@ -53,7 +58,8 @@ export default {
   components: {
     CameraItem,
     Swiper,
-    SwiperSlide
+    SwiperSlide,
+    SelfCameraItem
   },
   methods: {
     ...mapMutations("remoteStream", ["REMOTE_STREAM_PLAY"]),

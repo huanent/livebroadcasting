@@ -1,32 +1,23 @@
 <template>
-  <div :class="{ 'self-camera-panel': true }" v-show="currentStream.value">
-    <div class="self-camera-mask" v-if="role == ROLE.TEACHER">
+  <div :class="{ 'self-camera-panel': true }" v-show="stream">
+    <div class="self-camera-mask">
       <div class="self-camera-icons">
         <icon
-          @click.native.stop="onMicroStateChange"
+          @click.native.stop="audioChanged"
           :name="microIcon"
           color="#737882"
           :size="20"
         />
         <icon
-          @click.native.stop="onVideoStateChange"
+          @click.native.stop="videoChanged"
           :name="videoIcon"
           color="#737882"
           :size="20"
         />
       </div>
     </div>
-    <div
-      v-show="item.subscribeVideo"
-      :id="item.__primaryKey"
-      ref="video"
-      class="remote-video-view"
-    ></div>
-    <div
-      v-show="!item.subscribeVideo"
-      :id="item.__primaryKey"
-      class="remote-video-view"
-    >
+    <div v-show="videoStatus" ref="video" class="remote-video-view"></div>
+    <div v-show="!videoStatus" class="remote-video-view">
       <icon class="no-video" name="person" color="#34363b" />
     </div>
     <div class="self-camera-footer">
@@ -35,7 +26,7 @@
         <voice-intensity :intensity="0.8" /> -->
       </div>
       <span>
-        {{ item.__nickName || item.__primaryKey }}
+        本人
       </span>
     </div>
   </div>
@@ -49,62 +40,40 @@ import { delay } from "../../../core/utils";
 import { ROLE } from "../../../models/role";
 
 export default {
-  name: "CameraItem",
-  props: ["item"],
+  name: "SelfCameraItem",
   data() {
     return {
       show: false,
-      currentStream: {
-        value: null,
-        audio: null,
-        video: null
-      },
+      stream: null,
       active: true
     };
   },
   methods: {
-    ...mapActions("features", ["manualControlFeatures"]),
-    onMicroStateChange(el) {
-      this.manualControlFeatures({
-        id: this.item.primaryKey,
-        propName: "subscribeAudio",
-        value: !this.item.subscribeAudio
-      });
+    ...mapMutations("features", ["SET_VIDEO_STATUS", "SET_AUDIO_STATUS"]),
+    audioChanged() {
+      if (!this.stream) return;
+      this.audioStatus ? this.stream.muteAudio() : this.stream.unmuteAudio();
+      this.SET_AUDIO_STATUS(!this.audioStatus);
     },
-    onVideoStateChange() {
-      this.manualControlFeatures({
-        id: this.item.primaryKey,
-        propName: "subscribeVideo",
-        value: !this.item.subscribeVideo
-      });
+    videoChanged() {
+      if (!this.stream) return;
+      this.videoStatus ? this.stream.muteVideo() : this.stream.unmuteVideo();
+      this.SET_VIDEO_STATUS(!this.videoStatus);
     }
   },
   async mounted() {
     this.active = true;
+
     while (this.active) {
-      let stream = liveBroadcastService.trtcService.getRemoteStream(
-        this.item.__streamId
-      );
-      if (!stream) {
-        if (this.currentStream.value) this.currentStream.value.stop();
-        this.currentStream.value = null;
-        this.currentStream.audio = null;
-        this.currentStream.video = null;
-      } else {
-        if (
-          this.item.subscribeVideo != this.currentStream.video ||
-          this.item.subscribeAudio != this.currentStream.audio
-        ) {
-          await liveBroadcastService.trtcService.subscribe(
-            stream,
-            this.item.subscribeAudio,
-            this.item.subscribeVideo
-          );
-        }
-        if (stream != this.currentStream.value) {
-          stream.play(this.$refs.video);
-          this.currentStream.value = stream;
-        }
+      let stream = liveBroadcastService.trtcService.localStream;
+
+      if (this.stream != stream) {
+        if (this.stream) this.stream.stop();
+        stream.play(this.$refs.video, {
+          muted: true
+        });
+
+        this.stream = stream;
       }
 
       await delay(1000);
@@ -114,12 +83,12 @@ export default {
     this.active = false;
   },
   computed: {
-    ...mapState("account", ["role"]),
+    ...mapState("features", ["videoStatus", "audioStatus"]),
     microIcon() {
-      return this.item.subscribeAudio ? "microphone" : "microphone-slash";
+      return this.audioStatus ? "microphone" : "microphone-slash";
     },
     videoIcon() {
-      return this.item.subscribeVideo ? "video" : "video-slash";
+      return this.videoStatus ? "video" : "video-slash";
     }
   }
 };

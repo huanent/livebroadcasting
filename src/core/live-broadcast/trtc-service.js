@@ -1,7 +1,6 @@
 import TRTC from "trtc-js-sdk";
 import store from "@/store";
 import { Emitter } from "../emit";
-import { ROLE } from "../../models/role";
 import { enterRoom } from "../data/data-service.js";
 
 export class TrtcService {
