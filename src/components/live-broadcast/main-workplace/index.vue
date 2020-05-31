@@ -24,12 +24,8 @@
         </div>
       </div>
 
-      <div v-show="panelType === 'screen'">
-        <div ref="screen"></div>
-      </div>
-      <div v-show="panelType === 'camera'">
-        <div ref="camera" id="workplace-camera"></div>
-      </div>
+      <share-screen v-if="panelType === 'screen'" />
+      <camera v-if="panelType === 'camera'" />
     </div>
     <Toolbar v-if="isToolBarShow"></Toolbar>
     <div style="height: 100%" :class="{ hide: workplaceVisibity }"></div>
@@ -47,11 +43,13 @@ import Toolbar from "../toolbar/index";
 import BoardTabs from "./board-tabs";
 import WorkplaceFooter from "../workplace-footer";
 import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapGetters } from "vuex";
 import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";
 import { ROLE } from "../../../models/role";
 import Hand from "../hand-up/hand";
+import ShareScreen from "./share-screen";
+import Camera from "./camera";
 export default {
   name: "MainWorkplace",
   components: {
@@ -59,7 +57,9 @@ export default {
     BoardTabs,
     WorkplaceFooter,
     StreamSourceDialog,
-    Hand
+    Hand,
+    ShareScreen,
+    Camera
   },
   data() {
     return {
@@ -119,6 +119,7 @@ export default {
     ...mapState("workplace", ["panelType", "workplaceVisibity"]),
     ...mapState("electron", ["streamSelectVisibility"]),
     ...mapState("features", ["canControlBoard"]),
+    ...mapGetters("workplace", ["isTeacher"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
     },
@@ -139,27 +140,6 @@ export default {
       let fileInfo = this.boardProfiles[value];
 
       liveBroadcastService.boardService.switchFile(fileInfo.fid);
-    },
-    panelType: async function(type, oldType) {
-      let cameraEl = this.$refs.camera;
-      let screenEl = this.$refs.screen;
-      if (type !== "camera") {
-        this.LOCAL_STREAM_STOP_PLAY({ el: cameraEl, isCopy: true });
-      }
-      if (type !== "screen") {
-        this.SHARE_SCREEN_STOP_PLAY({ el: cameraEl, isCopy: true });
-      }
-      if (this.isServiceReady) {
-        switch (type) {
-          case "camera":
-            this.LOCAL_STREAM_PLAY({ el: cameraEl, isCopy: true });
-            break;
-          case "screen":
-            this.SHARE_SCREEN_PLAY({ el: screenEl, isCopy: true }, true);
-            break;
-          default:
-        }
-      }
     }
   }
 };

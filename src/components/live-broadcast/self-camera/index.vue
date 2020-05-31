@@ -1,15 +1,15 @@
 <template>
   <div :class="{ 'self-camera-panel': true }">
     <div class="self-camera-mask" ref="wrapper">
-      <div class="self-camera-icons">
+      <div class="self-camera-icons" v-if="isTeacher">
         <icon
-          @click.native.stop="onMicroStateChange"
+          @click.native.stop="audioChanged"
           :name="microIcon"
           color="#737882"
           :size="20"
         />
         <icon
-          @click.native.stop="onVideoStateChange"
+          @click.native.stop="videoChanged"
           :name="videoIcon"
           color="#737882"
           :size="20"
@@ -20,20 +20,7 @@
         <icon name="settings" size="16" class="settings-icon"></icon>
       </a>
     </div>
-    <div class="local_video">
-      <video
-        ref="video"
-        style="object-fit: contain"
-        :muted="true"
-        autoplay
-      ></video>
-      <icon
-        v-show="!$store.state.features.videoStatus"
-        class="no-video"
-        name="person"
-        color="#34363b"
-      />
-    </div>
+    <div class="local_video" ref="video"></div>
     <div class="self-camera-footer">
       <div>
         <icon :name="microIcon" color="#0A818C" :size="18" />
@@ -63,7 +50,9 @@ export default {
       showSettings: true,
       audioLevel: 0,
       active: false,
-      stream: null
+      stream: null,
+      audioStatus: true,
+      videoStatus: true
     };
   },
   components: {
@@ -71,10 +60,9 @@ export default {
     LocalstreamSetting
   },
   computed: {
-    ...mapGetters("workplace", ["isTeacher"]),
+    ...mapGetters("workplace", ["isTeacher", "teacherStreamId"]),
     ...mapState("workplace", ["token", "teachId"]),
     ...mapState("account", ["userInfo"]),
-    ...mapState("features", ["videoStatus", "audioStatus"]),
     microIcon() {
       return this.audioStatus ? "microphone" : "microphone-slash";
     },
@@ -94,15 +82,20 @@ export default {
     async setStream() {
       while (this.active) {
         let stream = this.isTeacher
-          ? liveBroadcastService.trtcService.getRemoteStream(
-              this.teacherStreamId()
-            )
-          : liveBroadcastService.trtcService.localStream;
+          ? liveBroadcastService.trtcService.localStream
+          : liveBroadcastService.trtcService.getRemoteStream(
+              this.teacherStreamId
+            );
 
         if (stream != this.stream) {
-          this.$refs.video.srcObject = stream.mediaStream_;
+          if (!this.isTeacher) {
+            liveBroadcastService.trtcService.subscribe(stream, true, true);
+          }
+
+          stream.play(this.$refs.video, { muted: this.isTeacher });
           this.stream = stream;
         }
+
         await delay(1000);
       }
     },
@@ -110,14 +103,18 @@ export default {
       while (this.active) {
         if (!this.stream) return;
         this.audioLevel = this.stream.getAudioLevel();
-        console.log(this.audioLevel);
-        await delay(500);
+        await delay(100);
       }
     },
-    teacherStreamId() {
-      let sublength = this.token.id.length - this.userInfo.username;
-      let prefix = this.token.id.substring(0, sublength);
-      return prefix + this.teacherId;
+    audioChanged() {
+      if (!this.stream) return;
+      this.audioStatus = !this.audioStatus;
+      this.audioStatus ? this.stream.unmuteAudio() : this.stream.muteAudio();
+    },
+    videoChanged() {
+      if (!this.stream) return;
+      this.videoStatus = !this.videoStatus;
+      this.videoStatus ? this.stream.unmuteVideo() : this.stream.muteVideo();
     }
   }
 };
@@ -128,7 +125,6 @@ export default {
   @include themeify {
     background: themed("background_color2");
   }
-  margin: 0 auto;
   position: relative;
   .self-camera-mask {
     position: absolute;
@@ -198,6 +194,7 @@ export default {
 }
 
 .local_video {
+  position: relative;
   height: 100%;
   width: 100%;
   video {

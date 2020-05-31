@@ -84,12 +84,7 @@ const mutations = {
 
 const actions = {
   async enterRoom({ commit, rootState }, query) {
-    const role =
-      query.createUser == rootState.account.username
-        ? ROLE.TEACHER
-        : ROLE.STUDENT;
     commit("SET_TEACHER_ID", query.createUser);
-    commit("SET_ROLE", role);
     let res = await enterRoom(rootState.account.userInfo.username, query.id);
     commit("SET_TOKEN", res.data.model);
     return res;
@@ -122,6 +117,15 @@ const actions = {
 const getters = {
   isTeacher(state) {
     return state.role == ROLE.TEACHER;
+  },
+  teacherStreamId(state, getters, rootState) {
+    let sublength =
+      state.token.id.length - rootState.account.userInfo.username.length;
+    let prefix = state.token.id.substring(0, sublength);
+    return prefix + state.teachId;
+  },
+  teacherScreenStreamId(state, getters) {
+    return getters.teacherStreamId + "_share_screen";
   }
 };
 

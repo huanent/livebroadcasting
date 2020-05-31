@@ -106,6 +106,7 @@ export default {
     const role =
       this.classCreator == this.userInfo.username ? ROLE.TEACHER : ROLE.STUDENT;
     this.SET_ROLE(role);
+    this.setRole(role);
 
     const enterResult = await this.enterRoom(roomData);
     if (!enterResult.data.success) {
@@ -176,6 +177,9 @@ export default {
       "SET_CAMERA_PANEL_VISIBILITY",
       "CLEAR_OFFLINE_USER"
     ]),
+    ...mapMutations("workplace", {
+      setRole: "SET_ROLE"
+    }),
     ...mapActions("workplace", ["enterRoom", "destroyRoom", "getRoomInfo"]),
     ...mapActions("tips", ["notAccessDevice", "redirectIndex"]),
     ...mapActions("board", ["boardResize"]),
