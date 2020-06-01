@@ -243,6 +243,9 @@ export default {
 }
 
 .dialog-item {
+  video {
+    transform: rotateY(180deg);
+  }
   margin-bottom: 15px;
   .select-item {
     margin-bottom: 1.4rem;
