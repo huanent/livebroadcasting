@@ -46,7 +46,11 @@ export class BoardService {
   }
 
   destroy() {
-    this.activeBoard.destroy();
+    try {
+      this.activeBoard.destroy();
+    } catch (error) {
+      console.error("销毁tiw失败", error);
+    }
   }
   getActiveBoard() {
     return this.activeBoard;

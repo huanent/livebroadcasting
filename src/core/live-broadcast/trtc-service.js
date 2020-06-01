@@ -193,9 +193,13 @@ export class TrtcService {
   }
 
   async destroy() {
-    if (this.mainClient) await this.mainClient.leave();
-    if (this.shareScreenClient) await this.shareScreenClient.leave();
-    if (this.localStream) this.localStream.close();
+    try {
+      if (this.mainClient) await this.mainClient.leave();
+      if (this.shareScreenClient) await this.shareScreenClient.leave();
+      if (this.localStream) this.localStream.close();
+    } catch (error) {
+      console.error("销毁trtc失败", error);
+    }
   }
 
   getElectronStream() {

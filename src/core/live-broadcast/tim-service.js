@@ -65,8 +65,12 @@ export class TimService {
   }
 
   async destroy() {
-    this.tim.off(TIM.EVENT.MESSAGE_RECEIVED, this.timMessageHandler);
-    this.tim.off(TIM.EVENT.KICKED_OUT, this.timKickedOutHandler);
-    return await this.tim.logout();
+    try {
+      this.tim.off(TIM.EVENT.MESSAGE_RECEIVED, this.timMessageHandler);
+      this.tim.off(TIM.EVENT.KICKED_OUT, this.timKickedOutHandler);
+      return await this.tim.logout();
+    } catch (error) {
+      console.error("销毁tim失败", error);
+    }
   }
 }

@@ -83,15 +83,9 @@ class LiveBroadcastService {
     return true;
   }
   async destroy() {
-    try {
-      if (this.boardService) this.boardService.destroy();
-    } catch (e) {}
-    try {
-      await this.timService.destroy();
-    } catch (e) {}
-    try {
-      if (this.trtcService) await this.trtcService.destroy();
-    } catch (e) {}
+    if (this.boardService) this.boardService.destroy();
+    await this.timService.destroy();
+    if (this.trtcService) await this.trtcService.destroy();
     this.initStatus();
     liveBroadcastService = null;
 
