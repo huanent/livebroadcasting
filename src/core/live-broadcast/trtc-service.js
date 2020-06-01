@@ -147,7 +147,7 @@ export class TrtcService {
   }
 
   async unsubscribe(stream) {
-    await client.unsubscribe(stream);
+    await this.mainClient.unsubscribe(stream);
   }
 
   async copyStream(stream, mirror = false) {

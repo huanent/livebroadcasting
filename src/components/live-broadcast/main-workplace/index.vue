@@ -84,18 +84,6 @@ export default {
       "SEND_PANEL_TYPE",
       "SET_WORKPLACE_VISIBILITY"
     ]),
-    ...mapMutations("features", []),
-    ...mapMutations("localStream", [
-      "LOCAL_STREAM_PLAY",
-      "LOCAL_STREAM_STOP_PLAY",
-      "SELF_CAMERA_STATUS",
-      "TEACHER_REMOTE_STREAM_STOP_PLAY",
-      "EMIT_SELECTED_STREAM"
-    ]),
-    ...mapMutations("shareScreenStream", [
-      "SHARE_SCREEN_PLAY",
-      "SHARE_SCREEN_STOP_PLAY"
-    ]),
     ...mapMutations("electron", ["STREAM_SELECT_VISIBILITY"]),
     onTabsClose(item, index) {
       if (item.fid) {
@@ -104,7 +92,7 @@ export default {
     },
     onSelected(stream) {
       this.STREAM_SELECT_VISIBILITY(false);
-      this.EMIT_SELECTED_STREAM(stream);
+      Emitter.emit("selected-stream", stream);
     },
     indexChange(index) {
       this.BOARD_INDEX(index);
