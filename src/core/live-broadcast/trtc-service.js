@@ -1,4 +1,4 @@
-import TRTC from "trtc-js-sdk";
+// import TRTC from "trtc-js-sdk";
 import store from "@/store";
 import { Emitter } from "../emit";
 import { enterRoom } from "../data/data-service.js";

@@ -1,7 +1,7 @@
-import TIM from "tim-js-sdk";
-import COS from "cos-js-sdk-v5";
+// import TIM from "tim-js-sdk";
+// import COS from "cos-js-sdk-v5";
 import { Emitter } from "../emit";
-window["COS"] = COS;
+// window["COS"] = COS;
 
 export class TimService {
   tim;
