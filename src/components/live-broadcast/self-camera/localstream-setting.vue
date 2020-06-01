@@ -138,6 +138,7 @@ export default {
 
   computed: {
     ...mapState("device", ["isMobile"]),
+    ...mapState("features", ["videoStatus", "audioStatus"]),
     dialogWidth() {
       return this.isMobile ? "80%" : "40%";
     }
@@ -213,13 +214,15 @@ export default {
     async save() {
       if (this.selectedCamera) {
         await liveBroadcastService.trtcService.setCamera(
-          this.selectedCamera.deviceId
+          this.selectedCamera.deviceId,
+          this.videoStatus
         );
       }
 
       if (this.selectedMicrophone) {
         await liveBroadcastService.trtcService.setMicrophone(
-          this.selectedMicrophone.deviceId
+          this.selectedMicrophone.deviceId,
+          this.audioStatus
         );
       }
 

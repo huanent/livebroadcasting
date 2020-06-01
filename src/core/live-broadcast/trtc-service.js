@@ -67,14 +67,16 @@ export class TrtcService {
     });
   }
 
-  async setCamera(deviceId) {
+  async setCamera(deviceId, mute) {
     if (!this.localStream) return;
-    return await this.localStream.switchDevice("video", deviceId);
+    await this.localStream.switchDevice("video", deviceId);
+    if (!mute) this.localStream.muteVideo();
   }
 
-  async setMicrophone(deviceId) {
+  async setMicrophone(deviceId, mute) {
     if (!this.localStream) return;
-    return await this.localStream.switchDevice("audio", deviceId);
+    await this.localStream.switchDevice("audio", deviceId);
+    if (!mute) this.localStream.muteAudio();
   }
 
   getRemoteStream(id) {

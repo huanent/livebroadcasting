@@ -50,9 +50,7 @@ export default {
       showSettings: true,
       audioLevel: 0,
       active: false,
-      stream: null,
-      audioStatus: true,
-      videoStatus: true
+      stream: null
     };
   },
   components: {
@@ -62,6 +60,7 @@ export default {
   computed: {
     ...mapGetters("workplace", ["isTeacher", "teacherStreamId"]),
     ...mapState("workplace", ["token", "teachId"]),
+    ...mapState("features", ["videoStatus", "audioStatus"]),
     ...mapState("account", ["userInfo"]),
     microIcon() {
       return this.audioStatus ? "microphone" : "microphone-slash";
@@ -79,6 +78,7 @@ export default {
     this.active = false;
   },
   methods: {
+    ...mapMutations("features", ["SET_VIDEO_STATUS", "SET_AUDIO_STATUS"]),
     async setStream() {
       while (this.active) {
         let stream = this.isTeacher
@@ -113,13 +113,13 @@ export default {
     },
     audioChanged() {
       if (!this.stream) return;
-      this.audioStatus = !this.audioStatus;
-      this.audioStatus ? this.stream.unmuteAudio() : this.stream.muteAudio();
+      this.audioStatus ? this.stream.muteAudio() : this.stream.unmuteAudio();
+      this.SET_AUDIO_STATUS(!this.audioStatus);
     },
     videoChanged() {
       if (!this.stream) return;
-      this.videoStatus = !this.videoStatus;
-      this.videoStatus ? this.stream.unmuteVideo() : this.stream.muteVideo();
+      this.videoStatus ? this.stream.muteVideo() : this.stream.unmuteVideo();
+      this.SET_VIDEO_STATUS(!this.videoStatus);
     }
   }
 };
