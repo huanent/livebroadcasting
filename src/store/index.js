@@ -4,9 +4,6 @@ import account from "./account";
 import board from "./board";
 import device from "./device";
 import workplace from "./workplace";
-import localStream from "./localStream";
-import remoteStream from "./remoteStream";
-import shareScreenStream from "./shareScreenStream";
 import electron from "./electron";
 import features from "./features";
 import widget from "./widget";
@@ -18,9 +15,6 @@ export default new Vuex.Store({
     board,
     device,
     workplace,
-    localStream,
-    remoteStream,
-    shareScreenStream,
     electron,
     features,
     widget,
