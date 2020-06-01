@@ -106,8 +106,9 @@ export default {
     },
     async setAudioLevel() {
       while (this.active) {
-        if (!this.stream) return;
-        this.audioLevel = this.stream.getAudioLevel();
+        if (this.stream) {
+          this.$nextTick(() => (this.audioLevel = this.stream.getAudioLevel()));
+        }
         await delay(100);
       }
     },
