@@ -1,18 +1,18 @@
 <template>
   <div class="zoom-controller">
     <icon
+      v-if="canControlBoard"
       name="minus-circle"
       color="#737882"
       :size="14"
-      v-if="canControlBoard"
       @click.native.stop="handleMinus"
     />
     <span>{{ currentFile.scale + "%" }}</span>
     <icon
+      v-if="canControlBoard"
       name="plus-circle"
       color="#737882"
       :size="14"
-      v-if="canControlBoard"
       @click.native.stop="handleAdd"
     />
   </div>
