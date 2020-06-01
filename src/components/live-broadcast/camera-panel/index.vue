@@ -51,7 +51,7 @@ export default {
     },
     list() {
       return this.featuresList.filter(
-        f => f.subscribeVideo || f.subscribeAudio || true
+        f => f.subscribeVideo || f.subscribeAudio
       );
     }
   },
