@@ -61,14 +61,14 @@ export default {
     ...mapActions("features", ["manualControlFeatures"]),
     onMicroStateChange(el) {
       this.manualControlFeatures({
-        id: this.item.primaryKey,
+        id: this.item.__primaryKey,
         propName: "subscribeAudio",
         value: !this.item.subscribeAudio
       });
     },
     onVideoStateChange() {
       this.manualControlFeatures({
-        id: this.item.primaryKey,
+        id: this.item.__primaryKey,
         propName: "subscribeVideo",
         value: !this.item.subscribeVideo
       });

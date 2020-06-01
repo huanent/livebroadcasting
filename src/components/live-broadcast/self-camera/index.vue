@@ -87,6 +87,11 @@ export default {
               this.teacherStreamId
             );
 
+        if (!stream) {
+          if (this.stream) this.stream.stop();
+          this.stream = null;
+        }
+
         if (stream != this.stream) {
           if (!this.isTeacher) {
             liveBroadcastService.trtcService.subscribe(stream, true, true);
