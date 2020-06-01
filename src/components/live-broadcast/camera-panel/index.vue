@@ -9,7 +9,7 @@
       <swiper-slide v-if="!isTeacher">
         <SelfCameraItem></SelfCameraItem>
       </swiper-slide>
-      <swiper-slide v-for="item in list" :key="item.__primaryKey">
+      <swiper-slide v-for="item in featuresList" :key="item.__primaryKey">
         <CameraItem :item="item"></CameraItem>
       </swiper-slide>
     </swiper>
@@ -48,11 +48,6 @@ export default {
     ...mapGetters("workplace", ["isTeacher"]),
     swiper() {
       return this.$refs.mySwiper.$swiper;
-    },
-    list() {
-      return this.featuresList.filter(
-        f => f.subscribeVideo || f.subscribeAudio
-      );
     }
   },
   components: {
