@@ -1,8 +1,8 @@
 <template>
   <div class="workplace-footer-main">
     <zoom-controller />
+    <StepController />
     <page-controller />
-    <StepController style="position: absolute;right: 5rem"></StepController>
   </div>
 </template>
 
