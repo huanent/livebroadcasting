@@ -13,7 +13,7 @@ const state = {
   teachId: null,
   featuresList: [],
   chatMessages: [],
-  cameraPanelVisibity: false,
+  cameraPanelVisibity: true,
   roomInfo: null,
   selectedCamera: null,
   selectedMicrophone: null

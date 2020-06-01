@@ -102,9 +102,6 @@ class LiveBroadcastService {
     store.commit("account/INIT_STATE", ROLE.STUDENT);
     store.commit("board/INIT_STATE");
     store.commit("features/INIT_STATE", ROLE.STUDENT);
-    store.commit("localStream/INIT_STATE");
-    store.commit("remoteStream/INIT_STATE");
-    store.commit("shareScreenStream/INIT_STATE");
   }
 
   isListener(listeners) {
