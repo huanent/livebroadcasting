@@ -2,6 +2,7 @@ import TRTC from "trtc-js-sdk";
 import store from "@/store";
 import { Emitter } from "../emit";
 import { enterRoom } from "../data/data-service.js";
+import { requestDeviceAccess } from "../utils";
 
 export class TrtcService {
   localStream;
@@ -167,12 +168,25 @@ export class TrtcService {
     this.mainClient = this.createClient(token);
     await this.mainClient.join({ roomId: token.classId.toString() });
     this.listenHandler(this.mainClient);
-    this.localStream = TRTC.createStream({ audio: true, video: true });
+    let access = await requestDeviceAccess();
+
+    this.localStream = TRTC.createStream({
+      audio: !!access.audio,
+      video: !!access.video
+    });
+
     this.localStream.setVideoProfile(this.isTeacher ? "720p" : "480p");
 
     try {
       await this.localStream.initialize();
       await this.mainClient.publish(this.localStream);
+
+      let selectedDevices = {
+        camera: this.localStream.getVideoTrack().label,
+        microphone: this.localStream.getAudioTrack().label
+      };
+
+      store.commit("workplace/SELECT_DEVICES", selectedDevices);
     } catch (error) {
       store.dispatch("tips/notAccessDevice");
     }
@@ -181,6 +195,7 @@ export class TrtcService {
   async destroy() {
     if (this.mainClient) await this.mainClient.leave();
     if (this.shareScreenClient) await this.shareScreenClient.leave();
+    if (this.localStream) this.localStream.close();
   }
 
   getElectronStream() {

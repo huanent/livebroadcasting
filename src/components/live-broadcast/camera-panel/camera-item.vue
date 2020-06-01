@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'self-camera-panel': true }" v-show="currentStream.value">
+  <div :class="{ 'self-camera-panel': true }">
     <div class="self-camera-mask" v-if="role == ROLE.TEACHER">
       <div class="self-camera-icons">
         <icon
@@ -17,11 +17,14 @@
       </div>
     </div>
     <div
-      v-show="item.subscribeVideo"
+      v-show="item.subscribeVideo && stream.value"
       ref="video"
       class="remote-video-view"
     ></div>
-    <div v-show="!item.subscribeVideo" class="remote-video-view">
+    <div
+      v-show="!item.subscribeVideo || !stream.value"
+      class="remote-video-view"
+    >
       <icon class="no-video" name="person" color="#34363b" />
     </div>
     <div class="self-camera-footer">
@@ -49,7 +52,7 @@ export default {
   data() {
     return {
       show: false,
-      currentStream: {
+      stream: {
         value: null,
         audio: null,
         video: null
@@ -81,14 +84,14 @@ export default {
         this.item.__streamId
       );
       if (!stream) {
-        if (this.currentStream.value) this.currentStream.value.stop();
-        this.currentStream.value = null;
-        this.currentStream.audio = null;
-        this.currentStream.video = null;
+        if (this.stream.value) this.stream.value.stop();
+        this.stream.value = null;
+        this.stream.audio = null;
+        this.stream.video = null;
       } else {
         if (
-          this.item.subscribeVideo != this.currentStream.video ||
-          this.item.subscribeAudio != this.currentStream.audio
+          this.item.subscribeVideo != this.stream.video ||
+          this.item.subscribeAudio != this.stream.audio
         ) {
           await liveBroadcastService.trtcService.subscribe(
             stream,
@@ -96,9 +99,9 @@ export default {
             this.item.subscribeVideo
           );
         }
-        if (stream != this.currentStream.value) {
+        if (stream != this.stream.value) {
           stream.play(this.$refs.video);
-          this.currentStream.value = stream;
+          this.stream.value = stream;
         }
       }
 

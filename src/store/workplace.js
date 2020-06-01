@@ -14,7 +14,9 @@ const state = {
   featuresList: [],
   chatMessages: [],
   cameraPanelVisibity: false,
-  roomInfo: null
+  roomInfo: null,
+  selectedCamera: null,
+  selectedMicrophone: null
 };
 const mutations = {
   SET_TEACHER_ID(state, id) {
@@ -79,6 +81,10 @@ const mutations = {
   },
   SET_ROOM_INFO(state, data) {
     state.roomInfo = data;
+  },
+  SELECT_DEVICES(state, { camera, microphone }) {
+    state.selectedCamera = camera;
+    state.selectedMicrophone = microphone;
   }
 };
 

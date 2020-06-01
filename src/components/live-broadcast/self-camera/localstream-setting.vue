@@ -14,9 +14,9 @@
             <el-select
               v-if="access.video"
               style="width:100%"
-              :value="selectedCamera"
+              :value="camera"
               value-key="deviceId"
-              @change="selectedCameraChanged"
+              @change="cameraChanged"
               :placeholder="$t('setting.chooseCamera')"
             >
               <el-option
@@ -42,9 +42,9 @@
             <el-select
               v-if="access.audio"
               style="width:100%"
-              :value="selectedMicrophone"
+              :value="microphone"
               value-key="label"
-              @change="selectedMicrophoneChanged"
+              @change="microphoneChanged"
               :placeholder="$t('setting.chooseMicro')"
             >
               <el-option
@@ -107,8 +107,6 @@ export default {
         video: null,
         audio: null
       },
-      selectedCamera: null,
-      selectedMicrophone: null,
       percentage: 0
     };
   },
@@ -118,53 +116,35 @@ export default {
     }
   },
   async mounted() {
-    this.$once("hook:beforeDestroy", () => {
-      if (this.audioLevelTimer) {
-        clearInterval(this.audioLevelTimer);
-      }
-    });
     this.access = await requestDeviceAccess();
     this.cameras = await liveBroadcastService.trtcService.getCameras();
     this.microphones = await liveBroadcastService.trtcService.getMicrophones();
-    if (this.cameras.length) {
-      this.selectedCamera = this.cameras[0];
-      this.selectedCameraChanged(this.selectedCamera);
-    }
-    if (this.microphones.length) {
-      this.selectedMicrophone = this.microphones[0];
-      this.selectedMicrophoneChanged(this.selectedMicrophone);
-    }
   },
 
   computed: {
     ...mapState("device", ["isMobile"]),
     ...mapState("features", ["videoStatus", "audioStatus"]),
+    ...mapState("workplace", ["selectedCamera", "selectedMicrophone"]),
     dialogWidth() {
       return this.isMobile ? "80%" : "40%";
+    },
+    microphone() {
+      return this.microphones.find(f => f.label == this.selectedMicrophone);
+    },
+    camera() {
+      return this.cameras.find(f => f.label == this.selectedCamera);
     }
   },
   methods: {
-    async selectedCameraChanged(e) {
-      this.selectedCamera = e;
-      let stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          deviceId: e.deviceId
-        },
-        audio: false
+    ...mapMutations("workplace", ["SELECT_DEVICES"]),
+    async cameraChanged(e) {
+      this.SELECT_DEVICES({
+        camera: e.label,
+        microphone: this.selectedMicrophone
       });
-
-      this.$refs.video.srcObject = stream;
     },
-    async selectedMicrophoneChanged(e) {
-      this.selectedMicrophone = e;
-
-      let stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          deviceId: e.deviceId
-        }
-      });
-
-      this.initWave(stream);
+    async microphoneChanged(e) {
+      this.SELECT_DEVICES({ camera: this.selectedCamera, microphone: e.label });
     },
     initWave(stream) {
       let audioContext = new AudioContext();
@@ -212,16 +192,16 @@ export default {
       draw();
     },
     async save() {
-      if (this.selectedCamera) {
+      if (this.camera) {
         await liveBroadcastService.trtcService.setCamera(
-          this.selectedCamera.deviceId,
+          this.camera.deviceId,
           this.videoStatus
         );
       }
 
-      if (this.selectedMicrophone) {
+      if (this.microphone) {
         await liveBroadcastService.trtcService.setMicrophone(
-          this.selectedMicrophone.deviceId,
+          this.microphone.deviceId,
           this.audioStatus
         );
       }
@@ -230,6 +210,27 @@ export default {
     },
     async close() {
       this.$emit("update:visibility", false);
+    }
+  },
+  watch: {
+    async microphone(value) {
+      let stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          deviceId: value.deviceId
+        }
+      });
+
+      this.initWave(stream);
+    },
+    async camera(value) {
+      let stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          deviceId: value.deviceId
+        },
+        audio: false
+      });
+
+      this.$refs.video.srcObject = stream;
     }
   }
 };
