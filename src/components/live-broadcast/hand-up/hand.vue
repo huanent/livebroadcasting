@@ -25,17 +25,7 @@ export default {
   },
   watch: {
     handUp(value) {
-      switch (this.handUp) {
-        case HAND_UP_STATUS.NONE:
-        case HAND_UP_STATUS.UPING:
-          this.SWITCH_SPEAKING(false);
-          break;
-        case HAND_UP_STATUS.SPEAKING:
-          this.SWITCH_SPEAKING(true);
-          break;
-        default:
-          break;
-      }
+      this.SWITCH_SPEAKING(value);
     }
   }
 };

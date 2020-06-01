@@ -7,32 +7,16 @@
       element-loading-background="rgba(0, 0, 0, 0.8)"
     >
       {{ feature.__nickName || feature.__primaryKey }} <strong>举手！</strong>
-      <el-button
-        type="success"
-        round
-        size="mini"
-        v-if="this.feature.handUp == HAND_UP_STATUS.UPING"
-        @click="manual(HAND_UP_STATUS.SPEAKING)"
-      >
-        发言
-      </el-button>
-      <el-button
-        type="success"
-        round
-        size="mini"
-        v-if="this.feature.handUp == HAND_UP_STATUS.SPEAKING"
-        @click="manual(HAND_UP_STATUS.NONE)"
-      >
-        结束发言
+      <el-button type="success" round size="mini" @click="operate">
+        {{ operationText }}
       </el-button>
       <el-button
         type="danger"
         round
         size="mini"
         @click="manual(HAND_UP_STATUS.NONE)"
-        v-if="this.feature.handUp == HAND_UP_STATUS.UPING"
       >
-        忽略
+        {{ closeText }}
       </el-button>
     </el-alert>
   </div>
@@ -47,6 +31,23 @@ export default {
       loading: false
     };
   },
+  computed: {
+    closeText() {
+      return this.feature.handUp == HAND_UP_STATUS.UPING ? "忽略" : "结束";
+    },
+    operationText() {
+      switch (this.feature.handUp) {
+        case HAND_UP_STATUS.SPEAKING:
+          return "启用白板";
+
+        case HAND_UP_STATUS.DRAWING:
+          return "禁用白板";
+
+        default:
+          return "发言";
+      }
+    }
+  },
   methods: {
     ...mapActions("features", ["manualControlFeatures"]),
     manual(status) {
@@ -56,6 +57,21 @@ export default {
         propName: "handUp",
         value: status
       });
+    },
+    operate() {
+      switch (this.feature.handUp) {
+        case HAND_UP_STATUS.UPING:
+          this.manual(HAND_UP_STATUS.SPEAKING);
+          break;
+        case HAND_UP_STATUS.SPEAKING:
+          this.manual(HAND_UP_STATUS.DRAWING);
+          break;
+        case HAND_UP_STATUS.DRAWING:
+          this.manual(HAND_UP_STATUS.SPEAKING);
+          break;
+        default:
+          break;
+      }
     }
   },
   watch: {

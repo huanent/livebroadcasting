@@ -48,9 +48,8 @@ const mutations = {
         state.handUp = HAND_UP_STATUS.UPING;
         break;
       case HAND_UP_STATUS.UPING:
-        state.handUp = HAND_UP_STATUS.NONE;
-        break;
       case HAND_UP_STATUS.SPEAKING:
+      case HAND_UP_STATUS.DRAWING:
         state.handUp = HAND_UP_STATUS.NONE;
         break;
       default:
@@ -58,8 +57,22 @@ const mutations = {
     }
   },
   SWITCH_SPEAKING(state, value) {
-    state.subscribeAudio = value;
-    state.canControlBoard = value;
+    switch (value) {
+      case HAND_UP_STATUS.NONE:
+        state.handUp = HAND_UP_STATUS.NONE;
+        state.canControlBoard = false;
+        state.subscribeAudio = false;
+        break;
+      case HAND_UP_STATUS.SPEAKING:
+        state.subscribeAudio = true;
+        state.canControlBoard = false;
+        break;
+      case HAND_UP_STATUS.DRAWING:
+        state.canControlBoard = true;
+        break;
+      default:
+        break;
+    }
   },
   INIT_STATE(state, role) {
     let data = initFeaturesState(role);
