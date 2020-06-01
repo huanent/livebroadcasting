@@ -1,5 +1,5 @@
 <template>
-  <div class="page-controller">
+  <div class="page-controller" v-if="canControlBoard">
     <el-tooltip :content="'上一步'" placement="bottom" :open-delay="200">
       <icon
         @click.native.stop="handleMinus"
