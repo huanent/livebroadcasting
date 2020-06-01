@@ -96,6 +96,7 @@
 import { mapActions, mapMutations, mapState } from "vuex";
 import { liveBroadcastService } from "../../../core/live-broadcast";
 import { requestDeviceAccess } from "../../../core/utils";
+import { releaseStream } from "../../../core/utils";
 
 export default {
   name: "LocalstreamSetting",
@@ -107,7 +108,9 @@ export default {
         video: null,
         audio: null
       },
-      percentage: 0
+      percentage: 0,
+      audioStream: null,
+      videoStream: null
     };
   },
   props: {
@@ -214,24 +217,32 @@ export default {
   },
   watch: {
     async microphone(value) {
-      let stream = await navigator.mediaDevices.getUserMedia({
+      if (this.audioStream) releaseStream(this.audioStream);
+
+      this.audioStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           deviceId: value.deviceId
         }
       });
 
-      this.initWave(stream);
+      this.initWave(this.audioStream);
     },
     async camera(value) {
-      let stream = await navigator.mediaDevices.getUserMedia({
+      if (this.videoStream) releaseStream(this.videoStream);
+
+      this.videoStream = await navigator.mediaDevices.getUserMedia({
         video: {
           deviceId: value.deviceId
         },
         audio: false
       });
 
-      this.$refs.video.srcObject = stream;
+      this.$refs.video.srcObject = this.videoStream;
     }
+  },
+  beforeDestroy() {
+    if (this.audioStream) releaseStream(this.audioStream);
+    if (this.videoStream) releaseStream(this.videoStream);
   }
 };
 </script>

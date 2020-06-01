@@ -6,7 +6,7 @@ export const delay = async time =>
 
 export const requestDeviceAccess = async function() {
   let video = await getMediaStream("video");
-  let audio = await getMediaStream("video");
+  let audio = await getMediaStream("audio");
   return { video, audio };
 };
 
@@ -17,14 +17,17 @@ async function getMediaStream(type) {
       audio: type == "audio"
     });
 
-    var tracks = stream.getTracks();
-
-    for (const i of tracks) {
-      i.stop();
-    }
-
+    releaseStream(stream);
     return stream;
   } catch (e) {
     console.log(e);
+  }
+}
+
+export function releaseStream(stream) {
+  var tracks = stream.getTracks();
+
+  for (const i of tracks) {
+    i.stop();
   }
 }
