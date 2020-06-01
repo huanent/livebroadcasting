@@ -9,8 +9,8 @@
       <swiper-slide v-if="!isTeacher">
         <SelfCameraItem></SelfCameraItem>
       </swiper-slide>
-      <swiper-slide v-for="(item, index) in list" :key="index">
-        <CameraItem :item="item" :key="index"></CameraItem>
+      <swiper-slide v-for="item in list" :key="item.__primaryKey">
+        <CameraItem :item="item"></CameraItem>
       </swiper-slide>
     </swiper>
     <div class="camera-right-ctl">

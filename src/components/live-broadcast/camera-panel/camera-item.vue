@@ -18,15 +18,10 @@
     </div>
     <div
       v-show="item.subscribeVideo"
-      :id="item.__primaryKey"
       ref="video"
       class="remote-video-view"
     ></div>
-    <div
-      v-show="!item.subscribeVideo"
-      :id="item.__primaryKey"
-      class="remote-video-view"
-    >
+    <div v-show="!item.subscribeVideo" class="remote-video-view">
       <icon class="no-video" name="person" color="#34363b" />
     </div>
     <div class="self-camera-footer">
