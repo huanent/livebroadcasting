@@ -3,7 +3,7 @@
 </template>
 <script>
 import { mapState, mapMutations, mapGetters } from "vuex";
-import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "@/core/live-broadcast";
 import { delay } from "../../../core/utils";
 export default {
   data() {

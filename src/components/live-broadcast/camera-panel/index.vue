@@ -26,7 +26,7 @@ import CameraItem from "./camera-item";
 import SelfCameraItem from "./self-camera-item";
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import { Emitter } from "@/core/emit";
-import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "../../../core/live-broadcast";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 export default {

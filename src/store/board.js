@@ -1,4 +1,4 @@
-import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "@/core/live-broadcast";
 
 const state = {
   toolType: 1,

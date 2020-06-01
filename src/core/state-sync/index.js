@@ -1,5 +1,5 @@
 import config from "./config";
-import { liveBroadcastService } from "../live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "../live-broadcast";
 
 export const syncConfig = config;
 

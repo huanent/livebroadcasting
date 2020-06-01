@@ -1,4 +1,4 @@
-import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "@/core/live-broadcast";
 
 import { enterRoom } from "../core/data/data-service";
 import { ROLE } from "../models/role";

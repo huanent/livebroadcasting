@@ -94,7 +94,7 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
-import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "../../../core/live-broadcast";
 import { requestDeviceAccess } from "../../../core/utils";
 
 export default {

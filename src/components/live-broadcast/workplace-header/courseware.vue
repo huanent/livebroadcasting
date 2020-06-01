@@ -133,7 +133,7 @@ import {
   setCourseFile
 } from "@/core/data/data-service";
 
-import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "@/core/live-broadcast";
 import { mapState, mapMutations } from "vuex";
 
 export default {

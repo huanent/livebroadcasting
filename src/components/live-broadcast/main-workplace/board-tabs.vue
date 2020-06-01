@@ -69,7 +69,7 @@
 <script>
 import { Multiselect } from "vue-multiselect";
 import { mapState, mapMutations } from "vuex";
-import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "../../../core/live-broadcast";
 export default {
   name: "BoardTabs",
   props: {

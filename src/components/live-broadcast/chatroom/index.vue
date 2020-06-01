@@ -10,7 +10,7 @@ import ChatroomBody from "./chatroom-body";
 import ChatroomFooter from "./chatroom-footer";
 import { Emitter } from "../../../core/emit";
 import { mapMutations, mapState } from "vuex";
-import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "../../../core/live-broadcast";
 import { ROLE } from "../../../models/role";
 
 export default {

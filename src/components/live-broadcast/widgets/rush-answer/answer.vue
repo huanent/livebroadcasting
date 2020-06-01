@@ -25,7 +25,7 @@
 <script>
 import { mapState } from "vuex";
 import { delay } from "../../../../core/utils";
-import { liveBroadcastService } from "../../../../core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "../../../../core/live-broadcast";
 import { ROLE } from "../../../../models/role";
 export default {
   data() {

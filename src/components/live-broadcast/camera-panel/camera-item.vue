@@ -42,7 +42,7 @@
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
 import { Emitter } from "@/core/emit";
-import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "../../../core/live-broadcast";
 import { delay } from "../../../core/utils";
 import { ROLE } from "../../../models/role";
 

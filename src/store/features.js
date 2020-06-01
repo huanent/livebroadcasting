@@ -1,4 +1,4 @@
-import { liveBroadcastService } from "../core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "../core/live-broadcast";
 import { HAND_UP_STATUS } from "../models/handUpStatus";
 export const initFeaturesState = function(role) {
   let isTeacher = role === "ROLE_TEACHER";

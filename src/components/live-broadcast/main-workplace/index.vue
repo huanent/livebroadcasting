@@ -42,7 +42,7 @@
 import Toolbar from "../toolbar/index";
 import BoardTabs from "./board-tabs";
 import WorkplaceFooter from "../workplace-footer";
-import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "@/core/live-broadcast";
 import { mapState, mapMutations, mapGetters } from "vuex";
 import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";

@@ -15,7 +15,7 @@
 <script>
 import { mapState } from "vuex";
 import StreamSourceDialog from "@c/common/stream-source-dialog/index.vue";
-import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "../../../core/live-broadcast";
 import { Emitter } from "../../../core/emit";
 
 const currentRecordAudioStreamList = [];

@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { liveBroadcastService } from "@/core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "@/core/live-broadcast";
 import { mapActions, mapMutations, mapState } from "vuex";
 import classApi from "@api/class";
 // import {

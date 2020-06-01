@@ -41,7 +41,7 @@ import { Emitter } from "../../../core/emit";
 import LocalstreamSetting from "./localstream-setting";
 import { ROLE } from "../../../models/role";
 import { delay } from "../../../core/utils";
-import { liveBroadcastService } from "../../../core/live-broadcast/live-broadcast-service";
+import { liveBroadcastService } from "../../../core/live-broadcast";
 export default {
   name: "SelfCamera",
   data() {
