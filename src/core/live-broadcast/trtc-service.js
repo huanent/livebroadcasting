@@ -170,7 +170,7 @@ export class TrtcService {
       video: !!access.video
     });
 
-    this.localStream.setVideoProfile(this.isTeacher ? "720p" : "480p");
+    this.localStream.setVideoProfile(this.isTeacher ? "720p" : "240p");
 
     try {
       await this.localStream.initialize();
