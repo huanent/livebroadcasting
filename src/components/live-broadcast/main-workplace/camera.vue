@@ -22,7 +22,7 @@ export default {
             );
 
       if (stream != this.stream) {
-        this.$refs.video.srcObject = stream.mediaStream_.clone();
+        this.$refs.video.srcObject = stream.mediaStream_;
 
         this.stream = stream;
       }
