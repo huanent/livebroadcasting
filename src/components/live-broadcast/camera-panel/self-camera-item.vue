@@ -97,8 +97,8 @@ export default {
 <style scoped lang="scss">
 .self-camera-panel {
   background: #212224;
-  margin: 0 auto;
   position: relative;
+  width: auto;
   height: 100%;
   .self-camera-mask {
     position: absolute;

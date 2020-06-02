@@ -14,11 +14,12 @@ export default {
   },
   async mounted() {
     while (this.active) {
-      let stream = this.isTeacher
-        ? liveBroadcastService.trtcService.localStream
-        : liveBroadcastService.trtcService.getRemoteStream(
-            this.teacherStreamId
-          );
+      let stream =
+        this.cameraPanelId == this.token.id
+          ? liveBroadcastService.trtcService.localStream
+          : liveBroadcastService.trtcService.getRemoteStream(
+              this.cameraPanelId
+            );
 
       if (stream != this.stream) {
         if (this.stream) this.stream.stop();
@@ -42,7 +43,8 @@ export default {
     this.stream = null;
   },
   computed: {
-    ...mapGetters("workplace", ["isTeacher", "teacherStreamId"])
+    ...mapState("workplace", ["cameraPanelId", "token"]),
+    ...mapGetters("workplace", ["isTeacher"])
   }
 };
 </script>

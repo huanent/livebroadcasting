@@ -1,20 +1,19 @@
 <template>
   <div class="camera-panel-wrapper">
-    <div class="camera-left-ctl">
+    <div class="ctrl left">
       <a @click.stop="preCtl()">
         <icon name="chevron-circle-left" size="24"></icon>
       </a>
     </div>
-    <swiper ref="mySwiper" :options="swiperOptions">
-      <swiper-slide v-if="!isTeacher">
-        <SelfCameraItem></SelfCameraItem>
-      </swiper-slide>
-
-      <swiper-slide v-for="item in featuresList" :key="item.__primaryKey">
-        <CameraItem :item="item"></CameraItem>
-      </swiper-slide>
-    </swiper>
-    <div class="camera-right-ctl">
+    <div class="items">
+      <SelfCameraItem v-if="!isTeacher"></SelfCameraItem>
+      <CameraItem
+        v-for="item in featuresList"
+        :key="item.__primaryKey"
+        :item="item"
+      ></CameraItem>
+    </div>
+    <div class="ctrl right">
       <a @click.stop="nextCtl()">
         <icon name="chevron-circle-right" size="24"></icon>
       </a>
@@ -53,8 +52,6 @@ export default {
   },
   components: {
     CameraItem,
-    Swiper,
-    SwiperSlide,
     SelfCameraItem
   },
   methods: {
@@ -74,28 +71,15 @@ export default {
 .camera-panel-wrapper {
   height: 100%;
   width: 100%;
-  display: flex;
-  align-items: center;
-  & > * {
-    display: inline-block;
-  }
-}
-.camera-left-ctl,
-.camera-right-ctl {
-  width: 5%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  & > a {
-    margin: 0 auto;
-    display: inline-block;
-    padding: 0.5rem;
-    cursor: pointer;
+  .ctrl {
+    width: 50px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .svg-icon {
-      padding: 1rem;
-      margin: 0 auto;
       @include themeify {
         fill: themed("font_color2");
       }
@@ -108,13 +92,20 @@ export default {
       }
     }
   }
-}
-.swiper-wrapper {
-  width: 90%;
-  height: 100%;
-}
-.swiper-container {
-  height: 100%;
-  width: 100%;
+  .left {
+    left: 0;
+  }
+  .right {
+    right: 0;
+  }
+  .items {
+    margin: 0 50px;
+    height: 100%;
+    & > div {
+      display: inline-block;
+      width: 250px;
+      margin-right: 5px;
+    }
+  }
 }
 </style>

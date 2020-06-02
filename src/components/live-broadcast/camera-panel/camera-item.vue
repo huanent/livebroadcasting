@@ -1,6 +1,10 @@
 <template>
-  <div :class="{ 'self-camera-panel': true }">
-    <div class="self-camera-mask" v-if="role == ROLE.TEACHER">
+  <div
+    :class="{ 'self-camera-panel': true }"
+    :draggable="isTeacher"
+    @dragstart="dragstart"
+  >
+    <div class="self-camera-mask" v-if="isTeacher">
       <div class="self-camera-icons">
         <icon
           @click.native.stop="onMicroStateChange"
@@ -40,11 +44,10 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState, mapGetters } from "vuex";
 import { Emitter } from "@/core/emit";
 import { liveBroadcastService } from "../../../core/live-broadcast";
 import { delay } from "../../../core/utils";
-import { ROLE } from "../../../models/role";
 
 export default {
   name: "CameraItem",
@@ -75,6 +78,9 @@ export default {
         propName: "subscribeVideo",
         value: !this.item.subscribeVideo
       });
+    },
+    dragstart(e) {
+      e.dataTransfer.setData("streamId", this.item.__streamId);
     }
   },
   async mounted() {
@@ -112,7 +118,7 @@ export default {
     this.active = false;
   },
   computed: {
-    ...mapState("account", ["role"]),
+    ...mapGetters("workplace", ["isTeacher"]),
     microIcon() {
       return this.item.subscribeAudio ? "microphone" : "microphone-slash";
     },
@@ -126,7 +132,6 @@ export default {
 <style scoped lang="scss">
 .self-camera-panel {
   background: #212224;
-  margin: 0 auto;
   position: relative;
   height: 100%;
   .self-camera-mask {

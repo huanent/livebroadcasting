@@ -7,6 +7,11 @@ export default [
     sender: ROLE.TEACHER
   },
   {
+    path: ["workplace", "cameraPanelId"],
+    listener: ROLE.STUDENT,
+    sender: ROLE.TEACHER
+  },
+  {
     path: ["features", "globalMessage"],
     listener: ROLE.STUDENT,
     sender: ROLE.TEACHER

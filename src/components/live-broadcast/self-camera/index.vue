@@ -1,5 +1,9 @@
 <template>
-  <div :class="{ 'self-camera-panel': true }">
+  <div
+    :class="{ 'self-camera-panel': true }"
+    draggable="true"
+    @dragstart="dragstart"
+  >
     <div class="self-camera-mask" ref="wrapper">
       <div class="self-camera-icons">
         <icon
@@ -117,6 +121,9 @@ export default {
       if (!this.stream) return;
       this.videoStatus ? this.stream.muteVideo() : this.stream.unmuteVideo();
       this.SET_VIDEO_STATUS(!this.videoStatus);
+    },
+    dragstart(e) {
+      e.dataTransfer.setData("streamId", this.token.id);
     }
   }
 };

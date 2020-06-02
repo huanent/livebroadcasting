@@ -1,5 +1,9 @@
 <template>
-  <div class="main-workplace-container">
+  <div
+    class="main-workplace-container"
+    @drop="drop"
+    @dragover="$event.preventDefault()"
+  >
     <div :class="{ hide: !workplaceVisibity }">
       <BoardTabs
         @on-close="onTabsClose"
@@ -98,13 +102,17 @@ export default {
       this.BOARD_INDEX(index);
     },
     onChange(type) {
-      this.SET_PANEL_TYPE(type);
+      this.SET_PANEL_TYPE({ type, streamId: this.token.id });
+    },
+    drop(e) {
+      let streamId = e.dataTransfer.getData("streamId");
+      this.SET_PANEL_TYPE({ type: "camera", streamId });
     }
   },
   computed: {
     ...mapState("account", ["role"]),
     ...mapState("localStream", []),
-    ...mapState("workplace", ["panelType", "workplaceVisibity"]),
+    ...mapState("workplace", ["panelType", "workplaceVisibity", "token"]),
     ...mapState("electron", ["streamSelectVisibility"]),
     ...mapState("features", ["canControlBoard"]),
     ...mapGetters("workplace", ["isTeacher"]),

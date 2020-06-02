@@ -7,6 +7,7 @@ import classApi from "../core/data/class";
 const state = {
   themeColor: "dark",
   panelType: "board",
+  cameraPanelId: null,
   workplaceVisibity: false,
   role: null,
   token: null,
@@ -45,8 +46,9 @@ const mutations = {
       file.resolution
     );
   },
-  SET_PANEL_TYPE(state, panelType) {
-    state.panelType = panelType;
+  SET_PANEL_TYPE(state, { type, streamId }) {
+    state.panelType = type;
+    state.cameraPanelId = streamId;
   },
   SET_WORKPLACE_VISIBILITY(state, status) {
     state.workplaceVisibity = status;

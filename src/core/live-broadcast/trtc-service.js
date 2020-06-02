@@ -146,12 +146,12 @@ export class TrtcService {
   }
 
   async copyStream(stream, mirror = false) {
-    let copedStream = TRTC.createStream({
-      audioSource: stream.getAudioTrack(),
-      videoSource: stream.getVideoTrack(),
-      mirror: mirror
-    });
-
+    let option = { mirror: mirror };
+    let audio = stream.getAudioTrack();
+    if (audio) option.audioSource = audio;
+    let video = stream.getVideoTrack();
+    if (video) option.videoSource = video;
+    let copedStream = TRTC.createStream(option);
     await copedStream.initialize();
     return copedStream;
   }
