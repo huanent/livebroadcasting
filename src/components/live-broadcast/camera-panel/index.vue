@@ -6,8 +6,9 @@
       </a>
     </div>
     <div class="items">
-      <SelfCameraItem v-if="!isTeacher"></SelfCameraItem>
+      <SelfCameraItem v-if="!isTeacher" class="item"></SelfCameraItem>
       <CameraItem
+        class="item"
         v-for="item in featuresList"
         :key="item.__primaryKey"
         :item="item"
@@ -101,7 +102,7 @@ export default {
   .items {
     margin: 0 50px;
     height: 100%;
-    & > div {
+    .item {
       display: inline-block;
       width: 250px;
       margin-right: 5px;
