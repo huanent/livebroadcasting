@@ -93,10 +93,6 @@ export default {
         }
 
         if (stream != this.stream) {
-          if (!this.isTeacher) {
-            liveBroadcastService.trtcService.subscribe(stream, true, true);
-          }
-
           stream.play(this.$refs.video, { muted: this.isTeacher });
           this.stream = stream;
         }

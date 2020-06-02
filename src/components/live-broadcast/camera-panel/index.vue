@@ -9,6 +9,7 @@
       <swiper-slide v-if="!isTeacher">
         <SelfCameraItem></SelfCameraItem>
       </swiper-slide>
+
       <swiper-slide v-for="item in featuresList" :key="item.__primaryKey">
         <CameraItem :item="item"></CameraItem>
       </swiper-slide>

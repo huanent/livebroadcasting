@@ -28,7 +28,6 @@ export class TrtcService {
         f => f.getUserId() == e.stream.getUserId()
       );
       if (!exist) this.remoteStreams.push(e.stream);
-      await this.unsubscribe(e.stream);
     });
 
     client.on("stream-removed", e => {
@@ -146,10 +145,6 @@ export class TrtcService {
     });
   }
 
-  async unsubscribe(stream) {
-    await this.mainClient.unsubscribe(stream);
-  }
-
   async copyStream(stream, mirror = false) {
     let copedStream = TRTC.createStream({
       audioSource: stream.getAudioTrack(),
@@ -175,7 +170,7 @@ export class TrtcService {
       video: !!access.video
     });
 
-    this.localStream.setVideoProfile(this.isTeacher ? "720p" : "480p");
+    this.localStream.setVideoProfile(this.isTeacher ? "720p" : "240p");
 
     try {
       await this.localStream.initialize();

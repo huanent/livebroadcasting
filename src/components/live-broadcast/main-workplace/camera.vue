@@ -39,9 +39,6 @@ export default {
   },
   async beforeDestroy() {
     this.active = false;
-    if (this.stream && !this.isTeacher) {
-      liveBroadcastService.trtcService.unsubscribe(stream);
-    }
     this.stream = null;
   },
   computed: {

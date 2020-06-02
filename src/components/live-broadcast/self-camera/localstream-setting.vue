@@ -222,7 +222,8 @@ export default {
       this.audioStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           deviceId: value.deviceId
-        }
+        },
+        video: false
       });
 
       this.initWave(this.audioStream);
