@@ -1,5 +1,5 @@
 <template>
-  <div ref="camera"></div>
+  <video ref="video" muted="true" autoplay />
 </template>
 <script>
 import { mapState, mapMutations, mapGetters } from "vuex";
@@ -22,16 +22,7 @@ export default {
             );
 
       if (stream != this.stream) {
-        if (this.stream) this.stream.stop();
-
-        let copedStream = await liveBroadcastService.trtcService.copyStream(
-          stream
-        );
-
-        copedStream.play(this.$refs.camera, {
-          objectFit: "contain",
-          muted: true
-        });
+        this.$refs.video.srcObject = stream.mediaStream_;
 
         this.stream = stream;
       }
@@ -48,3 +39,9 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+video {
+  width: 100%;
+  height: 100%;
+}
+</style>
