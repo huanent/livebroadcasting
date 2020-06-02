@@ -1,11 +1,11 @@
 <template>
-  <div class="camera-panel-wrapper">
+  <div class="camera-panel-wrapper" ref="wrapper">
     <div class="ctrl left">
-      <a @click.stop="preCtl()">
+      <a @click.stop="leftMove">
         <icon name="chevron-circle-left" size="24"></icon>
       </a>
     </div>
-    <div class="items">
+    <div class="items" ref="items" :style="{ left: offset + 50 + 'px' }">
       <SelfCameraItem v-if="!isTeacher" class="item"></SelfCameraItem>
       <CameraItem
         class="item"
@@ -15,7 +15,7 @@
       ></CameraItem>
     </div>
     <div class="ctrl right">
-      <a @click.stop="nextCtl()">
+      <a @click.stop="rightMove">
         <icon name="chevron-circle-right" size="24"></icon>
       </a>
     </div>
@@ -34,13 +34,7 @@ export default {
   name: "CameraPanel",
   data() {
     return {
-      swiperOptions: {
-        pagination: {
-          el: ".swiper-pagination"
-        },
-        slidesPerView: 5,
-        spaceBetween: 30
-      }
+      offset: 0
     };
   },
   computed: {
@@ -58,11 +52,21 @@ export default {
   methods: {
     ...mapMutations("remoteStream", ["REMOTE_STREAM_PLAY"]),
     ...mapActions("features", ["manualControlFeatures"]),
-    nextCtl() {
-      this.$refs.mySwiper.$swiper.slideNext();
+    leftMove() {
+      let wrapperRect = this.$refs.wrapper.getBoundingClientRect();
+      if (this.offset >= 0) return;
+      this.offset += wrapperRect.width * 0.7;
+      if (this.offset > 0) this.offset = 0;
     },
-    preCtl() {
-      this.$refs.mySwiper.$swiper.slidePrev();
+    rightMove() {
+      let itemsRect = this.$refs.items.getBoundingClientRect();
+      let wrapperRect = this.$refs.wrapper.getBoundingClientRect();
+      if (wrapperRect.width > itemsRect.right) return;
+      this.offset -= wrapperRect.width * 0.7;
+
+      if (this.offset - wrapperRect.width < -itemsRect.width) {
+        this.offset = wrapperRect.width * 0.7 - itemsRect.width;
+      }
     }
   }
 };
@@ -80,6 +84,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 100000;
     .svg-icon {
       @include themeify {
         fill: themed("font_color2");
@@ -100,8 +105,13 @@ export default {
     right: 0;
   }
   .items {
-    margin: 0 50px;
+    transition: all 0.5s;
+    position: absolute;
+    top: 0;
+    bottom: 0;
     height: 100%;
+    width: auto;
+    white-space: nowrap;
     .item {
       display: inline-block;
       width: 250px;

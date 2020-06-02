@@ -98,7 +98,6 @@ export default {
 .self-camera-panel {
   background: #212224;
   position: relative;
-  width: auto;
   height: 100%;
   .self-camera-mask {
     position: absolute;
@@ -110,11 +109,11 @@ export default {
     right: 0;
     bottom: 0;
     border: 2px solid #0a818c;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .self-camera-icons {
       position: relative;
-      top: 50%;
-      margin-top: -12px;
       svg {
         background-color: #34363b;
         border-radius: 50%;
@@ -134,25 +133,17 @@ export default {
     right: 0;
     bottom: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
     height: 32px;
     line-height: 32px;
+    color: #fff;
     background: linear-gradient(
       0deg,
       rgba(0, 0, 0, 0.7) 0%,
       rgba(0, 0, 0, 0.5) 35%,
       rgba(0, 0, 0, 0) 100%
     );
-    > div {
-      display: flex;
-      align-items: center;
-    }
-    > span {
-      color: #ccc;
-      font-size: 12px;
-      height: 32px;
-      line-height: 32px;
-    }
   }
   &:hover {
     .self-camera-mask {
@@ -163,8 +154,11 @@ export default {
 }
 
 .remote-video-view {
-  height: 100%;
-  width: 100%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
   background: rgb(52, 54, 58);
   .no-video {
     width: 100% !important;
@@ -172,25 +166,4 @@ export default {
     background-color: #202224;
   }
 }
-.camera-setting {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  padding: 10px;
-  fill: #979da7 !important;
-}
-.camera-setting:hover {
-  fill: #dcebeb !important;
-}
-video {
-  object-fit: contain !important;
-}
-
-/deep/ .el-dialog {
-  /* background: #212224;*/
-  min-height: 400px;
-}
-/*/deep/ .el-dialog__title {
-            color: white;
-          }*/
 </style>
