@@ -101,10 +101,19 @@ class LiveBroadcastService {
   isListener(listeners) {
     if (!listeners) return true;
     const currentRole = store.state.account.role;
-    const id = store.state.account.userInfo.username;
-    if (listeners == currentRole || listeners == id) return true;
+    const username = store.state.account.userInfo.username;
+    const streamId = store.state.workplace.token.id;
+
+    if (
+      listeners == currentRole ||
+      listeners == username ||
+      listeners == streamId
+    ) {
+      return true;
+    }
+
     if (listeners instanceof Array) {
-      if (listeners.find(f => f == id)) return true;
+      if (listeners.find(f => f == username || f == streamId)) return true;
     }
   }
 }

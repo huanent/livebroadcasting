@@ -6,7 +6,11 @@
       :stream-id="streamId"
       ref="videoPlayer"
       fit="cover"
+      @stream-changed="stream = $event"
     />
+    <div v-show="!subscribeVideo || !stream" class="no-video">
+      <icon name="person" color="#34363b" />
+    </div>
     <div class="mask-layer" v-if="controllable">
       <icon
         @click.native.stop="audioChanged"
@@ -21,9 +25,10 @@
         :size="20"
       />
     </div>
-    <div class="audio-level">
+    <div class="footer">
       <icon :name="microIcon" color="#0A818C" :size="18" />
-      <voice-intensity :intensity="intensity" />
+      <voice-intensity :intensity="Number(intensity)" />
+      <p>{{ name }}</p>
     </div>
   </div>
 </template>
@@ -32,6 +37,7 @@ import VideoPlayer from "./video-player";
 import voiceIntensity from "./voice-intensity";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { delay } from "../../../core/utils";
+import { liveBroadcastService } from "../../../core/live-broadcast";
 export default {
   props: {
     name: {
@@ -47,7 +53,8 @@ export default {
   data() {
     return {
       active: true,
-      intensity: 0
+      intensity: 0,
+      stream: null
     };
   },
   mounted() {
@@ -60,9 +67,6 @@ export default {
     ...mapState("features", ["videoStatus", "audioStatus"]),
     isLocal() {
       return this.streamId == "__local";
-    },
-    stream() {
-      return this.$refs.videoPlayer.stream;
     },
     microIcon() {
       let status = this.isLocal ? this.audioStatus : this.subscribeAudio;
@@ -107,18 +111,34 @@ export default {
     async getAudioLevel() {
       while (this.active) {
         if (this.stream) {
-          this.$nextTick(() => {
-            this.intensity = this.stream.getAudioLevel();
-            console.log(this.intensity);
-          });
+          this.$nextTick(() => (this.intensity = this.stream.getAudioLevel()));
         }
         await delay(100);
       }
+    },
+    async changeSubscribe() {
+      if (!this.stream || this.isLocal) return;
+      await liveBroadcastService.trtcService.subscribe(
+        this.stream,
+        this.subscribeAudio,
+        this.subscribeVideo
+      );
     }
   },
   components: {
     VideoPlayer,
     voiceIntensity
+  },
+  watch: {
+    subscribeAudio() {
+      this.changeSubscribe();
+    },
+    subscribeVideo() {
+      this.changeSubscribe();
+    },
+    stream() {
+      this.changeSubscribe();
+    }
   }
 };
 </script>
@@ -151,15 +171,44 @@ export default {
       }
     }
   }
-  .audio-level {
-    position: absolute;
-    bottom: 3px;
-    left: 3px;
-  }
   &:hover {
     .mask-layer {
       visibility: visible;
       background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+  .footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 3px;
+    background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0.5) 35%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    p {
+      flex-grow: 1;
+      text-align: right;
+    }
+  }
+  .no-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgb(52, 54, 58);
+    .svg-icon {
+      width: 100% !important;
+      height: 100% !important;
+      background-color: #202224;
     }
   }
 }

@@ -6,13 +6,29 @@
       </a>
     </div>
     <div class="items" ref="items" :style="{ left: offset + 50 + 'px' }">
-      <SelfCameraItem v-if="!isTeacher" class="item"></SelfCameraItem>
-      <CameraItem
+      <camera
+        class="item"
+        v-if="!isTeacher"
+        stream-id="__local"
+        controllable
+        name="本人"
+      />
+
+      <div
         class="item"
         v-for="item in featuresList"
         :key="item.__primaryKey"
-        :item="item"
-      ></CameraItem>
+        :draggable="isTeacher"
+        @dragstart="dragstart(item, $event)"
+      >
+        <camera
+          :stream-id="item.__streamId"
+          :controllable="isTeacher"
+          :name="item.__nickName || item.__primaryKey"
+          :subscribe-video="item.subscribeVideo"
+          :subscribe-audio="item.subscribeAudio"
+        />
+      </div>
     </div>
     <div class="ctrl right">
       <a @click.stop="rightMove">
@@ -23,13 +39,10 @@
 </template>
 
 <script>
-import CameraItem from "./camera-item";
-import SelfCameraItem from "./self-camera-item";
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import { Emitter } from "@/core/emit";
 import { liveBroadcastService } from "../../../core/live-broadcast";
-import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import "swiper/css/swiper.css";
+import Camera from "../../common/camera";
 export default {
   name: "CameraPanel",
   data() {
@@ -38,20 +51,13 @@ export default {
     };
   },
   computed: {
-    ...mapState("account", ["role"]),
     ...mapState("workplace", ["featuresList"]),
-    ...mapGetters("workplace", ["isTeacher"]),
-    swiper() {
-      return this.$refs.mySwiper.$swiper;
-    }
+    ...mapGetters("workplace", ["isTeacher"])
   },
   components: {
-    CameraItem,
-    SelfCameraItem
+    Camera
   },
   methods: {
-    ...mapMutations("remoteStream", ["REMOTE_STREAM_PLAY"]),
-    ...mapActions("features", ["manualControlFeatures"]),
     leftMove() {
       let wrapperRect = this.$refs.wrapper.getBoundingClientRect();
       if (this.offset >= 0) return;
@@ -67,6 +73,9 @@ export default {
       if (this.offset - wrapperRect.width < -itemsRect.width) {
         this.offset = wrapperRect.width * 0.7 - itemsRect.width;
       }
+    },
+    dragstart(item, e) {
+      e.dataTransfer.setData("streamId", item.__streamId);
     }
   }
 };
@@ -115,6 +124,7 @@ export default {
     .item {
       display: inline-block;
       width: 250px;
+      height: 100%;
       margin-right: 5px;
     }
   }

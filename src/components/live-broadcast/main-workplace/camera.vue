@@ -1,5 +1,5 @@
 <template>
-  <video-player :muted="true" :stream-id="streamId" />
+  <video-player :muted="true" :stream-id="streamId" copy />
 </template>
 <script>
 import { mapState } from "vuex";

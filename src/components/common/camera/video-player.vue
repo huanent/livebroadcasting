@@ -1,11 +1,13 @@
 <template>
-  <video
-    :muted="muted"
-    :class="{ mirror: mirror }"
-    :style="{ objectFit: fit }"
-    :src-object.prop="stream && stream.mediaStream_"
-    autoplay
-  ></video>
+  <div :class="{ mirror: mirror }" class="video" ref="video">
+    <video
+      v-if="copy"
+      :muted="muted"
+      :style="{ objectFit: fit }"
+      :src-object.prop="stream && stream.mediaStream_"
+      autoplay
+    ></video>
+  </div>
 </template>
 <script>
 import { liveBroadcastService } from "../../../core/live-broadcast";
@@ -20,7 +22,8 @@ export default {
     mirror: Boolean,
     fit: {
       default: "contain"
-    }
+    },
+    copy: Boolean
   },
   data() {
     return {
@@ -38,7 +41,17 @@ export default {
     async setStream() {
       while (this.active) {
         let stream = this.getStream();
-        if (stream != this.stream) this.stream = stream;
+        if (stream != this.stream) {
+          if (this.stream && !this.copy) this.stream.stop();
+          this.stream = stream;
+
+          if (this.stream && !this.copy) {
+            this.stream.play(this.$refs.video, {
+              objectFit: this.fit,
+              muted: this.muted
+            });
+          }
+        }
         await delay(1000);
       }
     },
@@ -53,10 +66,16 @@ export default {
 
       return liveBroadcastService.trtcService.getRemoteStream(this.streamId);
     }
+  },
+  watch: {
+    stream(value) {
+      this.$emit("stream-changed", value);
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
+.video,
 video {
   width: 100%;
   height: 100%;
