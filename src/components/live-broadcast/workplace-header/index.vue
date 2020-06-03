@@ -49,6 +49,20 @@
       <!--    <el-tooltip :content="'个人设置'" placement="bottom" :open-delay="200">
         <icon name="settings" :size="20"></icon>
       </el-tooltip>-->
+      <el-tooltip :content="$t('workplace.cameraPanel')" placement="bottom">
+        <icon
+          @click.native="$emit('head-toggle')"
+          name="monitor"
+          :size="16"
+        ></icon>
+      </el-tooltip>
+      <el-tooltip :content="$t('workplace.messagePanel')" placement="bottom">
+        <icon
+          @click.native="$emit('sidebar-toggle')"
+          name="comments"
+          :size="18"
+        />
+      </el-tooltip>
       <el-tooltip :content="'退出'" placement="bottom" :open-delay="200">
         <icon
           @click.native="liveroomLogout"

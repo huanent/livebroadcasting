@@ -10,8 +10,6 @@
         :active-index.sync="index"
         @index-change="indexChange($event)"
         @type-change="onChange"
-        @head-toggle="$emit('head-toggle')"
-        @sidebar-toggle="$emit('sidebar-toggle')"
         :panel-type="panelType"
         class="workplace-content"
         :show-lable="panelType === 'board'"
