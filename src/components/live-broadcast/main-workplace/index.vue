@@ -33,12 +33,11 @@
     </div>
     <Toolbar v-if="isToolBarShow"></Toolbar>
     <div style="height: 100%" :class="{ hide: workplaceVisibity }"></div>
-
     <StreamSourceDialog
       :visible.sync="showStreamSelectdialog"
       @selected="onSelected"
     />
-    <hand v-if="role == ROLE.STUDENT" />
+    <hand v-if="!isTeacher" />
   </div>
 </template>
 
@@ -50,10 +49,10 @@ import { liveBroadcastService } from "@/core/live-broadcast";
 import { mapState, mapMutations, mapGetters } from "vuex";
 import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";
-import { ROLE } from "../../../models/role";
 import Hand from "../hand-up/hand";
 import ShareScreen from "./share-screen";
 import Camera from "./camera";
+import { HAND_UP_STATUS } from "../../../models/handUpStatus";
 export default {
   name: "MainWorkplace",
   components: {
@@ -69,7 +68,8 @@ export default {
     return {
       showToolbar: true,
       isServiceReady: false,
-      showStreamSelectdialog: false
+      showStreamSelectdialog: false,
+      lastAudioStatus: false
     };
   },
   async mounted() {
@@ -89,6 +89,7 @@ export default {
       "SET_WORKPLACE_VISIBILITY"
     ]),
     ...mapMutations("electron", ["STREAM_SELECT_VISIBILITY"]),
+    ...mapMutations("features", ["SET_SUBSCRIBE_AUDIO"]),
     onTabsClose(item, index) {
       if (item.fid) {
         this.DELETE_BOARD_FILE(item.fid);
@@ -111,10 +112,14 @@ export default {
   },
   computed: {
     ...mapState("account", ["role"]),
-    ...mapState("localStream", []),
-    ...mapState("workplace", ["panelType", "workplaceVisibity", "token"]),
+    ...mapState("workplace", [
+      "panelType",
+      "workplaceVisibity",
+      "token",
+      "cameraPanelId"
+    ]),
     ...mapState("electron", ["streamSelectVisibility"]),
-    ...mapState("features", ["canControlBoard"]),
+    ...mapState("features", ["canControlBoard", "subscribeAudio"]),
     ...mapGetters("workplace", ["isTeacher"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
@@ -136,6 +141,16 @@ export default {
       let fileInfo = this.boardProfiles[value];
 
       liveBroadcastService.boardService.switchFile(fileInfo.fid);
+    },
+    cameraPanelId(id) {
+      if (this.isTeacher) return;
+      if (id == this.token.id) {
+        this.lastAudioStatus = this.subscribeAudio;
+        this.SET_SUBSCRIBE_AUDIO(true);
+      } else if (this.lastAudioStatus !== null) {
+        this.SET_SUBSCRIBE_AUDIO(this.lastAudioStatus);
+        this.this.lastAudioStatus = null;
+      }
     }
   }
 };

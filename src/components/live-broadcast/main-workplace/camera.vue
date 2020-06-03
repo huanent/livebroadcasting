@@ -21,7 +21,7 @@ export default {
               this.cameraPanelId
             );
 
-      if (stream != this.stream) {
+      if (stream && stream != this.stream) {
         this.$refs.video.srcObject = stream.mediaStream_;
 
         this.stream = stream;

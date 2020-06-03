@@ -68,6 +68,7 @@ const mutations = {
         state.canControlBoard = false;
         break;
       case HAND_UP_STATUS.DRAWING:
+        state.subscribeAudio = true;
         state.canControlBoard = true;
         break;
       default:
@@ -82,6 +83,9 @@ const mutations = {
   },
   SET_TIMESTAMP(state, data) {
     state.timestamp = data;
+  },
+  SET_SUBSCRIBE_AUDIO(state, data) {
+    state.subscribeAudio = data;
   }
 };
 
