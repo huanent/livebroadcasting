@@ -19,16 +19,6 @@
         </span>
       </div>
       <div class="head-right">
-        <div @click="$emit('head-toggle')" class="headview-toggle">
-          <el-tooltip :content="$t('workplace.cameraPanel')" placement="bottom">
-            <icon name="monitor" :size="18"></icon>
-          </el-tooltip>
-        </div>
-        <div class="sidebar-toggle" @click="$emit('sidebar-toggle')">
-          <el-tooltip :content="$t('workplace.sidebar')" placement="bottom">
-            <icon name="comments" :size="18" />
-          </el-tooltip>
-        </div>
         <div class="workplace-settings">
           <multiselect
             v-if="role !== ROLE.STUDENT"
@@ -281,34 +271,6 @@ cover component Multiselect style
   float: right;
   line-height: 1.8rem;
 }
-.headview-toggle,
-.sidebar-toggle {
-  margin-right: 0.25rem;
-  cursor: pointer;
-  @include themeify {
-    background: themed("background_color2");
-  }
-  .svg-icon {
-    @include themeify {
-      fill: themed("font_color2");
-      padding: 5px;
-    }
-  }
-  &:hover {
-    .svg-icon {
-      @include themeify {
-        fill: mix(themed("font_color2"), themed("color_opposite"), 70%);
-      }
-    }
-  }
-}
-
-.headview-toggle {
-  /*  .svg-icon {
-    transform: rotate(-90deg);
-  }*/
-}
-
 .head-right {
   float: right;
   display: flex;

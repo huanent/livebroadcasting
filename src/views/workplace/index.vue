@@ -4,6 +4,8 @@
       <WorkplacePanelHeader
         :creator="classCreator"
         :status="classStatus"
+        @head-toggle="toggleCameraPanel"
+        @sidebar-toggle="toggleSidebar"
       ></WorkplacePanelHeader>
     </div>
     <div
@@ -20,10 +22,7 @@
         <div class="camera-panel">
           <CameraPanel></CameraPanel>
         </div>
-        <MainWorkplace
-          @head-toggle="toggleCameraPanel"
-          @sidebar-toggle="toggleSidebar"
-        ></MainWorkplace>
+        <MainWorkplace></MainWorkplace>
       </div>
       <div id="workplace-panel-right">
         <self-camera />
