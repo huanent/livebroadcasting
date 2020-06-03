@@ -147,7 +147,7 @@ export default {
         this.SET_SUBSCRIBE_AUDIO(true);
       } else if (this.lastAudioStatus !== null) {
         this.SET_SUBSCRIBE_AUDIO(this.lastAudioStatus);
-        this.this.lastAudioStatus = null;
+        this.lastAudioStatus = null;
       }
     }
   }
