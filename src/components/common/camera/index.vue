@@ -8,7 +8,7 @@
       fit="cover"
       @stream-changed="stream = $event"
     />
-    <div v-show="!subscribeVideo || !stream" class="no-video">
+    <div v-show="showNoVideo" class="no-video">
       <icon name="person" color="#34363b" />
     </div>
     <div class="mask-layer" v-if="controllable">
@@ -75,6 +75,13 @@ export default {
     videoIcon() {
       let status = this.isLocal ? this.videoStatus : this.subscribeVideo;
       return status ? "video" : "video-slash";
+    },
+    showNoVideo() {
+      if (this.isLocal) {
+        return !this.videoStatus;
+      } else {
+        return !this.subscribeVideo || !this.stream;
+      }
     }
   },
   methods: {
