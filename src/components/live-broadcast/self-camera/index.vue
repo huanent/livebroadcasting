@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{ 'self-camera-panel': true }"
-    draggable="true"
+    :draggable="isTeacher"
     @dragstart="dragstart"
   >
     <div class="self-camera-mask" ref="wrapper">
