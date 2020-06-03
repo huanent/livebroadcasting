@@ -46,9 +46,13 @@
           @click.native="onShowFeaturesControlVisible"
         ></icon>
       </el-tooltip>-->
-      <!--    <el-tooltip :content="'个人设置'" placement="bottom" :open-delay="200">
-        <icon name="settings" :size="20"></icon>
-      </el-tooltip>-->
+      <el-tooltip :content="'个人设置'" placement="bottom" :open-delay="200">
+        <icon
+          name="settings"
+          :size="20"
+          @click.native="showSettings = true"
+        ></icon>
+      </el-tooltip>
       <el-tooltip :content="$t('workplace.cameraPanel')" placement="bottom">
         <icon
           @click.native="$emit('head-toggle')"
@@ -81,6 +85,7 @@
     />
     <FeaturesControl :visible.sync="featuresControlVisible"></FeaturesControl>
     <widgets :visible.sync="widegtsVisible"></widgets>
+    <device-settings :visibility.sync="showSettings" />
   </div>
 </template>
 
@@ -88,20 +93,13 @@
 import { liveBroadcastService } from "@/core/live-broadcast";
 import { mapActions, mapMutations, mapState } from "vuex";
 import classApi from "@api/class";
-// import {
-//   getCourseData,
-//   removeCourseFile,
-//   transcodeCreate,
-//   transcodeDescribe,
-//   setCourseFile
-// } from "../../../core/data/data-service";
-
 import Widgets from "./widgets";
 import Recoder from "./recorder.vue";
 import Courseware from "./courseware";
 import FeaturesControl from "./features-control";
 import { Emitter } from "../../../core/emit";
 import { ROLE } from "../../../models/role";
+import DeviceSettings from "./device-settings";
 import Timer from "./timer";
 export default {
   name: "WorkplaceHeader",
@@ -122,7 +120,8 @@ export default {
       switchStatus: false,
       activeColor: "#48a7a8",
       inactiveColor: "#76acc3",
-      showRecoderButton: false
+      showRecoderButton: false,
+      showSettings: true
     };
   },
   props: {
@@ -227,7 +226,8 @@ export default {
     Recoder,
     Courseware,
     FeaturesControl,
-    Timer
+    Timer,
+    DeviceSettings
   }
 };
 </script>

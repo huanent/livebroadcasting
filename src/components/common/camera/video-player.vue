@@ -2,7 +2,7 @@
   <video
     :muted="muted"
     :class="{ mirror: mirror }"
-    :style="{ onjectFit: fit }"
+    :style="{ objectFit: fit }"
     :src-object.prop="stream && stream.mediaStream_"
     autoplay
   ></video>

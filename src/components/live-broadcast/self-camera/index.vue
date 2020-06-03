@@ -4,124 +4,41 @@
     :draggable="isTeacher"
     @dragstart="dragstart"
   >
-    <div class="self-camera-mask" ref="wrapper">
-      <div class="self-camera-icons">
-        <icon
-          @click.native.stop="audioChanged"
-          :name="microIcon"
-          color="#737882"
-          :size="20"
-        />
-        <icon
-          @click.native.stop="videoChanged"
-          :name="videoIcon"
-          color="#737882"
-          :size="20"
-        />
-      </div>
-
-      <a @click.stop="showSettings = true">
-        <icon name="settings" size="16" class="settings-icon"></icon>
-      </a>
-    </div>
-    <div class="local_video" ref="video"></div>
-    <div class="self-camera-footer">
-      <div>
-        <icon :name="microIcon" color="#0A818C" :size="18" />
-        <voice-intensity :intensity="Number(audioLevel)" />
-      </div>
-    </div>
-    <LocalstreamSetting
-      :visibility.sync="showSettings"
-      v-if="showSettings"
-    ></LocalstreamSetting>
+    <camera
+      :stream-id="streamId"
+      :controllable="isTeacher"
+      :subscribe-audio="true"
+      :subscribe-video="true"
+    />
   </div>
 </template>
 
 <script>
-import VoiceIntensity from "./voice-intensity";
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import { Emitter } from "../../../core/emit";
-import LocalstreamSetting from "./localstream-setting";
-import { ROLE } from "../../../models/role";
-import { delay } from "../../../core/utils";
 import { liveBroadcastService } from "../../../core/live-broadcast";
+import Camera from "../../common/camera";
 export default {
   name: "SelfCamera",
   data() {
     return {
       visibility: false,
-      showSettings: true,
-      audioLevel: 0,
-      active: false,
-      stream: null
+      showSettings: true
     };
   },
   components: {
-    VoiceIntensity,
-    LocalstreamSetting
+    Camera
   },
   computed: {
     ...mapGetters("workplace", ["isTeacher", "teacherStreamId"]),
-    ...mapState("workplace", ["token", "teachId"]),
-    ...mapState("features", ["videoStatus", "audioStatus"]),
+    ...mapState("workplace", ["token"]),
     ...mapState("account", ["userInfo"]),
-    microIcon() {
-      return this.audioStatus ? "microphone" : "microphone-slash";
-    },
-    videoIcon() {
-      return this.videoStatus ? "video" : "video-slash";
+
+    streamId() {
+      return this.isTeacher ? "__local" : this.teacherStreamId;
     }
   },
-  async mounted() {
-    this.active = true;
-    this.setStream();
-    this.setAudioLevel();
-  },
-  beforeDestroy() {
-    this.active = false;
-  },
   methods: {
-    ...mapMutations("features", ["SET_VIDEO_STATUS", "SET_AUDIO_STATUS"]),
-    async setStream() {
-      while (this.active) {
-        let stream = this.isTeacher
-          ? liveBroadcastService.trtcService.localStream
-          : liveBroadcastService.trtcService.getRemoteStream(
-              this.teacherStreamId
-            );
-
-        if (!stream) {
-          if (this.stream) this.stream.stop();
-          this.stream = null;
-        }
-
-        if (stream != this.stream) {
-          stream.play(this.$refs.video, { muted: this.isTeacher });
-          this.stream = stream;
-        }
-
-        await delay(1000);
-      }
-    },
-    async setAudioLevel() {
-      while (this.active) {
-        if (this.stream) {
-          this.$nextTick(() => (this.audioLevel = this.stream.getAudioLevel()));
-        }
-        await delay(100);
-      }
-    },
-    audioChanged() {
-      if (!this.stream) return;
-      this.audioStatus ? this.stream.muteAudio() : this.stream.unmuteAudio();
-      this.SET_AUDIO_STATUS(!this.audioStatus);
-    },
-    videoChanged() {
-      if (!this.stream) return;
-      this.videoStatus ? this.stream.muteVideo() : this.stream.unmuteVideo();
-      this.SET_VIDEO_STATUS(!this.videoStatus);
-    },
     dragstart(e) {
       e.dataTransfer.setData("streamId", this.token.id);
     }
