@@ -1,6 +1,6 @@
 <template>
   <div class="camera">
-    <div ref="video"></div>
+    <video :muted="muted"></video>
     <div class="mask-layer"></div>
     <div class="audio-level"></div>
   </div>
@@ -14,7 +14,9 @@ export default {
     },
     streamId: String,
     subscribeAudio: Boolean,
-    subscribeVedio: Boolean
+    subscribeVideo: Boolean,
+    muted: Boolean,
+    mirror: Boolean
   },
   data() {
     return {
@@ -33,10 +35,6 @@ export default {
         if (!stream) this.clearOldSteam();
 
         if (stream != this.stream) {
-          if (!this.isTeacher) {
-            liveBroadcastService.trtcService.subscribe(stream, true, true);
-          }
-
           stream.play(this.$refs.video, { muted: this.isTeacher });
           this.stream = stream;
         }
@@ -48,12 +46,25 @@ export default {
       this.streamId
         ? liveBroadcastService.trtcService.getRemoteStream(this.streamId)
         : liveBroadcastService.trtcService.localStream;
-    },
-    clearOldSteam() {
-      if (!this.stream) return;
-      this.stream.stop();
-      this.stream = null;
     }
   }
 };
 </script>
+<style lang="scss" scoped>
+.camera {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  video {
+    height: 100%;
+    width: 100%;
+  }
+  .mask-layer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+</style>

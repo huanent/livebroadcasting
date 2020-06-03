@@ -1,50 +1,27 @@
 <template>
-  <div ref="screen"></div>
+  <video-player :muted="true" :stream-id="streamId" />
 </template>
 <script>
-import { mapState, mapMutations, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import { liveBroadcastService } from "@/core/live-broadcast";
-import { delay } from "../../../core/utils";
+import VideoPlayer from "../../common/camera/video-player";
 export default {
-  data() {
-    return {
-      active: true,
-      stream: null
-    };
+  components: {
+    VideoPlayer
   },
   async mounted() {
     if (this.isTeacher) {
       await liveBroadcastService.trtcService.startShareScreen();
     }
-
-    while (this.active) {
-      let stream = this.isTeacher
-        ? liveBroadcastService.trtcService.shareScreenStream
-        : liveBroadcastService.trtcService.getRemoteStream(
-            this.teacherScreenStreamId
-          );
-
-      if (stream != this.stream) {
-        if (this.stream) this.stream.stop();
-        if (!this.isTeacher) {
-          liveBroadcastService.trtcService.subscribe(stream, false, true);
-        }
-        stream.play(this.$refs.screen, {
-          objectFit: "contain",
-          muted: true
-        });
-        this.stream = stream;
-      }
-      await delay(1000);
-    }
   },
   async beforeDestroy() {
-    this.active = false;
-    this.stream = null;
     await liveBroadcastService.trtcService.stopShareScreen();
   },
   computed: {
-    ...mapGetters("workplace", ["isTeacher", "teacherScreenStreamId"])
+    ...mapGetters("workplace", ["isTeacher", "teacherScreenStreamId"]),
+    streamId() {
+      return this.isTeacher ? "__screen" : this.teacherScreenStreamId;
+    }
   }
 };
 </script>

@@ -1,48 +1,19 @@
 <template>
-  <video ref="video" muted="true" autoplay />
+  <video-player :muted="true" :stream-id="streamId" />
 </template>
 <script>
-import { mapState, mapMutations, mapGetters } from "vuex";
-import { liveBroadcastService } from "@/core/live-broadcast";
-import { delay } from "../../../core/utils";
+import { mapState } from "vuex";
+import VideoPlayer from "../../common/camera/video-player";
 export default {
-  data() {
-    return {
-      active: true,
-      stream: null
-    };
-  },
-  async mounted() {
-    while (this.active) {
-      let stream =
-        this.cameraPanelId == this.token.id
-          ? liveBroadcastService.trtcService.localStream
-          : liveBroadcastService.trtcService.getRemoteStream(
-              this.cameraPanelId
-            );
-
-      if (stream && stream != this.stream) {
-        this.$refs.video.srcObject = stream.mediaStream_;
-
-        this.stream = stream;
-      }
-      await delay(1000);
-    }
-  },
-  async beforeDestroy() {
-    this.active = false;
-    this.stream = null;
+  components: {
+    VideoPlayer
   },
   computed: {
     ...mapState("workplace", ["cameraPanelId", "token"]),
-    ...mapGetters("workplace", ["isTeacher"])
+    streamId() {
+      if (this.cameraPanelId == this.token.id) return "__local";
+      return this.cameraPanelId;
+    }
   }
 };
 </script>
-<style lang="scss" scoped>
-video {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-</style>
