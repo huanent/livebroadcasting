@@ -72,7 +72,7 @@ export default {
       this.offset -= wrapperRect.width * 0.7;
 
       if (this.offset - wrapperRect.width < -itemsRect.width) {
-        this.offset = wrapperRect.width * 0.7 - itemsRect.width;
+        this.offset = wrapperRect.width - itemsRect.width - 100;
       }
     },
     dragstart(item, e) {
@@ -95,6 +95,7 @@ export default {
     justify-content: center;
     align-items: center;
     z-index: 100000;
+    user-select: none;
     .svg-icon {
       @include themeify {
         fill: themed("font_color2");
