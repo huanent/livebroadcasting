@@ -4,7 +4,7 @@
     :visible="visibility"
     :width="dialogWidth"
     :append-to-body="true"
-    @close="$emit('update:visibility', false)"
+    @close="close"
     @closed="closed"
     @open="open"
   >
@@ -84,9 +84,7 @@
 
       <span slot="footer" class="clearfix">
         <div class="right">
-          <el-button @click="$emit('update:visibility', false)">{{
-            $t("button.close")
-          }}</el-button>
+          <el-button @click="close">{{ $t("button.close") }}</el-button>
           <el-button type="primary" @click="save()">{{
             $t("button.yes")
           }}</el-button>
@@ -170,6 +168,9 @@ export default {
       }
 
       this.close();
+    },
+    close() {
+      this.$emit("update:visibility", false);
     },
     closed() {
       if (this.audioStream) releaseStream(this.audioStream);
