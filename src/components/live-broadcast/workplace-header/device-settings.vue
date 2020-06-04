@@ -4,7 +4,9 @@
     :visible="visibility"
     :width="dialogWidth"
     :append-to-body="true"
-    @close="close"
+    @close="$emit('update:visibility', false)"
+    @closed="closed"
+    @open="open"
   >
     <div class="dialog-item">
       <el-row :gutter="20">
@@ -76,13 +78,15 @@
 
       <div class="dialog-item">
         <div class="wave-container">
-          <canvas id="oscilloscope"></canvas>
+          <audio-wave :stream="audioStream" />
         </div>
       </div>
 
       <span slot="footer" class="clearfix">
         <div class="right">
-          <el-button @click="close">{{ $t("button.close") }}</el-button>
+          <el-button @click="$emit('update:visibility', false)">{{
+            $t("button.close")
+          }}</el-button>
           <el-button type="primary" @click="save()">{{
             $t("button.yes")
           }}</el-button>
@@ -97,6 +101,7 @@ import { mapActions, mapMutations, mapState } from "vuex";
 import { liveBroadcastService } from "../../../core/live-broadcast";
 import { requestDeviceAccess } from "../../../core/utils";
 import { releaseStream } from "../../../core/utils";
+import AudioWave from "../../common/camera/audio-wave";
 
 export default {
   name: "LocalstreamSetting",
@@ -108,7 +113,6 @@ export default {
         video: null,
         audio: null
       },
-      percentage: 0,
       audioStream: null,
       videoStream: null
     };
@@ -118,12 +122,13 @@ export default {
       type: Boolean
     }
   },
+  components: {
+    AudioWave
+  },
   async mounted() {
     this.access = await requestDeviceAccess();
-    this.cameras = await liveBroadcastService.trtcService.getCameras();
-    this.microphones = await liveBroadcastService.trtcService.getMicrophones();
+    this.open();
   },
-
   computed: {
     ...mapState("device", ["isMobile"]),
     ...mapState("features", ["videoStatus", "audioStatus"]),
@@ -149,51 +154,6 @@ export default {
     async microphoneChanged(e) {
       this.SELECT_DEVICES({ camera: this.selectedCamera, microphone: e.label });
     },
-    initWave(stream) {
-      let audioContext = new AudioContext();
-
-      let analyser = audioContext.createAnalyser();
-      let mediaStreamSource = audioContext.createMediaStreamSource(stream);
-      mediaStreamSource.connect(analyser);
-      analyser.fftSize = 2048;
-      let bufferLength = analyser.frequencyBinCount;
-      let dataArray = new Uint8Array(bufferLength);
-      analyser.getByteTimeDomainData(dataArray);
-      let canvas = document.getElementById("oscilloscope");
-      let canvasCtx = canvas.getContext("2d");
-      function draw() {
-        requestAnimationFrame(draw);
-        analyser.getByteTimeDomainData(dataArray);
-
-        canvasCtx.fillStyle = "#ffffff";
-        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
-
-        canvasCtx.lineWidth = 2;
-        canvasCtx.strokeStyle = "rgba(10, 129, 140)";
-
-        canvasCtx.beginPath();
-
-        let sliceWidth = (canvas.width * 1.0) / bufferLength;
-        let x = 0;
-
-        for (let i = 0; i < bufferLength; i++) {
-          let v = dataArray[i] / 128.0;
-          let y = (v * canvas.height) / 2;
-          if (i === 0) {
-            canvasCtx.moveTo(x, y);
-          } else {
-            canvasCtx.lineTo(x, y);
-          }
-
-          x += sliceWidth;
-        }
-
-        canvasCtx.lineTo(canvas.width, canvas.height / 2);
-        canvasCtx.stroke();
-      }
-
-      draw();
-    },
     async save() {
       if (this.camera) {
         await liveBroadcastService.trtcService.setCamera(
@@ -211,29 +171,34 @@ export default {
 
       this.close();
     },
-    async close() {
-      this.$emit("update:visibility", false);
-    }
-  },
-  watch: {
-    async microphone(value) {
+    closed() {
       if (this.audioStream) releaseStream(this.audioStream);
+      if (this.videoStream) releaseStream(this.videoStream);
+    },
+    async open() {
+      this.cameras = await liveBroadcastService.trtcService.getCameras();
+      this.microphones = await liveBroadcastService.trtcService.getMicrophones();
+      this.setAudio();
+      this.setVideo();
+    },
+    async setAudio() {
+      if (this.audioStream) releaseStream(this.audioStream);
+      if (!this.microphone) return;
 
       this.audioStream = await navigator.mediaDevices.getUserMedia({
         audio: {
-          deviceId: value.deviceId
+          deviceId: this.microphone.deviceId
         },
         video: false
       });
-
-      this.initWave(this.audioStream);
     },
-    async camera(value) {
+    async setVideo() {
       if (this.videoStream) releaseStream(this.videoStream);
+      if (!this.camera) return;
 
       this.videoStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          deviceId: value.deviceId
+          deviceId: this.camera.deviceId
         },
         audio: false
       });
@@ -241,9 +206,13 @@ export default {
       this.$refs.video.srcObject = this.videoStream;
     }
   },
-  beforeDestroy() {
-    if (this.audioStream) releaseStream(this.audioStream);
-    if (this.videoStream) releaseStream(this.videoStream);
+  watch: {
+    microphone(value) {
+      this.setAudio();
+    },
+    camera(value) {
+      this.setVideo();
+    }
   }
 };
 </script>
@@ -304,9 +273,5 @@ export default {
 .wave-container {
   width: 100%;
   height: 7rem;
-  canvas {
-    width: 100%;
-    height: 100%;
-  }
 }
 </style>
