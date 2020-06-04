@@ -5,6 +5,11 @@
 <script>
 export default {
   props: ["stream", "status"],
+  data() {
+    return {
+      asnimationFrameCancelId: null
+    };
+  },
   methods: {
     initWave(stream) {
       let audioContext = new AudioContext();
@@ -18,8 +23,10 @@ export default {
       analyser.getByteTimeDomainData(dataArray);
       let canvas = this.$refs.canvas;
       let canvasCtx = canvas.getContext("2d");
+      let me = this;
       function draw() {
-        requestAnimationFrame(draw);
+        cancelAnimationFrame(me.asnimationFrameCancelId || 0);
+        me.asnimationFrameCancelId = requestAnimationFrame(draw);
         analyser.getByteTimeDomainData(dataArray);
 
         canvasCtx.fillStyle = "#ffffff";
@@ -56,6 +63,9 @@ export default {
     stream(value) {
       if (value) this.initWave(value);
     }
+  },
+  beforeDestroy() {
+    cancelAnimationFrame(this.asnimationFrameCancelId || 0);
   }
 };
 </script>

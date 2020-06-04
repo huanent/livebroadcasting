@@ -78,7 +78,7 @@
 
       <div class="dialog-item">
         <div class="wave-container">
-          <audio-wave :stream="audioStream" />
+          <audio-wave :stream="audioStream" v-if="visibility" />
         </div>
       </div>
 
