@@ -117,12 +117,12 @@ const actions = {
   async getRoomInfo({ commit, rootState }, id) {
     let result = await classApi.classGet(id);
     commit("SET_ROOM_INFO", result.data.model);
-    commit(
-      "SET_ROLE",
+    let role =
       rootState.account.userInfo.username == result.data.model.createUser
         ? ROLE.TEACHER
-        : ROLE.STUDENT
-    );
+        : ROLE.STUDENT;
+    commit("SET_ROLE", role);
+    commit("features/INIT_STATE", role, { root: true });
   }
 };
 

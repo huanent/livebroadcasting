@@ -93,7 +93,6 @@ class LiveBroadcastService {
   }
   initStatus() {
     store.commit("workplace/INIT_STATE");
-    store.commit("account/INIT_STATE", ROLE.STUDENT);
     store.commit("board/INIT_STATE");
     store.commit("features/INIT_STATE", ROLE.STUDENT);
   }

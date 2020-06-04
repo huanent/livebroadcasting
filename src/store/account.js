@@ -1,5 +1,3 @@
-import store from "@/store";
-import { ROLE } from "../models/role";
 const state = {
   userInfo: null,
   lb_expires: "",
@@ -7,10 +5,6 @@ const state = {
 };
 
 const mutations = {
-  SET_ROLE(state, role) {
-    state.role = role;
-    store.commit("features/INIT_STATE", state.role);
-  },
   SET_LB_TOKEN(state, lb_token) {
     state.lb_token = lb_token;
     localStorage.setItem("lb_token", lb_token);
@@ -25,9 +19,6 @@ const mutations = {
   },
   SET_USER_INFO(state, data) {
     state.userInfo = data;
-  },
-  INIT_STATE(state) {
-    state.role = ROLE.STUDENT;
   }
 };
 
