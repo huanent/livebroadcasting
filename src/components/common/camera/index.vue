@@ -144,7 +144,7 @@ export default {
       }
     },
     async getAudioLevel() {
-      while (this.active) {
+      while (this.active && this.hiddenVoiceIntensity) {
         if (this.stream) {
           this.$nextTick(() => (this.intensity = this.stream.getAudioLevel()));
         }
