@@ -1,5 +1,5 @@
 <template>
-  <div class="workplace-panel" v-if="visibity">
+  <div class="workplace-panel" v-if="ready">
     <div class="workplace-header">
       <WorkplacePanelHeader
         :creator="classCreator"
@@ -60,6 +60,7 @@ export default {
   name: "workplace",
   data: function() {
     return {
+      ready: false,
       timer: null,
       gridStyle: undefined,
       originPosition: [0, 0],
@@ -67,9 +68,8 @@ export default {
       classCreator: "",
       classStatus: 0,
       isSidebarShow: true,
-      visibity: false,
-      watchInstance: undefined,
-      offlineUserClearer: null
+      offlineUserClearer: null,
+      active: true
     };
   },
   computed: {
@@ -79,32 +79,29 @@ export default {
     ...mapGetters("workplace", ["isTeacher"])
   },
   async mounted() {
-    await this.getRoomInfo(this.$route.query.id);
-
     initEmitter();
-    autoSyncState(app);
+    await this.getRoomInfo(this.$route.query.id);
+    const enterResult = await this.enterRoom();
 
-    this.offlineUserClearer = setInterval(() => {
-      this.CLEAR_OFFLINE_USER();
-    }, 10000);
+    if (!enterResult.data.success) {
+      this.$message.error(this.$t("class.liveFinishedTips"));
+      return;
+    }
+
+    this.ready = true;
+
+    this.clearOfflineUser();
 
     if (this.roomInfo) {
       this.classCreator = this.roomInfo.createUser;
       this.classStatus = Number(this.roomInfo.status);
-      document.title = this.roomInfo.title;
     } else {
       this.$message.error(this.$t("class.hasNoClassInfo"));
       return;
     }
 
-    const enterResult = await this.enterRoom();
-    if (!enterResult.data.success) {
-      this.$message.error(this.$t("class.liveFinishedTips"));
-      return;
-    }
-    this.visibity = true;
-
     await initLiveBroadcastService();
+    autoSyncState(app);
 
     if (this.isTeacher) {
       Emitter.emit("SYS_PULL_STATE", ROLE.STUDENT);
@@ -115,12 +112,7 @@ export default {
         this.userInfo.username
       );
 
-      let timer = _ => {
-        this.SET_TIMESTAMP(new Date().getTime());
-        return timer;
-      };
-
-      setInterval(timer(), 10000);
+      this.setTimesamp();
     }
 
     Emitter.on("tim_kicked_out", type => {
@@ -146,7 +138,7 @@ export default {
     });
   },
   async beforeRouteLeave(to, from, next) {
-    clearInterval(this.offlineUserClearer);
+    this.active = false;
     destroySyncState();
     this.destroyRoom();
     destroyEmitter();
@@ -166,6 +158,18 @@ export default {
     toggleCameraPanel() {
       this.SET_CAMERA_PANEL_VISIBILITY(!this.cameraPanelVisibity);
       this.$nextTick(_ => this.boardResize());
+    },
+    async clearOfflineUser() {
+      while (this.active) {
+        this.CLEAR_OFFLINE_USER();
+        await delay(10000);
+      }
+    },
+    async setTimesamp() {
+      while (this.active) {
+        this.SET_TIMESTAMP(new Date().getTime());
+        await delay(10000);
+      }
     }
   },
   watch: {
@@ -194,6 +198,10 @@ export default {
           this.timer = null;
         });
       }
+    },
+    roomInfo(value) {
+      if (!value) return;
+      document.title = value.title;
     }
   },
   components: {

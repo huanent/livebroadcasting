@@ -56,6 +56,7 @@ export default {
       }
     },
     getStream() {
+      if (!liveBroadcastService) return;
       if (this.streamId == "__local") {
         return liveBroadcastService.trtcService.localStream;
       }
