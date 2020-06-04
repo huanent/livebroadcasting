@@ -54,7 +54,7 @@ import {
 } from "../../core/live-broadcast";
 import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
 import { autoSyncState, destroySyncState } from "../../core/state-sync";
-import { requestDeviceAccess } from "../../core/utils";
+import { requestDeviceAccess, delay } from "../../core/utils";
 
 export default {
   name: "workplace",
@@ -105,22 +105,22 @@ export default {
     this.visibity = true;
 
     await initLiveBroadcastService();
+
     if (this.isTeacher) {
-      setTimeout(() => {
-        Emitter.emit("SYS_PULL_STATE", ROLE.STUDENT);
-      }, 2000);
+      Emitter.emit("SYS_PULL_STATE", ROLE.STUDENT);
     } else {
-      setTimeout(() => {
+      liveBroadcastService.timService.sendSystemMsg(
+        "PULL_STATE",
+        ROLE.TEACHER,
+        this.userInfo.username
+      );
+
+      let timer = _ => {
         this.SET_TIMESTAMP(new Date().getTime());
-        liveBroadcastService.timService.sendSystemMsg(
-          "PULL_STATE",
-          ROLE.TEACHER,
-          this.userInfo.username
-        );
-      }, 2000);
-      setInterval(() => {
-        this.SET_TIMESTAMP(new Date().getTime());
-      }, 10000);
+        return timer;
+      };
+
+      setInterval(timer(), 10000);
     }
 
     Emitter.on("tim_kicked_out", type => {

@@ -42,6 +42,7 @@ export class TimService {
 
     this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, this.timMessageHandler);
     this.tim.on(TIM.EVENT.KICKED_OUT, this.timKickedOutHandler);
+    await new Promise(rs => this.tim.on(TIM.EVENT.SDK_READY, rs));
   }
 
   timMessageHandler(e) {
