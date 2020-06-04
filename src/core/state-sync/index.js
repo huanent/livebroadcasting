@@ -8,8 +8,7 @@ export function autoSyncState(app) {
   unwatch = app.$watch(
     _ => app.$store.state,
     value => {
-      const currentRole = value.account.role;
-      const senderConfig = config.filter(f => f.sender == currentRole);
+      const senderConfig = config.filter(f => f.sender == value.workplace.role);
       for (const i of senderConfig) {
         let stateValue = getStateValue(value, i.path);
         let comparable =

@@ -1,14 +1,14 @@
 <template>
   <div class="window" :style="{ top: top + '%', left: left + '%' }">
     <header
-      :draggable="role == ROLE.TEACHER && !notdrag"
+      :draggable="isTeacher && !notdrag"
       @dragstart="dragstart"
       @drag="drag"
       ref="header"
       @dragend="dragend"
     >
       <span class="timer">{{ nameWidget }}</span>
-      <div class="close" @click="$emit('close')" v-if="role == ROLE.TEACHER">
+      <div class="close" @click="$emit('close')" v-if="isTeacher">
         +
       </div>
     </header>
@@ -18,7 +18,7 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   props: ["position", "nameWidget", "notdrag"],
@@ -31,7 +31,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("account", ["role"])
+    ...mapGetters("workplace", ["isTeacher"])
   },
   methods: {
     dragstart(e) {

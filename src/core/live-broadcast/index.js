@@ -100,7 +100,7 @@ class LiveBroadcastService {
 
   isListener(listeners) {
     if (!listeners) return true;
-    const currentRole = store.state.account.role;
+    const currentRole = store.state.workplace.role;
     const username = store.state.account.userInfo.username;
     const streamId = store.state.workplace.token.id;
 

@@ -11,7 +11,6 @@ const state = {
   workplaceVisibity: false,
   role: null,
   token: null,
-  teachId: null,
   featuresList: [],
   chatMessages: [],
   cameraPanelVisibity: true,
@@ -20,9 +19,6 @@ const state = {
   selectedMicrophone: null
 };
 const mutations = {
-  SET_TEACHER_ID(state, id) {
-    state.teachId = id;
-  },
   SET_CAMERA_PANEL_VISIBILITY(state, status) {
     state.cameraPanelVisibity = status;
   },
@@ -91,9 +87,11 @@ const mutations = {
 };
 
 const actions = {
-  async enterRoom({ commit, rootState }, query) {
-    commit("SET_TEACHER_ID", query.createUser);
-    let res = await enterRoom(rootState.account.userInfo.username, query.id);
+  async enterRoom({ commit, rootState }) {
+    let res = await enterRoom(
+      rootState.account.userInfo.username,
+      state.roomInfo.classId
+    );
     commit("SET_TOKEN", res.data.model);
     return res;
   },
@@ -116,9 +114,15 @@ const actions = {
       device.deviceId
     );
   },
-  async getRoomInfo({ commit }, id) {
+  async getRoomInfo({ commit, rootState }, id) {
     let result = await classApi.classGet(id);
     commit("SET_ROOM_INFO", result.data.model);
+    commit(
+      "SET_ROLE",
+      rootState.account.userInfo.username == result.data.model.createUser
+        ? ROLE.TEACHER
+        : ROLE.STUDENT
+    );
   }
 };
 
@@ -130,7 +134,7 @@ const getters = {
     let sublength =
       state.token.id.length - rootState.account.userInfo.username.length;
     let prefix = state.token.id.substring(0, sublength);
-    return prefix + state.teachId;
+    return prefix + state.roomInfo.createUser;
   },
   teacherScreenStreamId(state, getters) {
     return getters.teacherStreamId + "_share_screen";

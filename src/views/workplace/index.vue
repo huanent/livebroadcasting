@@ -32,7 +32,7 @@
       </div>
     </div>
     <widgets />
-    <hand-up-list v-if="role == ROLE.TEACHER" />
+    <hand-up-list v-if="isTeacher" />
   </div>
 </template>
 
@@ -44,7 +44,7 @@ import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/camera-panel";
 import { destroyEmitter, Emitter, initEmitter } from "../../core/emit";
-import { mapState, mapMutations, mapActions } from "vuex";
+import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import { ROLE } from "@/models/role";
 import Widgets from "../../components/live-broadcast/widgets";
 import { app } from "../../main";
@@ -66,7 +66,6 @@ export default {
       total: 0,
       classCreator: "",
       classStatus: 0,
-      audioLevelTimer: undefined,
       isSidebarShow: true,
       visibity: false,
       watchInstance: undefined,
@@ -74,11 +73,14 @@ export default {
     };
   },
   computed: {
-    ...mapState("account", ["role", "userInfo"]),
-    ...mapState("workplace", ["cameraPanelVisibity"]),
-    ...mapState("features", ["canControlBoard", "classing"])
+    ...mapState("account", ["userInfo"]),
+    ...mapState("workplace", ["cameraPanelVisibity", "roomInfo"]),
+    ...mapState("features", ["canControlBoard", "classing"]),
+    ...mapGetters("workplace", ["isTeacher"])
   },
   async mounted() {
+    await this.getRoomInfo(this.$route.query.id);
+
     initEmitter();
     autoSyncState(app);
 
@@ -86,28 +88,16 @@ export default {
       this.CLEAR_OFFLINE_USER();
     }, 10000);
 
-    const classId = this.$route.query.id;
-    this.getRoomInfo(classId);
-    const res = await classApi.classGet(classId);
-    if (res.data.success) {
-      this.classCreator = res.data.model.createUser;
-      this.classStatus = Number(res.data.model.status);
-      document.title = res.data.model.title;
+    if (this.roomInfo) {
+      this.classCreator = this.roomInfo.createUser;
+      this.classStatus = Number(this.roomInfo.status);
+      document.title = this.roomInfo.title;
     } else {
       this.$message.error(this.$t("class.hasNoClassInfo"));
       return;
     }
-    const roomData = {
-      createUser: this.classCreator,
-      id: this.$route.query.id
-    };
 
-    const role =
-      this.classCreator == this.userInfo.username ? ROLE.TEACHER : ROLE.STUDENT;
-    this.SET_ROLE(role);
-    this.setRole(role);
-
-    const enterResult = await this.enterRoom(roomData);
+    const enterResult = await this.enterRoom();
     if (!enterResult.data.success) {
       this.$message.error(this.$t("class.liveFinishedTips"));
       return;
@@ -115,8 +105,7 @@ export default {
     this.visibity = true;
 
     await initLiveBroadcastService();
-
-    if (role == ROLE.TEACHER) {
+    if (this.isTeacher) {
       setTimeout(() => {
         Emitter.emit("SYS_PULL_STATE", ROLE.STUDENT);
       }, 2000);
@@ -133,12 +122,7 @@ export default {
         this.SET_TIMESTAMP(new Date().getTime());
       }, 10000);
     }
-    this.audioLevelTimer = setInterval(() => {
-      this.isTimer = true;
-    }, 200);
-    this.$once("hook:beforeDestroy", () => {
-      clearInterval(this.audioLevelTimer);
-    });
+
     Emitter.on("tim_kicked_out", type => {
       let tips = "";
       switch (type) {
@@ -170,26 +154,18 @@ export default {
   },
   methods: {
     ...mapMutations("features", ["SET_TIMESTAMP"]),
-    ...mapMutations("account", ["SET_ROLE"]),
-    ...mapMutations("board", ["SET_DRAW_ENABLE"]),
     ...mapMutations("workplace", [
       "SET_CAMERA_PANEL_VISIBILITY",
       "CLEAR_OFFLINE_USER"
     ]),
-    ...mapMutations("workplace", {
-      setRole: "SET_ROLE"
-    }),
     ...mapActions("workplace", ["enterRoom", "destroyRoom", "getRoomInfo"]),
-    ...mapActions("tips", ["notAccessDevice", "redirectIndex"]),
     ...mapActions("board", ["boardResize"]),
     toggleSidebar() {
       this.isSidebarShow = !this.isSidebarShow;
     },
     toggleCameraPanel() {
       this.SET_CAMERA_PANEL_VISIBILITY(!this.cameraPanelVisibity);
-      setTimeout(() => {
-        this.boardResize();
-      }, 300);
+      this.$nextTick(_ => this.boardResize());
     }
   },
   watch: {

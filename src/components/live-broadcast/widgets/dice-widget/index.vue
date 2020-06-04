@@ -75,7 +75,6 @@
 <script>
 import WidgetWindow from "../widget-window";
 import { mapState, mapMutations, mapGetters } from "vuex";
-import { ROLE } from "@/models/role";
 export default {
   components: {
     WidgetWindow
@@ -86,8 +85,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("widget", ["dice"]),
-    ...mapState("account", ["role"])
+    ...mapState("widget", ["dice"])
   },
   methods: {
     ...mapMutations("widget", [

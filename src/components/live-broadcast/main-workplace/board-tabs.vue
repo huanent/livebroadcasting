@@ -21,7 +21,7 @@
       <div class="head-right">
         <div class="workplace-settings">
           <multiselect
-            v-if="role !== ROLE.STUDENT"
+            v-if="isTeacher"
             v-model="selected"
             ref="select"
             :searchable="false"
@@ -58,7 +58,7 @@
 
 <script>
 import { Multiselect } from "vue-multiselect";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapGetters } from "vuex";
 import { liveBroadcastService } from "../../../core/live-broadcast";
 export default {
   name: "BoardTabs",
@@ -97,10 +97,10 @@ export default {
     };
   },
   computed: {
-    ...mapState("account", ["role"]),
     ...mapState("workplace", ["cameraPanelVisibity"]),
     ...mapState("features", ["canControlBoard"]),
-    ...mapState("board", ["fileList", "currentFile"])
+    ...mapState("board", ["fileList", "currentFile"]),
+    ...mapGetters("workplace", ["isTeacher"])
   },
   mounted() {
     this.init();

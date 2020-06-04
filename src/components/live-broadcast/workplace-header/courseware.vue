@@ -9,7 +9,7 @@
     class="courseware"
   >
     <div class="courseware-content">
-      <div v-show="role === ROLE.TEACHER">
+      <div v-show="isTeacher">
         <el-upload
           :action="
             '/api/courseFile/upload?userId=' + userId + '&classId=' + classId
@@ -51,7 +51,7 @@
                 class="btns"
                 type="text"
                 size="small"
-                v-show="role === ROLE.TEACHER && !isVideo(scope.row.url)"
+                v-show="isTeacher && !isVideo(scope.row.url)"
               >
                 <el-tooltip :content="$t('courseware.toboard')" placement="top"
                   ><icon name="fileimport" :size="16"></icon></el-tooltip
@@ -61,7 +61,7 @@
                 class="btns"
                 type="text"
                 size="small"
-                v-show="role === ROLE.TEACHER && isVideo(scope.row.url)"
+                v-show="isTeacher && isVideo(scope.row.url)"
                 @click="play(scope.row)"
               >
                 <el-tooltip :content="$t('courseware.play')" placement="top"
@@ -82,7 +82,7 @@
                 type="text"
                 size="small"
                 @click="reTranscode(scope.row)"
-                v-show="role === ROLE.TEACHER && !isVideo(scope.row.url)"
+                v-show="isTeacher && !isVideo(scope.row.url)"
               >
                 <el-tooltip :content="$t('courseware.recode')" placement="top"
                   ><icon name="recode" :size="16"></icon></el-tooltip
@@ -92,7 +92,7 @@
                 class="btns"
                 type="text"
                 size="small"
-                v-show="role === ROLE.TEACHER"
+                v-show="isTeacher"
               >
                 <el-tooltip :content="$t('courseware.del')" placement="top"
                   ><icon name="trash" :size="16"></icon
@@ -134,7 +134,7 @@ import {
 } from "@/core/data/data-service";
 
 import { liveBroadcastService } from "@/core/live-broadcast";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapGetters } from "vuex";
 
 export default {
   name: "Courseware",
@@ -171,6 +171,7 @@ export default {
   },
   computed: {
     ...mapState("account", ["role"]),
+    ...mapGetters("workplace", ["isTeacher"]),
     dialogWidth() {
       if (innerWidth < 768) {
         return "80%";
@@ -259,7 +260,7 @@ export default {
       });
     },
     rowclick(file) {
-      if (this.role === this.ROLE.TEACHER) {
+      if (this.isTeacher) {
         liveBroadcastService.boardService.addBoardFiles(
           file.resultUrl,
           file.title,

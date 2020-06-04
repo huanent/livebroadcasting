@@ -4,7 +4,7 @@
       effect="dark"
       :content="forbiddenTips"
       placement="top-end"
-      v-if="role === ROLE.TEACHER"
+      v-if="isTeacher"
     >
       <icon
         name="comment-slash"
@@ -31,8 +31,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import { ROLE } from "@/models/role";
+import { mapState, mapMutations, mapGetters } from "vuex";
 
 export default {
   name: "ChatroomFooter",
@@ -42,8 +41,8 @@ export default {
     };
   },
   computed: {
-    ...mapState("account", ["role"]),
     ...mapState("features", ["globalMessage", "selfMessage"]),
+    ...mapGetters("workplace", ["isTeacher"]),
     forbiddenTips() {
       return !this.globalMessage
         ? this.$t("class.message.liftAllBans")
@@ -57,11 +56,11 @@ export default {
     },
     onSubmit() {
       if (this.message.trim().length === 0) return;
-      if (this.role === ROLE.STUDENT && !this.globalMessage) {
+      if (!this.isTeacher && !this.globalMessage) {
         this.$message.error(this.$t("class.message.muteTips"));
         return;
       }
-      if (this.role === ROLE.STUDENT && !this.selfMessage) {
+      if (!this.isTeacher && !this.selfMessage) {
         this.$message.error(this.$t("class.message.selfMuteTips"));
         return;
       }
@@ -71,11 +70,10 @@ export default {
   },
   watch: {
     globalMessage(val) {
-      const isTeacher = this.role === ROLE.TEACHER;
-      const openTips = isTeacher
+      const openTips = this.isTeacher
         ? this.$t("class.message.muteAll")
         : this.$t("class.message.openAllMuteByTeacher");
-      const closeTips = isTeacher
+      const closeTips = this.isTeacher
         ? this.$t("class.message.liftAllBans")
         : this.$t("class.message.liftAllBansByTeacher");
       if (!val) {

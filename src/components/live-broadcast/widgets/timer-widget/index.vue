@@ -47,7 +47,6 @@
 import WidgetWindow from "../widget-window";
 import Controller from "./controller";
 import { mapState, mapMutations, mapGetters } from "vuex";
-import { ROLE } from "@/models/role";
 export default {
   data() {
     return {
@@ -65,6 +64,7 @@ export default {
   computed: {
     ...mapState("widget", ["timer"]),
     ...mapState("account", ["role"]),
+    ...mapGetters("workplace", ["isTeacher"]),
     seconds() {
       return (
         this.secondSingle +
@@ -74,7 +74,7 @@ export default {
       );
     },
     showOperation() {
-      return this.role == ROLE.TEACHER && !this.timer.started;
+      return this.isTeacher && !this.timer.started;
     }
   },
   methods: {

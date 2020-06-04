@@ -1,7 +1,8 @@
 import { liveBroadcastService } from "../core/live-broadcast";
 import { HAND_UP_STATUS } from "../models/handUpStatus";
+import { ROLE } from "../models/role";
 export const initFeaturesState = function(role) {
-  let isTeacher = role === "ROLE_TEACHER";
+  let isTeacher = role === ROLE.TEACHER;
   return {
     timestamp: 1,
     canControlBoard: isTeacher,

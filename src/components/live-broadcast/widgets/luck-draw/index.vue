@@ -19,7 +19,7 @@
       </div>
       <div class="btnClick">
         <el-button
-          v-if="role == ROLE.TEACHER && !drawing"
+          v-if="isTeacher && !drawing"
           size="mini "
           type="primary"
           @click="start"
@@ -32,8 +32,7 @@
 </template>
 <script>
 import WidgetWindow from "../widget-window";
-import { mapState, mapMutations } from "vuex";
-import { ROLE } from "../../../../models/role";
+import { mapState, mapMutations, mapGetters } from "vuex";
 
 export default {
   name: "LuckDraw",
@@ -48,8 +47,8 @@ export default {
   },
   computed: {
     ...mapState("widget", ["draw"]),
-    ...mapState("account", ["role"]),
-    ...mapState("workplace", ["featuresList"])
+    ...mapState("workplace", ["featuresList"]),
+    ...mapGetters("workplace", ["isTeacher"])
   },
   methods: {
     ...mapMutations("widget", [
@@ -69,7 +68,7 @@ export default {
     "draw.visible"(value) {
       this.drawing = false;
       this.isanimate = false;
-      if (this.role == ROLE.TEACHER) {
+      if (this.isTeacher) {
         this.SET_DRAW_LIST(
           this.featuresList.map(m => m.__nickName || m.__primaryKey)
         );

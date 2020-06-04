@@ -9,7 +9,7 @@
       </el-tooltip>
 
       <el-button
-        v-if="role === ROLE.TEACHER"
+        v-if="isTeacher"
         @click="classFinish"
         class="class-btn"
         size="mini"
@@ -27,25 +27,13 @@
       </el-tooltip>
 
       <el-tooltip
-        v-if="role === ROLE.TEACHER"
+        v-if="isTeacher"
         :content="'应用中心'"
         placement="bottom"
         :open-delay="200"
       >
         <icon @click.native="onWidgetsOpen" name="widgets" :size="20"></icon>
       </el-tooltip>
-      <!--      <el-tooltip
-        v-if="role === ROLE.TEACHER"
-        :content="'控制面板'"
-        placement="bottom"
-        :open-delay="200"
-      >
-        <icon
-          name="settings"
-          :size="20"
-          @click.native="onShowFeaturesControlVisible"
-        ></icon>
-      </el-tooltip>-->
       <el-tooltip :content="'个人设置'" placement="bottom" :open-delay="200">
         <icon
           name="settings"
@@ -91,7 +79,7 @@
 
 <script>
 import { liveBroadcastService } from "@/core/live-broadcast";
-import { mapActions, mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState, mapGetters } from "vuex";
 import classApi from "@api/class";
 import Widgets from "./widgets";
 import Recoder from "./recorder.vue";
@@ -129,7 +117,7 @@ export default {
     status: Number
   },
   computed: {
-    ...mapState("account", ["role"])
+    ...mapGetters("workplace", ["isTeacher"])
   },
   watch: {
     switchStatus(value) {

@@ -1,14 +1,9 @@
-import Vue from "vue";
-import features from "./features";
 import store from "@/store";
 import { ROLE } from "../models/role";
 const state = {
   userInfo: null,
   lb_expires: "",
-  lb_token: "",
-  userId: "",
-
-  role: ROLE.STUDENT // student teacher
+  lb_token: ""
 };
 
 const mutations = {

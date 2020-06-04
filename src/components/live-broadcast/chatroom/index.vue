@@ -9,14 +9,14 @@
 import ChatroomBody from "./chatroom-body";
 import ChatroomFooter from "./chatroom-footer";
 import { Emitter } from "../../../core/emit";
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapState, mapGetters } from "vuex";
 import { liveBroadcastService } from "../../../core/live-broadcast";
-import { ROLE } from "../../../models/role";
 
 export default {
   name: "Chatroom",
   computed: {
-    ...mapState("account", ["userInfo", "role"])
+    ...mapState("account", ["userInfo"]),
+    ...mapGetters("workplace", ["isTeacher"])
   },
   methods: {
     ...mapMutations("workplace", ["ADD_CHAT_MESSAGE"]),
@@ -32,7 +32,7 @@ export default {
         avatar: this.userInfo.avatar,
         nickname: this.userInfo.nickname,
         username: this.userInfo.username,
-        isTeacher: this.role == ROLE.TEACHER
+        isTeacher: this.isTeacher
       };
 
       let res = await liveBroadcastService.timService.sendMessage(

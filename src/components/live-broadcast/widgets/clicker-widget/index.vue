@@ -7,9 +7,9 @@
     :position="position"
     :notdrag="true"
   >
-    <question v-if="role == ROLE.TEACHER && !this.clicker.question" />
-    <answer v-if="role != ROLE.TEACHER && this.clicker.question" />
-    <statistics v-if="role == ROLE.TEACHER && this.clicker.question" />
+    <question v-if="isTeacher && !this.clicker.question" />
+    <answer v-if="!isTeacher && this.clicker.question" />
+    <statistics v-if="isTeacher && this.clicker.question" />
   </widget-window>
 </template>
 <script>
@@ -17,8 +17,7 @@ import WidgetWindow from "../widget-window";
 import Question from "./question";
 import Answer from "./answer";
 import Statistics from "./statistics";
-import { mapState, mapMutations } from "vuex";
-import { ROLE } from "../../../../models/role";
+import { mapState, mapMutations, mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -30,9 +29,9 @@ export default {
   },
   computed: {
     ...mapState("widget", ["clicker"]),
-    ...mapState("account", ["role"]),
+    ...mapGetters("workplace", ["isTeacher"]),
     visible() {
-      if (this.role == ROLE.TEACHER) {
+      if (this.isTeacher) {
         return this.clicker.visible;
       } else {
         return this.clicker.question;
