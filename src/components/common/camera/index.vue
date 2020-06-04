@@ -57,13 +57,16 @@ export default {
     subscribeAudio: Boolean,
     subscribeVideo: Boolean,
     controllable: Boolean,
-    hiddenVoiceIntensity: Boolean
+    hiddenVoiceIntensity: Boolean,
+    alwaysLocalMuted: Boolean
   },
   data() {
     return {
       active: true,
       intensity: 0,
-      stream: null
+      stream: null,
+      audioMuted: !this.subscribeAudio,
+      videoMuted: !this.subscribeVideo
     };
   },
   mounted() {
@@ -78,11 +81,21 @@ export default {
       return this.streamId == "__local";
     },
     microIcon() {
-      let status = this.isLocal ? this.audioStatus : this.subscribeAudio;
+      let status = this.isLocal
+        ? this.audioStatus
+        : this.alwaysLocalMuted
+        ? !this.audioMuted
+        : this.subscribeAudio;
+
       return status ? "microphone" : "microphone-slash";
     },
     videoIcon() {
-      let status = this.isLocal ? this.videoStatus : this.subscribeVideo;
+      let status = this.isLocal
+        ? this.videoStatus
+        : this.alwaysLocalMuted
+        ? !this.videoMuted
+        : this.subscribeVideo;
+
       return status ? "video" : "video-slash";
     },
     showNoVideo() {
@@ -102,6 +115,9 @@ export default {
       if (this.isLocal) {
         this.audioStatus ? this.stream.muteAudio() : this.stream.unmuteAudio();
         this.SET_AUDIO_STATUS(!this.audioStatus);
+      } else if (this.alwaysLocalMuted) {
+        this.audioMuted = !this.audioMuted;
+        this.audioMuted ? this.stream.muteAudio() : this.stream.unmuteAudio();
       } else {
         this.manualControlFeatures({
           id: this.streamId,
@@ -116,6 +132,9 @@ export default {
       if (this.isLocal) {
         this.videoStatus ? this.stream.muteVideo() : this.stream.unmuteVideo();
         this.SET_VIDEO_STATUS(!this.videoStatus);
+      } else if (this.alwaysLocalMuted) {
+        this.videoMuted = !this.videoMuted;
+        this.videoMuted ? this.stream.muteVideo() : this.stream.unmuteVideo();
       } else {
         this.manualControlFeatures({
           id: this.streamId,

@@ -6,9 +6,10 @@
   >
     <camera
       :stream-id="streamId"
-      :controllable="isTeacher"
+      controllable
       :subscribe-audio="true"
       :subscribe-video="true"
+      always-local-muted
     />
   </div>
 </template>
