@@ -148,7 +148,7 @@ export default {
         if (this.stream) {
           this.$nextTick(() => (this.intensity = this.stream.getAudioLevel()));
         }
-        await delay(100);
+        await delay(300);
       }
     },
     async changeSubscribe() {
