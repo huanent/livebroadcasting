@@ -26,8 +26,16 @@
       />
     </div>
     <div class="footer">
-      <icon :name="microIcon" color="#0A818C" :size="18" />
-      <voice-intensity :intensity="Number(intensity)" />
+      <icon
+        :name="microIcon"
+        color="#0A818C"
+        :size="18"
+        v-if="!hiddenVoiceIntensity"
+      />
+      <voice-intensity
+        :intensity="Number(intensity)"
+        v-if="!hiddenVoiceIntensity"
+      />
       <p>{{ name }}</p>
     </div>
   </div>
@@ -48,7 +56,8 @@ export default {
     mirror: Boolean,
     subscribeAudio: Boolean,
     subscribeVideo: Boolean,
-    controllable: Boolean
+    controllable: Boolean,
+    hiddenVoiceIntensity: Boolean
   },
   data() {
     return {

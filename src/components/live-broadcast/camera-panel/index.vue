@@ -27,6 +27,7 @@
           :name="item.__nickName || item.__primaryKey"
           :subscribe-video="item.subscribeVideo"
           :subscribe-audio="item.subscribeAudio"
+          hidden-voice-intensity
         />
       </div>
     </div>
