@@ -105,6 +105,11 @@ export default {
 
     if (this.isTeacher) {
       Emitter.emit("SYS_PULL_STATE", ROLE.STUDENT);
+      liveBroadcastService.timService.sendSystemMsg(
+        "PULL_FEATURES",
+        ROLE.STUDENT,
+        ROLE.TEACHER
+      );
     } else {
       liveBroadcastService.timService.sendSystemMsg(
         "PULL_STATE",

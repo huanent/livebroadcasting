@@ -80,6 +80,10 @@ class LiveBroadcastService {
       this.timService.sendSystemMsg("STATE_SYNC", data, msgs);
     });
 
+    Emitter.on("SYS_PULL_FEATURES", _ => {
+      store.commit("features/SET_TIMESTAMP", new Date().getTime());
+    });
+
     return true;
   }
   async destroy() {
