@@ -131,6 +131,7 @@ const getters = {
     return state.role == ROLE.TEACHER;
   },
   teacherStreamId(state, getters, rootState) {
+    if (!state.token || !rootState.account.userInfo) return;
     let sublength =
       state.token.id.length - rootState.account.userInfo.username.length;
     let prefix = state.token.id.substring(0, sublength);
