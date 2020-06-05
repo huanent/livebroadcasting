@@ -145,17 +145,6 @@ export class TrtcService {
     });
   }
 
-  async copyStream(stream, mirror = false) {
-    let option = { mirror: mirror };
-    let audio = stream.getAudioTrack();
-    if (audio) option.audioSource = audio;
-    let video = stream.getVideoTrack();
-    if (video) option.videoSource = video;
-    let copedStream = TRTC.createStream(option);
-    await copedStream.initialize();
-    return copedStream;
-  }
-
   async init(token) {
     TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.ERROR);
     this.checkSupported();
