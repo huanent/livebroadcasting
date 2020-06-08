@@ -141,7 +141,7 @@ export class TrtcService {
       });
     }
 
-    this.shareScreenStream.setScreenProfile("720p");
+    this.shareScreenStream.setScreenProfile("1080p");
     await this.shareScreenStream.initialize();
     await this.shareScreenClient.publish(this.shareScreenStream);
   }

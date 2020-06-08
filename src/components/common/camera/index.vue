@@ -151,13 +151,17 @@ export default {
         await delay(300);
       }
     },
-    async changeSubscribe() {
+    async changeVideo() {
       if (!this.stream || this.isLocal) return;
       await liveBroadcastService.trtcService.subscribe(
         this.stream,
-        this.subscribeAudio,
+        true,
         this.subscribeVideo
       );
+    },
+    async changeAudio() {
+      if (!this.stream || this.isLocal) return;
+      this.subscribeAudio ? this.stream.unmuteAudio() : this.stream.muteAudio();
     }
   },
   components: {
@@ -165,14 +169,15 @@ export default {
     voiceIntensity
   },
   watch: {
-    subscribeAudio() {
-      this.changeSubscribe();
+    subscribeAudio(value) {
+      this.changeAudio();
     },
     subscribeVideo() {
-      this.changeSubscribe();
+      this.changeVideo();
     },
-    stream() {
-      this.changeSubscribe();
+    async stream() {
+      await this.changeVideo();
+      this.changeAudio();
     }
   }
 };
