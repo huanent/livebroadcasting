@@ -10,11 +10,11 @@ export default {
     VideoPlayer
   },
   async mounted() {
-    if (this.isTeacher) {
-      await liveBroadcastService.trtcService.startShareScreen();
-    }
+    if (!this.isTeacher) return;
+    await liveBroadcastService.trtcService.startShareScreen();
   },
   async beforeDestroy() {
+    if (!this.isTeacher) return;
     await liveBroadcastService.trtcService.stopShareScreen();
   },
   computed: {
