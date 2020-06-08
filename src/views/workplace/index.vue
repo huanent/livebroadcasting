@@ -181,13 +181,6 @@ export default {
         this.SET_TIMESTAMP(new Date().getTime());
         await delay(10000);
       }
-    },
-    switchProfile() {
-      if (this.panelType == "camera" && this.cameraPanelId == this.token.id) {
-        liveBroadcastService.trtcService.switchProfile("720p");
-      } else {
-        liveBroadcastService.trtcService.switchProfile("240p");
-      }
     }
   },
   watch: {
@@ -220,12 +213,6 @@ export default {
     roomInfo(value) {
       if (!value) return;
       document.title = value.title;
-    },
-    panelType() {
-      this.switchProfile();
-    },
-    cameraPanelId() {
-      this.switchProfile();
     }
   },
   components: {

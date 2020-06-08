@@ -12,8 +12,6 @@ export class TrtcService {
   shareScreenClient;
   mainToken;
   shareScreenToken;
-  access;
-  localProfile;
 
   async checkSupported() {
     let isSupport = await TRTC.checkSystemRequirements();
@@ -155,50 +153,6 @@ export class TrtcService {
     });
   }
 
-  async createLocalStream(localProfile) {
-    this.localStream = TRTC.createStream({
-      audio: !!this.access.audio,
-      video: !!this.access.video
-    });
-
-    this.localStream.setVideoProfile(localProfile);
-
-    try {
-      await this.localStream.initialize();
-      await this.mainClient.publish(this.localStream);
-
-      if (!store.state.features.videoStatus) {
-        this.localStream.muteVideo();
-      }
-
-      if (!store.state.features.audioStatus) {
-        this.localStream.muteAudio();
-      }
-
-      let selectedDevices = {
-        camera: this.localStream.getVideoTrack().label,
-        microphone: this.localStream.getAudioTrack().label
-      };
-
-      this.localProfile = localProfile;
-      store.commit("workplace/SELECT_DEVICES", selectedDevices);
-    } catch (error) {
-      store.dispatch("tips/notAccessDevice");
-    }
-  }
-
-  async closeLocalStream() {
-    if (!this.localStream || !this.mainClient) return;
-    this.localStream.close();
-    await this.mainClient.unpublish(this.localStream);
-  }
-
-  async switchProfile(localProfile) {
-    if (this.localProfile == localProfile) return;
-    await this.closeLocalStream();
-    await this.createLocalStream(localProfile);
-  }
-
   async init(token) {
     TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.ERROR);
     this.checkSupported();
@@ -206,8 +160,28 @@ export class TrtcService {
     this.mainClient = this.createClient(token);
     await this.mainClient.join({ roomId: token.classId.toString() });
     this.listenHandler(this.mainClient);
-    this.access = await requestDeviceAccess();
-    this.createLocalStream("240p");
+    let access = await requestDeviceAccess();
+
+    this.localStream = TRTC.createStream({
+      audio: !!access.audio,
+      video: !!access.video
+    });
+
+    this.localStream.setVideoProfile(this.isTeacher ? "720p" : "480p");
+
+    try {
+      await this.localStream.initialize();
+      await this.mainClient.publish(this.localStream);
+
+      let selectedDevices = {
+        camera: this.localStream.getVideoTrack().label,
+        microphone: this.localStream.getAudioTrack().label
+      };
+
+      store.commit("workplace/SELECT_DEVICES", selectedDevices);
+    } catch (error) {
+      store.dispatch("tips/notAccessDevice");
+    }
   }
 
   async destroy() {
