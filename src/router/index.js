@@ -39,14 +39,6 @@ const routes = [
     ]
   },
   {
-    path: "/h5/live",
-    name: "h5Live",
-    component: () => import("@v/h5/live-page"),
-    meta: {
-      title: "手机端直播页面"
-    }
-  },
-  {
     path: "/login",
     name: "Login",
     component: () => import("@v/login.vue"),
