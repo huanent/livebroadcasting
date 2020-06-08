@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ mirror: mirror }" class="video" ref="video">
+  <div :class="{ mirror: mirror }" class="video __video_force_bg" ref="video">
     <video
       v-if="copy"
       :muted="muted"
@@ -89,5 +89,10 @@ video {
 }
 .mirror {
   transform: rotateY(180deg);
+}
+</style>
+<style>
+.__video_force_bg div {
+  background-color: rgba(0, 0, 0, 0) !important;
 }
 </style>
