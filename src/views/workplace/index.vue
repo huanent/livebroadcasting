@@ -78,10 +78,11 @@ export default {
       "cameraPanelVisibity",
       "roomInfo",
       "panelType",
-      "cameraPanelId"
+      "cameraPanelId",
+      "token"
     ]),
     ...mapState("features", ["canControlBoard", "classing"]),
-    ...mapGetters("workplace", ["isTeacher", "token"])
+    ...mapGetters("workplace", ["isTeacher"])
   },
   async mounted() {
     initEmitter();
