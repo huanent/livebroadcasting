@@ -12,6 +12,8 @@ export class TrtcService {
   shareScreenClient;
   mainToken;
   shareScreenToken;
+  access;
+  localProfile;
 
   async checkSupported() {
     let isSupport = await TRTC.checkSystemRequirements();
@@ -153,21 +155,13 @@ export class TrtcService {
     });
   }
 
-  async init(token) {
-    TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.ERROR);
-    this.checkSupported();
-    this.mainToken = token;
-    this.mainClient = this.createClient(token);
-    await this.mainClient.join({ roomId: token.classId.toString() });
-    this.listenHandler(this.mainClient);
-    let access = await requestDeviceAccess();
-
+  async createLocalStream(localProfile) {
     this.localStream = TRTC.createStream({
-      audio: !!access.audio,
-      video: !!access.video
+      audio: !!this.access.audio,
+      video: !!this.access.video
     });
 
-    this.localStream.setVideoProfile(this.isTeacher ? "720p" : "240p");
+    this.localStream.setVideoProfile(localProfile);
 
     try {
       await this.localStream.initialize();
@@ -178,10 +172,28 @@ export class TrtcService {
         microphone: this.localStream.getAudioTrack().label
       };
 
+      this.localProfile = localProfile;
       store.commit("workplace/SELECT_DEVICES", selectedDevices);
     } catch (error) {
       store.dispatch("tips/notAccessDevice");
     }
+  }
+
+  async closeLocalStream() {
+    if (!this.localStream || !this.mainClient) return;
+    await this.mainClient.unpublish(this.localStream);
+    this.localStream.close();
+  }
+
+  async init(token) {
+    TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.ERROR);
+    this.checkSupported();
+    this.mainToken = token;
+    this.mainClient = this.createClient(token);
+    await this.mainClient.join({ roomId: token.classId.toString() });
+    this.listenHandler(this.mainClient);
+    this.access = await requestDeviceAccess();
+    this.createLocalStream("240p");
   }
 
   async destroy() {
