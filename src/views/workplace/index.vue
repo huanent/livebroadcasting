@@ -181,6 +181,13 @@ export default {
         this.SET_TIMESTAMP(new Date().getTime());
         await delay(10000);
       }
+    },
+    switchProfile() {
+      if (this.panelType == "camera" && this.cameraPanelId == this.token.id) {
+        liveBroadcastService.trtcService.switchProfile("720p");
+      } else {
+        liveBroadcastService.trtcService.switchProfile("240p");
+      }
     }
   },
   watch: {
@@ -214,12 +221,11 @@ export default {
       if (!value) return;
       document.title = value.title;
     },
-    async panelType(value) {
-      if (value == "camera" && this.cameraPanelId == this.token.id) {
-        liveBroadcastService.trtcService.switchProfile("720p");
-      } else {
-        liveBroadcastService.trtcService.switchProfile("240p");
-      }
+    panelType() {
+      this.switchProfile();
+    },
+    cameraPanelId() {
+      this.switchProfile();
     }
   },
   components: {

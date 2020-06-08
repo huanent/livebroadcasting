@@ -163,17 +163,17 @@ export class TrtcService {
 
     this.localStream.setVideoProfile(localProfile);
 
-    if (!store.state.features.videoStatus) {
-      this.localStream.muteVideo();
-    }
-
-    if (!store.state.features.audioStatus) {
-      this.localStream.muteAudio();
-    }
-
     try {
       await this.localStream.initialize();
       await this.mainClient.publish(this.localStream);
+
+      if (!store.state.features.videoStatus) {
+        this.localStream.muteVideo();
+      }
+
+      if (!store.state.features.audioStatus) {
+        this.localStream.muteAudio();
+      }
 
       let selectedDevices = {
         camera: this.localStream.getVideoTrack().label,
