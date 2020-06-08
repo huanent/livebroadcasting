@@ -3,17 +3,24 @@
     <div class="m-sidebar"></div>
     <div class="m-main">
       <div class="m-live-area"></div>
-      <div class="m-control"></div>
+      <div class="m-control">
+        <live-control />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import LiveControl from "./live-control";
+
 export default {
   name: "LivePage",
   data: () => ({
     title: "hello"
-  })
+  }),
+  components: {
+    LiveControl
+  }
 };
 </script>
 
@@ -38,9 +45,7 @@ export default {
       background-color: aliceblue;
     }
     .m-control {
-      width: 5em;
-      height: 10rem;
-      background-color: cadetblue;
+      padding-right: 0.6rem;
       position: absolute;
       right: 0;
       top: 50%;
