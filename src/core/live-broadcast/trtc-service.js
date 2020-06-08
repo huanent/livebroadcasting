@@ -112,7 +112,15 @@ export class TrtcService {
   }
 
   async stopShareScreen() {
-    await this.shareScreenClient.unpublish(this.shareScreenStream);
+    try {
+      await this.shareScreenClient.unpublish(this.shareScreenStream);
+    } catch (error) {
+      console.log(error);
+    }
+
+    if (this.shareScreenStream) this.shareScreenStream.close();
+    if (this.shareScreenClient) await this.shareScreenClient.leave();
+    this.shareScreenClient = null;
     this.shareScreenStream.close();
     this.shareScreenStream = null;
   }

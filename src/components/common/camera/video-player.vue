@@ -36,6 +36,7 @@ export default {
   },
   beforeDestroy() {
     this.active = false;
+    if (!this.copy && this.stream) this.stream.stop();
   },
   methods: {
     async setStream() {

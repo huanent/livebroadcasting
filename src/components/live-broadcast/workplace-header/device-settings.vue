@@ -71,7 +71,12 @@
         </el-col>
         <el-col :xs="24" :sm="24" :md="12">
           <div class="media-container">
-            <video ref="video" autoplay="autoplay" muted="true"></video>
+            <video
+              ref="video"
+              autoplay="autoplay"
+              muted="true"
+              :src-object.prop="videoStream"
+            ></video>
           </div>
         </el-col>
       </el-row>
@@ -203,8 +208,6 @@ export default {
         },
         audio: false
       });
-
-      this.$refs.video.srcObject = this.videoStream;
     }
   },
   watch: {
