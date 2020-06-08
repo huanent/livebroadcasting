@@ -74,7 +74,12 @@ export default {
   },
   computed: {
     ...mapState("account", ["userInfo"]),
-    ...mapState("workplace", ["cameraPanelVisibity", "roomInfo", "panelType"]),
+    ...mapState("workplace", [
+      "cameraPanelVisibity",
+      "roomInfo",
+      "panelType",
+      "cameraPanelId"
+    ]),
     ...mapState("features", ["canControlBoard", "classing"]),
     ...mapGetters("workplace", ["isTeacher"])
   },
@@ -209,16 +214,10 @@ export default {
       document.title = value.title;
     },
     async panelType(value) {
-      let profile = liveBroadcastService.trtcService.localProfile;
-
-      if (value == "camera" && profile == "240p") {
-        await liveBroadcastService.trtcService.closeLocalStream();
-        liveBroadcastService.trtcService.createLocalStream("720p");
-      }
-
-      if (value != "camera" && profile == "720p") {
-        await liveBroadcastService.trtcService.closeLocalStream();
-        liveBroadcastService.trtcService.createLocalStream("240p");
+      if (value == "camera" && this.cameraPanelId == this.userInfo.id) {
+        liveBroadcastService.trtcService.switchProfile("720p");
+      } else {
+        liveBroadcastService.trtcService.switchProfile("240p");
       }
     }
   },

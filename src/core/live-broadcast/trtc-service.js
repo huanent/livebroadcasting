@@ -163,6 +163,14 @@ export class TrtcService {
 
     this.localStream.setVideoProfile(localProfile);
 
+    if (!store.state.features.videoStatus) {
+      this.localStream.mutedVideo();
+    }
+
+    if (!store.state.features.audioStatus) {
+      this.localStream.mutedAudio();
+    }
+
     try {
       await this.localStream.initialize();
       await this.mainClient.publish(this.localStream);
@@ -183,6 +191,12 @@ export class TrtcService {
     if (!this.localStream || !this.mainClient) return;
     await this.mainClient.unpublish(this.localStream);
     this.localStream.close();
+  }
+
+  async switchProfile(localProfile) {
+    if (this.localProfile == localProfile) return;
+    await this.closeLocalStream();
+    await this.createLocalStream(localProfile);
   }
 
   async init(token) {
