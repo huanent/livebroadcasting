@@ -164,11 +164,11 @@ export class TrtcService {
     this.localStream.setVideoProfile(localProfile);
 
     if (!store.state.features.videoStatus) {
-      this.localStream.mutedVideo();
+      this.localStream.muteVideo();
     }
 
     if (!store.state.features.audioStatus) {
-      this.localStream.mutedAudio();
+      this.localStream.muteAudio();
     }
 
     try {
