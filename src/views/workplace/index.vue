@@ -214,7 +214,7 @@ export default {
       document.title = value.title;
     },
     async panelType(value) {
-      if (value == "camera" && this.cameraPanelId == this.userInfo.id) {
+      if (value == "camera" && this.cameraPanelId == this.token.id) {
         liveBroadcastService.trtcService.switchProfile("720p");
       } else {
         liveBroadcastService.trtcService.switchProfile("240p");
