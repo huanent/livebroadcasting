@@ -70,6 +70,15 @@ const routes = [
       title: ""
     },
     component: () => import("@v/workplace")
+  },
+  {
+    path: "/mobile/liveroom",
+    name: "Liveroom",
+    meta: {
+      requireAuth: true,
+      title: ""
+    },
+    component: () => import("@v/mobile/workplace")
   }
 ];
 
