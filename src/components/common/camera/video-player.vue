@@ -40,18 +40,23 @@ export default {
   methods: {
     async setStream() {
       while (this.active) {
-        let stream = this.getStream();
-        if (stream != this.stream) {
-          if (this.stream && !this.copy) this.stream.stop();
-          this.stream = stream;
+        try {
+          let stream = this.getStream();
+          if (stream != this.stream) {
+            if (this.stream && !this.copy) this.stream.stop();
+            this.stream = stream;
 
-          if (this.stream && !this.copy) {
-            this.stream.play(this.$refs.video, {
-              objectFit: this.fit,
-              muted: this.muted
-            });
+            if (this.stream && !this.copy) {
+              this.stream.play(this.$refs.video, {
+                objectFit: this.fit,
+                muted: this.muted
+              });
+            }
           }
+        } catch (error) {
+          console.error(error);
         }
+
         await delay(1000);
       }
     },
