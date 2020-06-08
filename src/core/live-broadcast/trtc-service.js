@@ -189,8 +189,8 @@ export class TrtcService {
 
   async closeLocalStream() {
     if (!this.localStream || !this.mainClient) return;
-    await this.mainClient.unpublish(this.localStream);
     this.localStream.close();
+    await this.mainClient.unpublish(this.localStream);
   }
 
   async switchProfile(localProfile) {
