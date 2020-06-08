@@ -108,6 +108,7 @@ export default {
   },
   methods: {
     ...mapMutations("features", ["SET_VIDEO_STATUS", "SET_AUDIO_STATUS"]),
+    ...mapMutations("workplace", ["SET_STUDENT_MEDIA"]),
     ...mapActions("features", ["manualControlFeatures"]),
     audioChanged() {
       if (!this.stream) return;
@@ -119,11 +120,14 @@ export default {
         this.audioMuted = !this.audioMuted;
         this.audioMuted ? this.stream.muteAudio() : this.stream.unmuteAudio();
       } else {
-        this.manualControlFeatures({
+        let params = {
           id: this.streamId,
           propName: "subscribeAudio",
           value: !this.subscribeAudio
-        });
+        };
+
+        this.manualControlFeatures(params);
+        this.SET_STUDENT_MEDIA(params);
       }
     },
     videoChanged() {
@@ -136,11 +140,14 @@ export default {
         this.videoMuted = !this.videoMuted;
         this.videoMuted ? this.stream.muteVideo() : this.stream.unmuteVideo();
       } else {
-        this.manualControlFeatures({
+        let params = {
           id: this.streamId,
           propName: "subscribeVideo",
           value: !this.subscribeVideo
-        });
+        };
+
+        this.manualControlFeatures(params);
+        this.SET_STUDENT_MEDIA(params);
       }
     },
     async getAudioLevel() {

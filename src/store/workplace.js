@@ -83,6 +83,11 @@ const mutations = {
   SELECT_DEVICES(state, { camera, microphone }) {
     state.selectedCamera = camera;
     state.selectedMicrophone = microphone;
+  },
+  SET_STUDENT_MEDIA(state, { id, propName, value }) {
+    let features = state.featuresList.find(f => f.__streamId == id);
+    if (features) features[propName] = value;
+    state.featuresList = [...state.featuresList];
   }
 };
 
