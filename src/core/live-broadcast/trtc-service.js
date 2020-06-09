@@ -47,22 +47,6 @@ export class TrtcService {
     });
   }
 
-  async getDefaultDevice() {
-    let camera = null;
-    let microphone = null;
-
-    try {
-      let cameraDeviceList = await TRTC.getCameras();
-      let microphones = await TRTC.getMicrophones();
-      camera = cameraDeviceList.find(device => device.deviceId);
-      microphone = microphones.find(device => device.deviceId);
-    } catch (e) {
-      console.error(e);
-    }
-
-    return { camera, microphone };
-  }
-
   getCameras = () => TRTC.getCameras();
   getMicrophones = () => TRTC.getMicrophones();
 
