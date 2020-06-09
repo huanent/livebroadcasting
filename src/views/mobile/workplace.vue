@@ -1,35 +1,14 @@
 <template>
   <div class="workplace-panel" v-if="ready">
-    <MainWorkplace></MainWorkplace>
-    <div
-      style="position: absolute;height:100%;width:100%;left:0;top:0;z-index:999"
-    >
-      <div
-        class="workplace-header"
-        style="position: absolute;height:2rem;width:100%;right:0;top:0;background-color: rgba(61,69,140,0.64)"
-      >
-        <WorkplacePanelHeader
-          :creator="classCreator"
-          :status="classStatus"
-          @head-toggle="toggleCameraPanel"
-          @sidebar-toggle="toggleSidebar"
-          v-show="false"
-        ></WorkplacePanelHeader>
+    <div style="height: 100%;display: flex">
+      <div style="width: 7rem;height: 100%;position: relative">
+        <CameraPanel></CameraPanel>
       </div>
-      <div
-        class="workplace-panel-left"
-        style="width: 7rem;height: 100%;background-color: rgba(10,129,140,0.37)"
-      ></div>
-      <div
-        class="workplace-panel-rigth"
-        style="position: absolute;height:100%;width:10rem;right:0;top:0;background-color: rgba(140,66,47,0.46)"
-      ></div>
-      <div
-        class="workplace-panel-footer"
-        style="position: absolute;height:2rem;width:100%;left:0;bottom:0;background-color: rgba(40,140,41,0.46)"
-      ></div>
-      <widgets />
+      <div style="width: calc(100% - 7rem);display: inline-block;height: 100%">
+        <MainWorkplace></MainWorkplace>
+      </div>
     </div>
+    <widgets />
     <hand-up-list v-if="isTeacher" />
   </div>
 </template>
@@ -39,7 +18,7 @@ import WorkplacePanelHeader from "@c/live-broadcast/workplace-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
 import SelfCamera from "@c/live-broadcast/self-camera";
-import CameraPanel from "../../components/live-broadcast/camera-panel";
+import CameraPanel from "../../components/live-broadcast/mobile/camera-panel";
 import { destroyEmitter, Emitter, initEmitter } from "../../core/emit";
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import { ROLE } from "@/models/role";
@@ -52,7 +31,6 @@ import {
 import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
 import { autoSyncState, destroySyncState } from "../../core/state-sync";
 import { requestDeviceAccess, delay } from "../../core/utils";
-
 export default {
   name: "workplace",
   data: function() {
@@ -77,6 +55,12 @@ export default {
   },
   async mounted() {
     initEmitter();
+
+    //初始化默认皮肤
+    document.body.setAttribute(
+      "data-theme",
+      this.$store.state.workplace.themeColor
+    );
     await this.getRoomInfo(this.$route.query.id);
     const enterResult = await this.enterRoom();
 

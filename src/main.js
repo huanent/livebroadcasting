@@ -5,6 +5,8 @@ import router from "./router";
 import store from "./store";
 import i18n from "./plugins/i18n";
 import "@/plugins/icons";
+import hammer from "./plugins/hammer";
+
 import element from "@c/common/element";
 import "@style/normalize.css";
 import "./assets/style/element-variable.scss";
@@ -12,6 +14,8 @@ import "@style/custom.scss";
 import { autoSyncState } from "./core/state-sync";
 
 Vue.use(element);
+
+Vue.use(hammer);
 
 Vue.config.productionTip = false;
 
