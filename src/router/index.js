@@ -70,7 +70,7 @@ const routes = [
       requireAuth: true,
       title: ""
     },
-    component: () => import("@v/mobile/live-page/index")
+    component: () => import("@v/mobile/workplace")
   }
 ];
 
