@@ -1,10 +1,10 @@
 <template>
   <div class="workplace-panel" v-if="ready">
-    <div style="height: 100%;display: flex">
-      <div style="width: 7rem;height: 100%;position: relative">
+    <div class="workplace-panel-content">
+      <div class="camera-panel-wrapper">
         <CameraPanel></CameraPanel>
       </div>
-      <div style="width: calc(100% - 7rem);display: inline-block;height: 100%">
+      <div>
         <MainWorkplace></MainWorkplace>
       </div>
     </div>
@@ -210,6 +210,20 @@ export default {
   padding: 0;
   @include themeify {
     background: themed("background_color1");
+  }
+}
+.workplace-panel-content {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 15% 85%;
+}
+.camera-panel-wrapper {
+  height: 100%;
+  position: relative;
+  padding: 1rem 0;
+  @include themeify {
+    background: rgba(themed("background_color3"), 1);
   }
 }
 </style>

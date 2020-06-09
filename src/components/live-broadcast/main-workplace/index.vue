@@ -1,21 +1,20 @@
 <template>
   <div
-    class="main-workplace-container"
+    class="main-workplace-container mini"
     @drop="drop"
     @dragover="$event.preventDefault()"
   >
-    <div :class="{ hide: !workplaceVisibity }">
-      <BoardTabs
-        @on-close="onTabsClose"
-        :active-index.sync="index"
-        @index-change="indexChange($event)"
-        @type-change="onChange"
-        :panel-type="panelType"
-        class="workplace-content"
-        :show-lable="panelType === 'board'"
-      >
-      </BoardTabs>
-    </div>
+    <BoardTabs
+      :class="{ hide: !workplaceVisibity }"
+      @on-close="onTabsClose"
+      :active-index.sync="index"
+      @index-change="indexChange($event)"
+      @type-change="onChange"
+      :panel-type="panelType"
+      class="workplace-content"
+      :show-lable="panelType === 'board'"
+    >
+    </BoardTabs>
 
     <div class="wrapper" style="height: calc(100% - 2rem)">
       <div v-show="panelType === 'board'">
@@ -29,7 +28,7 @@
       <share-screen v-if="panelType === 'screen'" />
       <camera v-if="panelType === 'camera'" />
     </div>
-    <Toolbar v-if="isToolBarShow"></Toolbar>
+    <Toolbar v-if="isToolBarShow" v-show="false"></Toolbar>
     <div style="height: 100%" :class="{ hide: workplaceVisibity }"></div>
     <StreamSourceDialog
       :visible.sync="showStreamSelectdialog"
@@ -200,5 +199,11 @@ export default {
     background: themed("background_color3");
   }
   border-top: 1px solid rgba(30, 33, 37, 0.19);
+}
+.mini #board-el {
+  height: calc(100% - 1.5rem);
+}
+.mini .workplace-footer {
+  height: 1.5rem !important;
 }
 </style>
