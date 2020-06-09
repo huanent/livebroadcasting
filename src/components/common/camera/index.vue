@@ -167,21 +167,18 @@ export default {
     },
     async initAudioMonitor(stream) {
       if (this.audioContext) this.audioContext.close();
-      this.audioContext = null;
-
-      setTimeout(() => {
-        this.audioContext = new AudioContext();
-        let source = this.audioContext.createMediaStreamSource(
-          stream.mediaStream_
-        );
-        let processor = this.audioContext.createScriptProcessor(4096, 1, 1);
-        source.connect(processor);
-        processor.connect(this.audioContext.destination);
-        processor.onaudioprocess = e => {
-          let buffer = e.inputBuffer.getChannelData(0);
-          this.intensity = Math.max.apply(Math, buffer);
-        };
-      }, 500);
+      this.audioContext = new AudioContext();
+      while (!stream.mediaStream_) await delay(500);
+      let source = this.audioContext.createMediaStreamSource(
+        stream.mediaStream_
+      );
+      let processor = this.audioContext.createScriptProcessor(4096, 1, 1);
+      source.connect(processor);
+      processor.connect(this.audioContext.destination);
+      processor.onaudioprocess = e => {
+        let buffer = e.inputBuffer.getChannelData(0);
+        this.intensity = Math.max.apply(Math, buffer);
+      };
     }
   },
   components: {
