@@ -145,14 +145,6 @@ export default {
         this.SET_STUDENT_MEDIA(params);
       }
     },
-    async getAudioLevel() {
-      while (this.active && !this.hiddenVoiceIntensity) {
-        if (this.stream) {
-          this.$nextTick(() => (this.intensity = this.stream.getAudioLevel()));
-        }
-        await delay(300);
-      }
-    },
     async changeVideo() {
       if (!this.stream || this.isLocal) return;
       await liveBroadcastService.trtcService.subscribe(
@@ -169,13 +161,15 @@ export default {
       if (this.audioContext) this.audioContext.close();
       this.audioContext = new AudioContext();
       while (!stream.mediaStream_) await delay(500);
-      let source = this.audioContext.createMediaStreamSource(
-        stream.mediaStream_
-      );
+      let mediaStream = stream.mediaStream_;
+      let source = this.audioContext.createMediaStreamSource(mediaStream);
       let processor = this.audioContext.createScriptProcessor(4096, 1, 1);
       source.connect(processor);
       processor.connect(this.audioContext.destination);
       processor.onaudioprocess = e => {
+        if (stream.mediaStream_ != mediaStream) {
+          this.initAudioMonitor(stream);
+        }
         let buffer = e.inputBuffer.getChannelData(0);
         this.intensity = Math.max.apply(Math, buffer);
       };
