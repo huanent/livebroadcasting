@@ -28,12 +28,19 @@ export class TrtcService {
   listenHandler(client) {
     client.on("stream-added", async e => {
       let id = e.stream.getUserId();
-      let exist = this.remoteStreams.find(f => f.getUserId() == id);
-      if (!exist) this.remoteStreams.push(e.stream);
 
       if (this.assistToken && this.assistToken.id == id) {
         client.unsubscribe(e.stream);
+      } else {
+        let exist = this.remoteStreams.find(f => f.getUserId() == id);
+        if (!exist) this.remoteStreams.push(e.stream);
       }
+    });
+
+    client.on("stream-updated", e => {
+      let id = e.stream.getUserId();
+      this.remoteStreams.filter(f => f.getUserId() != id);
+      this.remoteStreams.push(e.stream);
     });
 
     client.on("stream-removed", e => {

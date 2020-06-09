@@ -1,13 +1,11 @@
 <template>
-  <div :class="{ mirror: mirror }" class="video __video_force_bg" ref="video">
-    <video
-      v-if="copy"
-      :muted="muted"
-      :style="{ objectFit: fit }"
-      :src-object.prop="stream && stream.mediaStream_"
-      autoplay
-    ></video>
-  </div>
+  <video
+    :class="{ mirror: mirror }"
+    :muted="muted"
+    :style="{ objectFit: fit }"
+    :src-object.prop="stream && stream.mediaStream_"
+    autoplay
+  ></video>
 </template>
 <script>
 import { liveBroadcastService } from "../../../core/live-broadcast";
@@ -22,8 +20,7 @@ export default {
     mirror: Boolean,
     fit: {
       default: "contain"
-    },
-    copy: Boolean
+    }
   },
   data() {
     return {
@@ -34,25 +31,13 @@ export default {
   mounted() {
     this.setStream();
   },
-  beforeDestroy() {
-    this.active = false;
-    if (!this.copy && this.stream) this.stream.stop();
-  },
   methods: {
     async setStream() {
       while (this.active) {
         try {
           let stream = this.getStream();
           if (stream != this.stream) {
-            if (this.stream && !this.copy) this.stream.stop();
             this.stream = stream;
-
-            if (this.stream && !this.copy) {
-              this.stream.play(this.$refs.video, {
-                objectFit: this.fit,
-                muted: this.muted
-              });
-            }
           }
         } catch (error) {
           console.error(error);
@@ -89,10 +74,5 @@ video {
 }
 .mirror {
   transform: rotateY(180deg);
-}
-</style>
-<style>
-.__video_force_bg div {
-  background-color: rgba(0, 0, 0, 0) !important;
 }
 </style>
