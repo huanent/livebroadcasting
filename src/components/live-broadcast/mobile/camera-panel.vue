@@ -10,19 +10,21 @@
         class="item"
         v-if="!isTeacher"
         stream-id="__local"
-        controllable
+        :controllable="false"
         name="本人"
       />
 
       <div
         class="item"
+        :style="{ height: itemHeight + 'px' }"
         v-for="item in featuresList"
         :key="item.__primaryKey"
-        @touchstart="dragstart(item, $event)"
+        :draggable="true"
+        @dragstart="dragstart(item, $event)"
       >
         <camera
           :stream-id="item.__streamId"
-          :controllable="isTeacher"
+          :controllable="false"
           :name="item.__nickName || item.__primaryKey"
           :subscribe-video="item.subscribeVideo"
           :subscribe-audio="item.subscribeAudio"
@@ -43,18 +45,25 @@ export default {
   name: "CameraPanel",
   data() {
     return {
-      offset: 0
+      offset: 0,
+      itemHeight: 0
     };
   },
-  mounted() {},
+  mounted() {
+    this.itemHeight = this.$el.getBoundingClientRect().width * (3 / 4);
+  },
   computed: {
     ...mapState("workplace", ["featuresList"]),
     ...mapGetters("workplace", ["isTeacher"])
+  },
+  beforeDestroy() {
+    this.observer.disconnect();
   },
   components: {
     Camera
   },
   methods: {
+    observerHandler() {},
     swipedown(e, a) {
       let { deltaY } = e;
       if (deltaY > 0) {
@@ -74,7 +83,7 @@ export default {
       this.offset = deltaY;
     },
     dragstart(item, e) {
-      Emitter.emit("drag-stream-change", { streamId: item.__streamId });
+      e.dataTransfer.setData("streamId", item.__streamId);
     }
   }
 };
@@ -94,9 +103,8 @@ export default {
     width: 100%;
     .item {
       display: block;
-      background-color: rgba(0, 0, 0, 0.58);
       width: 100%;
-      height: 5rem;
+      min-height: 5rem;
       margin: 0.5rem 0;
     }
   }

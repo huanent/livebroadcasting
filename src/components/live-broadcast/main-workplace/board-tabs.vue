@@ -32,13 +32,7 @@
             <template slot="singleLabel" slot-scope="props"
               ><div class="select-header">
                 <span>{{ props.option.title }}</span>
-
-                <div
-                  @mousedown.prevent.stop="toggle()"
-                  class="multiselect__select"
-                >
-                  <icon :name="caretIconName" size="14"></icon>
-                </div>
+                <icon :name="caretIconName" size="14"></icon>
               </div>
             </template>
             <template slot="option" slot-scope="props">
@@ -155,12 +149,12 @@ export default {
 <style scoped lang="scss">
 .board-tabs {
   color: #bfbfbf;
-  font-size: small;
   user-select: none;
+  font-size: 1rem;
 }
 .tab-item {
-  padding: 0.3rem;
-  height: 1.2rem;
+  padding: 0.1rem;
+  height: 100%;
   display: inline-block;
   cursor: pointer;
   border-bottom: rgba(0, 0, 0, 0.1) 2px solid;
@@ -170,7 +164,7 @@ export default {
     }
   }
   &:not(:first-child) {
-    margin-left: 0.2rem;
+    margin-left: 0.1rem;
   }
 }
 .board-tabs-header {
@@ -180,7 +174,7 @@ export default {
   border-bottom: 1px solid rgba(30, 33, 37, 0.19);
   width: 100%;
   padding-bottom: 0.2rem;
-  height: 1.8rem;
+  height: 1.2rem;
 }
 .board-tab-icon {
   padding: 0 0 0 0.5rem;
@@ -190,7 +184,7 @@ export default {
   padding: 0.2rem 0 0.2rem 0.5rem;
 }
 .board-tab-title-container {
-  padding: 0 0.5rem;
+  padding: 0 0.2rem;
 }
 .tab-item-active {
   @include themeify {
@@ -201,36 +195,31 @@ export default {
 }
 
 .workplace-settings {
-  width: 7.5rem;
-  margin-right: 0.25rem;
+  margin-right: 1rem;
   line-height: 1.8rem;
+  text-align: left;
   .type-text {
     @include themeify {
       color: themed("font_color1");
     }
-    font-size: 0.9rem;
     letter-spacing: 0.02rem;
     text-align: center;
     width: 100%;
   }
   .select-header {
-    text-align: center;
     z-index: 100;
     @include themeify {
       background: themed("background_color2");
       color: themed("font_color1");
     }
-    padding: 0 0.5rem;
     cursor: pointer;
     span {
       padding-right: 0.5rem;
-      font-size: 0.9rem;
       letter-spacing: 0.02rem;
     }
   }
   .select-option {
     z-index: 100;
-    padding: 0 1rem 0 1.2rem;
     cursor: pointer;
     @include themeify {
       background-color: themed("toolbar_bg");
@@ -267,13 +256,15 @@ cover component Multiselect style
   border-radius: 1px;
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.32);
 }
-/deep/ .multiselect__select {
-  float: right;
-  line-height: 1.8rem;
-}
 .head-right {
   float: right;
   display: flex;
   align-items: center;
+}
+
+.mini {
+  * {
+    font-size: xx-small;
+  }
 }
 </style>
