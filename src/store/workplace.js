@@ -3,6 +3,7 @@ import { liveBroadcastService } from "@/core/live-broadcast";
 import { enterRoom } from "../core/data/data-service";
 import { ROLE } from "../models/role";
 import classApi from "../core/data/class";
+import { ASSIST_TOKEN } from "../models/constants";
 
 const state = {
   themeColor: "dark",
@@ -143,7 +144,7 @@ const getters = {
     return prefix + state.roomInfo.createUser;
   },
   teacherScreenStreamId(state, getters) {
-    return getters.teacherStreamId + "_share_screen";
+    return getters.teacherStreamId + ASSIST_TOKEN;
   }
 };
 

@@ -68,7 +68,7 @@ export default {
       }
 
       if (this.streamId == "__screen") {
-        return liveBroadcastService.trtcService.shareScreenStream;
+        return liveBroadcastService.trtcService.assistStream;
       }
 
       return liveBroadcastService.trtcService.getRemoteStream(this.streamId);

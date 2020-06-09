@@ -3,15 +3,18 @@ import store from "@/store";
 import { Emitter } from "../emit";
 import { enterRoom } from "../data/data-service.js";
 import { requestDeviceAccess } from "../utils";
+import { ASSIST_TOKEN } from "../../models/constants";
 
 export class TrtcService {
   localStream;
   remoteStreams = [];
-  shareScreenStream;
+  assistStream;
+
   mainClient;
-  shareScreenClient;
+  assistClient;
+
   mainToken;
-  shareScreenToken;
+  assistToken;
 
   async checkSupported() {
     let isSupport = await TRTC.checkSystemRequirements();
@@ -24,10 +27,13 @@ export class TrtcService {
 
   listenHandler(client) {
     client.on("stream-added", async e => {
-      let exist = this.remoteStreams.find(
-        f => f.getUserId() == e.stream.getUserId()
-      );
+      let id = e.stream.getUserId();
+      let exist = this.remoteStreams.find(f => f.getUserId() == id);
       if (!exist) this.remoteStreams.push(e.stream);
+
+      if (this.assistToken && this.assistToken.id == id) {
+        client.unsubscribe(e.stream);
+      }
     });
 
     client.on("stream-removed", e => {
@@ -89,61 +95,80 @@ export class TrtcService {
     return this.remoteStreams.find(f => f.getUserId() == id);
   }
 
-  async startShareScreen() {
-    if (!this.shareScreenToken) {
+  async createAssistToken() {
+    if (!this.assistToken) {
       let result = await enterRoom(
-        store.state.account.userInfo.username + "_share_screen",
+        store.state.account.userInfo.username + ASSIST_TOKEN,
         this.mainToken.classId
       );
 
-      this.shareScreenToken = result.data.model;
+      this.assistToken = result.data.model;
     }
+  }
 
-    if (!this.shareScreenClient) {
-      this.shareScreenClient = this.createClient(this.shareScreenToken);
-      this.shareScreenClient.setDefaultMuteRemoteStreams(true);
-      await this.shareScreenClient.join({
-        roomId: this.shareScreenToken.classId
+  async createAssistClient() {
+    if (!this.assistClient) {
+      this.assistClient = this.createClient(this.assistToken);
+      this.assistClient.setDefaultMuteRemoteStreams(true);
+      await this.assistClient.join({
+        roomId: this.assistToken.classId
       });
     }
+  }
 
-    if (!this.shareScreenStream) await this.createScreenStream();
-    return this.shareScreenStream;
+  async releaseAssistStream() {
+    if (this.assistStream) {
+      this.assistStream.close();
+
+      if (this.assistClient) {
+        try {
+          await this.assistClient.unpublish(this.assistStream);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      this.assistStream == null;
+    }
+  }
+
+  async releaseAssistClient() {
+    if (this.assistClient) await this.assistClient.leave();
+    this.assistClient = null;
+  }
+
+  async startShareScreen() {
+    await this.createAssistToken();
+    await this.createAssistClient();
+    await this.createScreenStream();
   }
 
   async stopShareScreen() {
-    try {
-      await this.shareScreenClient.unpublish(this.shareScreenStream);
-    } catch (error) {
-      console.log(error);
-    }
-
-    if (this.shareScreenStream) this.shareScreenStream.close();
-    if (this.shareScreenClient) await this.shareScreenClient.leave();
-    this.shareScreenClient = null;
-    this.shareScreenStream.close();
-    this.shareScreenStream = null;
+    await this.releaseAssistStream();
+    await this.releaseAssistClient();
   }
 
   async createScreenStream() {
+    await this.releaseAssistStream();
+
     if (store.state.electron.onElectronClient) {
       let stream = await this.getElectronStream();
       const videoTrack = stream.getVideoTracks()[0];
 
-      this.shareScreenStream = TRTC.createStream({
+      this.assistStream = TRTC.createStream({
         videoSource: videoTrack,
         mirror: false
       });
     } else {
-      this.shareScreenStream = TRTC.createStream({
+      this.assistStream = TRTC.createStream({
         audio: false,
         screen: true
       });
     }
 
-    this.shareScreenStream.setScreenProfile("1080p");
-    await this.shareScreenStream.initialize();
-    await this.shareScreenClient.publish(this.shareScreenStream);
+    this.assistStream.setScreenProfile("1080p");
+    await this.assistStream.initialize();
+    await this.assistClient.publish(this.assistStream);
   }
 
   async subscribe(stream, audio, video) {
