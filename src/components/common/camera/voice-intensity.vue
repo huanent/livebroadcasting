@@ -26,13 +26,7 @@ export default {
   },
   computed: {
     activeIndex() {
-      if (this.intensity >= 0.4) {
-        return this.lines;
-      } else if (this.intensity <= 0) {
-        return 0;
-      } else {
-        return Math.ceil(this.intensity * 3 * this.lines);
-      }
+      return this.intensity * INTENSITY__LINES;
     }
   }
 };
