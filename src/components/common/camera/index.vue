@@ -32,10 +32,7 @@
         :size="18"
         v-if="!hiddenVoiceIntensity"
       />
-      <voice-intensity
-        :intensity="Number(intensity)"
-        v-if="!hiddenVoiceIntensity"
-      />
+      <voice-intensity :intensity="intensity" v-if="!hiddenVoiceIntensity" />
       <p>{{ name }}</p>
     </div>
   </div>
@@ -66,11 +63,9 @@ export default {
       intensity: 0,
       stream: null,
       audioMuted: !this.subscribeAudio,
-      videoMuted: !this.subscribeVideo
+      videoMuted: !this.subscribeVideo,
+      audioContext: null
     };
-  },
-  mounted() {
-    this.getAudioLevel();
   },
   beforeDestroy() {
     this.active = false;
@@ -169,6 +164,24 @@ export default {
     async changeAudio() {
       if (!this.stream || this.isLocal) return;
       this.subscribeAudio ? this.stream.unmuteAudio() : this.stream.muteAudio();
+    },
+    async initAudioMonitor(stream) {
+      if (this.audioContext) this.audioContext.close();
+      this.audioContext = null;
+
+      setTimeout(() => {
+        this.audioContext = new AudioContext();
+        let source = this.audioContext.createMediaStreamSource(
+          stream.mediaStream_
+        );
+        let processor = this.audioContext.createScriptProcessor(4096, 1, 1);
+        source.connect(processor);
+        processor.connect(this.audioContext.destination);
+        processor.onaudioprocess = e => {
+          let buffer = e.inputBuffer.getChannelData(0);
+          this.intensity = Math.max.apply(Math, buffer);
+        };
+      }, 500);
     }
   },
   components: {
@@ -182,9 +195,10 @@ export default {
     subscribeVideo() {
       this.changeVideo();
     },
-    async stream() {
+    async stream(value) {
       await this.changeVideo();
       this.changeAudio();
+      if (!this.hiddenVoiceIntensity) this.initAudioMonitor(value);
     }
   }
 };
