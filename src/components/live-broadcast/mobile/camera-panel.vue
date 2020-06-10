@@ -8,7 +8,7 @@
     <div class="items" ref="items" :style="{ top: offset + 'px' }">
       <camera
         :stream-id="teacherStreamId"
-        controllable
+        :controllable="false"
         :subscribe-audio="true"
         :subscribe-video="true"
         name="老师"
