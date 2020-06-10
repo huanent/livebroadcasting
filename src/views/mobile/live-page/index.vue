@@ -3,24 +3,18 @@
     <div class="m-sidebar"></div>
     <div class="m-main">
       <div class="m-live-area"></div>
-      <div class="m-control">
-        <live-control />
-      </div>
+      <div class="m-control"></div>
     </div>
   </div>
 </template>
 
 <script>
-import LiveControl from "./live-control";
-
 export default {
   name: "LivePage",
   data: () => ({
     title: "hello"
   }),
-  components: {
-    LiveControl
-  }
+  components: {}
 };
 </script>
 

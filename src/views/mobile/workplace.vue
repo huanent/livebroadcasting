@@ -9,8 +9,7 @@
       </div>
     </div>
     <widgets />
-    <hand v-if="!isTeacher" />
-    <hand-up-list v-if="isTeacher" />
+    <live-control />
     <div class="workplace-overlay"></div>
   </div>
 </template>
@@ -34,7 +33,7 @@ import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
 import Hand from "../../components/live-broadcast/hand-up/hand";
 import { autoSyncState, destroySyncState } from "../../core/state-sync";
 import { requestDeviceAccess, delay } from "../../core/utils";
-// import ToolTurntable from "../../components/live-broadcast/mobile/tool-turntable";
+import LiveControl from "../../components/live-broadcast/mobile/live-control";
 export default {
   name: "workplace",
   data: function() {
@@ -196,14 +195,10 @@ export default {
   },
   components: {
     MainWorkplace,
-    Chatroom,
-    SelfCamera,
     WorkplacePanelHeader,
     CameraPanel,
     Widgets,
-    HandUpList,
-    Hand
-    //ToolTurntable
+    LiveControl
   }
 };
 </script>
