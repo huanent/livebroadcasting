@@ -7,14 +7,22 @@
   >
     <div class="items" ref="items" :style="{ top: offset + 'px' }">
       <camera
+        :stream-id="teacherStreamId"
+        controllable
+        :subscribe-audio="true"
+        :subscribe-video="true"
+        name="老师"
+        always-local-muted
+        v-if="!isTeacher && this.teacherStreamId"
+        voiceVisualization="intensity"
+      />
+      <camera
         class="item"
-        v-if="!isTeacher"
         stream-id="__local"
         :controllable="false"
         name="本人"
         voiceVisualization="bar"
       />
-
       <div
         class="item"
         :style="{ height: itemHeight + 'px' }"
@@ -55,7 +63,7 @@ export default {
   },
   computed: {
     ...mapState("workplace", ["featuresList"]),
-    ...mapGetters("workplace", ["isTeacher"])
+    ...mapGetters("workplace", ["isTeacher", "teacherStreamId"])
   },
   beforeDestroy() {
     this.observer.disconnect();
