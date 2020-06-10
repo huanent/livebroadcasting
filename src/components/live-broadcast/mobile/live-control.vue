@@ -34,11 +34,11 @@ export default {
       background-color: #242c2c;
       border-radius: 50%;
       width: 1.6rem;
-      height: 2rem;
+      height: 1.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.8rem;
     }
   }
 }
