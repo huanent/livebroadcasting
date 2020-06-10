@@ -10,8 +10,7 @@ export default {};
 .window {
   position: fixed;
   right: 5rem;
-  top: 1rem;
-  min-width: 20rem;
-  height: 80%;
+  top: 3rem;
+  z-index: 1000;
 }
 </style>

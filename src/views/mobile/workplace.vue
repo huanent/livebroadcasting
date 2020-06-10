@@ -10,16 +10,17 @@
     </div>
     <widgets />
     <live-control />
-    <Chatroom v-show="showChat" />
+    <chat-room v-show="showChat" />
+    <setting-panel v-show="showSetting" />
   </div>
 </template>
 
 <script>
-import WorkplacePanelHeader from "@c/live-broadcast/workplace-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
-import Chatroom from "../../components/live-broadcast/mobile/chat-room";
+import ChatRoom from "../../components/live-broadcast/mobile/chat-room";
 import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/mobile/camera-panel";
+import SettingPanel from "../../components/live-broadcast/mobile/setting-panel";
 import { destroyEmitter, Emitter, initEmitter } from "../../core/emit";
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import { ROLE } from "@/models/role";
@@ -54,7 +55,7 @@ export default {
     ...mapState("account", ["userInfo"]),
     ...mapState("workplace", ["cameraPanelVisibity", "roomInfo"]),
     ...mapState("features", ["canControlBoard", "classing"]),
-    ...mapState("mobile", ["showChat"]),
+    ...mapState("mobile", ["showChat", "showSetting"]),
     ...mapGetters("workplace", ["isTeacher"])
   },
   async mounted() {
@@ -196,11 +197,11 @@ export default {
   },
   components: {
     MainWorkplace,
-    WorkplacePanelHeader,
     CameraPanel,
     Widgets,
     LiveControl,
-    Chatroom
+    ChatRoom,
+    SettingPanel
   }
 };
 </script>

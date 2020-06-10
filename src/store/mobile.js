@@ -1,10 +1,17 @@
 const state = {
-  showChat: false
+  showChat: false,
+  showSetting: false
 };
 
 const mutations = {
-  SET_CHAR_VISIBLE(state) {
-    state.showChat = !state.showChat;
+  SET_VISIBLE(state, prop) {
+    for (const key in state) {
+      if (key.startsWith("show")) {
+        state[key] = false;
+      }
+    }
+
+    state[prop] = !state[prop];
   }
 };
 

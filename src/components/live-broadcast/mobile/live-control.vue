@@ -10,10 +10,10 @@
     }"
   >
     <ul class="control-wrap">
-      <li>
+      <li @click="SET_VISIBLE('showSetting')">
         <icon name="settings" size="100%" color="#fff"></icon>
       </li>
-      <li @click="SET_CHAR_VISIBLE">
+      <li @click="SET_VISIBLE('showChat')">
         <icon name="comment-dots" size="100%" color="#fff"></icon>
       </li>
       <li><icon name="wrench" size="100%" color="#fff"></icon></li>
@@ -41,7 +41,7 @@ export default {
     this.initToolBarPosition();
   },
   methods: {
-    ...mapMutations("mobile", ["SET_CHAR_VISIBLE"]),
+    ...mapMutations("mobile", ["SET_VISIBLE"]),
     onPanend() {
       // this.originRight += this.offsetRight;
       // this.originTop += this.offsetTop;

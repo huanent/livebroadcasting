@@ -1,7 +1,7 @@
 <template>
-  <div class="chat-room">
+  <div>
     <icon name="comment-dots" size="100%" color="#fff"></icon>
-    <window>
+    <window class="chat-room">
       <chat-room />
     </window>
   </div>
@@ -18,10 +18,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .chat-room {
-  position: absolute;
-  right: 5rem;
-  top: 3rem;
-  bottom: 0;
-  z-index: 1000;
+  height: 80%;
 }
 </style>
