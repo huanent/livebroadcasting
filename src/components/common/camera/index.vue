@@ -26,13 +26,12 @@
       />
     </div>
     <div class="footer">
-      <icon
-        :name="microIcon"
-        color="#0A818C"
-        :size="18"
-        v-if="!hiddenVoiceIntensity"
+      <voice-bar v-if="voiceVisualization == 'bar'" :level="intensity" />
+      <voice-intensity
+        :intensity="intensity"
+        :status="microStatus"
+        v-if="voiceVisualization == 'intensity'"
       />
-      <voice-intensity :intensity="intensity" v-if="!hiddenVoiceIntensity" />
       <p>{{ name }}</p>
     </div>
   </div>
@@ -40,6 +39,7 @@
 <script>
 import VideoPlayer from "./video-player";
 import voiceIntensity from "./voice-intensity";
+import VoiceBar from "./voice-bar";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { delay } from "../../../core/utils";
 import { liveBroadcastService } from "../../../core/live-broadcast";
@@ -54,7 +54,7 @@ export default {
     subscribeAudio: Boolean,
     subscribeVideo: Boolean,
     controllable: Boolean,
-    hiddenVoiceIntensity: Boolean,
+    voiceVisualization: String,
     alwaysLocalMuted: Boolean
   },
   data() {
@@ -75,14 +75,15 @@ export default {
     isLocal() {
       return this.streamId == "__local";
     },
-    microIcon() {
-      let status = this.isLocal
+    microStatus() {
+      return this.isLocal
         ? this.audioStatus
         : this.alwaysLocalMuted
         ? !this.audioMuted
         : this.subscribeAudio;
-
-      return status ? "microphone" : "microphone-slash";
+    },
+    microIcon() {
+      return this.microStatus ? "microphone" : "microphone-slash";
     },
     videoIcon() {
       let status = this.isLocal
@@ -177,7 +178,8 @@ export default {
   },
   components: {
     VideoPlayer,
-    voiceIntensity
+    voiceIntensity,
+    VoiceBar
   },
   watch: {
     subscribeAudio(value) {
@@ -189,7 +191,7 @@ export default {
     async stream(value) {
       await this.changeVideo();
       this.changeAudio();
-      if (!this.hiddenVoiceIntensity) this.initAudioMonitor(value);
+      if (this.voiceVisualization) this.initAudioMonitor(value);
     }
   }
 };
@@ -248,6 +250,11 @@ export default {
     p {
       flex-grow: 1;
       text-align: right;
+    }
+    .voice-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
     }
   }
   .no-video {

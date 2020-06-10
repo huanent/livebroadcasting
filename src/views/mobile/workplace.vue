@@ -31,7 +31,7 @@ import {
 import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
 import { autoSyncState, destroySyncState } from "../../core/state-sync";
 import { requestDeviceAccess, delay } from "../../core/utils";
-import ToolTurntable from "../../components/live-broadcast/mobile/tool-turntable";
+// import ToolTurntable from "../../components/live-broadcast/mobile/tool-turntable";
 export default {
   name: "workplace",
   data: function() {
@@ -198,8 +198,8 @@ export default {
     WorkplacePanelHeader,
     CameraPanel,
     Widgets,
-    HandUpList,
-    ToolTurntable
+    HandUpList
+    //ToolTurntable
   }
 };
 </script>

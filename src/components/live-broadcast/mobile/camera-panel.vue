@@ -12,6 +12,7 @@
         stream-id="__local"
         :controllable="false"
         name="本人"
+        voiceVisualization="bar"
       />
 
       <div

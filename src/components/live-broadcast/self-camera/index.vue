@@ -10,6 +10,7 @@
       :subscribe-audio="true"
       :subscribe-video="true"
       always-local-muted
+      voiceVisualization="intensity"
     />
   </div>
 </template>

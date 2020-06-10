@@ -1,5 +1,6 @@
 <template>
   <div class="camera-voice-intensity">
+    <icon :name="microIcon" class="micro" color="#0A818C" :size="18" />
     <span
       v-for="(item, index) in lines"
       :key="index"
@@ -22,11 +23,15 @@ export default {
     intensity: {
       type: Number,
       default: 0
-    }
+    },
+    status: Boolean
   },
   computed: {
     activeIndex() {
       return this.intensity * INTENSITY__LINES;
+    },
+    microIcon() {
+      return this.status ? "microphone" : "microphone-slash";
     }
   }
 };
@@ -42,6 +47,7 @@ export default {
   position: relative;
   margin-left: 5px;
   padding-top: 2px;
+  padding-left: 20px;
   font-size: 0;
   .camera-voice__line {
     display: inline-block;
@@ -71,6 +77,10 @@ export default {
   }
   .active {
     background-color: #737882;
+  }
+  .micro {
+    position: absolute;
+    left: 0;
   }
 }
 </style>

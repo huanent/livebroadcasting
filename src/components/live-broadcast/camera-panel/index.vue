@@ -12,6 +12,7 @@
         stream-id="__local"
         controllable
         name="本人"
+        voiceVisualization="intensity"
       />
 
       <div
@@ -27,6 +28,7 @@
           :name="item.__nickName || item.__primaryKey"
           :subscribe-video="item.subscribeVideo"
           :subscribe-audio="item.subscribeAudio"
+          voiceVisualization="intensity"
         />
       </div>
     </div>
