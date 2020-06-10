@@ -93,7 +93,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100000;
+    z-index: 1;
     user-select: none;
     .svg-icon {
       @include themeify {

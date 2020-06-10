@@ -9,43 +9,43 @@ export default {
       this.binding = binding;
       let hammer = new Hammer(this.el);
       hammer.on(this.type, this.binding.value);
+      hammer.get("pan").set({ direction: Hammer.DIRECTION_ALL });
+      hammer.get("swipe").set({ direction: Hammer.DIRECTION_VERTICAL });
       return hammer;
     }
-    Vue.directive("tap", {
-      bind: function(el, binding) {
-        new vueTouch(el, "tap", binding);
+    let tapList = [{ name: "tap" }];
+    let swipeList = [
+      { name: "swipe" },
+      { name: "swipeleft" },
+      { name: "swiperight" },
+      {
+        name: "swipeup"
+      },
+      {
+        name: "swipedown"
       }
-    });
-    Vue.directive("swipe", {
-      bind: function(el, binding) {
-        new vueTouch(el, "swipe", binding);
-      }
-    });
-    Vue.directive("swipeleft", {
-      bind: function(el, binding) {
-        new vueTouch(el, "swipeleft", binding);
-      }
-    });
-    Vue.directive("swiperight", {
-      bind: function(el, binding) {
-        new vueTouch(el, "swiperight", binding);
-      }
-    });
-    Vue.directive("swipeup", {
-      bind: function(el, binding) {
-        let hammer = new vueTouch(el, "swipeup", binding);
-        hammer.get("swipe").set({
-          direction: Hammer.DIRECTION_ALL
-        });
-      }
-    });
-    Vue.directive("swipedown", {
-      bind: function(el, binding) {
-        let hammer = new vueTouch(el, "swipedown", binding);
-        hammer.get("swipe").set({
-          direction: Hammer.DIRECTION_ALL
-        });
-      }
+    ];
+    let panList = [
+      { name: "pan" },
+      { name: "panstart" },
+      { name: "panmove" },
+      { name: "panend" },
+      { name: "pancancel" }
+    ];
+    let list = [{ name: "pressup" }];
+
+    list = list.concat(tapList);
+    list = list.concat(swipeList);
+    list = list.concat(panList);
+    list.forEach(item => {
+      Vue.directive(item.name, {
+        bind: function(el, binding) {
+          let hammer = new vueTouch(el, item.name, binding);
+          if (item.bindAfter) {
+            item.bindAfter(hammer);
+          }
+        }
+      });
     });
   }
 };

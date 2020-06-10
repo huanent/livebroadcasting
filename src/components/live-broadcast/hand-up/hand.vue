@@ -43,7 +43,7 @@ export default {
   position: absolute;
   bottom: 50px;
   right: 10px;
-  z-index: 100000;
+  z-index: 999;
   display: flex;
   justify-content: center;
   align-items: center;

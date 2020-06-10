@@ -28,7 +28,7 @@
       <share-screen v-if="panelType === 'screen'" />
       <camera v-if="panelType === 'camera'" />
     </div>
-    <Toolbar v-if="isToolBarShow" v-show="false"></Toolbar>
+    <Toolbar v-if="isToolBarShow"></Toolbar>
     <div style="height: 100%" :class="{ hide: workplaceVisibity }"></div>
     <StreamSourceDialog
       :visible.sync="showStreamSelectdialog"
