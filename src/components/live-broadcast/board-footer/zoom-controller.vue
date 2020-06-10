@@ -4,7 +4,6 @@
       v-if="canControlBoard"
       name="minus-circle"
       color="#737882"
-      :size="14"
       @click.native.stop="handleMinus"
     />
     <span>{{ currentFile.scale + "%" }}</span>
@@ -12,7 +11,6 @@
       v-if="canControlBoard"
       name="plus-circle"
       color="#737882"
-      :size="14"
       @click.native.stop="handleAdd"
     />
   </div>
@@ -63,7 +61,7 @@ export default {
     min-width: 2.5rem;
     padding: 0 0.5rem;
   }
-  > .svg-icon {
+  > /deep/ .svg-icon {
     @include themeify {
       fill: themed("font_color2") !important;
     }
@@ -72,6 +70,17 @@ export default {
         fill: mix(themed("font_color2"), themed("color_opposite"), 70%);
       }
     }
+  }
+}
+
+.svg-icon {
+  height: 14px !important;
+  width: 14px !important;
+}
+@media screen and (max-width: 768px) {
+  .svg-icon {
+    height: 12px !important;
+    width: 12px !important;
   }
 }
 </style>

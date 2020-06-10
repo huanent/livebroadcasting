@@ -10,7 +10,6 @@
     </div>
     <widgets />
     <live-control />
-    <div class="workplace-overlay"></div>
   </div>
 </template>
 
@@ -219,6 +218,7 @@ body {
   overflow: hidden;
   margin: 0;
   padding: 0;
+  height: 100%;
   @include themeify {
     background: themed("background_color1");
   }

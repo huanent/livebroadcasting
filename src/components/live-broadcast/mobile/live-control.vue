@@ -1,5 +1,14 @@
 <template>
-  <div class="live-control">
+  <div
+    ref="control"
+    class="live-control"
+    v-panend="onPanend"
+    v-panmove="onPanmove"
+    :style="{
+      right: originRight + offsetRight + 'px',
+      top: originTop + offsetTop + 'px'
+    }"
+  >
     <ul class="control-wrap">
       <li><icon name="settings" size="100%" color="#fff"></icon></li>
       <li><icon name="comment-dots" size="100%" color="#fff"></icon></li>
@@ -14,10 +23,63 @@ import HandInner from "../hand-up/hand-inner";
 export default {
   name: "LiveControl",
   data: () => ({
-    title: "hello"
+    title: "hello",
+    offsetRight: 0,
+    offsetTop: 0,
+    originRight: 0,
+    originTop: 0
   }),
   components: {
     HandInner
+  },
+  mounted() {
+    this.initToolBarPosition();
+  },
+  methods: {
+    onPanend() {
+      this.originRight += this.offsetRight;
+      this.originTop += this.offsetTop;
+      this.offsetRight = 0;
+      this.offsetTop = 0;
+    },
+    onPanmove(e) {
+      let { deltaX, deltaY } = e;
+      if (
+        !this.checkEdge(-deltaX + this.originRight, deltaY + this.originTop)
+      ) {
+        this.offsetRight = -deltaX;
+        this.offsetTop = deltaY;
+      }
+    },
+    initToolBarPosition(isFix) {
+      let el = this.$refs.control;
+      if (el) {
+        let parentEl = el.parentElement;
+        let ph = parentEl.getBoundingClientRect().height;
+        let h = el.getBoundingClientRect().height;
+        this.originTop = ph / 2 - h / 2;
+        if (!isFix) {
+          this.originRight = 0;
+        }
+
+        if (this.toolHight < el.clientHeight) {
+          this.toolHight = el.clientHeight;
+          this.originTop = (ph - this.toolHight) / 2;
+        }
+      }
+    },
+    checkEdge(right, top) {
+      let odiv = this.$refs.control;
+      let rect = odiv.getBoundingClientRect();
+      let w = rect.width;
+      let h = rect.height;
+      let prect = odiv.parentElement.getBoundingClientRect();
+      let pw = prect.width;
+      let ph = prect.height;
+      if (right < 0 || top < 0) return true;
+      if (right > 0 && right - (pw - w) > 0) return true;
+      if (top > 0 && top - ph + h > 0) return true;
+    }
   }
 };
 </script>
@@ -25,9 +87,6 @@ export default {
 <style lang="scss" scoped>
 .live-control {
   position: absolute;
-  right: 1rem;
-  top: 0;
-  bottom: 0;
   z-index: 1000;
   display: flex;
   justify-content: center;

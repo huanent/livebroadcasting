@@ -3,7 +3,6 @@
     <icon
       name="chevron-circle-left"
       color="#737882"
-      :size="14"
       @click.native.stop="handleMinus"
       v-if="canControlBoard"
     />
@@ -14,8 +13,8 @@
     <icon
       name="chevron-circle-right"
       color="#737882"
-      :size="14"
       @click.native.stop="handleAdd"
+      custom-class="custom-svg-icon"
       v-if="canControlBoard"
     />
   </div>
@@ -69,6 +68,16 @@ export default {
     @include themeify {
       fill: mix(themed("font_color2"), themed("color_opposite"), 70%);
     }
+  }
+}
+.svg-icon {
+  height: 14px !important;
+  width: 14px !important;
+}
+@media screen and (max-width: 768px) {
+  .svg-icon {
+    height: 12px !important;
+    width: 12px !important;
   }
 }
 </style>

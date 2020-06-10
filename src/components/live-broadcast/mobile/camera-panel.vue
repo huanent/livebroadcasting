@@ -64,8 +64,7 @@ export default {
     Camera
   },
   methods: {
-    observerHandler() {},
-    swipedown(e, a) {
+    swipedown(e) {
       let { deltaY } = e;
       if (deltaY > 0) {
         deltaY = 0;

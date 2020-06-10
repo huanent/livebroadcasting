@@ -1,11 +1,10 @@
 <template>
-  <div class="page-controller" v-if="canControlBoard">
+  <div class="step-controller" v-if="canControlBoard">
     <el-tooltip :content="'上一步'" placement="bottom" :open-delay="200">
       <icon
         @click.native.stop="handleMinus"
         name="long-arrow-alt-left"
         color="#737882"
-        :size="26"
       />
     </el-tooltip>
 
@@ -15,7 +14,6 @@
         @click.native.stop="handleAdd"
         name="long-arrow-alt-right"
         color="#737882"
-        :size="26"
       />
     </el-tooltip>
   </div>
@@ -48,7 +46,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.page-controller {
+.step-controller {
   height: 100%;
   display: flex;
   align-items: center;
@@ -68,6 +66,16 @@ export default {
     @include themeify {
       fill: mix(themed("font_color2"), themed("color_opposite"), 70%);
     }
+  }
+}
+.svg-icon {
+  height: 24px !important;
+  width: 24px !important;
+}
+@media screen and (max-width: 768px) {
+  .svg-icon {
+    height: 20px !important;
+    width: 20px !important;
   }
 }
 </style>

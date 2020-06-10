@@ -169,11 +169,13 @@ export default {
   overflow: hidden;
 }
 .tab-item {
+  font-size: smaller;
   height: 100%;
   display: inline-block;
   cursor: pointer;
   box-sizing: border-box;
-  padding: 0 0.25rem;
+  overflow: hidden;
+  padding: 0.1rem;
   border-bottom: rgba(0, 0, 0, 0.1) 2px solid;
   > .tab-item-text-wrapper {
     height: 100%;
@@ -211,6 +213,7 @@ export default {
 .workplace-settings {
   margin-right: 1rem;
   text-align: left;
+  font-size: smaller;
   .type-text {
     @include themeify {
       color: themed("font_color1");
@@ -221,6 +224,8 @@ export default {
   }
   .select-header {
     z-index: 100;
+    padding: 0.1rem;
+    white-space: nowrap;
     @include themeify {
       background: themed("background_color2");
       color: themed("font_color1");
@@ -273,11 +278,5 @@ cover component Multiselect style
 .header-right {
   display: flex;
   align-items: center;
-}
-
-.mini {
-  * {
-    font-size: xx-small;
-  }
 }
 </style>
