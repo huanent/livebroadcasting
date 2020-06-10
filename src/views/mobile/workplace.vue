@@ -9,14 +9,9 @@
       </div>
     </div>
     <widgets />
+    <hand v-if="!isTeacher" />
     <hand-up-list v-if="isTeacher" />
-    <div class="workplace-overlay">
-      <div
-        class="workplace-overlay-header"
-        style="background-color: #0a818c;width: 100%;height: 20px"
-      ></div>
-      <hand v-if="!isTeacher" />
-    </div>
+    <div class="workplace-overlay"></div>
   </div>
 </template>
 
@@ -36,6 +31,7 @@ import {
   liveBroadcastService
 } from "../../core/live-broadcast";
 import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
+import Hand from "../../components/live-broadcast/hand-up/hand";
 import { autoSyncState, destroySyncState } from "../../core/state-sync";
 import { requestDeviceAccess, delay } from "../../core/utils";
 // import ToolTurntable from "../../components/live-broadcast/mobile/tool-turntable";
@@ -205,7 +201,8 @@ export default {
     WorkplacePanelHeader,
     CameraPanel,
     Widgets,
-    HandUpList
+    HandUpList,
+    Hand
     //ToolTurntable
   }
 };

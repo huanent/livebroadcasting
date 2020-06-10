@@ -194,14 +194,16 @@ export default {
 }
 </style>
 <style lang="scss">
+.mobile .main-workplace-header {
+  height: 1.2rem;
+}
 .mobile #board-el {
   height: calc(100% - 1rem);
 }
 .mobile .wrapper {
-  height: calc(100% - 2rem);
+  height: calc(100% - 0.6rem);
 }
 .mobile .board-footer-wrapper {
-  height: 1rem;
-  font-size: x-small;
+  font-size: smaller;
 }
 </style>
