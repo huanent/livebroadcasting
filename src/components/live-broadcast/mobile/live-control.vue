@@ -10,8 +10,12 @@
     }"
   >
     <ul class="control-wrap">
-      <li><icon name="settings" size="100%" color="#fff"></icon></li>
-      <li><icon name="comment-dots" size="100%" color="#fff"></icon></li>
+      <li>
+        <icon name="settings" size="100%" color="#fff"></icon>
+      </li>
+      <li @click="SET_CHAR_VISIBLE">
+        <icon name="comment-dots" size="100%" color="#fff"></icon>
+      </li>
       <li><icon name="wrench" size="100%" color="#fff"></icon></li>
       <li><hand-inner /></li>
     </ul>
@@ -20,6 +24,7 @@
 
 <script>
 import HandInner from "../hand-up/hand-inner";
+import { mapMutations } from "vuex";
 export default {
   name: "LiveControl",
   data: () => ({
@@ -36,20 +41,21 @@ export default {
     this.initToolBarPosition();
   },
   methods: {
+    ...mapMutations("mobile", ["SET_CHAR_VISIBLE"]),
     onPanend() {
-      this.originRight += this.offsetRight;
-      this.originTop += this.offsetTop;
-      this.offsetRight = 0;
-      this.offsetTop = 0;
+      // this.originRight += this.offsetRight;
+      // this.originTop += this.offsetTop;
+      // this.offsetRight = 0;
+      // this.offsetTop = 0;
     },
     onPanmove(e) {
-      let { deltaX, deltaY } = e;
-      if (
-        !this.checkEdge(-deltaX + this.originRight, deltaY + this.originTop)
-      ) {
-        this.offsetRight = -deltaX;
-        this.offsetTop = deltaY;
-      }
+      // let { deltaX, deltaY } = e;
+      // if (
+      //   !this.checkEdge(-deltaX + this.originRight, deltaY + this.originTop)
+      // ) {
+      //   this.offsetRight = -deltaX;
+      //   this.offsetTop = deltaY;
+      // }
     },
     initToolBarPosition(isFix) {
       let el = this.$refs.control;

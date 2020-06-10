@@ -8,6 +8,7 @@ import electron from "./electron";
 import features from "./features";
 import widget from "./widget";
 import tips from "./tips";
+import mobile from "./mobile";
 Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
@@ -18,7 +19,8 @@ export default new Vuex.Store({
     electron,
     features,
     widget,
-    tips
+    tips,
+    mobile
   },
   mutations: {
     SYNC_STATE(state, payload) {

@@ -10,13 +10,14 @@
     </div>
     <widgets />
     <live-control />
+    <Chatroom v-show="showChat" />
   </div>
 </template>
 
 <script>
 import WorkplacePanelHeader from "@c/live-broadcast/workplace-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
-import Chatroom from "@c/live-broadcast/chatroom";
+import Chatroom from "../../components/live-broadcast/mobile/chat-room";
 import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/mobile/camera-panel";
 import { destroyEmitter, Emitter, initEmitter } from "../../core/emit";
@@ -53,6 +54,7 @@ export default {
     ...mapState("account", ["userInfo"]),
     ...mapState("workplace", ["cameraPanelVisibity", "roomInfo"]),
     ...mapState("features", ["canControlBoard", "classing"]),
+    ...mapState("mobile", ["showChat"]),
     ...mapGetters("workplace", ["isTeacher"])
   },
   async mounted() {
@@ -197,7 +199,8 @@ export default {
     WorkplacePanelHeader,
     CameraPanel,
     Widgets,
-    LiveControl
+    LiveControl,
+    Chatroom
   }
 };
 </script>
