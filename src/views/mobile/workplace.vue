@@ -1,15 +1,22 @@
 <template>
-  <div class="workplace-panel" v-if="ready">
+  <div class="workplace-panel mobile" v-if="ready">
     <div class="workplace-panel-content">
       <div class="camera-panel-wrapper">
         <CameraPanel></CameraPanel>
       </div>
-      <div>
+      <div class="main-workplace-wrapper">
         <MainWorkplace></MainWorkplace>
       </div>
     </div>
     <widgets />
     <hand-up-list v-if="isTeacher" />
+    <div class="workplace-overlay">
+      <div
+        class="workplace-overlay-header"
+        style="background-color: #0a818c;width: 100%;height: 20px"
+      ></div>
+      <hand v-if="!isTeacher" />
+    </div>
   </div>
 </template>
 
@@ -205,8 +212,18 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.workplace-panel {
+html,
+body {
+  overflow: hidden;
   height: 100vh;
+  margin: 0;
+  padding: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+.workplace-panel {
   overflow: hidden;
   margin: 0;
   padding: 0;
@@ -215,17 +232,36 @@ export default {
   }
 }
 .workplace-panel-content {
-  height: 100%;
-  width: 100%;
   display: grid;
   grid-template-columns: 15% 85%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
 }
 .camera-panel-wrapper {
   height: 100%;
   position: relative;
-  padding: 1rem 0;
+  padding: 0 0 0 0;
   @include themeify {
     background: rgba(themed("background_color3"), 1);
   }
+}
+.main-workplace-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.workplace-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 0;
 }
 </style>

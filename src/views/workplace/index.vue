@@ -1,6 +1,6 @@
 <template>
   <div class="workplace-panel" v-if="ready">
-    <div class="workplace-header">
+    <div class="workplace-header-wrapper">
       <WorkplacePanelHeader
         :creator="classCreator"
         :status="classStatus"
@@ -19,14 +19,17 @@
         ref="left"
         :class="{ 'cameraPanel-hide': !cameraPanelVisibity }"
       >
-        <div class="camera-panel">
+        <div class="camera-panel-wrapper">
           <CameraPanel></CameraPanel>
         </div>
-        <MainWorkplace></MainWorkplace>
+        <div class="main-workplace-wrapper">
+          <MainWorkplace></MainWorkplace>
+          <hand v-if="!isTeacher" />
+        </div>
       </div>
       <div id="workplace-panel-right">
         <self-camera />
-        <div class="message-panel">
+        <div class="message-panel-wrapper">
           <chatroom />
         </div>
       </div>
@@ -55,6 +58,7 @@ import {
 import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
 import { autoSyncState, destroySyncState } from "../../core/state-sync";
 import { requestDeviceAccess, delay } from "../../core/utils";
+import Hand from "@c/live-broadcast/hand-up/hand";
 
 export default {
   name: "workplace",
@@ -222,7 +226,8 @@ export default {
     WorkplacePanelHeader,
     CameraPanel,
     Widgets,
-    HandUpList
+    HandUpList,
+    Hand
   }
 };
 </script>
@@ -237,7 +242,7 @@ export default {
     background: themed("background_color1");
   }
 }
-.workplace-header {
+.workplace-header-wrapper {
   @include themeify {
     background: themed("background_color2");
   }
@@ -288,7 +293,13 @@ export default {
     height: auto;
   }
 }
-.camera-panel {
+.main-workplace-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.camera-panel-wrapper {
   @include themeify {
     background: themed("background_color1");
   }
@@ -297,7 +308,7 @@ export default {
 .cameraPanel-hide {
   grid-template-rows: 0 100% !important;
 }
-.message-panel {
+.message-panel-wrapper {
   background: #292b2e;
 }
 </style>

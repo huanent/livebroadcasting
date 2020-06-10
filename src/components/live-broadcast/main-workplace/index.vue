@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="main-workplace-container mini"
-    @drop="drop"
-    @dragover="$event.preventDefault()"
-  >
+  <div class="main-workplace" @drop="drop" @dragover="$event.preventDefault()">
     <BoardTabs
       :class="{ hide: !workplaceVisibity }"
       @on-close="onTabsClose"
@@ -11,17 +7,17 @@
       @index-change="indexChange($event)"
       @type-change="onChange"
       :panel-type="panelType"
-      class="workplace-content"
+      class="main-workplace-header"
       :show-lable="panelType === 'board'"
     >
     </BoardTabs>
 
-    <div class="wrapper" style="height: calc(100% - 2rem)">
+    <div class="wrapper">
       <div v-show="panelType === 'board'">
         <div class="mask" v-if="!canControlBoard"></div>
         <div id="board-el" class="roll-scroll"></div>
-        <div class="workplace-footer" v-show="panelType === 'board'">
-          <workplace-footer />
+        <div class="board-footer-wrapper" v-show="panelType === 'board'">
+          <BoardFooter />
         </div>
       </div>
 
@@ -29,35 +25,32 @@
       <camera v-if="panelType === 'camera'" />
     </div>
     <Toolbar v-if="isToolBarShow"></Toolbar>
-    <div style="height: 100%" :class="{ hide: workplaceVisibity }"></div>
     <StreamSourceDialog
       :visible.sync="showStreamSelectdialog"
       @selected="onSelected"
     />
-    <hand v-if="!isTeacher" />
   </div>
 </template>
 
 <script>
 import Toolbar from "../toolbar/index";
 import BoardTabs from "./board-tabs";
-import WorkplaceFooter from "../workplace-footer";
+import BoardFooter from "../board-footer";
 import { liveBroadcastService } from "@/core/live-broadcast";
 import { mapState, mapMutations, mapGetters } from "vuex";
 import { Emitter } from "@/core/emit";
 import StreamSourceDialog from "@c/common/stream-source-dialog";
-import Hand from "../hand-up/hand";
 import ShareScreen from "./share-screen";
 import Camera from "./camera";
 import { HAND_UP_STATUS } from "../../../models/handUpStatus";
+import board from "../../../store/board";
 export default {
   name: "MainWorkplace",
   components: {
     Toolbar,
     BoardTabs,
-    WorkplaceFooter,
+    BoardFooter,
     StreamSourceDialog,
-    Hand,
     ShareScreen,
     Camera
   },
@@ -154,7 +147,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.main-workplace-container {
+.main-workplace {
   height: 100%;
   width: 100%;
   position: relative;
@@ -162,16 +155,11 @@ export default {
     background: mix(themed("background_color4"), themed("color_like"), 90%);
   }
 }
-
-#board-el {
-  position: absolute;
-  z-index: 1;
-  width: 100%;
-  height: calc(100% - 2rem);
-  overflow: hidden;
+.main-workplace-header {
+  height: 2rem;
 }
 .wrapper {
-  height: 100%;
+  height: calc(100% - 2rem);
   width: 100%;
   > div {
     width: 100%;
@@ -184,14 +172,18 @@ export default {
       height: 100%;
       cursor: default;
     }
-    div {
-      height: 100%;
+    #board-el {
+      position: absolute;
+      z-index: 1;
       width: 100%;
+      overflow: hidden;
+      height: calc(100% - 2rem);
     }
   }
 }
-.workplace-footer {
-  height: 2rem !important;
+.board-footer-wrapper {
+  width: 100%;
+  height: 2rem;
   color: #737882;
   position: absolute;
   bottom: 0;
@@ -200,10 +192,16 @@ export default {
   }
   border-top: 1px solid rgba(30, 33, 37, 0.19);
 }
-.mini #board-el {
-  height: calc(100% - 1.5rem);
+</style>
+<style lang="scss">
+.mobile #board-el {
+  height: calc(100% - 1rem);
 }
-.mini .workplace-footer {
-  height: 1.5rem !important;
+.mobile .wrapper {
+  height: calc(100% - 2rem);
+}
+.mobile .board-footer-wrapper {
+  height: 1rem;
+  font-size: x-small;
 }
 </style>

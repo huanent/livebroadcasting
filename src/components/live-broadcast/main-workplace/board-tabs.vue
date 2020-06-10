@@ -1,6 +1,6 @@
 <template>
-  <div class="board-tabs">
-    <div class="board-tabs-header">
+  <div class="board-tabs-header">
+    <div class="header-left">
       <div
         class="tab-item"
         v-for="(item, i) in fileList"
@@ -9,41 +9,44 @@
         :class="{ 'tab-item-active': item === currentFile }"
         v-show="showLable"
       >
-        <span class="board-tab-title-container">{{ item.title }}</span>
-        <span
-          @click="onClose(item)"
-          class="board-tab-icon-container"
-          v-if="canControlBoard"
-        >
-          <icon class="board-tab-icon" name="times" :size="12"></icon>
-        </span>
-      </div>
-      <div class="head-right">
-        <div class="workplace-settings">
-          <multiselect
-            v-if="isTeacher"
-            v-model="selected"
-            ref="select"
-            :searchable="false"
-            :options="options"
-            :allow-empty="false"
-            @select="onSelect"
+        <div class="tab-item-text-wrapper">
+          <span class="board-tab-title-container">{{ item.title }}</span>
+          <span
+            @click="onClose(item)"
+            class="board-tab-icon-container"
+            v-if="canControlBoard"
           >
-            <template slot="singleLabel" slot-scope="props"
-              ><div class="select-header">
-                <span>{{ props.option.title }}</span>
-                <icon :name="caretIconName" size="14"></icon>
-              </div>
-            </template>
-            <template slot="option" slot-scope="props">
-              <div class="select-option">
-                {{ props.option.title }}
-              </div>
-            </template>
-          </multiselect>
-          <div v-else class="type-text">
-            {{ selected && selected.title }}
-          </div>
+            <icon class="board-tab-icon" name="times" :size="12"></icon>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="workplace-settings">
+        <multiselect
+          v-if="isTeacher"
+          v-model="selected"
+          ref="select"
+          :searchable="false"
+          :options="options"
+          :allow-empty="false"
+          @select="onSelect"
+        >
+          <template slot="singleLabel" slot-scope="props"
+            ><div class="select-header">
+              <span>{{ props.option.title }}</span>
+              <icon :name="caretIconName" size="14"></icon>
+            </div>
+          </template>
+          <template slot="option" slot-scope="props">
+            <div class="select-option">
+              {{ props.option.title }}
+            </div>
+          </template>
+        </multiselect>
+        <div v-else class="type-text">
+          {{ selected && selected.title }}
         </div>
       </div>
     </div>
@@ -147,17 +150,36 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.board-tabs {
+.board-tabs-header {
   color: #bfbfbf;
   user-select: none;
-  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+  @include themeify {
+    background: themed("background_color2");
+  }
+  border-bottom: 1px solid rgba(30, 33, 37, 0.19);
+  width: 100%;
+  padding-bottom: 0.2rem;
+  height: 100%;
+}
+.header-left {
+  width: 80%;
+  height: 100%;
+  overflow: hidden;
 }
 .tab-item {
-  padding: 0.1rem;
   height: 100%;
   display: inline-block;
   cursor: pointer;
+  box-sizing: border-box;
+  padding: 0 0.25rem;
   border-bottom: rgba(0, 0, 0, 0.1) 2px solid;
+  > .tab-item-text-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
   &:hover {
     @include themeify {
       background: themed("background_color4");
@@ -167,15 +189,7 @@ export default {
     margin-left: 0.1rem;
   }
 }
-.board-tabs-header {
-  @include themeify {
-    background: themed("background_color2");
-  }
-  border-bottom: 1px solid rgba(30, 33, 37, 0.19);
-  width: 100%;
-  padding-bottom: 0.2rem;
-  height: 1.2rem;
-}
+
 .board-tab-icon {
   padding: 0 0 0 0.5rem;
   fill: #bfbfbf !important;
@@ -196,7 +210,6 @@ export default {
 
 .workplace-settings {
   margin-right: 1rem;
-  line-height: 1.8rem;
   text-align: left;
   .type-text {
     @include themeify {
@@ -221,6 +234,7 @@ export default {
   .select-option {
     z-index: 100;
     cursor: pointer;
+    padding: 0.3rem 0;
     @include themeify {
       background-color: themed("toolbar_bg");
     }
@@ -256,8 +270,7 @@ cover component Multiselect style
   border-radius: 1px;
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.32);
 }
-.head-right {
-  float: right;
+.header-right {
   display: flex;
   align-items: center;
 }

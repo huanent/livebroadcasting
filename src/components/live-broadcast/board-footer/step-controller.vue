@@ -49,14 +49,13 @@ export default {
 
 <style lang="scss" scoped>
 .page-controller {
-  height: 2rem;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
   text-align: center;
   padding: 0 5px;
   color: #8a9099;
-  font-size: 14px;
   > span {
     min-width: 2.5rem;
   }
