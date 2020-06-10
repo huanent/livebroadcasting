@@ -10,13 +10,15 @@
     }"
   >
     <ul class="control-wrap">
+      <li v-show="canControlBoard">
+        <icon name="pen4" size="100%" color="#fff"></icon>
+      </li>
       <li @click="SET_VISIBLE('showSetting')">
         <icon name="settings" size="100%" color="#fff"></icon>
       </li>
       <li @click="SET_VISIBLE('showChat')">
         <icon name="comment-dots" size="100%" color="#fff"></icon>
       </li>
-      <li><icon name="wrench" size="100%" color="#fff"></icon></li>
       <li><hand-inner /></li>
     </ul>
   </div>
@@ -24,7 +26,7 @@
 
 <script>
 import HandInner from "../hand-up/hand-inner";
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 export default {
   name: "LiveControl",
   data: () => ({
@@ -86,6 +88,9 @@ export default {
       if (right > 0 && right - (pw - w) > 0) return true;
       if (top > 0 && top - ph + h > 0) return true;
     }
+  },
+  computed: {
+    ...mapState("features", ["canControlBoard"])
   }
 };
 </script>

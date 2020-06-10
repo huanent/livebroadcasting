@@ -8,9 +8,10 @@ export default {};
 </script>
 <style lang="scss" scoped>
 .window {
-  position: fixed;
-  right: 5rem;
-  top: 3rem;
   z-index: 1000;
+  @include themeify {
+    background: themed("background_color3");
+  }
+  border-radius: 0.2rem;
 }
 </style>

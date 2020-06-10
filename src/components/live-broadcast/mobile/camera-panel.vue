@@ -8,13 +8,11 @@
     <div class="items" ref="items" :style="{ top: offset + 'px' }">
       <camera
         :stream-id="teacherStreamId"
-        :controllable="false"
         :subscribe-audio="true"
         :subscribe-video="true"
         name="老师"
-        always-local-muted
         v-if="!isTeacher && this.teacherStreamId"
-        voiceVisualization="intensity"
+        voiceVisualization="bar"
       />
       <camera
         class="item"

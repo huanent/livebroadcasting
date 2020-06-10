@@ -6,7 +6,7 @@ const state = {
 const mutations = {
   SET_VISIBLE(state, prop) {
     for (const key in state) {
-      if (key.startsWith("show")) {
+      if (key.startsWith("show") && key != prop) {
         state[key] = false;
       }
     }
