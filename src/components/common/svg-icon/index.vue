@@ -2,7 +2,7 @@
   <svg
     :class="{ 'svg-icon': hasClass }"
     aria-hidden="true"
-    :style="{ width: size + 'px', height: size + 'px', fill: color }"
+    :style="{ width: innerSize, height: innerSize, fill: color }"
   >
     <use :xlink:href="iconName" />
   </svg>
@@ -32,6 +32,10 @@ export default {
   computed: {
     iconName() {
       return `#icon-${this.name}`;
+    },
+    innerSize() {
+      if (Number.isNaN(Number(this.size))) return this.size;
+      return this.size + "px";
     }
   }
 };
