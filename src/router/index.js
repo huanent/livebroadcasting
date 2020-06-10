@@ -65,7 +65,7 @@ const routes = [
   },
   {
     path: "/mobile/liveroom",
-    name: "Liveroom",
+    name: "mobileLiveRoom",
     meta: {
       requireAuth: true,
       title: ""

@@ -76,6 +76,7 @@
 <script>
 import dayjs from "dayjs";
 import classApi from "@api/class";
+import { mapState } from "vuex";
 
 export default {
   name: "ClassList",
@@ -86,6 +87,7 @@ export default {
     type: String
   },
   computed: {
+    ...mapState("device", ["isMobile"]),
     nodataTips() {
       return this.type === "creator"
         ? this.$t("class.noCreateClassTips")
@@ -155,8 +157,9 @@ export default {
         return;
       }
 
+      let routName = this.isMobile ? "mobileLiveRoom" : "Liveroom";
       this.$router.push({
-        name: "Liveroom",
+        name: routName,
         query: {
           id: classInfo.classId
         }
