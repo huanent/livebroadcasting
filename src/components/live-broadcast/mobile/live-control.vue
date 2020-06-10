@@ -1,27 +1,31 @@
 <template>
   <div class="live-control">
     <ul class="control-wrap">
-      <li><icon name="settings" :size="16" color="#fff"></icon></li>
-      <li><icon name="comment-dots" :size="14" color="#fff"></icon></li>
-      <li><icon name="wrench" :size="14" color="#fff"></icon></li>
-      <li><icon name="hand" :size="14" color="#fff"></icon></li>
+      <li><icon name="settings" size="100%" color="#fff"></icon></li>
+      <li><icon name="comment-dots" size="100%" color="#fff"></icon></li>
+      <li><icon name="wrench" size="100%" color="#fff"></icon></li>
+      <li><hand-inner /></li>
     </ul>
   </div>
 </template>
 
 <script>
+import HandInner from "../hand-up/hand-inner";
 export default {
   name: "LiveControl",
   data: () => ({
     title: "hello"
-  })
+  }),
+  components: {
+    HandInner
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .live-control {
   position: absolute;
-  right: 10px;
+  right: 1rem;
   top: 0;
   bottom: 0;
   z-index: 1000;
@@ -30,15 +34,19 @@ export default {
   align-items: center;
   .control-wrap {
     > li {
-      padding: 0.1rem;
+      padding: 0.3rem;
+      margin: 0.8rem;
       background-color: #242c2c;
       border-radius: 50%;
-      width: 1.6rem;
+      width: 1.5rem;
       height: 1.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 0.8rem;
+      opacity: 0.8;
+      & > * {
+        transform: scale(0.7);
+      }
     }
   }
 }

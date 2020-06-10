@@ -1,32 +1,16 @@
 <template>
-  <div
-    class="hand"
-    @click="HAND_UP"
-    v-loading="handUp == HAND_UP_STATUS.UPING"
-    element-loading-background="rgba(0, 0, 0, 0)"
-    title="举手"
-  >
-    <icon
-      :name="handUp == HAND_UP_STATUS.SPEAKING ? 'microphone' : 'hand'"
-      :size="25"
-    ></icon>
+  <div class="hand" title="举手">
+    <hand-inner />
   </div>
 </template>
 <script>
 import { mapMutations, mapState } from "vuex";
 import { HAND_UP_STATUS } from "@/models/handUpStatus";
+import HandInner from "./hand-inner";
 
 export default {
-  computed: {
-    ...mapState("features", ["handUp"])
-  },
-  methods: {
-    ...mapMutations("features", ["HAND_UP", "SWITCH_SPEAKING"])
-  },
-  watch: {
-    handUp(value) {
-      this.SWITCH_SPEAKING(value);
-    }
+  components: {
+    HandInner
   }
 };
 </script>
@@ -44,23 +28,12 @@ export default {
   bottom: 50px;
   right: 10px;
   z-index: 999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  .svg-icon {
-    @include themeify {
-      fill: themed("font_color2");
-    }
+  .hand-inner {
+    transform: scale(0.4);
   }
 }
 .hand:hover {
   transform: scale(1.1);
   opacity: 0.8;
-  .svg-icon {
-    @include themeify {
-      fill: themed("font_color1");
-      transform: scale(1.1);
-    }
-  }
 }
 </style>
