@@ -5,39 +5,48 @@
     v-swipeup="swipeup"
     v-swipedown="swipedown"
   >
-    <div class="items" ref="items" :style="{ top: offset + 'px' }">
+    <div
+      class="item"
+      :style="{ height: itemHeight + 'px' }"
+      v-if="!isTeacher && this.teacherStreamId"
+    >
       <camera
         :stream-id="teacherStreamId"
         :subscribe-audio="true"
         :subscribe-video="true"
         name="老师"
-        v-if="!isTeacher && this.teacherStreamId"
         voiceVisualization="bar"
+        object-fit="cover"
       />
+    </div>
+    <div class="item" :style="{ height: itemHeight + 'px' }">
       <camera
         class="item"
         stream-id="__local"
         :controllable="false"
         name="本人"
+        object-fit="cover"
         voiceVisualization="bar"
       />
-      <div
-        class="item"
-        :style="{ height: itemHeight + 'px' }"
-        v-for="item in featuresList"
-        :key="item.__primaryKey"
-        :draggable="true"
-        @dragstart="dragstart(item, $event)"
-      >
-        <camera
-          :stream-id="item.__streamId"
-          :controllable="false"
-          :name="item.__nickName || item.__primaryKey"
-          :subscribe-video="item.subscribeVideo"
-          :subscribe-audio="item.subscribeAudio"
-          hidden-voice-intensity
-        />
-      </div>
+    </div>
+
+    <div
+      class="item"
+      :style="{ height: itemHeight + 'px' }"
+      v-for="item in featuresList"
+      :key="item.__primaryKey"
+      :draggable="true"
+      @dragstart="dragstart(item, $event)"
+    >
+      <camera
+        :stream-id="item.__streamId"
+        :controllable="false"
+        :name="item.__nickName || item.__primaryKey"
+        :subscribe-video="item.subscribeVideo"
+        :subscribe-audio="item.subscribeAudio"
+        hidden-voice-intensity
+        object-fit="cover"
+      />
     </div>
   </div>
 </template>

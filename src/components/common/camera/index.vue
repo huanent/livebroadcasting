@@ -5,7 +5,7 @@
       :mirror="mirror"
       :stream-id="streamId"
       ref="videoPlayer"
-      fit="cover"
+      :fit="objectFit"
       @stream-changed="stream = $event"
     />
     <div v-show="showNoVideo" class="no-video">
@@ -55,7 +55,11 @@ export default {
     subscribeVideo: Boolean,
     controllable: Boolean,
     voiceVisualization: String,
-    alwaysLocalMuted: Boolean
+    alwaysLocalMuted: Boolean,
+    objectFit: {
+      type: String,
+      default: "cover"
+    }
   },
   data() {
     return {
