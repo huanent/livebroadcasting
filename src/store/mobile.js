@@ -1,6 +1,7 @@
 const state = {
   showChat: false,
-  showSetting: false
+  showSetting: false,
+  showBoardTool: false
 };
 
 const mutations = {

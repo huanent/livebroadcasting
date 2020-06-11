@@ -24,6 +24,7 @@
         </div>
         <div class="main-workplace-wrapper">
           <MainWorkplace></MainWorkplace>
+          <Toolbar v-if="isToolBarShow"></Toolbar>
           <hand v-if="!isTeacher" />
         </div>
       </div>
@@ -40,7 +41,6 @@
 </template>
 
 <script>
-import classApi from "@api/class";
 import WorkplacePanelHeader from "@c/live-broadcast/workplace-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
@@ -59,7 +59,7 @@ import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
 import { autoSyncState, destroySyncState } from "../../core/state-sync";
 import { requestDeviceAccess, delay } from "../../core/utils";
 import Hand from "@c/live-broadcast/hand-up/hand";
-
+import Toolbar from "@c/live-broadcast/toolbar";
 export default {
   name: "workplace",
   data: function() {
@@ -83,10 +83,14 @@ export default {
       "roomInfo",
       "panelType",
       "cameraPanelId",
-      "token"
+      "token",
+      "isToolBarShow"
     ]),
-    ...mapState("features", ["canControlBoard", "classing"]),
-    ...mapGetters("workplace", ["isTeacher"])
+    ...mapState("features", ["canControlBoard", "classing", "canControlBoard"]),
+    ...mapGetters("workplace", ["isTeacher", '"panelType"']),
+    isToolBarShow() {
+      return this.panelType === "board" && this.canControlBoard;
+    }
   },
   async mounted() {
     initEmitter();
@@ -227,7 +231,8 @@ export default {
     CameraPanel,
     Widgets,
     HandUpList,
-    Hand
+    Hand,
+    Toolbar
   }
 };
 </script>

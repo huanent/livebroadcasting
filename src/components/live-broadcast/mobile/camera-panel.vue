@@ -67,13 +67,22 @@ export default {
   },
   mounted() {
     this.itemHeight = this.$el.getBoundingClientRect().width * (3 / 4);
+    window.addEventListener(
+      "resize",
+      () => {
+        this.itemHeight = this.$el.getBoundingClientRect().width * (3 / 4);
+      },
+      false
+    );
   },
   computed: {
     ...mapState("workplace", ["featuresList"]),
     ...mapGetters("workplace", ["isTeacher", "teacherStreamId"])
   },
   beforeDestroy() {
-    this.observer.disconnect();
+    if (this.observer && this.observer.disconnect) {
+      this.observer.disconnect();
+    }
   },
   components: {
     Camera

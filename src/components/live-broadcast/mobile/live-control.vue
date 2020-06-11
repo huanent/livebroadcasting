@@ -1,7 +1,7 @@
 <template>
   <div ref="control" class="live-control">
     <ul class="control-wrap">
-      <li v-show="canControlBoard">
+      <li v-show="canControlBoard" @click="SET_VISIBLE('showBoardTool')">
         <icon name="pen4" size="100%" color="#fff"></icon>
       </li>
       <li @click="SET_VISIBLE('showSetting')">

@@ -24,7 +24,6 @@
       <share-screen v-if="panelType === 'screen'" />
       <camera v-if="panelType === 'camera'" />
     </div>
-    <Toolbar v-if="isToolBarShow"></Toolbar>
     <StreamSourceDialog
       :visible.sync="showStreamSelectdialog"
       @selected="onSelected"
@@ -56,7 +55,6 @@ export default {
   },
   data() {
     return {
-      showToolbar: true,
       isServiceReady: false,
       showStreamSelectdialog: false,
       lastAudioStatus: false
@@ -113,11 +111,6 @@ export default {
     ...mapGetters("workplace", ["isTeacher"]),
     boardProfiles() {
       return this.$store.state.workplace.boardProfiles;
-    },
-    isToolBarShow() {
-      return (
-        this.showToolbar && this.panelType === "board" && this.canControlBoard
-      );
     },
     index() {
       return this.$store.state.workplace.activeBoardIndex;

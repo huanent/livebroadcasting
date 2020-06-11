@@ -12,6 +12,7 @@
     <live-control />
     <chat-room v-show="showChat" />
     <setting-panel v-show="showSetting" />
+    <BoardToolbar v-show="showBoardTool" />
   </div>
 </template>
 
@@ -21,6 +22,7 @@ import ChatRoom from "../../components/live-broadcast/mobile/chat-room";
 import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/mobile/camera-panel";
 import SettingPanel from "../../components/live-broadcast/mobile/setting-panel";
+import BoardToolbar from "../../components/live-broadcast/mobile/board-toolbar";
 import { destroyEmitter, Emitter, initEmitter } from "../../core/emit";
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import { ROLE } from "@/models/role";
@@ -55,7 +57,7 @@ export default {
     ...mapState("account", ["userInfo"]),
     ...mapState("workplace", ["cameraPanelVisibity", "roomInfo"]),
     ...mapState("features", ["canControlBoard", "classing"]),
-    ...mapState("mobile", ["showChat", "showSetting"]),
+    ...mapState("mobile", ["showChat", "showSetting", "showBoardTool"]),
     ...mapGetters("workplace", ["isTeacher"])
   },
   async mounted() {
@@ -201,7 +203,8 @@ export default {
     Widgets,
     LiveControl,
     ChatRoom,
-    SettingPanel
+    SettingPanel,
+    BoardToolbar
   }
 };
 </script>
