@@ -15,6 +15,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .chat-room {
+  transform: scale(0.8);
   height: 80%;
   position: fixed;
   right: 4rem;
