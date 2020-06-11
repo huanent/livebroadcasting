@@ -230,6 +230,7 @@ body {
 .workplace-panel-content {
   display: grid;
   grid-template-columns: 15% 85%;
+  height: 100%;
   position: absolute;
   left: 0;
   top: 0;
