@@ -23,9 +23,6 @@ export default {
   components: {
     HandInner
   },
-  mounted() {
-    this.initToolBarPosition();
-  },
   methods: {
     ...mapMutations("mobile", ["SET_VISIBLE"])
   },

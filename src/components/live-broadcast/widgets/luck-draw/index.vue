@@ -6,6 +6,7 @@
       :position="draw.position"
       v-if="draw.visible"
       @moved="UPDATE_POSITION({ name: 'draw', position: $event })"
+      :class="{ 'mobile-scale': isMobile }"
     >
       <div class="contain">
         <div class="content">
@@ -47,6 +48,7 @@ export default {
   },
   computed: {
     ...mapState("widget", ["draw"]),
+    ...mapState("device", ["isMobile"]),
     ...mapState("workplace", ["featuresList"]),
     ...mapGetters("workplace", ["isTeacher"])
   },

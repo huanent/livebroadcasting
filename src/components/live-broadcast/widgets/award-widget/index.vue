@@ -101,7 +101,8 @@
 import { mapState, mapMutations } from "vuex";
 export default {
   computed: {
-    ...mapState("widget", ["award"])
+    ...mapState("widget", ["award"]),
+    ...mapState("device", ["isMobile"])
   },
   methods: {
     ...mapMutations("widget", ["SET_AWARD"])

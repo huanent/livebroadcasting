@@ -5,6 +5,7 @@
     :position="dice.position"
     v-if="dice.visible"
     @moved="UPDATE_POSITION({ name: 'dice', position: $event })"
+    :class="{ 'mobile-scale': isMobile }"
   >
     <transition>
       <div class="dice">
@@ -85,7 +86,8 @@ export default {
     };
   },
   computed: {
-    ...mapState("widget", ["dice"])
+    ...mapState("widget", ["dice"]),
+    ...mapState("device", ["isMobile"])
   },
   methods: {
     ...mapMutations("widget", [

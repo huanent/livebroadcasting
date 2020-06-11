@@ -5,6 +5,7 @@
     v-if="timer.visible"
     :position="timer.position"
     @moved="UPDATE_POSITION({ name: 'timer', position: $event })"
+    :class="{ 'mobile-scale': isMobile }"
   >
     <div class="timer">
       <div class="time">
@@ -63,7 +64,7 @@ export default {
   },
   computed: {
     ...mapState("widget", ["timer"]),
-    ...mapState("account", ["role"]),
+    ...mapState("device", ["isMobile"]),
     ...mapGetters("workplace", ["isTeacher"]),
     seconds() {
       return (

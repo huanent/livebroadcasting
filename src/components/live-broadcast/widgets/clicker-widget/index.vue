@@ -6,6 +6,7 @@
     nameWidget="随堂测试"
     :position="position"
     :notdrag="true"
+    :class="{ 'mobile-scale': isMobile }"
   >
     <question v-if="isTeacher && !this.clicker.question" />
     <answer v-if="!isTeacher && this.clicker.question" />
@@ -29,6 +30,7 @@ export default {
   },
   computed: {
     ...mapState("widget", ["clicker"]),
+    ...mapState("device", ["isMobile"]),
     ...mapGetters("workplace", ["isTeacher"]),
     visible() {
       if (this.isTeacher) {

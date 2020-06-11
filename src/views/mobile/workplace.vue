@@ -207,17 +207,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-html,
-body {
-  overflow: hidden;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-}
 .workplace-panel {
   overflow: hidden;
   margin: 0;
@@ -260,5 +249,22 @@ body {
   bottom: 0;
   right: 0;
   z-index: 0;
+}
+</style>
+<style>
+html,
+body {
+  overflow: hidden;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+.mobile-scale {
+  transform-origin: left top;
+  transform: scale(0.6);
 }
 </style>

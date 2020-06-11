@@ -1,7 +1,7 @@
 <template>
   <div class="content" v-if="rush.visible">
-    <Controller v-if="isTeacher" />
-    <Answer v-else />
+    <Controller v-if="isTeacher" :class="{ 'mobile-scale': isMobile }" />
+    <Answer v-else :class="{ 'mobile-scale': isMobile }" />
   </div>
 </template>
 <script>
@@ -21,6 +21,7 @@ export default {
   },
   computed: {
     ...mapState("widget", ["rush"]),
+    ...mapState("device", ["isMobile"]),
     ...mapGetters("workplace", ["isTeacher"])
   }
 };
