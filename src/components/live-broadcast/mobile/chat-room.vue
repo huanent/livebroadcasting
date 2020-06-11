@@ -17,7 +17,7 @@ export default {
 .chat-room {
   height: 80%;
   position: fixed;
-  right: 5rem;
+  right: 4rem;
   top: 3rem;
 }
 </style>

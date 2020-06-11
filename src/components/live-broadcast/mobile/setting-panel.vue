@@ -18,13 +18,15 @@ export default {
 <style lang="scss" scoped>
 .settings {
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
   position: fixed;
-  right: 5rem;
+  width: 8rem;
+  right: 4rem;
   top: 30%;
   & > * {
     padding: 0.5rem;
     width: 2rem;
+    flex-grow: 1;
   }
 }
 </style>
