@@ -160,6 +160,7 @@ export default {
     },
     async initAudioMonitor(stream) {
       if (this.audioContext) this.audioContext.close();
+      let AudioContext = window.AudioContext || window.webkitAudioContext;
       this.audioContext = new AudioContext();
       while (!stream.mediaStream_) await delay(500);
       let mediaStream = stream.mediaStream_;

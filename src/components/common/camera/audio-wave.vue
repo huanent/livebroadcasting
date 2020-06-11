@@ -12,6 +12,7 @@ export default {
   },
   methods: {
     initWave(stream) {
+      let AudioContext = window.AudioContext || window.webkitAudioContext;
       let audioContext = new AudioContext();
 
       let analyser = audioContext.createAnalyser();
