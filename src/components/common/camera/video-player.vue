@@ -5,6 +5,9 @@
     :style="{ objectFit: fit }"
     :src-object.prop="stream && stream.mediaStream_"
     autoplay
+    webkit-playsinline
+    playsinline
+    ref="video"
   ></video>
 </template>
 <script>
