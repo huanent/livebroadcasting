@@ -33,7 +33,8 @@ export default {
       top: "0%",
       left: "0%",
       infoText: "等待开始",
-      loading: false
+      loading: false,
+      rushing: false
     };
   },
   created() {
@@ -45,11 +46,11 @@ export default {
   },
   methods: {
     rendomPosition() {
-      this.top = parseInt(1 + Math.random() * 80) + "%";
-      this.left = parseInt(1 + Math.random() * 80) + "%";
+      this.top = parseInt(1 + Math.random() * 70) + "%";
+      this.left = parseInt(1 + Math.random() * 70) + "%";
     },
     onclick() {
-      if (this.rush.name || this.loading) return;
+      if (this.rushing || this.rush.name || this.loading) return;
       this.infoText = "";
       this.loading = true;
       liveBroadcastService.timService.sendSystemMsg(
@@ -62,6 +63,7 @@ export default {
   watch: {
     "rush.started"(value) {
       if (!value) return;
+      this.rushing = true;
       this.$nextTick(async _ => {
         this.infoText = 3;
         this.rendomPosition();
@@ -74,6 +76,7 @@ export default {
         await delay(1000);
         this.rendomPosition();
         this.infoText = "抢答";
+        this.rushing = false;
       });
     },
     "rush.name"(value) {

@@ -4,6 +4,7 @@
     :position="video.position"
     @moved="UPDATE_POSITION({ name: 'video', position: $event })"
     @close="SET_VIDEO_VISIBLE({ visible: false })"
+    :class="{ 'mobile-scale': isMobile }"
   >
     <video :src="video.src" controls autoplay></video>
   </widget-window>
@@ -13,7 +14,8 @@ import WidgetWindow from "../widget-window";
 import { mapState, mapMutations } from "vuex";
 export default {
   computed: {
-    ...mapState("widget", ["video"])
+    ...mapState("widget", ["video"]),
+    ...mapState("device", ["isMobile"])
   },
   components: {
     WidgetWindow
