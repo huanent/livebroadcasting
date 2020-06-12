@@ -1,6 +1,8 @@
 <template>
   <div class="workplace-panel mobile" v-if="ready">
-    <div class="workplace-panel-content">
+    <div
+      :class="['workplace-panel-content', { 'm-sideber-hide': hideSidebar }]"
+    >
       <div class="camera-panel-wrapper">
         <CameraPanel></CameraPanel>
       </div>
@@ -56,7 +58,12 @@ export default {
     ...mapState("account", ["userInfo"]),
     ...mapState("workplace", ["cameraPanelVisibity", "roomInfo"]),
     ...mapState("features", ["canControlBoard", "classing"]),
-    ...mapState("mobile", ["showChat", "showSetting", "showBoardTool"]),
+    ...mapState("mobile", [
+      "showChat",
+      "showSetting",
+      "showBoardTool",
+      "hideSidebar"
+    ]),
     ...mapGetters("workplace", ["isTeacher"])
   },
   async mounted() {
@@ -228,6 +235,9 @@ export default {
   bottom: 0;
   right: 0;
   z-index: 2;
+}
+.m-sideber-hide {
+  grid-template-columns: 0 100%;
 }
 .camera-panel-wrapper {
   height: 100%;

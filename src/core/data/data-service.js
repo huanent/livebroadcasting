@@ -1,32 +1,32 @@
 /* eslint-disable*/
 import axios from "axios";
 
-export const getClassByRoomID = function(roomId) {
+export const getClassByRoomID = function (roomId) {
   return axios.get("/getClass?classId=1");
 };
-export const setClassByRoomID = function(body) {
+export const setClassByRoomID = function (body) {
   return axios.post("/setClass", body);
 };
 
-export const enterRoom = function(userId, roomId) {
+export const enterRoom = function (userId, roomId) {
   return axios.get(`/liveRoom/enter?userId=${userId}&classId=${roomId}`);
 };
 
-export const getCourseData = function(pageNum, pageSize, classId) {
+export const getCourseData = function (pageNum, pageSize, classId) {
   return axios.get(
     `/courseFile/list?pageNum=${pageNum}&pageSize=${pageSize}&classId=${classId}`
   );
 };
 
-export const removeCourseFile = function(id) {
+export const removeCourseFile = function (id) {
   return axios.post("/courseFile/remove", { id });
 };
-export const transcodeCreate = function(rawFileUrl) {
+export const transcodeCreate = function (rawFileUrl) {
   return axios.post("/transcode/create", { url: rawFileUrl });
 };
-export const transcodeDescribe = function(taskId) {
+export const transcodeDescribe = function (taskId) {
   return axios.post("/transcode/describe", { taskId: taskId });
 };
-export const setCourseFile = function(body) {
+export const setCourseFile = function (body) {
   return axios.post("/setCourseFile", body);
 };

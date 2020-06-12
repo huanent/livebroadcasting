@@ -4,8 +4,8 @@
       <li v-show="canControlBoard" @click="SET_VISIBLE('showBoardTool')">
         <icon name="pen4" size="100%" color="#fff"></icon>
       </li>
-      <li @click="SET_VISIBLE('showSetting')">
-        <icon name="settings" size="100%" color="#fff"></icon>
+      <li>
+        <setting-panel />
       </li>
       <li @click="SET_VISIBLE('showChat')">
         <icon name="comment-dots" size="100%" color="#fff"></icon>
@@ -17,17 +17,20 @@
 
 <script>
 import HandInner from "../hand-up/hand-inner";
+import SettingPanel from "./setting-panel";
 import { mapMutations, mapState } from "vuex";
+
 export default {
   name: "LiveControl",
-  components: {
-    HandInner
-  },
   methods: {
     ...mapMutations("mobile", ["SET_VISIBLE"])
   },
   computed: {
     ...mapState("features", ["canControlBoard"])
+  },
+  components: {
+    SettingPanel,
+    HandInner
   }
 };
 </script>

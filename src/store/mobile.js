@@ -1,7 +1,9 @@
 const state = {
   showChat: false,
   showSetting: false,
-  showBoardTool: false
+  showBoardTool: false,
+  hideSidebar: false,
+  showFiles: false,
 };
 
 const mutations = {
@@ -13,6 +15,9 @@ const mutations = {
     }
 
     state[prop] = !state[prop];
+  },
+  TOGGLE_SIDEBAR(state) {
+    state.hideSidebar = !state.hideSidebar
   }
 };
 
