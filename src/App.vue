@@ -19,9 +19,14 @@ export default {
   },
   created() {
     this.SET_IS_MOBILE(this._isMobile);
+    this.resizeHandler();
+    window.addEventListener("resize", this.resizeHandler);
   },
   methods: {
-    ...mapMutations("device", ["SET_IS_MOBILE"])
+    ...mapMutations("device", ["SET_IS_MOBILE", "SET_IS_HORIZONTAL"]),
+    resizeHandler() {
+      this.SET_IS_HORIZONTAL(window.innerWidth > window.innerHeight);
+    }
   }
 };
 </script>
