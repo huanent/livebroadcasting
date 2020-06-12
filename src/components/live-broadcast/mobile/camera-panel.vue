@@ -5,34 +5,27 @@
     v-swipeup="swipeup"
     v-swipedown="swipedown"
   >
-    <div
-      class="item"
-      :style="{ height: itemHeight + 'px' }"
-      v-if="!isTeacher && this.teacherStreamId"
-    >
+    <div class="item" v-if="!isTeacher && this.teacherStreamId">
       <camera
         :stream-id="teacherStreamId"
         :subscribe-audio="true"
         :subscribe-video="true"
         name="老师"
         voiceVisualization="bar"
-        object-fit="cover"
       />
     </div>
-    <div class="item" :style="{ height: itemHeight + 'px' }">
+    <div class="item">
       <camera
         class="item"
         stream-id="__local"
         :controllable="false"
         name="本人"
-        object-fit="cover"
         voiceVisualization="bar"
       />
     </div>
 
     <div
       class="item"
-      :style="{ height: itemHeight + 'px' }"
       v-for="item in featuresList"
       :key="item.__primaryKey"
       :draggable="true"
@@ -44,8 +37,7 @@
         :name="item.__nickName || item.__primaryKey"
         :subscribe-video="item.subscribeVideo"
         :subscribe-audio="item.subscribeAudio"
-        hidden-voice-intensity
-        object-fit="cover"
+        voiceVisualization="bar"
       />
     </div>
   </div>
@@ -65,24 +57,9 @@ export default {
       itemHeight: 0
     };
   },
-  mounted() {
-    this.itemHeight = this.$el.getBoundingClientRect().width * (3 / 4);
-    window.addEventListener(
-      "resize",
-      () => {
-        this.itemHeight = this.$el.getBoundingClientRect().width * (3 / 4);
-      },
-      false
-    );
-  },
   computed: {
     ...mapState("workplace", ["featuresList"]),
     ...mapGetters("workplace", ["isTeacher", "teacherStreamId"])
-  },
-  beforeDestroy() {
-    if (this.observer && this.observer.disconnect) {
-      this.observer.disconnect();
-    }
   },
   components: {
     Camera
@@ -105,9 +82,6 @@ export default {
         return;
       }
       this.offset = deltaY;
-    },
-    dragstart(item, e) {
-      e.dataTransfer.setData("streamId", item.__streamId);
     }
   }
 };
