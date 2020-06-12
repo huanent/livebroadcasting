@@ -20,7 +20,7 @@
         :class="{ 'cameraPanel-hide': !cameraPanelVisibity }"
       >
         <div class="camera-panel-wrapper">
-          <CameraPanel></CameraPanel>
+          <student-camera />
         </div>
         <div class="main-workplace-wrapper">
           <MainWorkplace></MainWorkplace>
@@ -29,7 +29,7 @@
         </div>
       </div>
       <div id="workplace-panel-right">
-        <self-camera />
+        <teacher-camera />
         <div class="message-panel-wrapper">
           <chatroom />
         </div>
@@ -44,8 +44,8 @@
 import WorkplacePanelHeader from "@c/live-broadcast/workplace-header";
 import MainWorkplace from "@c/live-broadcast/main-workplace";
 import Chatroom from "@c/live-broadcast/chatroom";
-import SelfCamera from "@c/live-broadcast/self-camera";
-import CameraPanel from "../../components/live-broadcast/camera-panel";
+import TeacherCamera from "@c/live-broadcast/camera/teacher";
+import StudentCamera from "@c/live-broadcast/camera/student";
 import { destroyEmitter, Emitter, initEmitter } from "../../core/emit";
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import { ROLE } from "@/models/role";
@@ -226,9 +226,9 @@ export default {
   components: {
     MainWorkplace,
     Chatroom,
-    SelfCamera,
+    TeacherCamera,
     WorkplacePanelHeader,
-    CameraPanel,
+    StudentCamera,
     Widgets,
     HandUpList,
     Hand,

@@ -46,7 +46,7 @@ import { Emitter } from "@/core/emit";
 import { liveBroadcastService } from "../../../core/live-broadcast";
 import Camera from "../../common/camera";
 export default {
-  name: "CameraPanel",
+  name: "StudentCamera",
   data() {
     return {
       offset: 0

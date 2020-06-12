@@ -19,7 +19,6 @@
 <script>
 import MainWorkplace from "@c/live-broadcast/main-workplace";
 import ChatRoom from "../../components/live-broadcast/mobile/chat-room";
-import SelfCamera from "@c/live-broadcast/self-camera";
 import CameraPanel from "../../components/live-broadcast/mobile/camera-panel";
 import SettingPanel from "../../components/live-broadcast/mobile/setting-panel";
 import BoardToolbar from "../../components/live-broadcast/mobile/board-toolbar";
