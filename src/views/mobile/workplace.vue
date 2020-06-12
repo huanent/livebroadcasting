@@ -21,25 +21,25 @@
 
 <script>
 import MainWorkplace from "@c/live-broadcast/main-workplace";
-import ChatRoom from "../../components/live-broadcast/mobile/chat-room";
-import CameraPanel from "../../components/live-broadcast/mobile/camera-panel";
-import SettingPanel from "../../components/live-broadcast/mobile/setting-panel";
-import BoardToolbar from "../../components/live-broadcast/mobile/board-toolbar";
+import ChatRoom from "@c/live-broadcast/mobile/chat-room";
+import CameraPanel from "@c/live-broadcast/mobile/camera-panel";
+import SettingPanel from "@c/live-broadcast/mobile/setting-panel";
+import BoardToolbar from "@c/live-broadcast/mobile/board-toolbar";
 import { destroyEmitter, Emitter, initEmitter } from "../../core/emit";
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import { ROLE } from "@/models/role";
-import Widgets from "../../components/live-broadcast/widgets";
+import Widgets from "@c/live-broadcast/widgets";
 import { app } from "../../main";
 import {
   initLiveBroadcastService,
   liveBroadcastService
 } from "../../core/live-broadcast";
-import HandUpList from "../../components/live-broadcast/hand-up/hand-up-list";
-import Hand from "../../components/live-broadcast/hand-up/hand";
+import HandUpList from "@c/live-broadcast/hand-up/hand-up-list";
+import Hand from "@c/live-broadcast/hand-up/hand";
 import { autoSyncState, destroySyncState } from "../../core/state-sync";
 import { requestDeviceAccess, delay } from "../../core/utils";
-import LiveControl from "../../components/live-broadcast/mobile/live-control";
-import HroizontalTipCover from "../../components/live-broadcast/mobile/horizontal-tip-cover";
+import LiveControl from "@c/live-broadcast/mobile/live-control";
+import HroizontalTipCover from "@c/live-broadcast/mobile/horizontal-tip-cover";
 export default {
   name: "workplace",
   data: function() {
