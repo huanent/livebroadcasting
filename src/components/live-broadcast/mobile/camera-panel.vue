@@ -2,38 +2,38 @@
   <div
     class="camera-panel-wrapper"
     ref="wrapper"
-    v-swipeup="swipeup"
-    v-swipedown="swipedown"
+    v-panend="panend"
+    v-panmove="panmove"
+    v-panstart="panstart"
   >
-    <div class="item" v-if="!isTeacher && this.teacherStreamId">
+    <div
+      ref="items"
+      class="items"
+      :class="{ smoothness: smoothness }"
+      :style="{ top: top + 'px' }"
+    >
       <camera
+        v-if="!isTeacher && this.teacherStreamId"
+        class="item"
         :stream-id="teacherStreamId"
         :subscribe-audio="true"
         :subscribe-video="true"
         name="老师"
         voiceVisualization="bar"
       />
-    </div>
-    <div class="item">
+
       <camera
         class="item"
         stream-id="__local"
-        :controllable="false"
         name="本人"
         voiceVisualization="bar"
       />
-    </div>
 
-    <div
-      class="item"
-      v-for="item in featuresList"
-      :key="item.__primaryKey"
-      :draggable="true"
-      @dragstart="dragstart(item, $event)"
-    >
       <camera
+        v-for="item in featuresList"
+        :key="item.__primaryKey"
+        class="item"
         :stream-id="item.__streamId"
-        :controllable="false"
         :name="item.__nickName || item.__primaryKey"
         :subscribe-video="item.subscribeVideo"
         :subscribe-audio="item.subscribeAudio"
@@ -53,8 +53,9 @@ export default {
   name: "CameraPanel",
   data() {
     return {
+      top: 0,
       offset: 0,
-      itemHeight: 0
+      smoothness: false
     };
   },
   computed: {
@@ -65,23 +66,24 @@ export default {
     Camera
   },
   methods: {
-    swipedown(e) {
-      let { deltaY } = e;
-      if (deltaY > 0) {
-        deltaY = 0;
-      }
-      this.offset = deltaY;
-    },
-    swipeup(e) {
-      let { deltaY } = e;
+    panend(e) {
+      this.smoothness = true;
       let prect = this.$refs.wrapper.getBoundingClientRect();
       let rect = this.$refs.items.getBoundingClientRect();
-      let ph = prect.height;
-      let h = rect.height;
-      if (ph >= h) {
-        return;
+
+      if (-this.top > rect.height - prect.height) {
+        this.top = prect.height - rect.height;
       }
-      this.offset = deltaY;
+
+      if (this.top > 0) this.top = 0;
+      this.offset = this.top;
+    },
+    panmove(e) {
+      let { deltaY } = e;
+      this.top = deltaY + this.offset;
+    },
+    panstart() {
+      this.smoothness = false;
     }
   }
 };
@@ -95,16 +97,15 @@ export default {
   overflow: hidden;
   .items {
     position: absolute;
-    transition: all 0.5s;
-    top: 0;
-    height: auto;
-    width: 100%;
     .item {
       display: block;
       width: 100%;
-      min-height: 5rem;
-      margin: 0.5rem 0;
+      height: 5rem;
+      margin-bottom: 0.5rem;
     }
   }
+}
+.smoothness {
+  transition: top 0.5s;
 }
 </style>
