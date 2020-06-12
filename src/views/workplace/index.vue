@@ -87,7 +87,7 @@ export default {
       "isToolBarShow"
     ]),
     ...mapState("features", ["canControlBoard", "classing", "canControlBoard"]),
-    ...mapGetters("workplace", ["isTeacher", '"panelType"']),
+    ...mapGetters("workplace", ["isTeacher"]),
     isToolBarShow() {
       return this.panelType === "board" && this.canControlBoard;
     }

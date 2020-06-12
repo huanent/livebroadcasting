@@ -15,6 +15,7 @@
     <chat-room v-show="showChat" />
     <setting-panel v-show="showSetting" />
     <BoardToolbar v-show="showBoardTool" />
+    <HroizontalTipCover />
   </div>
 </template>
 
@@ -38,6 +39,7 @@ import Hand from "../../components/live-broadcast/hand-up/hand";
 import { autoSyncState, destroySyncState } from "../../core/state-sync";
 import { requestDeviceAccess, delay } from "../../core/utils";
 import LiveControl from "../../components/live-broadcast/mobile/live-control";
+import HroizontalTipCover from "../../components/live-broadcast/mobile/horizontal-tip-cover";
 export default {
   name: "workplace",
   data: function() {
@@ -210,7 +212,8 @@ export default {
     LiveControl,
     ChatRoom,
     SettingPanel,
-    BoardToolbar
+    BoardToolbar,
+    HroizontalTipCover
   }
 };
 </script>
