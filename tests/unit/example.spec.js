@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import ChatroomMessage from "@/components/live-broadcast/chatroom/chatroom-message.vue";
+import ChatroomMessage from "@/components/live-broadcast/Chatroom/ChatroomMessage.vue";
 
 describe("ChatroomMessage.vue组件", () => {
   it("测试ChatroomMessage组件能否正常显示并增加", () => {
