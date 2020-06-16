@@ -55,8 +55,8 @@ export default {
   align-items: center;
   justify-content: space-around;
   text-align: center;
+  padding: 0 1rem;
   color: #8a9099;
-  user-select: none;
   > span {
     min-width: 2.5rem;
     padding: 0 0.5rem;
