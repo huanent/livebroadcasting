@@ -46,6 +46,7 @@
   "login.passwordTips": "请输入您的密码",
   "login.successTips": "登录成功",
   "login.failedTips": "登录失败",
+  "login.logining":"登录中",
 
   "signup": "注册",
   "signup.signupSuccess": "注册成功，请登录",

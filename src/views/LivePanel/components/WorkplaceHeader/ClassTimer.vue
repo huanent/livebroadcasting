@@ -23,9 +23,21 @@ export default {
       if (offset < 0) {
         this.time = "00:00";
       } else {
-        let minutes = parseInt(offset / 60000);
-        let seconds = parseInt((offset % 60000) / 1000);
-        this.time = `${minutes}:${seconds}`;
+        // let minutes = parseInt(offset / 60000);
+        // let seconds = parseInt((offset % 60000) / 1000);
+
+        
+        let offsetDays=parseInt(offset/(24*3600*1000));
+        let surplusTimes=offset%(24*60*60*1000);
+
+        let hours=parseInt(surplusTimes/(3600*1000));
+        let surplusMinutes=surplusTimes%(60*60*1000);
+
+        let minutes=parseInt(surplusMinutes/(60*1000));
+        let surplusSeconds=surplusMinutes%(60*1000);
+
+        let seconds=parseInt(surplusSeconds/1000);
+        this.time = `${offsetDays}天:${hours}:${minutes}:${seconds}`;
       }
     }, 1000);
   },

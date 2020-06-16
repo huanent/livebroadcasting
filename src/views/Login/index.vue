@@ -22,8 +22,8 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit('loginForm')">
-            {{ $t("login") }}
+          <el-button type="primary" :loading="showLoading" @click="onSubmit('loginForm')">
+            {{ showLoading ?  $t("login.logining") : $t("login") }}
           </el-button>
           <el-button type="primary" @click="signup">
             {{ $t("signup") }}
@@ -62,7 +62,8 @@ export default {
             trigger: "change"
           }
         ]
-      }
+      },
+      showLoading:false
     };
   },
   computed: {
@@ -84,6 +85,8 @@ export default {
           const data = new FormData();
           data.append("username", this.loginForm.username);
           data.append("password", this.loginForm.password);
+
+          this.showLoading = true;
           userApi
             .login(data)
             .then(res => {
@@ -96,12 +99,15 @@ export default {
 
                 this.SET_USER_INFO(data);
                 this.$router.push({ name: "Classlist" });
+                this.showLoading = false;
               } else {
                 this.$message.error(this.$t("login.failedTips"));
+                this.endLoading();
               }
             })
             .catch(err => {
               console.log(err);
+              this.endLoading();
             });
         }
       });
@@ -111,6 +117,11 @@ export default {
     },
     resetForm: function(formName) {
       this.$refs[formName].resetFields();
+    },
+    endLoading(){
+      setTimeout(() => {
+        this.showLoading = false;
+      }, 500);
     }
   }
 };
