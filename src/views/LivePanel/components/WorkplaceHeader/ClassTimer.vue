@@ -37,7 +37,13 @@ export default {
         let surplusSeconds=surplusMinutes%(60*1000);
 
         let seconds=parseInt(surplusSeconds/1000);
-        this.time = `${offsetDays}天:${hours}:${minutes}:${seconds}`;
+        if(seconds <10){
+          seconds = '0' + seconds
+        }
+        if(minutes <10){
+          minutes = '0' + minutes
+        }
+        this.time = `${hours}:${minutes}:${seconds}`;
       }
     }, 1000);
   },
