@@ -1,10 +1,15 @@
 <template>
   <div class="workplace-header-component">
     <div class="menu-operation">
+      <span class="show-hide">显示/隐藏：</span>
+      <el-tooltip :content="'课件库'" placement="bottom" :open-delay="200">
+        <icon @click.native="onCoursewareOpen" name="import_contacts" :size="20"></icon>
+      </el-tooltip>
+
       <class-timer />
       <el-tooltip :content="'切换主题'" placement="bottom" :open-delay="200">
         <span style="padding: 0 20px">
-          <el-switch v-model="switchStatus"> </el-switch>
+          <el-switch v-model="switchStatus"></el-switch>
         </span>
       </el-tooltip>
 
@@ -14,53 +19,27 @@
         class="class-btn"
         size="mini"
         type="primary"
-        >下课</el-button
-      >
+      >下课</el-button>
 
       <recoder v-if="showRecoderButton"></recoder>
       <el-tooltip :content="'课件库'" placement="bottom" :open-delay="200">
-        <icon
-          @click.native="onCoursewareOpen"
-          name="import_contacts"
-          :size="20"
-        ></icon>
+        <icon @click.native="onCoursewareOpen" name="import_contacts" :size="20"></icon>
       </el-tooltip>
 
-      <el-tooltip
-        v-if="isTeacher"
-        :content="'应用中心'"
-        placement="bottom"
-        :open-delay="200"
-      >
+      <el-tooltip v-if="isTeacher" :content="'应用中心'" placement="bottom" :open-delay="200">
         <icon @click.native="onWidgetsOpen" name="widgets" :size="20"></icon>
       </el-tooltip>
       <el-tooltip :content="'个人设置'" placement="bottom" :open-delay="200">
-        <icon
-          name="settings"
-          :size="20"
-          @click.native="showSettings = true"
-        ></icon>
+        <icon name="settings" :size="20" @click.native="showSettings = true"></icon>
       </el-tooltip>
       <el-tooltip :content="$t('workplace.cameraPanel')" placement="bottom">
-        <icon
-          @click.native="$emit('head-toggle')"
-          name="monitor"
-          :size="16"
-        ></icon>
+        <icon @click.native="$emit('head-toggle')" name="monitor" :size="16"></icon>
       </el-tooltip>
       <el-tooltip :content="$t('workplace.messagePanel')" placement="bottom">
-        <icon
-          @click.native="$emit('sidebar-toggle')"
-          name="comments"
-          :size="18"
-        />
+        <icon @click.native="$emit('sidebar-toggle')" name="comments" :size="18" />
       </el-tooltip>
       <el-tooltip :content="'退出'" placement="bottom" :open-delay="200">
-        <icon
-          @click.native="liveroomLogout"
-          name="exit_to_app"
-          :size="20"
-        ></icon>
+        <icon @click.native="liveroomLogout" name="exit_to_app" :size="20"></icon>
       </el-tooltip>
       <!--   <icon name="info_outline" :size="20"></icon>-->
     </div>
@@ -232,6 +211,11 @@ export default {
   height: 100%;
   display: flex;
   align-items: center;
+  .show-hide {
+    @include themeify {
+      color: themed("font_color2");
+    }
+  }
 }
 .menu-operation > svg {
   display: inline-block;
