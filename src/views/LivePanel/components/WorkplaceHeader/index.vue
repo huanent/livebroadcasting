@@ -1,46 +1,70 @@
 <template>
   <div class="workplace-header-component">
     <div class="menu-operation">
-      <span class="show-hide">显示/隐藏：</span>
-      <el-tooltip :content="'课件库'" placement="bottom" :open-delay="200">
-        <icon @click.native="onCoursewareOpen" name="import_contacts" :size="20"></icon>
-      </el-tooltip>
+      <div class="icon-group">
+        <span class="header-label">显示/隐藏：</span>
+        <el-tooltip :content="$t('workplace.messagePanel')" placement="bottom">
+          <span class="icon-wrapper">
+            <icon @click.native="$emit('sidebar-toggle')" name="comments" />
+          </span>
+        </el-tooltip>
+        <el-tooltip :content="$t('workplace.cameraPanel')" placement="bottom">
+          <span class="icon-wrapper">
+            <icon @click.native="$emit('head-toggle')" name="monitor"></icon>
+          </span>
+        </el-tooltip>
+      </div>
+      <div class="icon-group">
+        <span class="header-label">切换主题：</span>
+        <el-tooltip :content="'切换主题'" placement="bottom" :open-delay="200">
+          <span style="padding: 0 16px 0 9px">
+            <el-switch v-model="switchStatus"></el-switch>
+          </span>
+        </el-tooltip>
+      </div>
 
-      <class-timer />
-      <el-tooltip :content="'切换主题'" placement="bottom" :open-delay="200">
-        <span style="padding: 0 20px">
-          <el-switch v-model="switchStatus"></el-switch>
+      <div class="icon-group">
+        <class-timer />
+        <el-button
+          v-if="isTeacher"
+          @click="classFinish"
+          class="class-btn"
+          size="mini"
+          type="primary"
+          >下课</el-button
+        >
+      </div>
+
+      <recoder v-if="showRecoderButton"></recoder>
+      <!--      <el-tooltip :content="'课件库'" placement="bottom" :open-delay="200">
+        <span class="icon-wrapper">
+          <icon @click.native="onCoursewareOpen" name="import_contacts"></icon>
         </span>
       </el-tooltip>
 
-      <el-button
+      <el-tooltip
         v-if="isTeacher"
-        @click="classFinish"
-        class="class-btn"
-        size="mini"
-        type="primary"
-      >下课</el-button>
-
-      <recoder v-if="showRecoderButton"></recoder>
-      <el-tooltip :content="'课件库'" placement="bottom" :open-delay="200">
-        <icon @click.native="onCoursewareOpen" name="import_contacts" :size="20"></icon>
-      </el-tooltip>
-
-      <el-tooltip v-if="isTeacher" :content="'应用中心'" placement="bottom" :open-delay="200">
-        <icon @click.native="onWidgetsOpen" name="widgets" :size="20"></icon>
+        :content="'应用中心'"
+        placement="bottom"
+        :open-delay="200"
+      >
+        <span class="icon-wrapper">
+          <icon @click.native="onWidgetsOpen" name="widgets"></icon>
+        </span>
       </el-tooltip>
       <el-tooltip :content="'个人设置'" placement="bottom" :open-delay="200">
-        <icon name="settings" :size="20" @click.native="showSettings = true"></icon>
-      </el-tooltip>
-      <el-tooltip :content="$t('workplace.cameraPanel')" placement="bottom">
-        <icon @click.native="$emit('head-toggle')" name="monitor" :size="16"></icon>
-      </el-tooltip>
-      <el-tooltip :content="$t('workplace.messagePanel')" placement="bottom">
-        <icon @click.native="$emit('sidebar-toggle')" name="comments" :size="18" />
-      </el-tooltip>
-      <el-tooltip :content="'退出'" placement="bottom" :open-delay="200">
-        <icon @click.native="liveroomLogout" name="exit_to_app" :size="20"></icon>
-      </el-tooltip>
+        <span class="icon-wrapper">
+          <icon name="settings" @click.native="showSettings = true"></icon>
+        </span>
+      </el-tooltip>-->
+      <div class="icon-group exit" @click.native="liveroomLogout">
+        <el-tooltip :content="'退出'" placement="bottom" :open-delay="200">
+          <span class="icon-wrapper">
+            <icon name="sign-out-alt"></icon>
+          </span>
+        </el-tooltip>
+        <span class="header-label">退出</span>
+      </div>
       <!--   <icon name="info_outline" :size="20"></icon>-->
     </div>
     <Courseware
@@ -211,23 +235,8 @@ export default {
   height: 100%;
   display: flex;
   align-items: center;
-  .show-hide {
-    @include themeify {
-      color: themed("font_color2");
-    }
-  }
 }
-.menu-operation > svg {
-  display: inline-block;
-  line-height: 2rem;
-  cursor: pointer;
 
-  @include themeify {
-    fill: themed("font_color2");
-  }
-  padding: 2.5px 4px;
-  margin: 0 auto;
-}
 .menu-operation svg:hover {
   @include themeify {
     fill: themed("font_color1");
@@ -257,6 +266,34 @@ export default {
 
 .class-btn {
   padding: 2px 4px;
+  height: 16px;
   margin: 0 10px;
+}
+
+.svg-icon {
+  @include themeify {
+    fill: themed("font_color2");
+  }
+  height: 15px !important;
+  width: 15px !important;
+}
+.header-label {
+  padding: 0 2px;
+  margin: 0 auto;
+  @include themeify {
+    color: themed("font_color2");
+  }
+}
+.icon-wrapper {
+  display: inline-block;
+  cursor: pointer;
+  padding: 0 5px;
+  margin: 0 auto;
+}
+.icon-group {
+  height: 100%;
+  padding: 2px 7px;
+  display: flex;
+  align-items: center;
 }
 </style>
