@@ -152,15 +152,25 @@ export default {
     },
     async changeVideo() {
       if (!this.stream || this.isLocal) return;
-      await liveBroadcastService.trtcService.subscribe(
-        this.stream,
-        true,
-        this.subscribeVideo
-      );
+
+      if (this.alwaysLocalMuted) {
+        this.videoMuted ? this.stream.muteVideo() : this.stream.unmuteVideo();
+      } else {
+        await liveBroadcastService.trtcService.subscribe(
+          this.stream,
+          true,
+          this.subscribeVideo
+        );
+      }
     },
     async changeAudio() {
       if (!this.stream || this.isLocal) return;
-      this.subscribeAudio ? this.stream.unmuteAudio() : this.stream.muteAudio();
+
+      let status = this.alwaysLocalMuted
+        ? this.audioMuted
+        : this.subscribeAudio;
+
+      status ? this.stream.unmuteAudio() : this.stream.muteAudio();
     },
     async initAudioMonitor(stream) {
       if (this.audioContext) this.audioContext.close();
