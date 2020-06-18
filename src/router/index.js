@@ -14,7 +14,7 @@ const routes = [
   {
     path: "/my",
     name: "MyClass",
-    component: () => import("@v/myclass"),
+    component: () => import("@v/ClassPanel"),
     meta: {
       requireAuth: true,
       title: "我的课堂"
@@ -23,7 +23,7 @@ const routes = [
       {
         path: "/",
         name: "Classlist",
-        component: () => import("@c/my-class"),
+        component: () => import("@v/ClassPanel/ClassList"),
         meta: {
           title: "课堂列表"
         }
@@ -31,7 +31,7 @@ const routes = [
       {
         path: "/setting",
         name: "Setting",
-        component: () => import("@c/my-class/my-setting"),
+        component: () => import("@v/ClassPanel/ProfileSetting"),
         meta: {
           title: "个人设置"
         }
@@ -41,7 +41,7 @@ const routes = [
   {
     path: "/login",
     name: "Login",
-    component: () => import("@v/login.vue"),
+    component: () => import("@v/Login"),
     meta: {
       title: "登录"
     }
@@ -49,7 +49,7 @@ const routes = [
   {
     path: "/signup",
     name: "SignUp",
-    component: () => import("@v/signup.vue"),
+    component: () => import("@v/SignUp"),
     meta: {
       title: "注册"
     }
@@ -61,7 +61,7 @@ const routes = [
       requireAuth: true,
       title: ""
     },
-    component: () => import("@v/workplace")
+    component: () => import("@v/LivePanel")
   },
   {
     path: "/mobile/liveroom",
@@ -70,7 +70,7 @@ const routes = [
       requireAuth: true,
       title: ""
     },
-    component: () => import("@v/mobile/workplace")
+    component: () => import("@v/LivePanel/MobileLivePanel")
   }
 ];
 

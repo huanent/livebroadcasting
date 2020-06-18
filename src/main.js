@@ -7,7 +7,7 @@ import i18n from "./plugins/i18n";
 import "@/plugins/icons";
 import hammer from "./plugins/hammer";
 
-import element from "@c/common/element";
+import element from "@c/Element";
 import "@style/normalize.css";
 import "./assets/style/element-variable.scss";
 import "@style/custom.scss";

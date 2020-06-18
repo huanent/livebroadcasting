@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Icon from "@/components/common/svg-icon"; // svg组件
+import Icon from "@/components/SvgIcon"; // svg组件
 
 // register as a global component
 Vue.component("icon", Icon);
