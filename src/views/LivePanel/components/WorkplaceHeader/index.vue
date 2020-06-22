@@ -5,12 +5,12 @@
         <span class="header-label">显示/隐藏：</span>
         <el-tooltip :content="$t('workplace.messagePanel')" placement="bottom">
           <span class="icon-wrapper">
-            <icon @click.native="$emit('sidebar-toggle')" name="comments" />
+            <icon @click="$emit('sidebar-toggle')" name="comments" />
           </span>
         </el-tooltip>
         <el-tooltip :content="$t('workplace.cameraPanel')" placement="bottom">
           <span class="icon-wrapper">
-            <icon @click.native="$emit('head-toggle')" name="monitor"></icon>
+            <icon @click.="$emit('head-toggle')" name="monitor"></icon>
           </span>
         </el-tooltip>
       </div>
@@ -57,7 +57,7 @@
           <icon name="settings" @click.native="showSettings = true"></icon>
         </span>
       </el-tooltip>-->
-      <div class="icon-group exit" @click.native="liveroomLogout">
+      <div class="icon-group exit" @click="liveroomLogout">
         <el-tooltip :content="'退出'" placement="bottom" :open-delay="200">
           <span class="icon-wrapper">
             <icon name="sign-out-alt"></icon>

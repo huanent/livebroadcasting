@@ -1,30 +1,38 @@
 <template>
   <div class="shape-box">
-    <div class="block">
-      <el-slider
-        v-model="brushThin"
-        @change="onSlider"
-        :min="1"
-        :max="500"
-      ></el-slider>
-    </div>
     <div>
       <ul class="shape-select">
         <li
           v-for="(item, index) in toolitems"
           :key="index"
-          :class="[{ active: toolitemscurrent == item.shape }]"
+          :class="{ active: toolitemscurrent == item.shape }"
           @click="addToolitemClass(index, item)"
         >
           {{ item.index }}
-          <icon :name="item.name" :size="18" color="#b4b4b5" />
+          <icon :name="item.name" :size="18" />
         </li>
-        <li ref="colorpck">
-          <el-color-picker
-            v-model="shapecolor"
-            size="mini"
-            @change="onColorPicked"
-          ></el-color-picker>
+      </ul>
+    </div>
+
+    <el-slider
+      v-model="brushThin"
+      @change="onSlider"
+      :min="1"
+      :max="500"
+    ></el-slider>
+    <div>
+      <ul class="shape-select brush-thin-select">
+        <li
+          v-for="(item, index) in thinSelectsData"
+          :key="index"
+          @click="selectedThin(item)"
+        >
+          <span
+            :style="{
+              height: index * 3 + 6 + 'px',
+              width: index * 3 + 6 + 'px'
+            }"
+          ></span>
         </li>
       </ul>
     </div>
@@ -58,6 +66,12 @@ export default {
           name: "rectangle",
           shape: "rectangle"
         }
+      ],
+      thinSelectsData: [
+        { size: 20 },
+        { size: 100 },
+        { size: 200 },
+        { size: 400 }
       ]
     };
   },
@@ -94,6 +108,10 @@ export default {
     },
     onSlider(num) {
       this.SET_BRUSH_THIN(num);
+    },
+    selectedThin(item) {
+      this.onSlider(item.size);
+      this.brushThin = this.$store.state.board.brushThin;
     }
   }
 };
@@ -102,20 +120,14 @@ export default {
 .svg-bold {
   font-weight: 100;
 }
-.svg-icon {
-  padding: 0rem !important;
-}
 .shape-box {
   text-align: center;
-  padding: 0.7rem;
-  margin-top: 0.6rem;
-  // position: absolute;
-  // left: -170px;
-  // top: 0;
-  width: 9.4rem;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  width: 8em;
   @include themeify {
     background-color: themed("background_color3");
-    border: 1px solid themed("background_color5");
+    box-shadow: $shadow;
   }
   background-color: rgba(48, 49, 51, 0.79);
   .shape-select {
@@ -130,11 +142,7 @@ export default {
       width: 1.1rem;
       height: 1.1rem;
       padding: 0.2rem;
-      &:hover svg {
-        @include themeify {
-          fill: themed("toolbar_icon") !important;
-        }
-      }
+
       &:not(:first-child) {
         margin-left: 0.2rem;
       }
@@ -151,20 +159,44 @@ export default {
     width: 1.7rem;
   }
 }
-.active {
-  // background-color: black;
+.svg-icon {
   @include themeify {
-    box-shadow: 0 0 0px 1px themed("toolbar_icon");
+    fill: #aaaaaa;
   }
-  // box-shadow: 0 0 0px 1px #888888;
-  // @include themeify {
-  //   background-color: themed("background_color5");
-  // }
-  svg {
-    // fill: rgb(255, 255, 255) !important;
+}
+.shape-select > .active {
+  .svg-icon {
     @include themeify {
-      fill: themed("toolbar_icon") !important;
+      fill: #e4e7ed;
     }
+  }
+}
+
+.shape-select > li:hover {
+  .svg-icon {
+    @include themeify {
+      fill: #e4e7ed;
+    }
+  }
+}
+
+/deep/ .el-slider__button {
+  width: 8px;
+  height: 8px;
+  border: solid 2px #aaaaaa;
+}
+
+/deep/ .el-slider__bar {
+  background-color: #aaaaaa !important;
+}
+.brush-thin-select {
+  span {
+    cursor: pointer;
+    background-color: #aaaaaa;
+    border-radius: 50%;
+  }
+  span:hover {
+    background-color: #e4e7ed;
   }
 }
 </style>

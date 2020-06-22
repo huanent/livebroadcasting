@@ -18,7 +18,8 @@ $themes: (
     toolbar_bg: rgb(255, 255, 255),
     primary: rgb(10, 129, 140),
     bg_1: rgb(10, 129, 140),
-    board_bg: #fff
+    board_bg: #fff,
+    /*          :*/
   ),
   dark: (
     font_color1: rgb(226, 222, 222),
@@ -65,3 +66,5 @@ $themes: (
 
 $white: #ffffff;
 $black: #fcfdff;
+$shadow: 0px 2px 4px 0px rgba(40, 120, 255, 0.08),
+  0px 0px 4px 1px rgba(0, 0, 0, 0.12);
