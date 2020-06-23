@@ -143,8 +143,11 @@ export default {
   width: 100%;
   position: relative;
   @include themeify {
-    background: mix(themed("background_color4"), themed("color_like"), 90%);
+    background: mix(themed("background_color3"), themed("color_like"), 85%);
   }
+  /*  @include themeify {
+    background: mix(themed("background_color4"), themed("color_like"), 90%);
+  }*/
 }
 .main-workplace-header {
   height: 2rem;
@@ -179,7 +182,7 @@ export default {
   position: absolute;
   bottom: 0;
   @include themeify {
-    background: themed("background_color3");
+    background: themed("background_color2");
   }
   border-top: 1px solid rgba(30, 33, 37, 0.19);
 }

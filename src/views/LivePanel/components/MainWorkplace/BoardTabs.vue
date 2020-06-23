@@ -241,7 +241,7 @@ export default {
     cursor: pointer;
     padding: 0.3rem 0;
     @include themeify {
-      background-color: themed("toolbar_bg");
+      background-color: themed("background_color2");
     }
   }
   .select-option:hover {

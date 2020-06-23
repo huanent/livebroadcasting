@@ -12,7 +12,7 @@ export class BoardService {
     textSize: store.state.board.textSize,
     toolType: store.state.board.toolType,
     drawEnable: store.state.features.canControlBoard,
-    globalBackgroundColor: "rgba(255, 255, 255, 0.01)"
+    globalBackgroundColor: "rgba(41,43,46,0.02)"
   };
 
   async init(token) {
