@@ -36,18 +36,43 @@
         </li>
       </ul>
     </div>
+    <div>
+      <ul
+        class="shape-select color-select"
+        v-for="(colorSelect, index) in colorSelectsData"
+        :key="index"
+      >
+        <li
+          v-for="(item, index) in colorSelect"
+          :key="index"
+          @click="selectedColor(item)"
+        >
+          <span
+            v-if="!item.type || item.type !== 'colorPicker'"
+            :style="{
+              background: item.color
+            }"
+          ></span>
+          <icon v-else name="hue-ring"></icon>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <ColorPicker :value="color"> </ColorPicker>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapMutations } from "vuex";
-
+import ColorPicker from "@/components/color-picker";
 export default {
   name: "ShapeBox",
   data() {
     return {
       shapecolor: "",
       brushThin: "",
+      color: "red",
       toolitemscurrent: "curve",
       toolitems: [
         {
@@ -72,12 +97,40 @@ export default {
         { size: 100 },
         { size: 200 },
         { size: 400 }
+      ],
+      colorSelectsData: [
+        [
+          { color: "#FFFFFF" },
+          { color: "#9B9B9B" },
+          { color: "#4B4B4B" },
+          { color: "#000000" }
+        ],
+        [
+          { color: "#F53636" },
+          { color: "#EC6841" },
+          { color: "#F9F833" },
+          { color: "#B5E848" }
+        ],
+
+        [
+          { color: "#28E9E3" },
+          { color: "#00A0E8" },
+          { color: "#9285C1" },
+          {
+            color:
+              "linear-gradient(90deg,rgba(255,0,0,1),rgba(255,0,255,1),rgba(0,0,255,1),rgba(0,255,255,1),rgba(0,255,0,1),rgba(255,255,0,1),rgba(255,0,0,1))",
+            type: "colorPicker"
+          }
+        ]
       ]
     };
   },
   created() {
     this.shapecolor = this.$store.state.board.brushColor;
     this.brushThin = this.$store.state.board.brushThin;
+  },
+  components: {
+    ColorPicker
   },
   methods: {
     ...mapMutations("board", [
@@ -112,6 +165,11 @@ export default {
     selectedThin(item) {
       this.onSlider(item.size);
       this.brushThin = this.$store.state.board.brushThin;
+    },
+    selectedColor(item) {
+      if (!item.type || item.type !== "colorPicker") {
+        this.SET_BRUSH_COLOR(item.color);
+      }
     }
   }
 };
@@ -183,7 +241,8 @@ export default {
 /deep/ .el-slider__button {
   width: 8px;
   height: 8px;
-  border: solid 2px #aaaaaa;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 /deep/ .el-slider__bar {
@@ -198,5 +257,20 @@ export default {
   span:hover {
     background-color: #e4e7ed;
   }
+}
+
+.color-select {
+  display: flex;
+  span {
+    cursor: pointer;
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+  span:hover {
+  }
+}
+/deep/ .svg-icon {
+  width: 100% !important;
+  height: 100% !important;
 }
 </style>

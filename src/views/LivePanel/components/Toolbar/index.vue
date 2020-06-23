@@ -281,7 +281,7 @@ export default {
   width: 2rem;
   color: #eee;
   @include themeify {
-    background-color: themed("toolbar_bg");
+    background-color: themed("background_color3");
   }
   box-shadow: $shadow;
   position: absolute;
