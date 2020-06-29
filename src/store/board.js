@@ -19,68 +19,85 @@ const state = {
 const mutations = {
   // 设置画笔颜色
   SET_BRUSH_COLOR(state, color) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.brushColor = color;
     liveBroadcastService.boardService.activeBoard.setBrushColor(color);
   },
   SET_BRUSH_THIN(state, num) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.brushThin = num;
     liveBroadcastService.boardService.activeBoard.setBrushThin(num);
   },
   SET_TOOL_PEN(state) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.toolType = 1;
     liveBroadcastService.boardService.activeBoard.setToolType(1);
   },
   SET_TOOL_TEXT(state) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.toolType = 11;
     liveBroadcastService.boardService.activeBoard.setToolType(11);
   },
   SET_TOOL_LASERPEN(state) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.toolType = 3;
     liveBroadcastService.boardService.activeBoard.setToolType(3);
   },
   SET_TOOL_ERASER(state) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.toolType = 2;
     liveBroadcastService.boardService.activeBoard.setToolType(2);
   },
   SET_TOOL_LINE(state) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.toolType = 4;
     liveBroadcastService.boardService.activeBoard.setToolType(4);
   },
   SET_TOOL_OVAL(state) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.toolType = 5;
     liveBroadcastService.boardService.activeBoard.setToolType(5);
   },
   SET_TOOL_RECT(state) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.toolType = 6;
     liveBroadcastService.boardService.activeBoard.setToolType(6);
   },
   // 拖动 zoom-drag
   SET_TOOL_DRAG(state) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.toolType = 12;
     liveBroadcastService.boardService.activeBoard.setToolType(12);
   },
   SET_TEXT_COLOR(state, color) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.textColor = color;
     liveBroadcastService.boardService.activeBoard.setTextColor(color);
   },
   SET_TEXT_SIZE(state, num) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.textSize = num;
     liveBroadcastService.boardService.activeBoard.setTextSize(num);
   },
 
   CLEAR_BOARD() {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     liveBroadcastService.boardService.activeBoard.clear();
   },
   CAN_REDO() {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     liveBroadcastService.boardService.activeBoard.redo();
   },
   CAN_UNDO() {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     liveBroadcastService.boardService.activeBoard.undo();
   },
   ADD_BOARD() {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     liveBroadcastService.boardService.activeBoard.addBoard();
   },
   REMOVE_BOARD() {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     liveBroadcastService.boardService.activeBoard.deleteBoard();
   },
   SYNC_STATE(state, data) {
@@ -89,6 +106,7 @@ const mutations = {
     }
   },
   SET_BOARD_SCALE(state, value) {
+    if (!liveBroadcastService.boardService.activeBoard) return;
     state.currentFile.scale = value;
     liveBroadcastService.boardService.activeBoard.setBoardScale(value);
   },

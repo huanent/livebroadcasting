@@ -28,22 +28,53 @@
       <el-tooltip :content="item.tips" placement="right" :open-delay="300">
         <el-popover
           placement="left"
-          trigger="click"
+          trigger="manual"
           :visible-arrow="false"
-          v-if="item.name === 'pen' || item.name === 'text'"
+          v-if="item.name === 'pen'"
+          v-model="shapeBoxVisibity"
           popper-class="popper"
         >
-          <div v-show="item.name === 'pen'">
+          <div>
             <!-- 形状的面板 -->
-            <ShapeBox ref="shapeBox"></ShapeBox>
-          </div>
-          <div v-show="item.name === 'text'">
-            <!-- 字体选择面板 -->
-            <TextBox ref="textBox"></TextBox>
+            <MutilPicker
+              ref="shapeBox"
+              :color="shapecolor"
+              :size="brushThin"
+              @shape-change="shapeChange"
+              @color-change="shapeColorChange"
+              @size-change="sizeChange"
+            ></MutilPicker>
           </div>
           <icon :name="item.iconName" :size="18" slot="reference"></icon>
         </el-popover>
-        <icon v-else :name="item.iconName" :size="18"></icon>
+        <el-popover
+          placement="left"
+          trigger="manual"
+          :visible-arrow="false"
+          v-if="item.name === 'text'"
+          v-model="textBoxVisibity"
+          popper-class="popper"
+        >
+          <div>
+            <!-- 字体选择面板 -->
+            <MutilPicker
+              ref="textBox"
+              :shape-disable="true"
+              :color="textColor"
+              :size="textSize"
+              :size-options="textSizeOptions"
+              @color-change="textColorChange"
+              @size-change="textSizeChange"
+              :slider-options="{ max: 1200, min: 1 }"
+            ></MutilPicker>
+          </div>
+          <icon :name="item.iconName" :size="18" slot="reference"></icon>
+        </el-popover>
+        <icon
+          v-if="item.name !== 'pen' && item.name !== 'text'"
+          :name="item.iconName"
+          :size="18"
+        ></icon>
       </el-tooltip>
     </li>
     <li class="toolbar-item" v-show="hideTool" @click="showTool">
@@ -54,8 +85,7 @@
 
 <script>
 import { mapMutations, mapState } from "vuex";
-import ShapeBox from "./ShapeBox";
-import TextBox from "./TextBox";
+import MutilPicker from "./MutilPicker";
 export default {
   name: "Toolbar",
   data() {
@@ -63,6 +93,8 @@ export default {
       activeTool: undefined,
       hideTool: false,
       toolHight: 0,
+      shapeBoxVisibity: false,
+      textBoxVisibity: false,
       toolslist: [
         {
           iconName: "pen4",
@@ -127,12 +159,21 @@ export default {
       ],
       right: 0,
       top: 0,
-      isHide: true
+      textSizeOptions: [
+        { size: 200 },
+        { size: 400 },
+        { size: 800 },
+        { size: 1000 }
+      ],
+      isHide: true,
+      shapecolor: undefined,
+      brushThin: undefined,
+      textColor: undefined,
+      textSize: undefined
     };
   },
   components: {
-    ShapeBox,
-    TextBox
+    MutilPicker
   },
   computed: {
     ...mapState("workplace", ["cameraPanelVisibity"]),
@@ -144,6 +185,12 @@ export default {
     cameraPanelVisibity() {
       this.initToolBarPosition(true);
     }
+  },
+  created() {
+    this.shapecolor = this.$store.state.board.brushColor;
+    this.brushThin = this.$store.state.board.brushThin;
+    this.textColor = this.$store.state.board.textColor;
+    this.textSize = this.$store.state.board.textSize;
   },
   mounted() {
     this.activeTool = this.toolslist[0];
@@ -158,14 +205,54 @@ export default {
       "CAN_REDO",
       "CAN_UNDO",
       "SET_TOOL_TEXT",
-      "SET_TOOL_PEN",
       "SET_TOOL_LASERPEN",
       "SET_TOOL_ERASER",
-      "SET_TOOL_DRAG"
+      "SET_TOOL_DRAG",
+      "SET_TOOL_PEN",
+      "SET_TOOL_LINE",
+      "SET_TOOL_OVAL",
+      "SET_TOOL_RECT",
+      "SET_BRUSH_COLOR",
+      "SET_BRUSH_THIN",
+      "SET_TEXT_COLOR",
+      "SET_TEXT_SIZE"
     ]),
     showTool() {
       this.hideTool = false;
       this.initToolBarPosition(true);
+    },
+    shapeChange(shape) {
+      switch (shape) {
+        case "line":
+          this.SET_TOOL_LINE();
+          break;
+        case "curve":
+          this.SET_TOOL_PEN();
+          break;
+        case "circle":
+          this.SET_TOOL_OVAL();
+          break;
+        case "rectangle":
+          this.SET_TOOL_RECT();
+          break;
+      }
+    },
+    shapeColorChange(color) {
+      this.SET_BRUSH_COLOR(color);
+      this.shapecolor = color;
+    },
+    sizeChange(num) {
+      this.SET_BRUSH_THIN(num);
+      this.brushThin = num;
+    },
+
+    textSizeChange(num) {
+      this.SET_TEXT_SIZE(num);
+      this.textSize = num;
+    },
+    textColorChange(color) {
+      this.SET_TEXT_COLOR(color);
+      this.textColor = color;
     },
     initToolBarPosition(isFix) {
       let el = this.$refs.toolbar;
@@ -199,8 +286,18 @@ export default {
     toggerTool(item, index) {
       if (item.type === "switch") {
         if (item.name === "hand" && this.isScaleLimit) return;
+
+        if (item.name === "text") {
+          this.shapeBoxVisibity = false;
+          this.textBoxVisibity = !this.textBoxVisibity;
+        }
+        if (item.name === "pen") {
+          this.textBoxVisibity = false;
+          this.shapeBoxVisibity = !this.shapeBoxVisibity;
+        }
         this.activeTool = item;
       }
+
       this.handleSetting(item.name);
     },
     handleSetting(name) {

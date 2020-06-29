@@ -1,12 +1,12 @@
 <template>
   <div class="shape-box">
-    <div>
+    <div v-if="!shapeDisable">
       <ul class="shape-select">
         <li
           v-for="(item, index) in toolitems"
           :key="index"
           :class="{ active: toolitemscurrent == item.shape }"
-          @click="addToolitemClass(index, item)"
+          @click="shapeChange(index, item)"
         >
           {{ item.index }}
           <icon :name="item.name" :size="18" />
@@ -15,17 +15,17 @@
     </div>
 
     <el-slider
-      v-model="brushThin"
-      @change="onSlider"
-      :min="1"
-      :max="500"
+      :value="size"
+      @input="setSize"
+      :min="sliderOptions.min"
+      :max="sliderOptions.max"
     ></el-slider>
     <div>
       <ul class="shape-select brush-thin-select">
         <li
-          v-for="(item, index) in thinSelectsData"
+          v-for="(item, index) in sizeOptions"
           :key="index"
-          @click="selectedThin(item)"
+          @click="setSize(item.size)"
         >
           <span
             :style="{
@@ -42,38 +42,61 @@
         v-for="(colorSelect, index) in colorSelectsData"
         :key="index"
       >
-        <li
-          v-for="(item, index) in colorSelect"
-          :key="index"
-          @click="selectedColor(item)"
-        >
+        <li v-for="(item, index) in colorSelect" :key="index">
           <span
+            @click="selectedColor(item)"
             v-if="!item.type || item.type !== 'colorPicker'"
             :style="{
               background: item.color
             }"
           ></span>
-          <icon v-else name="hue-ring"></icon>
+          <span
+            v-else
+            @click="colorPickerVisiblity = !colorPickerVisiblity"
+            style="position: relative"
+          >
+            <icon
+              name="hue-ring"
+              style="position: absolute;left: 0;top:0"
+            ></icon>
+          </span>
         </li>
       </ul>
     </div>
     <div>
-      <ColorPicker :value="color"> </ColorPicker>
+      <ColorPicker
+        :value="color"
+        @input="setColor($event)"
+        v-show="colorPickerVisiblity"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
 import ColorPicker from "@/components/color-picker";
 export default {
-  name: "ShapeBox",
+  name: "MutilPicker",
+  props: {
+    shapeDisable: { type: Boolean, default: false },
+    color: { type: String, default: "" },
+    size: { type: Number, default: 200 },
+    sizeOptions: {
+      type: Array,
+      default: () => {
+        return [{ size: 20 }, { size: 100 }, { size: 200 }, { size: 400 }];
+      }
+    },
+    sliderOptions: {
+      default: () => {
+        return { min: 1, max: 500 };
+      }
+    }
+  },
   data() {
     return {
-      shapecolor: "",
-      brushThin: "",
-      color: "red",
-      toolitemscurrent: "curve",
+      toolitemscurrent: "line",
+      colorPickerVisiblity: false,
       toolitems: [
         {
           name: "line2",
@@ -91,12 +114,6 @@ export default {
           name: "rectangle",
           shape: "rectangle"
         }
-      ],
-      thinSelectsData: [
-        { size: 20 },
-        { size: 100 },
-        { size: 200 },
-        { size: 400 }
       ],
       colorSelectsData: [
         [
@@ -125,50 +142,25 @@ export default {
       ]
     };
   },
-  created() {
-    this.shapecolor = this.$store.state.board.brushColor;
-    this.brushThin = this.$store.state.board.brushThin;
-  },
   components: {
     ColorPicker
   },
   methods: {
-    ...mapMutations("board", [
-      "SET_BRUSH_COLOR",
-      "SET_BRUSH_THIN",
-      "SET_TOOL_PEN",
-      "SET_TOOL_LINE",
-      "SET_TOOL_OVAL",
-      "SET_TOOL_RECT"
-    ]),
-    addToolitemClass(index, item) {
+    shapeChange(index, item) {
       this.toolitemscurrent = item.shape;
-      if (item.shape == "line") {
-        this.SET_TOOL_LINE();
-      }
-      if (item.shape == "curve") {
-        this.SET_TOOL_PEN();
-      }
-      if (item.shape == "circle") {
-        this.SET_TOOL_OVAL();
-      }
-      if (item.shape == "rectangle") {
-        this.SET_TOOL_RECT();
-      }
+      this.$emit("shape-change", item.shape);
     },
-    onColorPicked(color) {
-      this.SET_BRUSH_COLOR(color);
+    setSize(num) {
+      this.$emit("size-change", num);
+      this.$emit("update:size", num);
     },
-    onSlider(num) {
-      this.SET_BRUSH_THIN(num);
-    },
-    selectedThin(item) {
-      this.onSlider(item.size);
-      this.brushThin = this.$store.state.board.brushThin;
+    setColor(color) {
+      this.$emit("color-change", color);
+      this.$emit("update:color", color);
     },
     selectedColor(item) {
       if (!item.type || item.type !== "colorPicker") {
-        this.SET_BRUSH_COLOR(item.color);
+        this.setColor(item.color);
       }
     }
   }
