@@ -94,7 +94,7 @@ export default {
         s: this.saturationNumber,
         v: this.valueNumber
       }).alpha(this.alphaNumber);
-      this.$emit("input", color.toString());
+      this.$emit("input", color.css());
       return color;
     }
   },

@@ -36,7 +36,7 @@
       </div>
 
       <recoder v-if="showRecoderButton"></recoder>
-      <!--      <el-tooltip :content="'课件库'" placement="bottom" :open-delay="200">
+      <el-tooltip :content="'课件库'" placement="bottom" :open-delay="200">
         <span class="icon-wrapper">
           <icon @click.native="onCoursewareOpen" name="import_contacts"></icon>
         </span>
@@ -56,7 +56,7 @@
         <span class="icon-wrapper">
           <icon name="settings" @click.native="showSettings = true"></icon>
         </span>
-      </el-tooltip>-->
+      </el-tooltip>
       <div class="icon-group exit" @click="liveroomLogout">
         <el-tooltip :content="'退出'" placement="bottom" :open-delay="200">
           <span class="icon-wrapper">
