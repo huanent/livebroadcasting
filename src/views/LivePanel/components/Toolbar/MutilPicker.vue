@@ -50,16 +50,12 @@
               background: item.color
             }"
           ></span>
-          <span
+
+          <icon
             v-else
-            @click="colorPickerVisiblity = !colorPickerVisiblity"
-            style="position: relative"
-          >
-            <icon
-              name="hue-ring"
-              style="position: absolute;left: 0;top:0"
-            ></icon>
-          </span>
+            @click.native="colorPickerVisiblity = !colorPickerVisiblity"
+            name="hue-ring"
+          ></icon>
         </li>
       </ul>
     </div>

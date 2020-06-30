@@ -160,7 +160,7 @@ export default {
   }
   border-bottom: 1px solid rgba(30, 33, 37, 0.19);
   width: 100%;
-  padding-bottom: 0.2rem;
+  padding: 1px 0 0.2rem 0;
   height: 100%;
 }
 .header-left {

@@ -5,12 +5,12 @@
         <span class="header-label">显示/隐藏：</span>
         <el-tooltip :content="$t('workplace.messagePanel')" placement="bottom">
           <span class="icon-wrapper">
-            <icon @click="$emit('sidebar-toggle')" name="comments" />
+            <icon @click.native="$emit('sidebar-toggle')" name="comments" />
           </span>
         </el-tooltip>
         <el-tooltip :content="$t('workplace.cameraPanel')" placement="bottom">
           <span class="icon-wrapper">
-            <icon @click.="$emit('head-toggle')" name="monitor"></icon>
+            <icon @click.native="$emit('head-toggle')" name="monitor"></icon>
           </span>
         </el-tooltip>
       </div>
