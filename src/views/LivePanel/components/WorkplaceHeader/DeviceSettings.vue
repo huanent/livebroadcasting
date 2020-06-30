@@ -1,16 +1,20 @@
 <template>
-  <el-dialog
-    :title="$t('setting')"
+  <CustomDialog
+    :title="$t('title.setting')"
+    :secondary-title="'Personal Settings'"
     :visible="visibility"
     :width="dialogWidth"
     :append-to-body="true"
     @close="close"
     @closed="closed"
     @open="open"
+    :on-confirm="save"
+    :on-cancel="close"
+    :footer-visibity="true"
   >
     <div class="dialog-item">
       <el-row :gutter="20">
-        <el-col :xs="24" :sm="24" :md="12">
+        <el-col :xs="24" :sm="8" :md="14">
           <div class="select-item">
             <div class="dialog-title">{{ $t("setting.camera") }}</div>
             <el-select
@@ -69,7 +73,7 @@
             </el-alert>
           </div>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="12">
+        <el-col :xs="24" :sm="16" :md="10">
           <div class="media-container">
             <video
               ref="video"
@@ -86,17 +90,8 @@
           <audio-wave :stream="audioStream" v-if="visibility" />
         </div>
       </div>
-
-      <span slot="footer" class="clearfix">
-        <div class="right">
-          <el-button @click="close">{{ $t("button.close") }}</el-button>
-          <el-button type="primary" @click="save()">{{
-            $t("button.yes")
-          }}</el-button>
-        </div>
-      </span>
     </div>
-  </el-dialog>
+  </CustomDialog>
 </template>
 
 <script>
@@ -105,7 +100,7 @@ import { liveBroadcastService } from "@/core/live-broadcast";
 import { requestDeviceAccess } from "@/core/utils";
 import { releaseStream } from "@/core/utils";
 import AudioWave from "@c/Camera/AudioWave";
-
+import CustomDialog from "@/components/custom-dialog";
 export default {
   name: "LocalstreamSetting",
   data() {
@@ -126,7 +121,8 @@ export default {
     }
   },
   components: {
-    AudioWave
+    AudioWave,
+    CustomDialog
   },
   async mounted() {
     this.access = await requestDeviceAccess();
@@ -269,9 +265,12 @@ export default {
   height: auto;
   margin: 0 auto;
   margin-top: 20px;
+
+  overflow: hidden;
   video {
     width: 100%;
     height: 100%;
+    border-radius: 0.2rem;
   }
 }
 .wave-container {

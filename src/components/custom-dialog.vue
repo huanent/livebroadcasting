@@ -5,6 +5,9 @@
     :append-to-body="appendToBody"
     :width="width"
     @close="closeDialog"
+    @closed="$emit('closed', $event)"
+    @open="$emit('open', $event)"
+    @opened="$emit('opened', $event)"
   >
     <slot name="title" v-if="$slots.title"></slot>
     <div
@@ -35,11 +38,11 @@
     >
       <el-button
         type="info"
-        @click="onConfirm($event)"
+        @click="onCancel($event)"
         class="footer-btn cancel"
         >{{ $t("button.cancel") }}</el-button
       >
-      <el-button type="primary" @click="onCancel($event)" class="footer-btn">{{
+      <el-button type="primary" @click="onConfirm($event)" class="footer-btn">{{
         $t("button.yes")
       }}</el-button>
     </div>
