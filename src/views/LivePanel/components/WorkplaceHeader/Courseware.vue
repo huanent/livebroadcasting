@@ -1,15 +1,19 @@
 <template>
-  <el-dialog
+  <CustomDialog
     :title="$t('courseware.title')"
+    :secondary-title="'Courseware Library'"
     :visible.sync="dialogVisible"
     :before-close="onCoursewareClose"
     :append-to-body="true"
     :width="dialogWidth"
     @close="closeDialog"
+    :on-confirm="onCoursewareClose"
+    :on-cancel="onCoursewareClose"
+    :footer-visibity="true"
     class="courseware"
   >
     <div class="courseware-content">
-      <div v-show="isTeacher">
+      <div v-show="isTeacher" style="text-align: center">
         <el-upload
           :action="
             '/api/courseFile/upload?userId=' + userId + '&classId=' + classId
@@ -23,21 +27,30 @@
           :on-success="onUploadSuccess"
           :before-remove="beforeRemove"
         >
-          <el-button size="small" type="primary">点击上传</el-button>
+          <el-button size="small" type="primary">
+            <icon name="upload" class="icon-upload"> </icon>
+
+            点击上传</el-button
+          >
         </el-upload>
       </div>
       <div v-show="showProgressDialog" class="progress-wrap">
-        <el-progress :percentage="transcodeProgress"></el-progress>
-        ppt 转码中...
+        <div class="progress-bar">
+          <div
+            class="progress-active"
+            :style="{ width: transcodeProgress + '%' }"
+          ></div>
+        </div>
+        <span>ppt 转码中...</span><span>{{ transcodeProgress }}%</span>
       </div>
 
       <div class="table-container">
         <el-table
           :data="courseFileList"
-          stripe=""
           style="width: 100%"
           empty-text="No data"
           @row-click="rowclick"
+          :size="'mini'"
         >
           <el-table-column prop="filename" label="文件名"> </el-table-column>
           <el-table-column
@@ -45,57 +58,62 @@
             label="操作"
             width="200"
             prop="hasTranscode"
+            align="right"
           >
             <template slot-scope="scope">
               <el-button
-                class="btns"
                 type="text"
                 size="small"
                 v-show="isTeacher && !isVideo(scope.row.url)"
               >
                 <el-tooltip :content="$t('courseware.toboard')" placement="top"
-                  ><icon name="fileimport" :size="16"></icon></el-tooltip
+                  ><icon
+                    name="fileimport"
+                    class="icon-operate"
+                  ></icon></el-tooltip
               ></el-button>
 
               <el-button
-                class="btns"
                 type="text"
                 size="small"
                 v-show="isTeacher && isVideo(scope.row.url)"
-                @click="play(scope.row)"
+                @click.stop="play(scope.row)"
               >
                 <el-tooltip :content="$t('courseware.play')" placement="top"
-                  ><icon name="play-circle" :size="16"></icon></el-tooltip
+                  ><icon
+                    name="play-circle"
+                    class="icon-operate"
+                  ></icon></el-tooltip
               ></el-button>
 
               <el-button
-                @click="downloadCourseFile(scope.row)"
-                class="btns"
+                @click.stop="downloadCourseFile(scope.row)"
                 type="text"
                 size="small"
               >
                 <el-tooltip :content="$t('courseware.download')" placement="top"
-                  ><icon name="download" :size="16"></icon></el-tooltip
+                  ><icon
+                    name="download"
+                    class="icon-operate"
+                  ></icon></el-tooltip
               ></el-button>
               <el-button
-                class="btns"
                 type="text"
                 size="small"
-                @click="reTranscode(scope.row)"
+                @click.stop="reTranscode(scope.row)"
                 v-show="isTeacher && !isVideo(scope.row.url)"
               >
                 <el-tooltip :content="$t('courseware.recode')" placement="top"
-                  ><icon name="recode" :size="16"></icon></el-tooltip
+                  ><icon name="recode" class="icon-operate"></icon></el-tooltip
               ></el-button>
               <el-button
-                @click="deleteCourseFile(scope.row)"
-                class="btns"
+                @click.stop="deleteCourseFile(scope.row)"
                 type="text"
                 size="small"
                 v-show="isTeacher"
               >
                 <el-tooltip :content="$t('courseware.del')" placement="top"
-                  ><icon name="trash" :size="16"></icon
+                  ><icon name="trash" class="icon-operate"></icon
                 ></el-tooltip>
               </el-button>
             </template>
@@ -113,15 +131,7 @@
         </el-pagination>
       </div>
     </div>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="onCoursewareClose">{{
-        $t("button.cancel")
-      }}</el-button>
-      <el-button type="primary" @click="onCoursewareClose">{{
-        $t("button.yes")
-      }}</el-button>
-    </span>
-  </el-dialog>
+  </CustomDialog>
 </template>
 
 <script>
@@ -134,6 +144,7 @@ import {
 } from "@/core/data/data-service";
 
 import { liveBroadcastService } from "@/core/live-broadcast";
+import CustomDialog from "@/components/custom-dialog";
 import { mapState, mapMutations, mapGetters } from "vuex";
 
 export default {
@@ -176,7 +187,7 @@ export default {
       if (innerWidth < 768) {
         return "80%";
       }
-      return "50%";
+      return "30%";
     }
   },
   methods: {
@@ -318,17 +329,47 @@ export default {
       this.showProgressDialog = false;
       this.transcodeProgress = 0;
     }
+  },
+  components: {
+    CustomDialog
   }
 };
 </script>
 
 <style scoped lang="scss">
-.btns {
-  svg {
-    fill: #0a818c;
+.svg-icon {
+  width: 0.8rem !important;
+  height: 0.8rem !important;
+  @include themeify {
+    fill: themed("primary2") !important;
+  }
+}
+
+.icon-upload {
+  @include themeify {
+    width: 0.7rem !important;
+    height: 0.7rem !important;
+    fill: #fff !important;
+    padding: 0 0.4rem 0 0;
+    border-right: 1px #fff solid;
   }
 }
 .progress-wrap {
   margin: 10px 0 10px 5px;
+  text-align: center;
+  font-size: smaller;
+}
+
+.progress-active {
+  height: 100%;
+  border-radius: 0.25rem;
+  @include themeify {
+    background: themed("primary");
+  }
+}
+.progress-bar {
+  background: rgb(217, 236, 238);
+  height: 0.5rem;
+  border-radius: 0.25rem;
 }
 </style>

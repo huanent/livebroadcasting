@@ -268,6 +268,10 @@ export default {
   padding: 2px 4px;
   height: 16px;
   margin: 0 10px;
+  @include themeify {
+    background-color: themed("primary2");
+    border-color: themed("primary2");
+  }
 }
 
 .svg-icon {

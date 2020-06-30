@@ -25,14 +25,14 @@
             v-if="item.name === 'pen' || item.name === 'text'"
             popper-class="popper"
           >
-            <div v-show="item.name === 'pen'">
-              <!-- 形状的面板 -->
+            <!--            <div v-show="item.name === 'pen'">
+              &lt;!&ndash; 形状的面板 &ndash;&gt;
               <ShapeBox ref="shapeBox"></ShapeBox>
             </div>
             <div v-show="item.name === 'text'">
-              <!-- 字体选择面板 -->
+              &lt;!&ndash; 字体选择面板 &ndash;&gt;
               <TextBox ref="textBox"></TextBox>
-            </div>
+            </div>-->
             <icon :name="item.iconName" :size="18" slot="reference"></icon>
           </el-popover>
           <icon v-else :name="item.iconName" :size="18"></icon>
@@ -44,8 +44,8 @@
 
 <script>
 import { mapMutations, mapState } from "vuex";
-import ShapeBox from "../Toolbar/ShapeBox";
-import TextBox from "../Toolbar/TextBox";
+/*import ShapeBox from "../Toolbar/ShapeBox";
+import TextBox from "../Toolbar/TextBox";*/
 import window from "./Window";
 export default {
   name: "BoardToolbar",
@@ -120,8 +120,8 @@ export default {
     };
   },
   components: {
-    ShapeBox,
-    TextBox,
+    /*    ShapeBox,
+    TextBox,*/
     window
   },
   computed: {

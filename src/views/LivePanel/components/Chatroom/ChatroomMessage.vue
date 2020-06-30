@@ -100,13 +100,19 @@ export default {
     text-align: right;
     .chatroom-msg__detail {
       &:before {
-        border-bottom-color: #0a818c !important;
+        @include themeify {
+          border-bottom-color: themed("primary2");
+        }
+
         left: auto;
         right: 0;
         transform: translateX(-100%);
       }
       .chatroom-msg__inner {
-        background-color: #0a818c !important;
+        @include themeify {
+          background-color: themed("primary2");
+        }
+
         color: #dcebeb;
       }
     }

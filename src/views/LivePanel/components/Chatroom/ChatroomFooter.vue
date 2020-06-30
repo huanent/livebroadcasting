@@ -118,5 +118,12 @@ export default {
       color: themedOpacity("color_opposite", 0.9);
     }
   }
+
+  /deep/ .el-button--primary {
+    @include themeify {
+      background-color: themed("primary2");
+      border-color: themed("primary2");
+    }
+  }
 }
 </style>
