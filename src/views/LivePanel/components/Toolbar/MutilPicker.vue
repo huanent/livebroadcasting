@@ -66,7 +66,8 @@
     <div>
       <ColorPicker
         :value="color"
-        @input="setColor($event)"
+        ref="colorpicker"
+        @input="setColor"
         v-show="colorPickerVisiblity"
       />
     </div>
@@ -160,7 +161,7 @@ export default {
     },
     selectedColor(item) {
       if (!item.type || item.type !== "colorPicker") {
-        this.setColor(item.color);
+        this.$refs.colorpicker.setColor(item.color);
       }
     }
   }

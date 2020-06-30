@@ -76,11 +76,6 @@ export default {
   created() {
     this.initColor(this.value);
   },
-  watch: {
-    value(value) {
-      this.initColor(value);
-    }
-  },
   computed: {
     valueNumber() {
       return 1 - this.valueTopOffset;
@@ -89,22 +84,45 @@ export default {
       return this.$chroma.hsv(this.hueNumber * 360, 1, 1);
     },
     currentColor() {
-      let color = this.$chroma({
+      const color = this.$chroma({
         h: this.hueNumber * 360,
         s: this.saturationNumber,
         v: this.valueNumber
       }).alpha(this.alphaNumber);
-      this.$emit("input", color.css());
       return color;
     }
   },
+
   methods: {
+    emitColor(color) {
+      this.$emit("input", color);
+    },
+    setColor(color) {
+      this.initColor(color);
+      this.$emit("input", color);
+    },
+    getColor() {
+      const arr = this.currentColor.rgba();
+      return `rgba(${arr[0]},${arr[2]},${arr[2]},${arr[3]})`;
+    },
     initColor(color) {
       let chromaColor = this.$chroma(color);
-      this.hueNumber = chromaColor.get("hsl.h") / 360;
-      this.saturationNumber = chromaColor.get("hsv.s");
-      this.valueTopOffset = 1 - chromaColor.get("hsv.v");
-      this.alphaNumber = chromaColor.alpha();
+      const hueNumber = chromaColor.get("hsl.h") / 360;
+      const saturationNumber = chromaColor.get("hsv.s");
+      const valueTopOffset = 1 - chromaColor.get("hsv.v");
+      const alphaNumber = chromaColor.alpha();
+      if (
+        isNaN(hueNumber) ||
+        isNaN(saturationNumber) ||
+        isNaN(valueTopOffset) ||
+        isNaN(alphaNumber)
+      )
+        return;
+
+      this.hueNumber = hueNumber;
+      this.saturationNumber = saturationNumber;
+      this.valueTopOffset = valueTopOffset;
+      this.alphaNumber = alphaNumber;
     },
     onPointerDragStart() {
       this.valueTopOffsetCache = this.valueTopOffset;
@@ -115,18 +133,14 @@ export default {
       let height = this.$refs.sv.getBoundingClientRect().height;
       let deltaRatioX = e.deltaX / width;
       let deltaRatioY = e.deltaY / height;
-      if (
-        this.saturationNumberCache + deltaRatioX > 1 ||
-        this.saturationNumberCache + deltaRatioX < 0
-      )
-        return;
-      if (
-        this.valueTopOffsetCache + deltaRatioY > 1 ||
-        this.valueTopOffsetCache + deltaRatioY < 0
-      )
-        return;
-      this.saturationNumber = this.saturationNumberCache + deltaRatioX;
-      this.valueTopOffset = this.valueTopOffsetCache + deltaRatioY;
+      let saturation = this.saturationNumberCache + deltaRatioX;
+      let value = this.valueTopOffsetCache + deltaRatioY;
+      if (saturation > 1 || saturation < 0 || isNaN(saturation)) return;
+      if (this.value > 1 || value < 0 || isNaN(value)) return;
+
+      this.saturationNumber = saturation;
+      this.valueTopOffset = value;
+      this.emitColor(this.getColor());
     },
     onHueDragStart() {
       this.hueNumberCache = this.hueNumber;
@@ -134,12 +148,13 @@ export default {
     onHueDragMove(e) {
       let width = this.$refs.hue.getBoundingClientRect().width;
       let deltaRatioX = e.deltaX / width;
-      if (
-        this.hueNumberCache + deltaRatioX > 1 ||
-        this.hueNumberCache + deltaRatioX < 0
-      )
-        return;
-      this.hueNumber = this.hueNumberCache + deltaRatioX;
+      let hue = this.hueNumberCache + deltaRatioX;
+      if (hue > 1 || hue < 0 || isNaN(hue)) return;
+
+      this.hueNumber = hue;
+      this.saturationNumber = 1;
+      this.valueTopOffset = 0;
+      this.emitColor(this.getColor());
     },
     onAlphaDragStart() {
       this.alphaNumberCache = this.alphaNumber;
@@ -147,12 +162,10 @@ export default {
     onAlphaDragMove(e) {
       let width = this.$refs.alpha.getBoundingClientRect().width;
       let deltaRatioX = e.deltaX / width;
-      if (
-        this.alphaNumberCache + deltaRatioX > 1 ||
-        this.alphaNumberCache + deltaRatioX < 0
-      )
-        return;
-      this.alphaNumber = this.alphaNumberCache + deltaRatioX;
+      let alpha = this.alphaNumberCache + deltaRatioX;
+      if (alpha > 1 || alpha < 0 || isNaN(alpha)) return;
+      this.alphaNumber = alpha;
+      this.emitColor(this.getColor());
     }
   }
 };
