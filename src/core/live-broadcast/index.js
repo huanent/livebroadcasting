@@ -26,7 +26,7 @@ class LiveBroadcastService {
     await this.boardService.init(token);
 
     Emitter.on("board-data-change", data => {
-      this.timService.sendMessage(JSON.stringify(data), "TIW_DATA");
+      this.timService.sendMessage(JSON.stringify(data), "TXWhiteBoardExt");
     });
 
     Emitter.on("tim_message_received", data => {
@@ -35,7 +35,7 @@ class LiveBroadcastService {
         const type = item.payload.extension;
         let data = item.payload.data;
         switch (type) {
-          case "TIW_DATA":
+          case "TXWhiteBoardExt":
             Emitter.emit("remote-board-data-change", data);
             break;
           case "TIM_TEXT":
