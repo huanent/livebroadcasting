@@ -5,8 +5,8 @@
     :visible.sync="dialogVisible"
     :before-close="onCoursewareClose"
     :append-to-body="true"
-    :width="dialogWidth"
     @close="closeDialog"
+    :size="'mini'"
     :on-confirm="onCoursewareClose"
     :on-cancel="onCoursewareClose"
     :footer-visibity="true"
@@ -182,13 +182,7 @@ export default {
   },
   computed: {
     ...mapState("account", ["role"]),
-    ...mapGetters("workplace", ["isTeacher"]),
-    dialogWidth() {
-      if (innerWidth < 768) {
-        return "80%";
-      }
-      return "30%";
-    }
+    ...mapGetters("workplace", ["isTeacher"])
   },
   methods: {
     ...mapMutations("widget", ["SET_VIDEO_VISIBLE"]),

@@ -4,6 +4,7 @@
     :before-close="beforeClose"
     :append-to-body="appendToBody"
     :width="width"
+    :class="size"
     @close="closeDialog"
     @closed="$emit('closed', $event)"
     @open="$emit('open', $event)"
@@ -17,12 +18,8 @@
       style="position: relative"
     >
       <div class="title">
-        <span
-          style="  font-size: 1.75rem;
-  font-weight: 500; letter-spacing:0.5rem;text-align: center"
-          >{{ title }}</span
-        >
-        <div style="font-size: 0.5rem;letter-spacing:2px; text-align: center">
+        <span class="main-title">{{ title }}</span>
+        <div class="secondary-title">
           <div class="title-line"></div>
           <span>{{ secondaryTitle }}</span>
           <div class="title-line"></div>
@@ -60,9 +57,17 @@ export default {
     onConfirm: {},
     onCancel: {},
     width: {},
+    size: {},
     footerVisibity: { type: Boolean, default: false },
     appendToBody: { type: Boolean }
   },
+  data() {
+    return {
+      screenWidth: undefined
+    };
+  },
+  computed: {},
+  mounted() {},
   methods: {
     clickConfirm(e) {
       this.$emit("update:visible", false);
@@ -86,7 +91,7 @@ export default {
   border-radius: 50%;
 }
 /deep/ .el-dialog__body {
-  padding: 2rem 4rem;
+  padding: 2rem 2rem;
   min-height: 10rem;
 }
 /deep/ .el-dialog__footer {
@@ -116,6 +121,7 @@ export default {
 .title {
   color: white;
 
+  width: 100%;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -132,5 +138,110 @@ export default {
   width: 2rem;
   background: #fff;
   height: 1px;
+}
+
+.main-title {
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: 0.5rem;
+  text-align: center;
+}
+.secondary-title {
+  font-size: 0.5rem;
+  letter-spacing: 2px;
+  text-align: center;
+}
+@media (max-width: 1400px) {
+  .main-title {
+    font-size: 1.75rem;
+  }
+  .secondary-title {
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .main-title {
+    font-size: 1.5rem;
+  }
+  .secondary-title {
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /deep/ .el-dialog__body {
+    padding: 0.5rem 1rem;
+    min-height: 10rem;
+  }
+  .main-title {
+    font-size: 1.2rem;
+  }
+  .secondary-title {
+    font-size: xx-small;
+  }
+  .title-line {
+    width: 0.75rem;
+    margin: 0.125rem 0.2rem;
+  }
+}
+/deep/ .el-dialog {
+  width: 40%;
+}
+@media (max-width: 1400px) {
+  /deep/ .el-dialog {
+    width: 40%;
+  }
+}
+@media (max-width: 1200px) {
+  /deep/ .el-dialog {
+    width: 50%;
+  }
+}
+@media (max-width: 992px) {
+  /deep/ .el-dialog {
+    width: 80%;
+  }
+}
+@media (max-width: 768px) {
+  /deep/ .el-dialog {
+    width: 70%;
+  }
+}
+@media (max-width: 480px) {
+  /deep/ .el-dialog {
+    width: 95%;
+  }
+}
+
+.mini {
+  /deep/ .el-dialog {
+    width: 30%;
+  }
+  @media (max-width: 1400px) {
+    /deep/ .el-dialog {
+      width: 35%;
+    }
+  }
+  @media (max-width: 1200px) {
+    /deep/ .el-dialog {
+      width: 45%;
+    }
+  }
+  @media (max-width: 992px) {
+    /deep/ .el-dialog {
+      width: 55%;
+    }
+  }
+  @media (max-width: 768px) {
+    /deep/ .el-dialog {
+      width: 65%;
+    }
+  }
+  @media (max-width: 480px) {
+    /deep/ .el-dialog {
+      width: 85%;
+    }
+  }
 }
 </style>

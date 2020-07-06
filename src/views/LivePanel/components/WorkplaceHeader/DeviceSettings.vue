@@ -3,7 +3,6 @@
     :title="$t('title.setting')"
     :secondary-title="'Personal Settings'"
     :visible="visibility"
-    :width="dialogWidth"
     :append-to-body="true"
     @close="close"
     @closed="closed"
@@ -132,9 +131,6 @@ export default {
     ...mapState("device", ["isMobile"]),
     ...mapState("features", ["videoStatus", "audioStatus"]),
     ...mapState("workplace", ["selectedCamera", "selectedMicrophone"]),
-    dialogWidth() {
-      return this.isMobile ? "80%" : "40%";
-    },
     microphone() {
       return this.microphones.find(f => f.label == this.selectedMicrophone);
     },

@@ -1,72 +1,28 @@
 <template>
   <div class="widgets">
-    <el-dialog
-      title="应用中心"
+    <CustomDialog
+      :title="'应用中心'"
+      :secondary-title="'Application Center'"
       :visible.sync="widgetVisible"
+      :size="'mini'"
       :append-to-body="true"
     >
       <ul class="widgets-content">
-        <li>
-          <a
-            @click="
-              SET_TIMER_VISIBLE(true);
-              widgetVisible = false;
-            "
-            >定时器</a
-          >
-        </li>
-        <li>
-          <a
-            @click="
-              SET_DICE_VISIBLE(true);
-              widgetVisible = false;
-            "
-            >骰子</a
-          >
-        </li>
-        <li>
-          <a
-            @click="
-              SET_DRAW_VISIBLE(true);
-              widgetVisible = false;
-            "
-            >幸运转盘</a
-          >
-        </li>
-        <li>
-          <a
-            @click="
-              SET_CLICKER_VISIBLE(true);
-              widgetVisible = false;
-            "
-            >随堂测试</a
-          >
-        </li>
-        <li>
-          <a
-            @click="
-              SET_RUSH_VISIBLE(true);
-              widgetVisible = false;
-            "
-            >抢答器</a
-          >
-        </li>
-        <li>
-          <a
-            @click="
-              SET_VISIBLE({ name: 'register', visible: true });
-              widgetVisible = false;
-            "
-            >花名册</a
-          >
+        <li v-for="item in applications">
+          <a class="app-wrapper" @click="onClick(item)">
+            <img :src="'assets/images/applications-center-icon/timer.png'" />
+
+            <span>{{ item.name }}</span>
+          </a>
         </li>
       </ul>
-    </el-dialog>
+    </CustomDialog>
   </div>
 </template>
 
 <script>
 import { mapMutations } from "vuex";
+import CustomDialog from "@/components/custom-dialog";
 export default {
   name: "Widgets",
   props: {
@@ -85,6 +41,45 @@ export default {
       this.$emit("update:visible", false);
     }
   },
+  data() {
+    return {
+      applications: [
+        {
+          name: "定时器",
+          imgUrl:
+            "../../../../assets/images/applications-center-icon/timer.png",
+          stateName: "timer"
+        },
+        {
+          name: "骰子",
+          imgUrl: "../../../../assets/images/applications-center-icon/dice.png",
+          stateName: "dice"
+        },
+        {
+          name: "幸运转盘",
+          imgUrl: "../../../../assets/images/applications-center-icon/lick.png",
+          stateName: "rush"
+        },
+        {
+          name: "随堂测试",
+          imgUrl:
+            "../../../../assets/images/applications-center-icon/timer.png",
+          stateName: "clicker"
+        },
+        {
+          name: "抢答器",
+          imgUrl: "../../../../assets/images/applications-center-icon/rush.png",
+          stateName: "rush"
+        },
+        {
+          name: "花名册",
+          imgUrl:
+            "../../../../assets/images/applications-center-icon/roster.png",
+          stateName: "register"
+        }
+      ]
+    };
+  },
   computed: {
     widgetVisible: {
       get() {
@@ -94,30 +89,59 @@ export default {
         this.$emit("update:visible", val);
       }
     }
+  },
+  components: {
+    CustomDialog
   }
 };
 </script>
 <style scoped lang="scss">
 .widgets-content {
-  display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-items: center;
+  justify-content: space-between;
+
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 2rem;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
   li {
-    flex: 20% 0 0;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-    a {
-      width: 80px;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: green;
-      color: #fff;
-      border-radius: 50%;
-      cursor: pointer;
-    }
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/deep/ .el-dialog__body {
+  padding: 2rem 1rem;
+}
+
+.app-wrapper:hover {
+  box-shadow: $shadow;
+}
+.app-wrapper {
+  width: 100px;
+  height: 100px;
+
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+
+  text-align: center;
+  cursor: pointer;
+  img {
+    margin: 0 auto;
+    padding: 0.5rem 0 0 0;
+    width: 70%;
+    object-fit: contain;
+  }
+  span {
+    margin: 0.25rem 0;
+    font-size: 0.5rem;
+    color: #8a8a8a;
   }
 }
 </style>
