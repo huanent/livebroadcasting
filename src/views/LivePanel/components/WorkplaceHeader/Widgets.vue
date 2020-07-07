@@ -10,7 +10,7 @@
       <ul class="widgets-content">
         <li v-for="item in applications">
           <a class="app-wrapper" @click="onClick(item)">
-            <img :src="'assets/images/applications-center-icon/timer.png'" />
+            <img :src="item.imgUrl" />
 
             <span>{{ item.name }}</span>
           </a>
@@ -37,6 +37,9 @@ export default {
       "SET_RUSH_VISIBLE",
       "SET_VISIBLE"
     ]),
+    onClick(item) {
+      this[item.action](true);
+    },
     closeWidgets() {
       this.$emit("update:visible", false);
     }
@@ -46,36 +49,39 @@ export default {
       applications: [
         {
           name: "定时器",
-          imgUrl:
-            "../../../../assets/images/applications-center-icon/timer.png",
-          stateName: "timer"
+          imgUrl: require("../../../../assets/images/applications-center-icon/timer.png"),
+          stateName: "timer",
+          action: "SET_TIMER_VISIBLE"
         },
         {
           name: "骰子",
-          imgUrl: "../../../../assets/images/applications-center-icon/dice.png",
-          stateName: "dice"
+          imgUrl: require("../../../../assets/images/applications-center-icon/dice.png"),
+          stateName: "dice",
+          action: "SET_DICE_VISIBLE"
         },
         {
           name: "幸运转盘",
-          imgUrl: "../../../../assets/images/applications-center-icon/lick.png",
-          stateName: "rush"
+          imgUrl: require("../../../../assets/images/applications-center-icon/lick.png"),
+          stateName: "rush",
+          action: "SET_DRAW_VISIBLE"
         },
         {
           name: "随堂测试",
-          imgUrl:
-            "../../../../assets/images/applications-center-icon/timer.png",
-          stateName: "clicker"
+          imgUrl: require("../../../../assets/images/applications-center-icon/timer.png"),
+          stateName: "clicker",
+          action: "SET_CLICKER_VISIBLE"
         },
         {
           name: "抢答器",
-          imgUrl: "../../../../assets/images/applications-center-icon/rush.png",
-          stateName: "rush"
+          imgUrl: require("../../../../assets/images/applications-center-icon/rush.png"),
+          stateName: "rush",
+          action: "SET_RUSH_VISIBLE"
         },
         {
           name: "花名册",
-          imgUrl:
-            "../../../../assets/images/applications-center-icon/roster.png",
-          stateName: "register"
+          imgUrl: require("../../../../assets/images/applications-center-icon/roster.png"),
+          stateName: "register",
+          action: "SET_VISIBLE"
         }
       ]
     };
@@ -100,7 +106,7 @@ export default {
   flex-wrap: wrap;
   align-items: center;
   justify-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
 
   padding: 1rem;
   display: grid;
