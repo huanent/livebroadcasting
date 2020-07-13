@@ -170,7 +170,7 @@ export default {
         ? this.audioMuted
         : this.subscribeAudio;
 
-      status ? this.stream.unmuteAudio() : this.stream.muteAudio();
+      status ? this.stream.muteAudio() : this.stream.unmuteAudio();
     },
     async initAudioMonitor(stream) {
       if (this.audioContext) this.audioContext.close();
