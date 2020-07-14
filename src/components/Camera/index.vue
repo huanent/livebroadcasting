@@ -168,7 +168,7 @@ export default {
 
       let status = this.alwaysLocalMuted
         ? this.audioMuted
-        : this.subscribeAudio;
+        : !this.subscribeAudio;
 
       status ? this.stream.muteAudio() : this.stream.unmuteAudio();
     },
