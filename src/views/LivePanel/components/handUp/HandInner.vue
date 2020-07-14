@@ -2,7 +2,7 @@
   <div class="hand-inner" @click="HAND_UP" title="举手">
     <icon
       :name="
-        handUp == HAND_UP_STATUS.SPEAKING || HAND_UP_STATUS.DRAWING
+        handUp == HAND_UP_STATUS.SPEAKING || handUp == HAND_UP_STATUS.DRAWING
           ? 'microphone'
           : 'hand'
       "
