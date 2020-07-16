@@ -67,7 +67,7 @@ export default {
         },
         {
           name: "随堂测试",
-          imgUrl: require("../../../../assets/images/applications-center-icon/timer.png"),
+          imgUrl: require("../../../../assets/images/applications-center-icon/exam.png"),
           stateName: "clicker",
           action: "SET_CLICKER_VISIBLE"
         },
@@ -106,16 +106,17 @@ export default {
   flex-wrap: wrap;
   align-items: center;
   justify-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
 
   padding: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 2rem;
   @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr;
   }
   li {
+    display: flex;
+    justify-content: center;
     width: 100%;
     height: 100%;
   }
