@@ -8,7 +8,7 @@
       :append-to-body="true"
     >
       <ul class="widgets-content">
-        <li v-for="item in applications">
+        <li v-for="item in applications" :key="item.name">
           <a class="app-wrapper" @click="onClick(item)">
             <img :src="item.imgUrl" />
 
@@ -39,6 +39,7 @@ export default {
     ]),
     onClick(item) {
       this[item.action](true);
+      this.$emit("update:visible", false);
     },
     closeWidgets() {
       this.$emit("update:visible", false);

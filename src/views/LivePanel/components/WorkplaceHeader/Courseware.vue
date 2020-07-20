@@ -13,7 +13,7 @@
     class="courseware"
   >
     <div class="courseware-content">
-      <div v-show="isTeacher" style="text-align: center">
+      <div v-show="isTeacher || canControlBoard" style="text-align: center">
         <el-upload
           :action="
             '/api/courseFile/upload?userId=' + userId + '&classId=' + classId
@@ -64,7 +64,9 @@
               <el-button
                 type="text"
                 size="small"
-                v-show="isTeacher && !isVideo(scope.row.url)"
+                v-show="
+                  (isTeacher && !isVideo(scope.row.url)) || canControlBoard
+                "
               >
                 <el-tooltip :content="$t('courseware.toboard')" placement="top"
                   ><icon
@@ -181,6 +183,7 @@ export default {
     this.getCourseData(this.pageNum, this.pageSize, this.classId);
   },
   computed: {
+    ...mapState("features", ["canControlBoard"]),
     ...mapState("account", ["role"]),
     ...mapGetters("workplace", ["isTeacher"])
   },
@@ -265,7 +268,7 @@ export default {
       });
     },
     rowclick(file) {
-      if (this.isTeacher) {
+      if (this.isTeacher || this.canControlBoard) {
         liveBroadcastService.boardService.addBoardFiles(
           file.resultUrl,
           file.title,
