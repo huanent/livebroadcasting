@@ -169,6 +169,8 @@ export class ArtcService {
 
       this.assistStream = AgoraRTC.createStream({
         videoSource: videoTrack,
+        video: true,
+        audio: false,
         mirror: false
       });
     } else {
