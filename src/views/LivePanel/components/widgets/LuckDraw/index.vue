@@ -11,7 +11,7 @@
       <div class="contain">
         <div class="content">
           <div class="line"></div>
-          <ul ref="ul" :class="{ isanimate: isanimate }">
+          <ul ref="ul" :style="{ 'margin-top': styleData.transformX + 'px' }">
             <li v-for="(item, index) in draw.list" :key="index">
               <div class="stu_name">{{ item }}</div>
             </li>
@@ -35,13 +35,22 @@
 import WidgetWindow from "../WidgetWindow";
 import { mapState, mapMutations, mapGetters } from "vuex";
 
+import BezierAnimation from "../../../../../core/common/animation/animation";
+
 export default {
   name: "LuckDraw",
   data() {
     return {
       drawing: false,
-      isanimate: false
+      isanimate: false,
+      animation: undefined,
+      styleData: { transformX: 0 }
     };
+  },
+  mounted() {
+    this.animation = new BezierAnimation(2, "ease", (i1, i2) => {
+      this.styleData.transformX = i2 * -1 * (this.draw.list.length - 1) * 30;
+    });
   },
   components: {
     WidgetWindow
@@ -81,7 +90,7 @@ export default {
       this.$forceUpdate();
       this.isanimate = false;
       setTimeout(() => {
-        this.isanimate = true;
+        this.animation.play();
       }, 100);
       this.drawing = true;
       setTimeout(() => {
@@ -153,18 +162,6 @@ ul {
     width: 160px;
     padding-bottom: 5px;
     font-size: 14px;
-  }
-}
-.isanimate {
-  animation: rotate 2s normal ease-in-out backwards;
-}
-
-@keyframes rotate {
-  0% {
-    margin-top: 0;
-  }
-  100% {
-    margin-top: -600px;
   }
 }
 </style>
