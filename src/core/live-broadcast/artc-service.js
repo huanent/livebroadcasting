@@ -39,7 +39,7 @@ export class ArtcService {
       this.remoteStreams.push(e.stream);
     });
 
-    client.on("stream-removed", e => {
+    client.on("peer-leave", e => {
       let userId = e.stream.streamId;
 
       this.remoteStreams = this.remoteStreams.filter(f => f.streamId != userId);
@@ -64,7 +64,7 @@ export class ArtcService {
 
   createClient() {
     return AgoraRTC.createClient({
-      mode: "rtc",
+      mode: "live",
       codec: "h264"
     });
   }

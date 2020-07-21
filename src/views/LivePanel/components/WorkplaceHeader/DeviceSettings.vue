@@ -174,7 +174,6 @@ export default {
     async open() {
       this.cameras = await liveBroadcastService.trtcService.getCameras();
       this.microphones = await liveBroadcastService.trtcService.getMicrophones();
-      console.log(this.cameras);
       this.setAudio();
       this.setVideo();
     },
