@@ -3,7 +3,7 @@
     :class="{ mirror: mirror }"
     :muted="muted"
     :style="{ objectFit: fit }"
-    :src-object.prop="stream && stream.mediaStream_"
+    :src-object.prop="stream && stream.stream"
     autoplay
     webkit-playsinline
     playsinline

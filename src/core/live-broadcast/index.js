@@ -1,6 +1,6 @@
 import store from "@/store";
 import { Emitter } from "../emit";
-import { TrtcService } from "./trtc-service";
+import { ArtcService } from "./artc-service";
 import { TimService } from "./tim-service";
 import { BoardService } from "./board-service";
 import { ROLE } from "../../models/role";
@@ -14,7 +14,7 @@ class LiveBroadcastService {
   boardService;
 
   constructor() {
-    this.trtcService = new TrtcService();
+    this.trtcService = new ArtcService();
     this.timService = new TimService();
     this.boardService = new BoardService();
   }
@@ -125,6 +125,7 @@ export let liveBroadcastService = null;
 
 export async function initLiveBroadcastService() {
   liveBroadcastService = new LiveBroadcastService();
+  window.__liveServer = liveBroadcastService;
   await liveBroadcastService.init();
   Emitter.emit("LIVE_READY");
 }

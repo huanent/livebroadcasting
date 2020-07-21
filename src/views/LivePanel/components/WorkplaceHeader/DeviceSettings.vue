@@ -19,8 +19,7 @@
             <el-select
               v-if="access.video"
               style="width:100%"
-              :value="camera"
-              value-key="deviceId"
+              :value="camera && camera.label"
               @change="cameraChanged"
               :placeholder="$t('setting.chooseCamera')"
             >
@@ -47,8 +46,7 @@
             <el-select
               v-if="access.audio"
               style="width:100%"
-              :value="microphone"
-              value-key="label"
+              :value="microphone && microphone.label"
               @change="microphoneChanged"
               :placeholder="$t('setting.chooseMicro')"
             >
@@ -176,13 +174,13 @@ export default {
     async open() {
       this.cameras = await liveBroadcastService.trtcService.getCameras();
       this.microphones = await liveBroadcastService.trtcService.getMicrophones();
+      console.log(this.cameras);
       this.setAudio();
       this.setVideo();
     },
     async setAudio() {
       if (this.audioStream) releaseStream(this.audioStream);
       if (!this.microphone) return;
-
       this.audioStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           deviceId: this.microphone.deviceId

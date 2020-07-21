@@ -176,14 +176,14 @@ export default {
       if (this.audioContext) this.audioContext.close();
       let AudioContext = window.AudioContext || window.webkitAudioContext;
       this.audioContext = new AudioContext();
-      while (!stream.mediaStream_) await delay(500);
-      let mediaStream = stream.mediaStream_;
+      while (!stream.stream) await delay(500);
+      let mediaStream = stream.stream;
       let source = this.audioContext.createMediaStreamSource(mediaStream);
       let processor = this.audioContext.createScriptProcessor(4096, 1, 1);
       source.connect(processor);
       processor.connect(this.audioContext.destination);
       processor.onaudioprocess = e => {
-        if (stream.mediaStream_ != mediaStream) {
+        if (stream.stream != mediaStream) {
           this.initAudioMonitor(stream);
         }
         let buffer = e.inputBuffer.getChannelData(0);
