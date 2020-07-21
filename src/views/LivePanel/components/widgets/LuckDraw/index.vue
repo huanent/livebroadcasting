@@ -47,11 +47,6 @@ export default {
       styleData: { transformX: 0 }
     };
   },
-  mounted() {
-    this.animation = new BezierAnimation(2, "ease", (i1, i2) => {
-      this.styleData.transformX = i2 * -1 * (this.draw.list.length - 1) * 30;
-    });
-  },
   components: {
     WidgetWindow
   },
@@ -73,12 +68,15 @@ export default {
         this.featuresList.map(m => m.__nickName || m.__primaryKey)
       );
       this.STAR_DRAW(true);
+      this.animation = new BezierAnimation(2, "ease", (i1, i2) => {
+        this.styleData.transformX = i2 * -1 * (this.draw.list.length - 1) * 30;
+      });
+      this.animation.play();
     }
   },
   watch: {
     "draw.visible"(value) {
       this.drawing = false;
-      this.isanimate = false;
       if (this.isTeacher) {
         this.SET_DRAW_LIST(
           this.featuresList.map(m => m.__nickName || m.__primaryKey)
@@ -88,10 +86,7 @@ export default {
     "draw.started"(value) {
       if (!value) return;
       this.$forceUpdate();
-      this.isanimate = false;
-      setTimeout(() => {
-        this.animation.play();
-      }, 100);
+      this.start();
       this.drawing = true;
       setTimeout(() => {
         this.drawing = false;
