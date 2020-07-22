@@ -29,6 +29,7 @@ export class ArtcService {
 
       if (this.assistToken && this.assistToken.id == id) return;
       this.mainClient.subscribe(e.stream);
+      this.mainClient.setRemoteVideoStreamType(e.stream, 1);
       let exist = this.remoteStreams.find(f => f.streamId == id);
       if (!exist) this.remoteStreams.push(e.stream);
     });
@@ -214,6 +215,14 @@ export class ArtcService {
       )
     );
 
+    await new Promise((rs, rj) => this.mainClient.enableDualStream(rs, rj));
+    this.mainClient.setLowStreamParameter({
+      width: 320,
+      height: 240,
+      framerate: 15,
+      bitrate: 200
+    });
+
     this.listenHandler(this.mainClient);
     let access = await requestDeviceAccess();
 
@@ -223,7 +232,7 @@ export class ArtcService {
       video: !!access.video
     });
 
-    this.localStream.setVideoProfile("240p_1");
+    this.localStream.setVideoProfile("480p_1");
 
     try {
       await new Promise((rs, rj) => this.localStream.init(rs, rj));
