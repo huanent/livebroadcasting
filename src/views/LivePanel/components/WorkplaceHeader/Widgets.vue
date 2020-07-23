@@ -38,7 +38,7 @@ export default {
       "SET_VISIBLE"
     ]),
     onClick(item) {
-      this[item.action](true);
+      this[item.action]({ name: item.stateName, visible: true });
       this.$emit("update:visible", false);
     },
     closeWidgets() {
