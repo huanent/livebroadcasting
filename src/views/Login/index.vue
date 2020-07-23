@@ -22,12 +22,16 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :loading="showLoading" @click="onSubmit('loginForm')">
-            {{ showLoading ?  $t("login.logining") : $t("login") }}
+          <el-button
+            type="primary"
+            :loading="showLoading"
+            @click="onSubmit('loginForm')"
+          >
+            {{ showLoading ? $t("login.logining") : $t("login") }}
           </el-button>
-          <el-button type="primary" @click="signup">
+          <!-- <el-button type="primary" @click="signup">
             {{ $t("signup") }}
-          </el-button>
+          </el-button> -->
         </el-form-item>
       </el-form>
     </div>
@@ -63,7 +67,7 @@ export default {
           }
         ]
       },
-      showLoading:false
+      showLoading: false
     };
   },
   computed: {
@@ -118,7 +122,7 @@ export default {
     resetForm: function(formName) {
       this.$refs[formName].resetFields();
     },
-    endLoading(){
+    endLoading() {
       setTimeout(() => {
         this.showLoading = false;
       }, 500);
