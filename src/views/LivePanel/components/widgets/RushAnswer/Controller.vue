@@ -18,7 +18,9 @@
       <div class="backyi"></div>
       <div class="backer"></div>
       <div class="backsan">
-        <span class="beginRushAnswer" @click="start">{{ infoText }}</span>
+        <span class="beginRushAnswer" @click="start">{{
+          infoText | ellipsis
+        }}</span>
         <restart-button v-if="showRestart" @click="start"></restart-button>
         <div class="closebtn" @click="SET_RUSH_VISIBLE(false)">关闭</div>
       </div>
@@ -50,6 +52,16 @@ export default {
   },
   components: {
     RestartButton
+  },
+  filters: {
+    ellipsis: function(value) {
+      if (!value) return "";
+      if (value.length > 6) {
+        return value.substr(0, 6) + "..";
+      } else {
+        return value;
+      }
+    }
   },
   methods: {
     ...mapMutations("widget", [

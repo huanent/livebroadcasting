@@ -8,9 +8,11 @@
     :notdrag="true"
     :class="{ 'mobile-scale': isMobile }"
   >
-    <question-list v-if="isTeacher && !this.clicker.question" />
-    <answer-info v-if="!isTeacher && this.clicker.question" />
-    <statistics v-if="isTeacher && this.clicker.question" />
+    <question-list
+      v-if="isTeacher && !this.clicker.question.items.length > 0"
+    />
+    <answer-info v-if="!isTeacher && this.clicker.question.items.length > 0" />
+    <statistics v-if="isTeacher && this.clicker.question.items.length > 0" />
   </widget-window>
 </template>
 <script>

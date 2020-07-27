@@ -16,7 +16,7 @@
       <div class="backyi"></div>
       <div class="backer"></div>
       <div class="backsan">
-        <span class="beginRushAnswer">{{ infoText }}</span>
+        <span class="beginRushAnswer">{{ infoText | ellipsis }}</span>
       </div>
     </div>
   </div>
@@ -44,6 +44,16 @@ export default {
   computed: {
     ...mapState("widget", ["rush"]),
     ...mapState("account", ["userInfo"])
+  },
+  filters: {
+    ellipsis: function(value) {
+      if (!value) return "";
+      if (value.length > 6) {
+        return value.substr(0, 6) + "..";
+      } else {
+        return value;
+      }
+    }
   },
   methods: {
     rendomPosition() {
@@ -86,6 +96,9 @@ export default {
         this.infoText = value;
         this.loading = false;
       });
+    },
+    "rush.visible"(value) {
+      this.infoText = "等待开始";
     }
   }
 };
