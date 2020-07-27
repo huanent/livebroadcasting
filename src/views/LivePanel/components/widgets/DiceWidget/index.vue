@@ -9,7 +9,12 @@
   >
     <transition>
       <div class="dice">
-        <div id="content" ref="dice" @click="start" :class="point">
+        <div
+          id="content"
+          ref="dice"
+          @click="start"
+          :class="point"
+        >
           <!-- 第一个筛子 -->
           <div>
             <span></span>
@@ -94,25 +99,28 @@ export default {
     ...mapMutations("widget", [
       "UPDATE_POSITION",
       "SET_DICE_VALUE",
-      "SET_DICE_VISIBLE"
+      "SET_DICE_VISIBLE",
+      "SET_DICE_START"
     ]),
     start() {
       let num = parseInt(1 + Math.random() * 6);
       this.SET_DICE_VALUE(num);
+
+      this.SET_DICE_START(true);
+      setTimeout(()=> {
+        this.SET_DICE_START(false);
+      },2000)
     }
   },
   watch: {
     "dice.value"(value) {
-      this.point == "";
-      this.$nextTick(() => {
-        if (value == 1) this.point = "pointone";
-        else if (value == 2) this.point = "pointtwo";
-        else if (value == 3) this.point = "pointthree";
-        else if (value == 4) this.point = "pointfour";
-        else if (value == 5) this.point = "pointfive";
-        else if (value == 6) this.point = "pointsix";
-        else this.point = "";
-      });
+      this.point = "";
+      if (value == 1) this.point = "pointone";
+      else if (value == 2) this.point = "pointtwo";
+      else if (value == 3) this.point = "pointthree";
+      else if (value == 4) this.point = "pointfour";
+      else if (value == 5) this.point = "pointfive";
+      else if (value == 6) this.point = "pointsix";
     }
   }
 };

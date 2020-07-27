@@ -13,8 +13,9 @@ const state = {
       x: 0,
       y: 0
     },
+    start: false,
     visible: false,
-    value: 0
+    value: 1
   },
   draw: {
     position: {
@@ -86,7 +87,10 @@ const mutations = {
   },
   SET_DICE_VISIBLE(state, visible) {
     state.dice.visible = visible;
-    state.dice.value = 0;
+    state.dice.value = 1;
+  },
+  SET_DICE_START(state, start) {
+    state.dice.start = start;
   },
   SET_DICE_VALUE(state, value) {
     state.dice.value = value;

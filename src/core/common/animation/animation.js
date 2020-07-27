@@ -24,8 +24,12 @@ function bezierAnimation(
   bezierTimingFunction,
   handlers,
   delay,
-  playNum
+  playNum,
+  fps
 ) {
+  if (fps) {
+    FPS = fps;
+  }
   if (!this instanceof bezierAnimation) {
     return new bezierAnimation(duration, bezierTimingFunction, handlers, delay);
   }
