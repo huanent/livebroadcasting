@@ -11,7 +11,7 @@
       <div class="contain">
         <div class="content">
           <div class="line"></div>
-          <ul ref="ul" :class="{ isanimate: isanimate }">
+          <ul ref="ul" :style="{ 'margin-top': styleData.transformX + 'px' }">
             <li v-for="(item, index) in draw.list" :key="index">
               <div class="stu_name">{{ item }}</div>
             </li>
@@ -35,12 +35,16 @@
 import WidgetWindow from "../WidgetWindow";
 import { mapState, mapMutations, mapGetters } from "vuex";
 
+import BezierAnimation from "../../../../../core/common/animation/animation";
+
 export default {
   name: "LuckDraw",
   data() {
     return {
       drawing: false,
-      isanimate: false
+      isanimate: false,
+      animation: undefined,
+      styleData: { transformX: 0 }
     };
   },
   components: {
@@ -64,12 +68,15 @@ export default {
         this.featuresList.map(m => m.__nickName || m.__primaryKey)
       );
       this.STAR_DRAW(true);
+      this.animation = new BezierAnimation(2, "ease", (i1, i2) => {
+        this.styleData.transformX = i2 * -1 * (this.draw.list.length - 1) * 30;
+      });
+      this.animation.play();
     }
   },
   watch: {
     "draw.visible"(value) {
       this.drawing = false;
-      this.isanimate = false;
       if (this.isTeacher) {
         this.SET_DRAW_LIST(
           this.featuresList.map(m => m.__nickName || m.__primaryKey)
@@ -79,10 +86,7 @@ export default {
     "draw.started"(value) {
       if (!value) return;
       this.$forceUpdate();
-      this.isanimate = false;
-      setTimeout(() => {
-        this.isanimate = true;
-      }, 100);
+      this.start();
       this.drawing = true;
       setTimeout(() => {
         this.drawing = false;
@@ -153,18 +157,6 @@ ul {
     width: 160px;
     padding-bottom: 5px;
     font-size: 14px;
-  }
-}
-.isanimate {
-  animation: rotate 2s normal ease-in-out backwards;
-}
-
-@keyframes rotate {
-  0% {
-    margin-top: 0;
-  }
-  100% {
-    margin-top: -600px;
   }
 }
 </style>

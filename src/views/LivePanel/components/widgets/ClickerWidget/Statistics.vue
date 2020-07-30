@@ -40,7 +40,10 @@ export default {
   },
   methods: {
     getAnswer(result) {
-      return result.map(m => String.fromCharCode(m + 65)).join(",");
+      if (result) {
+        return result.map(m => String.fromCharCode(m + 65)).join(",");
+      }
+      return [];
     }
   }
 };

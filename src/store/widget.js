@@ -13,8 +13,9 @@ const state = {
       x: 0,
       y: 0
     },
+    start: false,
     visible: false,
-    value: 0
+    value: 1
   },
   draw: {
     position: {
@@ -35,7 +36,10 @@ const state = {
     started: false
   },
   clicker: {
-    question: null,
+    question: {
+      title: "",
+      items: []
+    },
     statistics: [],
     visible: false,
     answer: {
@@ -86,7 +90,10 @@ const mutations = {
   },
   SET_DICE_VISIBLE(state, visible) {
     state.dice.visible = visible;
-    state.dice.value = 0;
+    state.dice.value = 1;
+  },
+  SET_DICE_START(state, start) {
+    state.dice.start = start;
   },
   SET_DICE_VALUE(state, value) {
     state.dice.value = value;
@@ -106,10 +113,25 @@ const mutations = {
   STAR_DRAW(state, value) {
     state.draw.started = value;
   },
-  SET_CLICKER_VISIBLE(state, visible) {
-    state.clicker.visible = visible;
-    state.clicker.question = null;
-    state.clicker.statistics = [];
+  SET_CLICKER_VISIBLE(state, payload) {
+    // state.clicker.question = {
+    //   title: '',
+    //   items: []
+    // };
+    // state.clicker.statistics = [];
+    // state.clicker.answer= null;
+    // state.clicker.visible = payload.visible;
+    state.clicker = {
+      question: {
+        title: "",
+        items: []
+      },
+      statistics: [],
+      visible: payload.visible,
+      answer: {
+        result: null
+      }
+    };
   },
   START_CLICKER(state, question) {
     state.clicker.question = question;

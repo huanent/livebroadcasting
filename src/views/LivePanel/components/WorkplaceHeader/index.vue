@@ -283,6 +283,7 @@ export default {
 }
 .header-label {
   padding: 0 2px;
+  cursor: pointer;
   margin: 0 auto;
   @include themeify {
     color: themed("font_color2");
