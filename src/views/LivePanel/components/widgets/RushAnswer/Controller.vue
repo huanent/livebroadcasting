@@ -30,6 +30,7 @@
 <script>
 import RestartButton from "./RestartButton";
 import { mapState, mapMutations } from "vuex";
+import { delay } from "../../../../../core/utils";
 export default {
   name: "Controller",
   mounted() {
@@ -66,14 +67,20 @@ export default {
   methods: {
     ...mapMutations("widget", [
       "SET_RUSH_VISIBLE",
-      "SET_RUSH_START",
+      "SET_RUSH_STATUS",
       "SET_RUSH_NAME"
     ]),
     async start() {
       this.showRestart = false;
       this.infoText = "抢答中";
-      this.SET_RUSH_START(true);
+      this.SET_RUSH_NAME('');
+      this.SET_RUSH_STATUS("rushing");
+      setTimeout(() => {
+        this.SET_RUSH_STATUS("rushable")
+      },3000);
+
       await this.startAnimation();
+
       this.showRestart = true;
       if (!this.rush.name) {
         this.infoText = "无人抢答";

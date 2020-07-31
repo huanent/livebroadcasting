@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+  import { mapGetters, mapMutations, mapState } from "vuex";
 import { delay } from "@/core/utils";
 import { liveBroadcastService } from "@/core/live-broadcast";
 import { ROLE } from "@/models/role";
@@ -43,7 +43,8 @@ export default {
   },
   computed: {
     ...mapState("widget", ["rush"]),
-    ...mapState("account", ["userInfo"])
+    ...mapState("account", ["userInfo"]),
+    ...mapGetters("workplace", ["isTeacher"])
   },
   filters: {
     ellipsis: function(value) {
@@ -56,15 +57,15 @@ export default {
     }
   },
   methods: {
+    ...mapMutations("widget",["SET_RUSH_STATUS","SET_RUSH_NAME"]),
     rendomPosition() {
       this.top = parseInt(1 + Math.random() * 70) + "%";
       this.left = parseInt(1 + Math.random() * 70) + "%";
     },
-    onclick() {
-      if (this.rushing || this.rush.name || this.loading) return;
-      this.infoText = "";
-      this.loading = true;
-      liveBroadcastService.timService.sendSystemMsg(
+    async onclick() {
+      if (this.rush.status !== 'rushable') return;
+       this.loading = true;
+      await liveBroadcastService.timService.sendSystemMsg(
         "RUSH_ANSWER",
         ROLE.TEACHER,
         this.userInfo.nickname || this.userInfo.username
@@ -72,33 +73,44 @@ export default {
     }
   },
   watch: {
-    "rush.started"(value) {
-      if (!value) return;
-      this.rushing = true;
-      this.$nextTick(async _ => {
-        this.infoText = 3;
-        this.rendomPosition();
-        await delay(1000);
-        this.infoText = 2;
-        this.rendomPosition();
-        await delay(1000);
-        this.infoText = 1;
-        this.rendomPosition();
-        await delay(1000);
-        this.rendomPosition();
-        this.infoText = "抢答";
-        this.rushing = false;
-      });
-    },
-    "rush.name"(value) {
-      if (!value) return;
-      this.$nextTick(() => {
-        this.infoText = value;
-        this.loading = false;
-      });
-    },
-    "rush.visible"(value) {
+    "rush.visible":function(value) {
       this.infoText = "等待开始";
+      if(!value && this.isTeacher){
+        this.SET_RUSH_STATUS('waitting');
+        this.SET_RUSH_NAME("");
+      }
+    },
+    "rush.name":function(value) {
+      this.infoText = value;
+      this.loading = false;
+    },
+    "rush.status":function(value){
+      switch (value) {
+        case 'waitting':
+          this.infoText = "等待开始";
+          break;
+        case 'rushing':
+          this.rushing = true;
+          this.$nextTick(async () => {
+            this.infoText = 3;
+            this.rendomPosition();
+            await delay(1000);
+            this.infoText = 2;
+            this.rendomPosition();
+            await delay(1000);
+            this.infoText = 1;
+            this.rendomPosition();
+            await delay(1000);
+            this.rendomPosition();
+            this.infoText = "抢答";
+            this.rushing = false;
+
+          });
+          break;
+        case 'rushable':
+          break;
+      }
+
     }
   }
 };

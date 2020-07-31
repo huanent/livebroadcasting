@@ -39,7 +39,7 @@ export default {
       if (this.isTeacher) {
         return this.clicker.visible;
       } else {
-        return this.clicker.question;
+        return this.clicker.question.items.length > 0;
       }
     }
   },

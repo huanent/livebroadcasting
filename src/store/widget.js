@@ -48,7 +48,7 @@ const state = {
   },
   rush: {
     visible: false,
-    started: false,
+    status: "waitting",
     name: ""
   },
   video: {
@@ -143,19 +143,18 @@ const mutations = {
   },
   SET_RUSH_VISIBLE(state, visible) {
     state.rush.visible = visible;
-    state.rush.queue = [];
   },
-  SET_RUSH_START(state, value) {
-    state.rush.started = value;
-    state.rush.name = null;
+  SET_RUSH_STATUS(state, value) {
+    state.rush.status = value;
   },
   SET_RUSH_NAME(state, value) {
     state.rush.name = value;
-    state.rush.started = false;
   },
   RUSH_ANSWER(state, value) {
-    if (state.rush.name || state.rush.started == false) return;
-    state.rush.name = value;
+    if (state.rush.status === 'rushable'){
+      state.rush.status = 'rushed';
+      state.rush.name = value;
+    }
   },
   SET_VIDEO_VISIBLE(state, { visible, src }) {
     state.video.visible = visible;
