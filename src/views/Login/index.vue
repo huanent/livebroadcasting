@@ -29,9 +29,9 @@
           >
             {{ showLoading ? $t("login.logining") : $t("login") }}
           </el-button>
-          <!-- <el-button type="primary" @click="signup">
+          <el-button type="primary" @click="signup">
             {{ $t("signup") }}
-          </el-button> -->
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
