@@ -10,9 +10,9 @@
     </div>
     <div class="chatroom-msg-body">
       <div class="chatroom-msg__detail">
-        <div class="chatroom-msg__inner">
+        <span class="chatroom-msg__inner">
           {{ content }}
-        </div>
+        </span>
       </div>
     </div>
   </div>
@@ -59,13 +59,17 @@ export default {
       position: relative;
       display: inline-block;
       min-width: 30px;
+      max-width: 100%;
+      background-color: transparent;
       .chatroom-msg__inner {
         color: #212224;
         padding: 10px;
-        line-height: normal;
-        // @include themeify {
-        //   background: themed("active_icon");
-        // }
+        max-width: 100%;
+        word-break:normal;
+        width:auto;
+        display:block;
+        word-wrap : break-word ;
+        overflow: hidden ;
         background: #8a9099;
         text-align: left;
         border-radius: 4px;
