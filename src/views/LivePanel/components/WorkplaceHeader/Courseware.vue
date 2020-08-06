@@ -292,23 +292,23 @@ export default {
       self.showProgressDialogFun();
       let interval = setInterval(async () => {
         let res = await transcodeDescribe(taskId);
-        if (res.data.success) {
-          if (res.data.model.progress) {
-            self.transcodeProgress = res.data.model.progress;
+        if (res.data) {
+          if (res.data.Progress) {
+            self.transcodeProgress = res.data.Progress;
           }
           if (self.transcodeProgress >= 100) {
             clearInterval(interval);
-            let model = res.data.model;
+            let model = res.data;
             let body = {
               id: fileId,
               hasTranscode: "true",
-              pages: model.pages.toString(),
-              resultUrl: model.resultUrl,
-              compressFileUrl: model.compressFileUrl,
-              taskId: model.taskId,
-              title: model.title,
-              resolution: model.resolution,
-              requestId: model.requestId
+              pages: model.Pages.toString(),
+              resultUrl: model.ResultUrl,
+              compressFileUrl: model.CompressFileUrl,
+              taskId: model.TaskId,
+              title: model.Title,
+              resolution: model.Resolution,
+              requestId: model.RequestId
             };
             let res1 = await setCourseFile(body);
             if (res1) {
