@@ -43,7 +43,12 @@ export default {
         if(minutes <10){
           minutes = '0' + minutes
         }
-        this.time = `${offsetDays}天 ${hours}:${minutes}:${seconds}`;
+        if(offsetDays > 0 ){
+          this.time = `${offsetDays}天 ${hours}:${minutes}:${seconds}`;
+        }else {
+          this.time = `${hours}:${minutes}:${seconds}`;
+        }
+
       }
     }, 1000);
   },

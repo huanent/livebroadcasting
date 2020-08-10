@@ -64,9 +64,11 @@ export default {
       "STAR_DRAW"
     ]),
     start() {
-      this.SET_DRAW_LIST(
-        this.featuresList.map(m => m.__nickName || m.__primaryKey)
-      );
+      if (this.isTeacher) {
+        this.SET_DRAW_LIST(
+                this.featuresList.map(m => m.__nickName || m.__primaryKey)
+        );
+      }
       this.STAR_DRAW(true);
       this.animation = new BezierAnimation(2, "ease", (i1, i2) => {
         this.styleData.transformX = i2 * -1 * (this.draw.list.length - 1) * 30;
