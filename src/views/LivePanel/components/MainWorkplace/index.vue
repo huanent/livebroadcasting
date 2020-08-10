@@ -117,6 +117,7 @@ export default {
   watch: {
     streamSelectVisibility(val) {
       this.showStreamSelectdialog = val;
+      this.STREAM_SELECT_VISIBILITY(val);
     },
     index(value) {
       let fileInfo = this.boardProfiles[value];
