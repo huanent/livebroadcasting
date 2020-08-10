@@ -89,6 +89,7 @@ export default {
       this.BOARD_INDEX(index);
     },
     onChange(type) {
+      if (type == "screen") this.showStreamSelectdialog = true;
       this.SET_PANEL_TYPE({ type, streamId: this.token.id });
     },
     drop(e) {
@@ -115,8 +116,7 @@ export default {
     }
   },
   watch: {
-    streamSelectVisibility(val) {
-      this.showStreamSelectdialog = val;
+    showStreamSelectdialog(val) {
       this.STREAM_SELECT_VISIBILITY(val);
     },
     index(value) {
