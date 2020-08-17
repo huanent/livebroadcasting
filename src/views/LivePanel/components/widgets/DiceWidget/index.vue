@@ -7,12 +7,12 @@
     @moved="UPDATE_POSITION({ name: 'dice', position: $event })"
   >
     <div class="contain">
-      <div class="dice" ref="dice" @click="start">
+      <div class="dice" :class="animationClass" ref="dice" @click="start">
         <div
-          class="side"
           v-for="(group, key, index) in pointerList"
+          class="side"
+          :class="'side-' + (index + 1)"
           :key="index"
-          v-if="key === pointer"
         >
           <div class="pointer-group" v-for="group in pointerList[key]">
             <div class="pointer-wrapper" v-for="p in group">
@@ -45,14 +45,12 @@ export default {
   data() {
     vm = this;
     return {
-      pointer: "1",
       pointerList: {},
-      animation: undefined
+      animationClass: ""
     };
   },
   mounted() {
     this.initPointerList();
-    this.pointer = this.dice.value + "";
   },
 
   computed: {
@@ -118,6 +116,7 @@ export default {
       };
     },
     start() {
+      if (this.dice.start) return;
       let num = parseInt(1 + Math.random() * 6);
       this.SET_DICE_VALUE(num);
 
@@ -128,16 +127,12 @@ export default {
     }
   },
   watch: {
-    "dice.start": function() {
-      this.animation = new BezierAnimation(2, "ease", (i1, i2) => {
-        let num = parseInt(1 + Math.random() * 6);
-
-        if (i2 >= 1) {
-          num = this.dice.value;
-        }
-        this.pointer = num + "";
-      });
-      this.animation.play();
+    "dice.start": function(value) {
+      if (value) {
+        this.animationClass = "pointer-" + this.dice.value + " animation";
+      } else {
+        this.animationClass = "pointer-" + this.dice.value;
+      }
     }
   }
 };
@@ -150,24 +145,36 @@ export default {
   position: relative;
   box-sizing: border-box;
   display: flex;
-}
-
-.dice {
-  flex: 1;
-  display: flex;
   justify-content: center;
   align-items: center;
 }
-.side {
-  width: 90px;
-  height: 90px;
-  padding: 5px;
-  display: flex;
-  background: #fff;
-  border-radius: 10px;
-  flex-direction: column;
+.dice {
+  height: 100px;
+  width: 100px;
+  /**/
+
+  /*left: 50%;*/
+  /*top: 50%;*/
+  transform-style: preserve-3d;
+  position: relative;
+  transform-origin: 50% 50% 100%;
+  animation-duration: 0s;
+  animation-fill-mode: forwards;
 }
 
+.side {
+  height: 100px;
+  width: 100px;
+  display: flex;
+  background: #fff;
+  border-radius: 2px;
+  border: 1px solid #e0e0e0;
+  box-shadow: inset 0 0 10px #ccc;
+  flex-direction: column;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
 .pointer-group {
   display: flex;
   flex: 1;
@@ -177,14 +184,115 @@ export default {
 }
 .pointer {
   text-align: center;
-  /*width: 16px;*/
-  /*height: 16px;*/
-  /*background-color: #c33;*/
 }
 .pointer-wrapper {
   display: flex;
   flex: 1;
   align-items: center;
   justify-content: center;
+}
+
+.side-1 {
+  transform: rotateX(90deg) translateZ(50px);
+}
+
+.side-2 {
+  transform: translateZ(50px);
+}
+
+.side-5 {
+  transform: rotateY(90deg) translateZ(50px);
+}
+
+.side-4 {
+  transform: rotateY(180deg) translateZ(50px);
+}
+
+.side-3 {
+  transform: rotateY(-90deg) translateZ(50px);
+}
+
+.side-6 {
+  transform: rotateX(-90deg) translateZ(50px);
+}
+
+@keyframes move1 {
+  0% {
+    transform: rotateY(45deg) rotateX(-45deg) rotateZ(45deg);
+  }
+
+  100% {
+    transform: rotateY(1800deg) rotateX(-90deg);
+  }
+}
+@keyframes move2 {
+  0% {
+    transform: rotateY(45deg) rotateX(-45deg) rotateZ(45deg);
+  }
+  100% {
+    transform: rotateY(1800deg);
+  }
+}
+
+@keyframes move3 {
+  0% {
+    transform: rotateY(45deg) rotateX(-45deg) rotateZ(45deg);
+  }
+
+  100% {
+    transform: rotateY(1890deg);
+  }
+}
+
+@keyframes move4 {
+  0% {
+    transform: rotateY(45deg) rotateX(-45deg) rotateZ(45deg);
+  }
+
+  100% {
+    transform: rotateY(1800deg) rotateX(-180deg);
+  }
+}
+
+@keyframes move5 {
+  0% {
+    transform: rotateY(45deg) rotateX(-45deg) rotateZ(45deg);
+  }
+
+  100% {
+    transform: rotateY(1710deg);
+  }
+}
+
+@keyframes move6 {
+  0% {
+    transform: rotateY(45deg) rotateX(-45deg) rotateZ(45deg);
+  }
+
+  100% {
+    transform: rotateY(1800deg) rotateX(90deg);
+  }
+}
+.pointer-1 {
+  animation-name: move1;
+}
+.pointer-2 {
+  animation-name: move2;
+}
+.pointer-3 {
+  animation-name: move3;
+}
+.pointer-4 {
+  animation-name: move4;
+}
+.pointer-5 {
+  animation-name: move5;
+}
+.pointer-6 {
+  animation-name: move6;
+}
+.animation {
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
 }
 </style>
