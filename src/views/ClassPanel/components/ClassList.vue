@@ -159,7 +159,7 @@ export default {
         return;
       }
 
-      let routName = this.isMobile ? "mobileLiveRoom" : "Liveroom";
+      let routName = this.isMobile ? "Liveroom" : "Liveroom";
       this.$router.push({
         name: routName,
         query: {

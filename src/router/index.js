@@ -62,15 +62,6 @@ const routes = [
       title: ""
     },
     component: () => import("@v/LivePanel")
-  },
-  {
-    path: "/mobile/liveroom",
-    name: "mobileLiveRoom",
-    meta: {
-      requireAuth: true,
-      title: ""
-    },
-    component: () => import("@v/LivePanel/MobileLivePanel")
   }
 ];
 
