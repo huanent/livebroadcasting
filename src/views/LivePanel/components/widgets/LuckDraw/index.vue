@@ -8,25 +8,27 @@
       @moved="UPDATE_POSITION({ name: 'draw', position: $event })"
       :class="{ 'mobile-scale': isMobile }"
     >
-      <div class="contain">
+      <div class="dice">
         <div class="content">
-          <div class="line"></div>
-          <ul ref="ul" :style="{ 'margin-top': styleData.transformX + 'px' }">
-            <li v-for="(item, index) in draw.list" :key="index">
-              <div class="stu_name">{{ item }}</div>
-            </li>
-          </ul>
+          <div class="luck-item-wrapper">
+            <ul id="luck-items" :class="{ animating: animating }">
+              <li v-for="(item, index) in draw.list" :key="index">
+                <div class="stu_name">{{ item }}</div>
+              </li>
+            </ul>
+            <div class="line"></div>
+          </div>
         </div>
-      </div>
-      <div class="btnClick">
-        <el-button
-          v-if="isTeacher && !drawing"
-          size="mini "
-          type="primary"
-          @click="start"
-          class="btn"
-          >开始</el-button
-        >
+        <div class="btnClick">
+          <el-button
+            v-if="isTeacher && !drawing"
+            size="mini "
+            type="primary"
+            @click="start"
+            class="btn"
+            >开始</el-button
+          >
+        </div>
       </div>
     </widget-window>
   </div>
@@ -42,9 +44,7 @@ export default {
   data() {
     return {
       drawing: false,
-      isanimate: false,
-      animation: undefined,
-      styleData: { transformX: 0 }
+      animating: false
     };
   },
   components: {
@@ -64,21 +64,25 @@ export default {
       "STAR_DRAW"
     ]),
     start() {
+      this.animating = false;
+
       if (this.isTeacher) {
         this.SET_DRAW_LIST(
-                this.featuresList.map(m => m.__nickName || m.__primaryKey)
+          this.featuresList.map(m => m.__nickName || m.__primaryKey)
         );
       }
       this.STAR_DRAW(true);
-      this.animation = new BezierAnimation(2, "ease", (i1, i2) => {
-        this.styleData.transformX = i2 * -1 * (this.draw.list.length - 1) * 30;
-      });
-      this.animation.play();
+      setTimeout(() => {
+        this.animating = true;
+      }, 100);
     }
   },
   watch: {
     "draw.visible"(value) {
       this.drawing = false;
+      if (!value) {
+        this.animating = false;
+      }
       if (this.isTeacher) {
         this.SET_DRAW_LIST(
           this.featuresList.map(m => m.__nickName || m.__primaryKey)
@@ -87,78 +91,90 @@ export default {
     },
     "draw.started"(value) {
       if (!value) return;
+
       this.$forceUpdate();
       this.start();
       this.drawing = true;
       setTimeout(() => {
         this.drawing = false;
         this.STAR_DRAW(false);
-      }, 2500);
+      }, 2000);
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-.contain {
+.dice {
+  background: #54555d;
+}
+.content {
   width: 200px;
   height: 100px;
-  background: #54555d;
-  position: relative;
-  box-sizing: border-box;
-  padding-top: 36px;
-  .content {
-    height: 30px;
-    font-weight: 500;
-    background: #54555d;
-    color: #000;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-    .line {
-      width: 120px;
-      left: 0;
-      right: 0;
-      position: absolute;
-      height: 1px;
-      top: 0;
-      bottom: 0;
-      margin: auto;
-      opacity: 0.2;
-      background: #000;
-    }
-    .stu_name {
-      border-radius: 2px;
-      background: #eee;
-      text-align: center;
-      overflow: hidden;
-      width: 120px;
-      height: 30px;
-      display: inline-block;
-    }
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.line {
+  width: 120px;
+  left: 0;
+  right: 0;
+  position: absolute;
+  height: 1px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  opacity: 0.2;
+  background: #000;
+}
+.stu_name {
+  font-weight: 500;
+  color: #000;
+  border-radius: 2px;
+  background: #eee;
+  text-align: center;
+  overflow: hidden;
+  width: 120px;
+  height: 30px;
+  display: inline-block;
 }
 
-ul {
+.luck-item-wrapper {
   height: 30px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+.luck-item-wrapper ul {
   list-style: none;
-  margin: 0;
-  padding: 0;
-  li {
-    font-size: 20px;
-    height: 30px;
-    width: 100%;
-  }
+  margin-top: 0;
+}
+.luck-item-wrapper li {
+  font-size: 20px;
+  height: 30px;
+  width: 100%;
 }
 
 .btnClick {
   text-align: center;
   background: #54555d;
   padding-bottom: 10px;
-  .el-button {
-    background: #018a8c;
-    width: 160px;
-    padding-bottom: 5px;
-    font-size: 14px;
+}
+.el-button {
+  background: #018a8c;
+  width: 160px;
+  padding-bottom: 5px;
+  font-size: 14px;
+}
+.animating {
+  animation: rotate 2s normal ease-in-out forwards;
+}
+
+@keyframes rotate {
+  0% {
+    margin-top: 0;
+  }
+  100% {
+    margin-top: -570px;
   }
 }
 </style>
