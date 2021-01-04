@@ -34,7 +34,7 @@ export default {
   height: 60px;
   color: #ffffff;
   font-size: 14px;
-  background-color: #2e333f;
+  background-color: #506EFA;
   .nav-wrap {
     width: 1205px;
     padding: 0 15px;

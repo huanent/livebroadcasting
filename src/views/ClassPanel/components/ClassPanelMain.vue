@@ -1,60 +1,64 @@
 <template>
   <div class="my-class-main">
     <div class="main-head">
-      <el-tabs v-model="activeName" @tab-click="handleTabChange">
-        <el-tab-pane
-          :label="$t('class.theClassIJoined')"
-          name="participant"
-        ></el-tab-pane>
-        <el-tab-pane
-          :label="$t('class.theClassICreated')"
-          name="creator"
-        ></el-tab-pane>
-      </el-tabs>
-    </div>
-    <div class="main-area">
-      <div class="operation-area clearfix">
-        <div class="search right">
-          <el-input
-            v-if="activeName === 'participant'"
-            :placeholder="$t('class.searchClass')"
-            v-model="searchValue"
-            class="input-with-select"
-            clearable
-          >
-            <el-select
-              v-model="searchField"
-              slot="prepend"
-              @change="handleFieldChange"
+      <div class="head-inner-wrapper">
+        <el-tabs v-model="activeName" @tab-click="handleTabChange">
+          <el-tab-pane
+            :label="$t('class.theClassIJoined')"
+            name="participant"
+          ></el-tab-pane>
+          <el-tab-pane
+            :label="$t('class.theClassICreated')"
+            name="creator"
+          ></el-tab-pane>
+        </el-tabs>
+        <div class="operation-area clearfix">
+          <div class="search right">
+            <el-input
+              v-if="activeName === 'participant'"
+              :placeholder="$t('class.searchClass')"
+              v-model="searchValue"
+              prefix-icon="el-icon-search"
+              class="input-with-select"
+              clearable
+              @change="handleSearch(1)"
             >
-              <el-option
-                :label="$t('class.classId')"
-                value="classId"
-              ></el-option>
-              <el-option
-                :label="$t('class.classTitle')"
-                value="title"
-              ></el-option>
-              <el-option
-                :label="$t('class.createUser')"
-                value="createUser"
-              ></el-option>
-            </el-select>
-            <el-button
+              <el-select
+                v-model="searchField"
+                slot="prepend"
+                @change="handleFieldChange"
+              >
+                <el-option
+                  :label="$t('class.classId')"
+                  value="classId"
+                ></el-option>
+                <el-option
+                  :label="$t('class.classTitle')"
+                  value="title"
+                ></el-option>
+                <el-option
+                  :label="$t('class.createUser')"
+                  value="createUser"
+                ></el-option>
+              </el-select>
+              <!-- <el-button
               @click="handleSearch(1)"
               slot="append"
               icon="el-icon-search"
-            ></el-button>
-          </el-input>
+            ></el-button> -->
+            </el-input>
+          </div>
+          <el-button
+            v-if="activeName === 'creator'"
+            class="right"
+            type="primary"
+            @click.stop="openCreateForm"
+            >{{ $t("class.createClass") }}</el-button
+          >
         </div>
-        <el-button
-          v-if="activeName === 'creator'"
-          class="right"
-          type="primary"
-          @click.stop="openCreateForm"
-          >{{ $t("class.createClass") }}</el-button
-        >
       </div>
+    </div>
+    <div class="main-area">
       <keep-alive>
         <class-list
           :classList="list"
@@ -115,7 +119,7 @@ export default {
       classCreatedTotal: 0,
       joinedDataCache: false,
       classJoinedList: [],
-      classJoinedTotal: 0
+      classJoinedTotal: 0,
     };
   },
   computed: {
@@ -131,7 +135,7 @@ export default {
     },
     list() {
       return this.isSearching ? this.searchResult : this.classList;
-    }
+    },
   },
   created() {
     this.getListData(this.activeName, this.pageNum, this.pageSize);
@@ -143,11 +147,11 @@ export default {
         lock: true,
         text: "Loading",
         spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
+        background: "rgba(0, 0, 0, 0.7)",
       });
       classApi
         .classGet(classId)
-        .then(res => {
+        .then((res) => {
           if (res.data.success) {
             this.classInfo = res.data.model;
             this.$refs["detailDialog"].open();
@@ -157,7 +161,7 @@ export default {
             loading.close();
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           loading.close();
         });
@@ -182,7 +186,7 @@ export default {
     },
     getListData(type, pageNum, pageSize) {
       this.loading = true;
-      classApi.getClassList(type, pageNum, pageSize).then(res => {
+      classApi.getClassList(type, pageNum, pageSize).then((res) => {
         if (res.data.success) {
           const data = res.data.model;
           if (type === "creator") {
@@ -244,7 +248,7 @@ export default {
           this.pageNum,
           this.pageSize
         )
-        .then(res => {
+        .then((res) => {
           if (res.data.success) {
             const data = res.data.model;
             this.total = data.total;
@@ -252,20 +256,20 @@ export default {
             this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
     openCreateForm() {
       this.$refs["createDialog"].open();
-    }
+    },
   },
   components: {
     ClassList,
     ClassCreate,
     ClassDetail,
-    ClassEdit
-  }
+    ClassEdit,
+  },
 };
 </script>
 
@@ -273,48 +277,96 @@ export default {
 .my-class-main {
   background: #fff;
   margin-bottom: 40px;
-  border-bottom: 1px solid #ddd;
-  height: 60px;
   text-align: left;
   .main-head {
-    width: 1205px;
-    padding: 0 15px;
+    max-width: 1205px;
+    padding: 40px 15px 32px;
     margin: 0 auto;
     @media screen and (max-width: 1200px) {
       width: auto;
     }
+    .head-inner-wrapper {
+      max-width: 916px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    /deep/ .el-tabs__nav {
+      .el-tabs__active-bar {
+        display: none;
+      }
+    }
+    /deep/ .el-tabs__header {
+      margin-bottom: 0;
+    }
     /deep/ .el-tabs__item {
-      height: 60px;
-      line-height: 60px;
-      font-size: 18px;
+      border: 1px solid #d0cfe6;
+      font-size: 16px;
+      font-weight: 400;
+      color: #8a8a99;
+      padding: 16px 32px;
+      height: auto;
+      line-height: 1.2;
+      &.is-active {
+        background: #506efa;
+        border-color: #506efa;
+        color: #ffffff;
+      }
+      &:nth-child(2) {
+        border-radius: 4px 0 0 4px;
+        border-right: 0 none;
+      }
+      &:last-child {
+        border-radius: 0 4px 4px 0;
+        border-left: 0 none;
+      }
     }
     /deep/ .el-tabs__nav-wrap::after {
       background-color: transparent;
     }
+    .operation-area {
+      .search {
+        @media screen and (max-width: 1200px) {
+          width: auto;
+        }
+        /deep/ {
+          .el-input .el-input--suffix {
+            width: 5.2rem;
+            .el-input__inner {
+              padding-left: 0.625rem;
+            }
+          }
+          .el-input-group {
+            border-radius: 4px;
+            border: 1px solid #506efa;
+          }
+          .el-input-group__prepend {
+            background: #506efa;
+            color: #ffffff;
+            border-radius: 0;
+            border: 0 none;
+          }
+          .el-select .el-input .el-select__caret {
+            color: #ffffff;
+          }
+          .el-input-group--prepend .el-input__inner {
+            border: 0 none;
+            height: 2rem;
+            line-height: 2rem;
+          }
+          .el-input__icon {
+            line-height: 2rem;
+          }
+        }
+      }
+    }
   }
   .main-area {
-    background-color: #f4f4f4;
-    width: 1205px;
+    max-width: 1205px;
     padding: 0 15px;
     margin: 0 auto;
     @media screen and (max-width: 1200px) {
       width: auto;
-    }
-    .operation-area {
-      padding-right: 20px;
-      .search {
-        width: 40%;
-        @media screen and (max-width: 1200px) {
-          width: auto;
-        }
-        /deep/ .el-input .el-input--suffix {
-          width: 6rem;
-        }
-        /deep/ .el-input-group__append {
-          background: #0a818c;
-          color: white;
-        }
-      }
     }
   }
 }

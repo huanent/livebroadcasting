@@ -39,31 +39,34 @@
             />
           </div>
           <div class="detail-content">
-            <div class="field" :title="item.title">
+            <div class="field title" :title="item.title">
               <span>{{ item.title }}</span>
             </div>
-            <div class="field">
-              <label>{{ $t("class.startTime") }}：</label
-              ><span>{{ item.startTime | timeFormat }}</span>
-            </div>
-            <div class="field">
-              <label>{{ $t("class.endTime") }}：</label
-              ><span>{{ item.endTime | timeFormat }}</span>
+            <div class="time-wrapper">
+              <div class="field">
+                <label>{{ $t("class.startTime") }}：</label
+                ><span>{{ item.startTime | timeFormat }}</span>
+              </div>
+              <div class="field">
+                <label>{{ $t("class.endTime") }}：</label
+                ><span>{{ item.endTime | timeFormat }}</span>
+              </div>
             </div>
             <div class="item-btn-group">
-              <span class="btn-apply" @click="viewDetail(item.classId)">{{
-                $t("class.viewDetail")
-              }}</span>
               <span
                 v-if="isSearching && !item.isJoined"
                 class="btn-apply"
                 @click="handleJoinClass(item.classId)"
               >
                 {{ $t("class.joinClass") }}
+                <i class="el-icon-arrow-right"></i>
               </span>
-              <span @click="toLiveRoomPage(item)" v-else class="btn-apply">{{
-                $t("class.enterClass")
-              }}</span>
+              <span @click="toLiveRoomPage(item)" v-else class="btn-apply"
+                >{{ $t("class.enterClass") }} <i class="el-icon-arrow-right"></i
+              ></span>
+              <span class="btn-apply" @click="viewDetail(item.classId)"
+                >{{ $t("class.viewDetail") }} <i class="el-icon-arrow-right"></i
+              ></span>
             </div>
           </div>
         </div>
@@ -86,7 +89,7 @@ export default {
   props: {
     classList: Array,
     isSearching: Boolean,
-    type: String
+    type: String,
   },
   computed: {
     ...mapState("device", ["isMobile"]),
@@ -99,12 +102,12 @@ export default {
       return this.isSearching
         ? this.$t("class.hasNoSearchResult")
         : this.nodataTips;
-    }
+    },
   },
   filters: {
     timeFormat(timestamp) {
       return dayjs(parseInt(timestamp)).format("YYYY/MM/DD HH:mm");
-    }
+    },
   },
   methods: {
     viewDetail(classId) {
@@ -114,7 +117,7 @@ export default {
       this.$confirm(this.$t("class.deleteTips"), this.$t("text.tips"), {
         confirmButtonText: this.$t("button.yes"),
         cancelButtonText: this.$t("button.cancel"),
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           const result = await classApi.classRemove(classId);
@@ -129,7 +132,7 @@ export default {
       this.$confirm(this.$t("class.quitTips"), this.$t("text.tips"), {
         confirmButtonText: this.$t("button.yes"),
         cancelButtonText: this.$t("button.cancel"),
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           const result = await classApi.classQuit(classId);
@@ -163,14 +166,14 @@ export default {
       this.$router.push({
         name: routName,
         query: {
-          id: classInfo.classId
-        }
+          id: classInfo.classId,
+        },
       });
     },
     handleJoinClass(id) {
       classApi
         .classApply(id)
-        .then(res => {
+        .then((res) => {
           if (res.data.success) {
             this.$message.success(this.$t("class.joinSuccess"));
             this.$emit("refresh");
@@ -178,18 +181,16 @@ export default {
             this.$message.error(this.$t("class.joinFailed"));
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .classlist {
-  overflow: auto;
-  margin: 15px 0;
   .addclass-btn {
     margin-left: calc(100% - 8rem);
   }
@@ -211,9 +212,10 @@ export default {
     .delete-btn {
       position: absolute;
       z-index: 99;
-      right: 4px;
+      right: 1rem;
       top: 0;
-      font-size: 18px;
+      font-size: 24px;
+      color: #d0cfe6;
     }
     .enter-class-btn {
       position: absolute;
@@ -222,31 +224,26 @@ export default {
     }
     .class-card {
       position: relative;
-      width: 32%;
-      min-width: 320px;
-      @media screen and (max-width: 1200px) {
-        width: 48%;
-      }
-      @media screen and (max-width: 767px) {
-        width: 92%;
-      }
+      width: 100%;
+      max-width: 916px;
       height: fit-content;
       background: white;
-      margin: 0.5%;
+      margin-bottom: 24px;
+      border-radius: 8px;
+      box-shadow: 0px 3px 30px 0px rgba(138, 138, 153, 0.2);
+      overflow: hidden;
       .card-container {
+        position: relative;
         display: flex;
         align-items: center;
-        padding: 1rem;
         justify-content: space-between;
       }
       &:hover {
         box-shadow: 0px 0px 5px -1px #888888;
       }
       .card-left {
-        position: relative;
-        width: 30%;
-        max-height: 100px;
-        min-height: 100px;
+        max-width: 282px;
+        height: 10rem;
         overflow: hidden;
         display: flex;
         align-items: center;
@@ -254,29 +251,40 @@ export default {
         .live-status {
           position: absolute;
           top: 0;
-          right: 0;
+          right: 4.125rem;
           z-index: 9;
           box-sizing: border-box;
-          font-size: 12px;
+          font-size: 0.625rem;
           color: #fff;
-          line-height: 18px;
+          line-height: 0.875rem;
           text-align: center;
-          width: 51px;
-          height: 18px;
-          border-radius: 2px;
+          width: 2.1875rem;
+          height: 4.125rem;
+          padding: 0.3125rem 0.625rem;
+          &:before {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            content: "";
+            width: 0;
+            height: 0;
+            border: 0.8125rem solid;
+            border-left-width: 1.125rem;
+            border-right-width: 1.125rem;
+            border-color: transparent transparent white;
+          }
           &.on {
-            background-color: #ff5e90;
+            background-color: #506EFA;
           }
           &.close {
-            background-color: #0a818c;
+            background-color: #D0CFE6;
           }
           &.expired {
-            background-color: #252434;
+            background-color: #D0CFE6;
           }
         }
         img {
           width: 100%;
-          max-height: 7rem;
           border-radius: 2px;
         }
       }
@@ -285,25 +293,36 @@ export default {
         flex-direction: column;
         justify-content: space-evenly;
         height: 100%;
-        width: 60%;
+        flex: 1;
+        padding: 24px 24px 33px;
         .field {
-          margin: 0.5rem 0.5rem 0;
+          margin-bottom: 0.75rem;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
-        .field:nth-child(1) {
-          margin: 0 0.5rem;
-          font-size: 1.4rem;
-          height: 2rem;
+        .title {
+          font-size: 1rem;
+          font-weight: 700;
+        }
+        .time-wrapper {
+          display: flex;
+          font-size: 0.875rem;
+          font-weight: 400;
+          color: #8a8a99;
+          .field {
+            margin-right: 2.5rem;
+            margin-bottom: 2rem;
+          }
         }
         .item-btn-group {
           display: flex;
-          justify-content: space-between;
-          margin: 0.5rem 0.5rem 0;
           .btn-apply {
-            color: #409eff;
+            color: #506efa;
             cursor: pointer;
+            margin-right: 1.875rem;
+            font-weight: 700;
+            font-size: 0.875rem;
             &:hover {
               color: #66b1ff;
             }

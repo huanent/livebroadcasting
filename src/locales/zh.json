@@ -85,8 +85,8 @@
   "toolbar.move": "移动",
   "toolbar.hand": "拖动",
 
-  "class.theClassICreated": "我的开课",
-  "class.theClassIJoined": "我的课堂",
+  "class.theClassICreated": "我创建的课堂",
+  "class.theClassIJoined": "我参与的课堂",
   "class.classId": "房间号",
   "class.classTitle": "房间名",
   "class.createUser": "创建人",

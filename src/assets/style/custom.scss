@@ -89,15 +89,18 @@ html {
 .m-control-popover {
   padding: 0.8rem 0.4rem;
   margin: 0;
+
   @include themeify {
     background: themed("background_color3");
     border: 1px solid themedOpacity("color_opposite", 0.1);
   }
+
   .popper__arrow::after {
     @include themeify {
       border-left-color: themed("background_color3");
     }
   }
+
   .popper__arrow {
     @include themeify {
       border-left-color: themedOpacity("color_opposite", 0.1);
@@ -162,8 +165,20 @@ html {
 .hide {
   visibility: hidden;
 }
+
 .tx_board_canvas_wrap {
   @include themeify {
     background-color: themed("board_bg");
+  }
+}
+
+//element dropdown
+.el-popper /deep/ {
+  .el-select-dropdown__list {
+    background: #f5f5fa;
+  }
+
+  &[x-placement^="bottom"] .popper__arrow::after {
+    border-bottom-color: #f5f5fa;
   }
 }

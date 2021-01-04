@@ -1,12 +1,12 @@
 <template>
   <div>
-    <class-panel-header :userInfo="userInfo" />
+    <!-- <class-panel-header :userInfo="userInfo" /> -->
     <class-panel-main />
   </div>
 </template>
 
 <script>
-import ClassPanelHeader from "./components/ClassPanelHeader";
+// import ClassPanelHeader from "./components/ClassPanelHeader";
 import ClassPanelMain from "./components/ClassPanelMain";
 
 export default {
@@ -18,7 +18,7 @@ export default {
     return {};
   },
   components: {
-    ClassPanelHeader,
+    // ClassPanelHeader,
     ClassPanelMain
   }
 };
