@@ -135,10 +135,9 @@ export default {
 .login-page {
   width: 100%;
   height: 100%;
-  background-color: #0a1c1e;
-  background-image: url(../../assets/images/board.jpg);
-  background-size: 100%;
-  background-repeat: no-repeat;
+  background-color: #ffffff;
+  background: url(../../assets/images/board.jpg) no-repeat 80% center;
+  background-size: 764px 613px;
   .login-form-container {
     position: absolute;
     top: 50%;
