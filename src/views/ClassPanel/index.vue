@@ -48,6 +48,5 @@ export default {
 <style lang="scss" scoped>
 .my-class {
   height: 100%;
-  background: #f4f4f4;
 }
 </style>
