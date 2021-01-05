@@ -50,7 +50,7 @@
           </div>
           <el-button
             v-if="activeName === 'creator'"
-            class="right"
+            class="right create-class-btn"
             type="primary"
             @click.stop="openCreateForm"
             >{{ $t("class.createClass") }}</el-button
@@ -358,6 +358,9 @@ export default {
             line-height: 2rem;
           }
         }
+      }
+      .create-class-btn {
+        height: 53px;
       }
     }
   }

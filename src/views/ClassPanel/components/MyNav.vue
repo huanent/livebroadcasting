@@ -1,7 +1,9 @@
 <template>
   <div class="my-nav">
     <div class="nav-wrap">
-      <router-link tag="h1" to="/">Live broadcast</router-link>
+      <router-link tag="h1" to="/">
+        <img src="@/assets/images/logo-white@2x.png" class="logo" alt="Live broadcast" />
+      </router-link>
       <!-- <div class="serach-wrap">
         <el-input v-model="value" suffix-icon="el-icon-search"></el-input>
       </div> -->
@@ -16,28 +18,34 @@ export default {
   name: "MyNav",
   props: {
     avatar: String,
-    nickname: String
+    nickname: String,
   },
   data() {
     return {
-      value: ""
+      value: "",
     };
   },
   components: {
-    MyProfile
-  }
+    MyProfile,
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .my-nav {
-  height: 60px;
   color: #ffffff;
   font-size: 14px;
-  background-color: #506EFA;
+  background-color: #506efa;
+  .router-link-active {
+    max-width: 256px;
+    img {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
   .nav-wrap {
     width: 1205px;
-    padding: 0 15px;
+    padding: 15px;
     height: 100%;
     margin: 0 auto;
     display: flex;

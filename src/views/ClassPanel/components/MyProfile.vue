@@ -1,7 +1,7 @@
 <template>
   <div class="profile-wrap">
-    <div class="profile-username">{{ nickname }}</div>
-    <div class="profile-avatar">
+    <div class="profile-avatar"><img :src="avatarUrl" :alt="$t('class.avatar')" /></div>
+    <div class="profile-username">
       <el-popover
         trigger="hover"
         placement="bottom"
@@ -17,7 +17,7 @@
             {{ $t("logout") }}
           </li>
         </ul>
-        <img slot="reference" :src="avatarUrl" :alt="$t('class.avatar')" />
+        <span slot="reference">{{ nickname }}<i class="el-icon-arrow-down"></i></span>
       </el-popover>
     </div>
   </div>
@@ -31,16 +31,16 @@ export default {
   name: "MyProfile",
   props: {
     avatar: String,
-    nickname: String
+    nickname: String,
   },
   computed: {
     avatarUrl() {
       return this.avatar || avatarImg;
-    }
+    },
   },
   data() {
     return {
-      visible: false
+      visible: false,
     };
   },
   methods: {
@@ -48,7 +48,7 @@ export default {
       "SET_LB_TOKEN",
       "SET_LB_EXPIRES",
       "SET_TX_USERID",
-      "SET_USER_INFO"
+      "SET_USER_INFO",
     ]),
     handleLogout() {
       this.SET_LB_TOKEN("");
@@ -56,8 +56,8 @@ export default {
       this.SET_TX_USERID("");
       this.SET_USER_INFO(null);
       this.$router.push({ name: "Login" });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -76,23 +76,22 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: center;
-    @media screen and (max-width: 575px) {
-      display: none;
-    }
-    // box-sizing: border-box;
     &:hover {
-      color: #6dbcc2;
-      // color: #10ae58;
+      color: #ffffff;
+    }
+    .el-icon-arrow-down {
+      margin-left: 4px;
     }
   }
   .profile-avatar {
     color: #999;
-    text-align: right;
-    margin-left: 4px;
-    width: 32px;
-    height: 32px;
-    line-height: 30px;
-    box-sizing: border-box;
+    margin-right: 13px;
+    width: 40px;
+    height: 40px;
+    line-height: 38px;
+    @media screen and (max-width: 575px) {
+      display: none;
+    }
 
     img {
       width: 100%;

@@ -4,9 +4,9 @@
       <div class="logo">
         <img src="@/assets/images/logo@2x.png" />
       </div>
-      <div class="login-form-wrapper">
-        <div class="login-form-container">
-          <div class="login-title">
+      <div class="form-wrapper">
+        <div class="form-container">
+          <div class="title">
             {{ $t("登录") }}
           </div>
           <el-form
@@ -15,7 +15,7 @@
             :model="loginForm"
             :rules="rules"
             :label-position="onTop"
-            label-width="80px"
+            status-icon="true"
           >
             <el-form-item prop="username" :label="$t('login.username')">
               <el-input
@@ -40,7 +40,7 @@
                 {{ showLoading ? $t("login.logining") : $t("login") }}
               </el-button>
               <el-button class="sign-up-btn" type="text" @click="signup">
-                {{ $t("signup") }}
+                {{ $t("signup.noAccount") }}
               </el-button>
             </el-form-item>
           </el-form>
@@ -153,23 +153,22 @@ export default {
     max-width: 1370px;
     margin: 0 auto;
     padding-top: 40px;
-    padding-left: 90px;
+    @media screen and (min-width: 768px) {
+      padding-left: 90px;
+    }
   }
-  .login-form-wrapper {
+  .form-wrapper {
     background: url(../../assets/images/board.jpg) no-repeat right center;
     background-size: 764px 613px;
   }
-  .login-form-container {
+  .form-container {
     max-width: 350px;
-    @media screen and (max-width: 768px) {
-      left: 50%;
-    }
     @media screen and (max-width: 767px) {
       width: 80%;
       max-width: 450px;
     }
   }
-  .login-title {
+  .title {
     font-size: 3.75rem;
     font-weight: 700;
     color: #1a1b29;
@@ -200,6 +199,31 @@ export default {
       background: #ffffff;
       border: 1px solid #d0cfe6;
       border-radius: 4px;
+    }
+    .el-form-item__error {
+      left: 100%;
+      top: 50%;
+      margin-left: 2.5rem;
+      transform: translateY(-65%);
+      width: 100%;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #1a1b29;
+      padding-top: 0;
+    }
+    .el-input__validateIcon {
+      position: absolute;
+      left: 100%;
+      margin-left: 1rem;
+      font-size: 1.25rem;
+      &.el-icon-circle-close:before {
+        color: #ff331f;
+        content:'\e79d';
+      }
+      &.el-icon-circle-check:before {
+        color: #13ce66;
+        content: '\e79c';
+      }
     }
     .login-btn {
       width: 100%;

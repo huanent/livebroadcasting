@@ -4,19 +4,21 @@
     :title="$t('class.classDetail')"
     :visible.sync="classDetailVisible"
     :append-to-body="true"
-    width="600px"
+    width="550px"
   >
     <div class="detail-wrap">
-      <img :src="classInfo.url" :alt="$t('class.classCover')" />
+      <!-- <img :src="classInfo.url" :alt="$t('class.classCover')" /> -->
       <div class="class-detail">
         <h1>{{ classInfo.title }}</h1>
-        <div class="detail-item">
-          <label>{{ $t("class.startTime") }}：</label>
-          <span>{{ classInfo.startTime | timeFormat }}</span>
-        </div>
-        <div class="detail-item">
-          <label>{{ $t("class.endTime") }}：</label>
-          <span>{{ classInfo.endTime | timeFormat }}</span>
+        <div class="item-wrapper">
+          <div class="detail-item">
+            <label>{{ $t("class.startTime") }}：</label>
+            <span>{{ classInfo.startTime | timeFormat }}</span>
+          </div>
+          <div class="detail-item">
+            <label>{{ $t("class.endTime") }}：</label>
+            <span>{{ classInfo.endTime | timeFormat }}</span>
+          </div>
         </div>
         <div class="detail-item">
           <label>{{ $t("class.createTime") }}：</label>
@@ -27,7 +29,7 @@
           ><span>{{ classInfo.description }}</span>
         </div>
         <div
-          class="detail-item"
+          class="detail-item file-item-wrapper"
           v-if="classInfo.status === 1 || classInfo.status === 2"
         >
           <label>{{ $t("class.courseFiles") }}：</label>
@@ -39,7 +41,7 @@
               :href="item.url"
             >
               {{ index + 1 + ".   " + item.filename }}
-              <icon color="#0a818c" name="download" :size="16"></icon>
+              <i class="el-icon-download"></i>
             </li>
           </ul>
         </div>
@@ -52,7 +54,6 @@
       </div>
     </div>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="classDetailVisible = false">关闭</el-button>
       <el-button type="primary" v-if="isCreater" @click="handleEdit">
         {{ $t("button.edit") }}
       </el-button>
@@ -66,22 +67,22 @@ import dayjs from "dayjs";
 export default {
   name: "ClassDetail",
   props: {
-    classInfo: Object
+    classInfo: Object,
   },
   data() {
     return {
-      classDetailVisible: false
+      classDetailVisible: false,
     };
   },
   computed: {
     isCreater() {
       return localStorage.getItem("lb_userId") === this.classInfo.createUser;
-    }
+    },
   },
   filters: {
     timeFormat(timestamp) {
       return dayjs(parseInt(timestamp)).format("YYYY/MM/DD HH:mm");
-    }
+    },
   },
   methods: {
     handleEdit() {
@@ -95,40 +96,50 @@ export default {
     },
     close() {
       this.classDetailVisible = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .detail-wrap {
-  display: flex;
-  img {
-    max-width: 150px;
-    min-width: 150px;
-  }
   .class-detail {
     width: 100%;
-    padding-left: 24px;
+    padding: 0 20px;
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: #1a1b29;
+      margin-bottom: 1rem;
+    }
+    .item-wrapper {
+      display: flex;
+      .detail-item {
+        margin-right: 40px;
+      }
+    }
     .detail-item {
-      padding: 2px 0;
-      label {
-        font-weight: bold;
-      }
-      span {
-        white-space: pre;
-      }
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: #1a1b29;
+      margin-bottom: 8px;
       .filelist {
         list-style: none;
-        padding-left: 70px;
-        svg {
-          margin-left: 20px;
+        li {
+          margin-bottom: 4px;
+          display: flex;
+          align-items: center;
         }
       }
     }
+    .file-item-wrapper {
+      display: flex;
+    }
+    .el-icon-download {
+      padding-left: 1rem;
+      color: #5d5dff;
+      font-size: 1rem;
+    }
   }
-}
-.detail-dialog /deep/ .el-dialog__body {
-  padding: 10px 20px;
 }
 </style>

@@ -10,6 +10,10 @@ html {
   font-size: 16px;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 #app {
   position: relative;
   height: 100%;
@@ -61,25 +65,22 @@ html {
 }
 
 .profile-popover {
+  min-width: 70px;
   .menu {
     padding: 8px;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color:#f5f5fa;
+    border: 1px solid #f5f5fa;
+    border-radius: 4px;
 
     li {
-      text-align: left;
+      text-align: center;
       font-size: 12px;
       cursor: pointer;
-      color: rgb(121, 119, 119);
+      color: #8a8a99;
       padding: 8px;
       box-sizing: border-box;
 
-      &.u-menu-bottom {
-        border-top: 1px solid #eaeaea;
-      }
-
       &:hover {
-        background-color: rgba(192, 191, 191, 0.2);
         color: #111;
       }
     }
@@ -236,6 +237,85 @@ html {
 
     &.active+li {
       border-left: 1px solid #d0cfe6;
+    }
+  }
+}
+
+// dialog
+.v-modal {
+  opacity: 0.3;
+}
+
+.el-dialog {
+  background: #ffffff;
+  border-radius: 8px;
+  margin-top: 0 !important;
+  top: 50%;
+  transform: translateY(-50%);
+
+  .el-dialog__header {
+    padding: 24px;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    color: #1a1b29;
+  }
+
+  .el-dialog__headerbtn {
+    top: 16px;
+    right: 16px;
+
+    .el-dialog__close {
+      color: #d0cfe6;
+      font-size: 1.5rem;
+    }
+  }
+
+  .el-dialog__body {
+    padding: 0 24px 40px;
+  }
+}
+
+// message box
+.el-message-box__wrapper {
+  color: #1a1b29;
+
+  .el-message-box {
+    border-radius: 8px;
+    padding-bottom: 30px;
+    width: 550px;
+  }
+
+  .el-message-box__header {
+    padding: 24px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .el-message-box__content {
+    padding: 0 40px 24px 40px;
+    font-size: 0.875rem;
+  }
+
+  .el-message-box__btns {
+    padding: 0 32px;
+
+    .el-button {
+      border-radius: 4px;
+      height: 40px;
+      min-width: 72px;
+    }
+
+    button:nth-child(2) {
+      margin-left: 1rem;
+    }
+  }
+
+  .el-message-box__headerbtn {
+    .el-message-box__close {
+      color: #d0cfe6;
+      font-size: 1.5rem;
     }
   }
 }

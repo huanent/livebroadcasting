@@ -48,7 +48,8 @@
   "login.failedTips": "登录失败",
   "login.logining":"登录中",
 
-  "signup": "还没有账号？去注册",
+  "signup": "注册",
+  "signup.noAccount": "还没有账号？去注册",
   "signup.signupSuccess": "注册成功，请登录",
   "signup.signupFailed": "注册失败",
   "signup.signupFailedByRepeated": "注册失败,用户名已存在",
@@ -69,7 +70,7 @@
   "signup.RepeatPasswordTips": "请再次填写密码",
   "signup.sameTips": "两次密码不一致",
   "signup.passwordLength": "密码长度至少为八位",
-  "signup.signupedTip": "已注册 直接登录",
+  "signup.signupedTip": "已注册？直接登录",
 
   "chatroom.readMore": "查看更多消息",
 
