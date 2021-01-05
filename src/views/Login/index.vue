@@ -1,39 +1,51 @@
 <template>
   <div class="login-page">
-    <div class="login-form-container">
-      <el-form
-        ref="loginForm"
-        :model="loginForm"
-        :rules="rules"
-        :label-position="onTop"
-        label-width="80px"
-      >
-        <el-form-item prop="username" :label="$t('login.username')">
-          <el-input
-            v-model="loginForm.username"
-            @keyup.enter.native="onSubmit('loginForm')"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="password" :label="$t('login.password')">
-          <el-input
-            v-model="loginForm.password"
-            show-password
-            @keyup.enter.native="onSubmit('loginForm')"
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button
-            type="primary"
-            :loading="showLoading"
-            @click="onSubmit('loginForm')"
+    <div class="container">
+      <div class="logo">
+        <img src="@/assets/images/logo@2x.png" />
+      </div>
+      <div class="login-form-wrapper">
+        <div class="login-form-container">
+          <div class="login-title">
+            {{ $t("登录") }}
+          </div>
+          <el-form
+            class="login-form"
+            ref="loginForm"
+            :model="loginForm"
+            :rules="rules"
+            :label-position="onTop"
+            label-width="80px"
           >
-            {{ showLoading ? $t("login.logining") : $t("login") }}
-          </el-button>
-          <el-button type="primary" @click="signup">
-            {{ $t("signup") }}
-          </el-button>
-        </el-form-item>
-      </el-form>
+            <el-form-item prop="username" :label="$t('login.username')">
+              <el-input
+                v-model="loginForm.username"
+                @keyup.enter.native="onSubmit('loginForm')"
+              ></el-input>
+            </el-form-item>
+            <el-form-item prop="password" :label="$t('login.password')">
+              <el-input
+                v-model="loginForm.password"
+                show-password
+                @keyup.enter.native="onSubmit('loginForm')"
+              ></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                class="login-btn"
+                type="primary"
+                :loading="showLoading"
+                @click="onSubmit('loginForm')"
+              >
+                {{ showLoading ? $t("login.logining") : $t("login") }}
+              </el-button>
+              <el-button class="sign-up-btn" type="text" @click="signup">
+                {{ $t("signup") }}
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -49,42 +61,43 @@ export default {
       userToken: "",
       loginForm: {
         username: "",
-        password: ""
+        password: "",
       },
       rules: {
         username: [
           {
             required: true,
             message: this.$t("login.usernameTips"),
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         password: [
           {
             required: true,
             message: this.$t("login.passwordTips"),
-            trigger: "change"
-          }
-        ]
+            trigger: "change",
+          },
+        ],
       },
-      showLoading: false
+      showLoading: false,
     };
   },
   computed: {
     ...mapState("device", ["isMobile"]),
     onTop() {
-      return this.isMobile ? "top" : "left";
-    }
+      // return this.isMobile ? "top" : "left";
+      return "top";
+    },
   },
   methods: {
     ...mapMutations("account", [
       "SET_LB_TOKEN",
       "SET_LB_EXPIRES",
       "SET_TX_USERID",
-      "SET_USER_INFO"
+      "SET_USER_INFO",
     ]),
     onSubmit(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           const data = new FormData();
           data.append("username", this.loginForm.username);
@@ -93,7 +106,7 @@ export default {
           this.showLoading = true;
           userApi
             .login(data)
-            .then(res => {
+            .then((res) => {
               if (res.data.success) {
                 this.$message.success(this.$t("login.successTips"));
                 const data = res.data.model;
@@ -109,7 +122,7 @@ export default {
                 this.endLoading();
               }
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
               this.endLoading();
             });
@@ -119,15 +132,15 @@ export default {
     signup() {
       this.$router.push({ path: "/signup" });
     },
-    resetForm: function(formName) {
+    resetForm: function (formName) {
       this.$refs[formName].resetFields();
     },
     endLoading() {
       setTimeout(() => {
         this.showLoading = false;
       }, 500);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -136,25 +149,76 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #ffffff;
-  background: url(../../assets/images/board.jpg) no-repeat 80% center;
-  background-size: 764px 613px;
+  .container {
+    max-width: 1370px;
+    margin: 0 auto;
+    padding-top: 40px;
+    padding-left: 90px;
+  }
+  .login-form-wrapper {
+    background: url(../../assets/images/board.jpg) no-repeat right center;
+    background-size: 764px 613px;
+  }
   .login-form-container {
-    position: absolute;
-    top: 50%;
-    left: 30%;
-    transform: translate(-50%, -50%);
-    padding: 2rem 1.5rem 1rem;
-    width: 450px;
-    background: $white;
-    border-radius: 4px;
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
+    max-width: 350px;
     @media screen and (max-width: 768px) {
       left: 50%;
     }
     @media screen and (max-width: 767px) {
       width: 80%;
       max-width: 450px;
+    }
+  }
+  .login-title {
+    font-size: 3.75rem;
+    font-weight: 700;
+    color: #1a1b29;
+    margin-bottom: 13%;
+  }
+  .logo {
+    max-width: 256px;
+    margin-bottom: 6rem;
+    img {
+      max-width: 100%;
+      width: 100%;
+    }
+  }
+  .login-form /deep/ {
+    .el-form-item__label {
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: #8a8a99;
+      padding-bottom: 1rem;
+      line-height: 1.625rem;
+      &::before {
+        display: none;
+      }
+    }
+    .el-input__inner {
+      height: 3.3125rem;
+      line-height: 3.3125rem;
+      background: #ffffff;
+      border: 1px solid #d0cfe6;
+      border-radius: 4px;
+    }
+    .login-btn {
+      width: 100%;
+      font-size: 1rem;
+      font-weight: 700;
+      padding-top: 0;
+      padding-bottom: 0;
+      height: 3.3125rem;
+      line-height: 3.3125rem;
+      margin-bottom: 1rem;
+    }
+    .sign-up-btn {
+      font-size: 1rem;
+      font-weight: 400;
+      padding: 0;
+      margin-left: 0;
+    }
+    .el-form-item {
+      margin-bottom: 2.5rem;
     }
   }
 }
