@@ -1,17 +1,18 @@
 <template>
   <el-dialog
+    class="course-detail-dialog"
     :title="$t('class.edit')"
     :visible.sync="editDialogVisible"
     :close-on-click-modal="false"
   >
-    <el-form :model="classForm">
+    <el-form :model="classForm" :label-position="'top'">
       <el-form-item :label="$t('class.pic')" class="img-upload-wrap">
         <el-upload
           action
           :class="[
             {
-              'class-upload': fileList.length > 0
-            }
+              'class-upload': fileList.length > 0,
+            },
           ]"
           list-type="picture-card"
           ref="upload"
@@ -25,37 +26,39 @@
         </el-upload>
       </el-form-item>
       <el-form-item prop="title" :label="$t('class.title')">
-        <el-input v-model="classForm.title"></el-input>
+        <el-input v-model="classForm.title" class="title-input"></el-input>
       </el-form-item>
       <el-form-item prop="description" :label="$t('class.description')">
         <el-input type="textarea" v-model="classForm.description"></el-input>
       </el-form-item>
-      <el-form-item prop="startTime" :label="$t('class.startTime')">
-        <div class="block">
-          <el-date-picker
-            v-model="classForm.startTime"
-            type="datetime"
-            :placeholder="$t('class.startTimetips')"
-            :editable="false"
-            value-format="timestamp"
-            :picker-options="pickerOptions"
-          >
-          </el-date-picker>
-        </div>
-      </el-form-item>
-      <el-form-item prop="endTime" :label="$t('class.endTime')">
-        <div class="block">
-          <el-date-picker
-            v-model="classForm.endTime"
-            type="datetime"
-            :placeholder="$t('class.endTimetips')"
-            :editable="false"
-            value-format="timestamp"
-            :picker-options="pickerOptions"
-          >
-          </el-date-picker>
-        </div>
-      </el-form-item>
+      <div class="class-time-range">
+        <el-form-item prop="startTime" :label="$t('class.startTime')">
+          <div class="block">
+            <el-date-picker
+              v-model="classForm.startTime"
+              type="datetime"
+              :placeholder="$t('class.startTimetips')"
+              :editable="false"
+              value-format="timestamp"
+              :picker-options="pickerOptions"
+            >
+            </el-date-picker>
+          </div>
+        </el-form-item>
+        <el-form-item prop="endTime" :label="$t('class.endTime')">
+          <div class="block">
+            <el-date-picker
+              v-model="classForm.endTime"
+              type="datetime"
+              :placeholder="$t('class.endTimetips')"
+              :editable="false"
+              value-format="timestamp"
+              :picker-options="pickerOptions"
+            >
+            </el-date-picker>
+          </div>
+        </el-form-item>
+      </div>
       <el-form-item prop="students" :label="$t('class.addStudents')">
         <el-select
           v-model="selectedStudents"
@@ -97,7 +100,7 @@ export default {
         title: "",
         description: "",
         startTime: "",
-        endTime: ""
+        endTime: "",
       },
       showUpload: false,
       fileList: [],
@@ -107,17 +110,17 @@ export default {
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() < Date.now() - 8.64e7;
-        }
-      }
+        },
+      },
     };
   },
   props: {
-    classInfo: Object
+    classInfo: Object,
   },
   watch: {
     classId(newValue) {
       this.dataInit();
-    }
+    },
   },
   methods: {
     init() {
@@ -133,7 +136,7 @@ export default {
     dataInit() {
       this.selectedStudents = [];
       if (this.classInfo.students && this.classInfo.students.length > 0) {
-        this.classInfo.students.forEach(element => {
+        this.classInfo.students.forEach((element) => {
           this.selectedStudents.push(element.userId);
         });
       }
@@ -143,31 +146,31 @@ export default {
         title: this.classInfo.title,
         description: this.classInfo.description,
         startTime: this.classInfo.startTime,
-        endTime: this.classInfo.endTime
+        endTime: this.classInfo.endTime,
       };
       this.fileList = [
         {
-          url: this.classInfo.url
-        }
+          url: this.classInfo.url,
+        },
       ];
     },
     getStudents() {
       classApi
         .getUserList()
-        .then(res => {
+        .then((res) => {
           if (res.data.success) {
-            this.studentsList = res.data.model.map(item => {
+            this.studentsList = res.data.model.map((item) => {
               return { value: item.username };
             });
             const userId = localStorage.getItem("lb_userId");
-            this.studentsList = this.studentsList.filter(ele => {
+            this.studentsList = this.studentsList.filter((ele) => {
               return ele.value !== userId;
             });
           } else {
             this.$message.error(this.$t("class.dataFailed"));
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -190,7 +193,7 @@ export default {
         formData.append("files", this.fileList[0].raw, this.fileList[0].name);
       }
       formData.append("students", JSON.stringify(this.selectedStudents));
-      classApi.classUpdate(formData).then(res => {
+      classApi.classUpdate(formData).then((res) => {
         if (res.data.success) {
           this.$message.success("课堂信息更新成功");
           this.$emit("success", res.data.model);
@@ -220,7 +223,7 @@ export default {
       if (query !== "") {
         this.loading = true;
         setTimeout(() => {
-          this.studentsList = this.studentsList.filter(item => {
+          this.studentsList = this.studentsList.filter((item) => {
             return item.value.toLowerCase().indexOf(query.toLowerCase()) > -1;
           });
           this.loading = false;
@@ -228,7 +231,7 @@ export default {
       } else {
         this.studentsList = [];
       }
-    }
-  }
+    },
+  },
 };
 </script>

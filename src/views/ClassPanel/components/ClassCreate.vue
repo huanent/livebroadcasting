@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    class="course-detail-dialog"
     :title="$t('class.createClass')"
     :visible.sync="createFormVisible"
     v-loading="loading"
@@ -8,15 +9,15 @@
       ref="classCreateForm"
       :model="classForm"
       :rules="rules"
-      label-width="80px"
+      :label-position="'top'"
     >
       <el-form-item :label="$t('class.pic')" class="img-upload-wrap">
         <el-upload
           action
           :class="[
             {
-              'class-upload': fileList.length > 0
-            }
+              'class-upload': fileList.length > 0,
+            },
           ]"
           list-type="picture-card"
           ref="upload"
@@ -30,37 +31,39 @@
         </el-upload>
       </el-form-item>
       <el-form-item prop="title" :label="$t('class.title')">
-        <el-input v-model="classForm.title"></el-input>
+        <el-input v-model="classForm.title" class="title-input"></el-input>
       </el-form-item>
       <el-form-item prop="description" :label="$t('class.description')">
         <el-input type="textarea" v-model="classForm.description"></el-input>
       </el-form-item>
-      <el-form-item prop="startTime" :label="$t('class.startTime')">
-        <div class="block">
-          <el-date-picker
-            v-model="classForm.startTime"
-            type="datetime"
-            :placeholder="$t('class.startTimetips')"
-            :editable="false"
-            value-format="timestamp"
-            :picker-options="pickerOptions"
-          >
-          </el-date-picker>
-        </div>
-      </el-form-item>
-      <el-form-item prop="endTime" :label="$t('class.endTime')">
-        <div class="block">
-          <el-date-picker
-            v-model="classForm.endTime"
-            type="datetime"
-            :placeholder="$t('class.endTimetips')"
-            :editable="false"
-            value-format="timestamp"
-            :picker-options="pickerOptions"
-          >
-          </el-date-picker>
-        </div>
-      </el-form-item>
+      <div class="class-time-range">
+        <el-form-item prop="startTime" :label="$t('class.startTime')">
+          <div class="block">
+            <el-date-picker
+              v-model="classForm.startTime"
+              type="datetime"
+              :placeholder="$t('class.startTimetips')"
+              :editable="false"
+              value-format="timestamp"
+              :picker-options="pickerOptions"
+            >
+            </el-date-picker>
+          </div>
+        </el-form-item>
+        <el-form-item prop="endTime" :label="$t('class.endTime')">
+          <div class="block">
+            <el-date-picker
+              v-model="classForm.endTime"
+              type="datetime"
+              :placeholder="$t('class.endTimetips')"
+              :editable="false"
+              value-format="timestamp"
+              :picker-options="pickerOptions"
+            >
+            </el-date-picker>
+          </div>
+        </el-form-item>
+      </div>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="handleCancel">取 消</el-button>
@@ -113,7 +116,7 @@ export default {
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() < Date.now() - 8.64e7;
-        }
+        },
       },
       createFormVisible: false,
       classForm: {
@@ -121,7 +124,7 @@ export default {
         title: "",
         description: "",
         startTime: "",
-        endTime: ""
+        endTime: "",
       },
       fileList: [],
       rules: {
@@ -129,31 +132,31 @@ export default {
           {
             required: true,
             message: this.$t("class.titletips"),
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         description: [
           {
             required: true,
             message: this.$t("class.descriptiontips"),
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         startTime: [
           {
             required: true,
             message: this.$t("class.startTimetips"),
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         endTime: [
           {
             required: true,
             message: this.$t("class.endTimetips"),
-            trigger: "change"
-          }
-        ]
-      }
+            trigger: "change",
+          },
+        ],
+      },
     };
   },
   methods: {
@@ -163,7 +166,7 @@ export default {
     onSubmit(formName) {
       const userId = localStorage.getItem("lb_userId");
 
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true;
           if (this.classForm.startTime >= this.classForm.endTime) {
@@ -187,7 +190,7 @@ export default {
           }
           classApi
             .classCreate(formData)
-            .then(res => {
+            .then((res) => {
               if (res.data.success) {
                 this.$message.success(this.$t("class.createSuccess"));
                 this.createFormVisible = false;
@@ -199,7 +202,7 @@ export default {
                 this.loading = false;
               }
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
               this.loading = false;
             });
@@ -213,7 +216,7 @@ export default {
       this.resetForm("classCreateForm");
       this.createFormVisible = false;
     },
-    resetForm: function(formName) {
+    resetForm: function (formName) {
       this.$refs[formName].resetFields();
     },
     onFileSelected(file, filelist) {
@@ -229,7 +232,7 @@ export default {
         return false;
       }
       this.fileList.push(file);
-    }
-  }
+    },
+  },
 };
 </script>

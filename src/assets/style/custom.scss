@@ -66,9 +66,10 @@ html {
 
 .profile-popover {
   min-width: 70px;
+
   .menu {
     padding: 8px;
-    background-color:#f5f5fa;
+    background-color: #f5f5fa;
     border: 1px solid #f5f5fa;
     border-radius: 4px;
 
@@ -115,7 +116,7 @@ html {
   }
 
   /deep/ .class-upload {
-    height: 60px;
+    height: 100px;
 
     /deep/ .el-upload-list__item {
       display: inline-block !important;
@@ -127,21 +128,21 @@ html {
   }
 
   /deep/ .el-upload {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
     margin: 0;
     padding: 0;
 
     svg {
       position: relative;
       left: 0px;
-      top: -45px;
+      top: -28px;
     }
   }
 
   /deep/ .el-upload-list--picture-card .el-upload-list__item {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
   }
 
   .el-upload-list__item.is-success {
@@ -274,6 +275,10 @@ html {
   .el-dialog__body {
     padding: 0 24px 40px;
   }
+
+  .el-dialog__footer {
+    text-align: center;
+  }
 }
 
 // message box
@@ -317,5 +322,46 @@ html {
       color: #d0cfe6;
       font-size: 1.5rem;
     }
+  }
+}
+
+// label on top form style
+.el-form--label-top .el-form-item__label {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #1a1b29;
+  line-height: 1.1875rem;
+  padding-bottom: 8px;
+}
+.course-detail-dialog {
+  .el-dialog {
+    width: 750px;
+  }
+  .el-dialog__body {
+    padding: 0 106px 0 44px;
+  }
+  .title-input {
+    max-width: 300px;
+  }
+  .el-input__inner {
+    height: 2.9375rem;
+    line-height: 2.9375rem;
+    color: #1a1b29;
+    font-size: 0.875rem;
+  }
+  .class-time-range {
+    display: flex;
+    .el-form-item:last-child {
+      margin-left: 32px;
+    }
+  }
+  .el-select {
+    width: 100%;
+  }
+  .el-textarea__inner {
+    min-height: 88px !important;
+  }
+  .el-dialog__footer {
+    padding-top: 18px;
   }
 }

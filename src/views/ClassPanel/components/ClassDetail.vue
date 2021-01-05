@@ -45,11 +45,13 @@
             </li>
           </ul>
         </div>
-        <div class="detail-item" v-if="isCreater">
+        <div class="detail-item student-item-wrapper" v-if="isCreater">
           <label>{{ $t("class.students") }}：</label>
-          <span v-for="item in classInfo.students" :key="item._id">
-            {{ item.userId }}、
-          </span>
+          <div>
+            <span v-for="item in classInfo.students" :key="item._id">
+              {{ item.userId }}、
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -132,13 +134,19 @@ export default {
         }
       }
     }
-    .file-item-wrapper {
+    .file-item-wrapper,
+    .student-item-wrapper {
       display: flex;
     }
     .el-icon-download {
       padding-left: 1rem;
       color: #5d5dff;
       font-size: 1rem;
+    }
+    .student-item-wrapper {
+      label {
+        min-width: 70px;
+      }
     }
   }
 }
