@@ -14,7 +14,7 @@ module.exports = {
     hot: true,
     proxy: {
       "/api": {
-        target: "http://livebroadcasting.jinrui.kooboo.site",
+        target: "https://archive2.huanent.kooboo.site/",
         changeOrigin: true
       }
     }
