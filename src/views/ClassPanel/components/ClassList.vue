@@ -242,7 +242,7 @@ export default {
         box-shadow: 0px 0px 5px -1px #888888;
       }
       .card-left {
-        max-width: 282px;
+        width: 17.625rem;
         height: 10rem;
         overflow: hidden;
         display: flex;
