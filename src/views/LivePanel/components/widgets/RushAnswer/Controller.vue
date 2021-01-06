@@ -22,7 +22,9 @@
           infoText | ellipsis
         }}</span>
         <restart-button v-if="showRestart" @click="start"></restart-button>
-        <div class="closebtn" @click="SET_RUSH_VISIBLE(false)">关闭</div>
+      </div>
+      <div class="closebtn" @click="SET_RUSH_VISIBLE(false)">
+        <i class="el-icon-close"></i>
       </div>
     </div>
   </div>
@@ -45,39 +47,39 @@ export default {
       leftAnimation: false,
       rightAnimation: false,
       showRestart: false,
-      infoText: "开始抢答"
+      infoText: "开始抢答",
     };
   },
   computed: {
-    ...mapState("widget", ["rush"])
+    ...mapState("widget", ["rush"]),
   },
   components: {
-    RestartButton
+    RestartButton,
   },
   filters: {
-    ellipsis: function(value) {
+    ellipsis: function (value) {
       if (!value) return "";
       if (value.length > 6) {
         return value.substr(0, 6) + "..";
       } else {
         return value;
       }
-    }
+    },
   },
   methods: {
     ...mapMutations("widget", [
       "SET_RUSH_VISIBLE",
       "SET_RUSH_STATUS",
-      "SET_RUSH_NAME"
+      "SET_RUSH_NAME",
     ]),
     async start() {
       this.showRestart = false;
       this.infoText = "抢答中";
-      this.SET_RUSH_NAME('');
+      this.SET_RUSH_NAME("");
       this.SET_RUSH_STATUS("rushing");
       setTimeout(() => {
-        this.SET_RUSH_STATUS("rushable")
-      },3000);
+        this.SET_RUSH_STATUS("rushable");
+      }, 3000);
 
       await this.startAnimation();
 
@@ -91,16 +93,16 @@ export default {
     },
     async startAnimation() {
       this.rightAnimation = true;
-      await new Promise(res => {
-        document.addEventListener("animationend", e => {
+      await new Promise((res) => {
+        document.addEventListener("animationend", (e) => {
           if (e.animationName.startsWith("circle_right")) {
             this.leftAnimation = true;
             res();
           }
         });
       });
-      await new Promise(res => {
-        document.addEventListener("animationend", e => {
+      await new Promise((res) => {
+        document.addEventListener("animationend", (e) => {
           if (e.animationName.startsWith("left_right")) {
             res();
           }
@@ -108,8 +110,8 @@ export default {
       });
       this.leftAnimation = false;
       this.rightAnimation = false;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -123,7 +125,7 @@ export default {
     width: 184px;
     height: 184px;
     box-sizing: border-box;
-    background-color: #3f424b;
+    background-color: rgba(80, 110, 250, 0.2);
     padding: 2px;
     display: flex;
     border-radius: 50%;
@@ -136,9 +138,9 @@ export default {
         width: 180px;
         height: 180px;
         border-radius: 50%;
-        border: 4px solid transparent;
-        border-left: 4px solid #0a818c;
-        border-top: 4px solid #0a818c;
+        border: 8px solid transparent;
+        border-left: 8px solid rgba(80, 110, 250, 0.2);
+        border-top: 8px solid rgba(80, 110, 250, 0.2);
         transform: rotate(-45deg);
         /* 旋转45度 */
       }
@@ -152,9 +154,9 @@ export default {
         width: 180px;
         height: 180px;
         border-radius: 50%;
-        border: 4px solid transparent;
-        border-right: 4px solid #0a818c;
-        border-bottom: 4px solid #0a818c;
+        border: 8px solid transparent;
+        border-right: 8px solid rgba(80, 110, 250, 0.2);
+        border-bottom: 8px solid rgba(80, 110, 250, 0.2);
         float: right;
         transform: rotate(-45deg);
       }
@@ -163,7 +165,7 @@ export default {
     .backyi {
       width: 160px;
       height: 160px;
-      background-color: #2d3037;
+      background-color: #506efa;
       position: absolute;
       left: 0;
       top: 0;
@@ -178,7 +180,7 @@ export default {
     .backer {
       width: 150px;
       height: 150px;
-      background-color: #3f424b;
+      background-color: #506efa;
       position: absolute;
       left: 0;
       top: 0;
@@ -194,7 +196,7 @@ export default {
       overflow: hidden;
       width: 140px;
       height: 140px;
-      background-color: #34373e;
+      background-color: #506efa;
       position: absolute;
       left: 0;
       top: 0;
@@ -241,24 +243,20 @@ export default {
 .beginRushAnswer {
   height: 140px;
   line-height: 140px;
-  text-shadow: 2px 5px 8px #fff;
   cursor: pointer;
-  &:hover {
-    box-shadow: 0px 0px 1 rgb(78, 67, 67);
-  }
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #ffffff;
 }
 .closebtn {
   position: absolute;
-  bottom: 0px;
-  width: 140px;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
   text-align: center;
   color: #fff;
-  height: 24px;
-  background: #2a6469;
-  font-size: 14px;
-
-  &:hover {
-    background: #0f9ca9;
-  }
+  height: 30px;
+  font-size: 1.5rem;
 }
 </style>

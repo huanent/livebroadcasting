@@ -111,6 +111,7 @@ export default {
     .el-button {
       font-size: 0.75rem;
       height: 40px;
+      min-width: 72px;
     }
   }
 }

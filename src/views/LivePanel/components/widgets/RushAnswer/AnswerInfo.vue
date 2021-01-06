@@ -126,7 +126,7 @@ export default {
     width: 184px;
     height: 184px;
     box-sizing: border-box;
-    background-color: #3f424b;
+    background-color: rgba(80,110,250,0.2);
     padding: 2px;
     display: flex;
     border-radius: 50%;
@@ -139,9 +139,9 @@ export default {
         width: 180px;
         height: 180px;
         border-radius: 50%;
-        border: 4px solid transparent;
-        border-left: 4px solid #0a818c;
-        border-top: 4px solid #0a818c;
+        border: 8px solid transparent;
+        border-left: 8px solid rgba(80,110,250,0.2);
+        border-top: 8px solid rgba(80,110,250,0.2);
         transform: rotate(-45deg);
         /* 旋转45度 */
       }
@@ -155,9 +155,9 @@ export default {
         width: 180px;
         height: 180px;
         border-radius: 50%;
-        border: 4px solid transparent;
-        border-right: 4px solid #0a818c;
-        border-bottom: 4px solid #0a818c;
+        border: 8px solid transparent;
+        border-right: 8px solid rgba(80,110,250,0.2);
+        border-bottom: 8px solid rgba(80,110,250,0.2);
         float: right;
         transform: rotate(-45deg);
       }
@@ -166,7 +166,7 @@ export default {
     .backyi {
       width: 160px;
       height: 160px;
-      background-color: #2d3037;
+      background-color:#506efa;
       position: absolute;
       left: 0;
       top: 0;
@@ -181,7 +181,7 @@ export default {
     .backer {
       width: 150px;
       height: 150px;
-      background-color: #3f424b;
+      background-color: #506efa;
       position: absolute;
       left: 0;
       top: 0;
@@ -197,7 +197,7 @@ export default {
       overflow: hidden;
       width: 140px;
       height: 140px;
-      background-color: #34373e;
+      background-color:#506efa;
       position: absolute;
       left: 0;
       top: 0;

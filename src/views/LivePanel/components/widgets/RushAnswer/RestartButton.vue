@@ -7,7 +7,7 @@
         rx="70"
         ry="40"
         class="hover"
-        style="fill:#077b76"
+        style="fill:#506efa"
       />
       <text x="43" y="17" fill="white" class="begin">
         重新开始
@@ -26,9 +26,6 @@ export default {
   width: 140px;
   height: 40px;
   bottom: 6px;
-  .hover:hover {
-    fill: #18908a !important;
-  }
   .begin {
     font-size: 12px;
   }
