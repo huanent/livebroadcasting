@@ -290,8 +290,17 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      @media screen and (max-width: 767px) {
+        display: block;
+        .el-tabs {
+          margin-bottom: 1rem;
+        }
+      }
     }
     /deep/ .el-tabs__nav {
+      @media screen and (max-width: 767px) {
+        width: 100%;
+      }
       .el-tabs__active-bar {
         display: none;
       }
@@ -300,6 +309,9 @@ export default {
       margin-bottom: 0;
     }
     /deep/ .el-tabs__item {
+      @media screen and (max-width: 767px) {
+        width: 50%;
+      }
       border: 1px solid #d0cfe6;
       font-size: 16px;
       font-weight: 400;
@@ -328,6 +340,9 @@ export default {
       .search {
         @media screen and (max-width: 1200px) {
           width: auto;
+        }
+        @media screen and (max-width: 768px) {
+          width: 100%;
         }
         /deep/ {
           .el-input .el-input--suffix {

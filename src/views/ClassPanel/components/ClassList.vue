@@ -274,13 +274,13 @@ export default {
             border-color: transparent transparent white;
           }
           &.on {
-            background-color: #506EFA;
+            background-color: #506efa;
           }
           &.close {
-            background-color: #D0CFE6;
+            background-color: #d0cfe6;
           }
           &.expired {
-            background-color: #D0CFE6;
+            background-color: #d0cfe6;
           }
         }
         img {
@@ -304,12 +304,19 @@ export default {
         .title {
           font-size: 1rem;
           font-weight: 700;
+          @media screen and (max-width: 767px) {
+            margin-bottom: 2rem;
+          }
         }
         .time-wrapper {
           display: flex;
           font-size: 0.875rem;
           font-weight: 400;
           color: #8a8a99;
+
+          @media screen and (max-width: 767px) {
+            display: block;
+          }
           .field {
             margin-right: 2.5rem;
             margin-bottom: 2rem;
