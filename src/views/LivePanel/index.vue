@@ -252,11 +252,8 @@ export default {
     background: themed("background_color2");
   }
   width: 100%;
-  height: 2rem;
+  height: 2.5rem;
   overflow: hidden;
-  @include themeify {
-    border-bottom: 1px solid themed("border_color1");
-  }
   box-sizing: border-box;
   & > * {
     overflow: hidden;
@@ -274,7 +271,7 @@ export default {
 }
 #workplace-panel-left {
   display: grid;
-  grid-template-rows: 24% 76%;
+  grid-template-rows: 15% 85%;
   height: calc(100vh - 2rem);
   width: 100%;
   overflow: hidden;
@@ -285,8 +282,8 @@ export default {
 #workplace-panel-right {
   display: grid;
   position: relative;
-  grid-template-rows: 24% 76%;
-  height: calc(100vh - 2rem);
+  grid-template-rows: 20% 80%;
+  height: calc(100vh - 2.5rem);
   width: 100%;
   overflow: hidden;
   @include themeify {

@@ -102,7 +102,7 @@ export default {
   overflow: auto;
   scroll-behavior: smooth;
   .chatroom-msg-list {
-    height: calc(100% - 60px);
+    height: calc(100% - 193px);
     overflow: auto;
     padding: 0.4rem 0.6rem;
     box-sizing: border-box;

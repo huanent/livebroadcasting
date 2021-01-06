@@ -63,7 +63,7 @@ export default {
       background-color: transparent;
       .chatroom-msg__inner {
         color: #212224;
-        padding: 10px;
+        padding: 7px 14px;
         max-width: 100%;
         word-break:normal;
         width:auto;

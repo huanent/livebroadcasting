@@ -126,7 +126,7 @@ export default {
     white-space: nowrap;
     .item {
       display: inline-block;
-      width: 250px;
+      width: 220px;
       height: 100%;
       margin-right: 5px;
     }

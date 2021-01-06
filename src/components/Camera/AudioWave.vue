@@ -35,7 +35,7 @@ export default {
         canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
         canvasCtx.lineWidth = 2;
-        canvasCtx.strokeStyle = "rgba(10, 129, 140)";
+        canvasCtx.strokeStyle = "rgba(80,110,250,1)";
 
         canvasCtx.beginPath();
 

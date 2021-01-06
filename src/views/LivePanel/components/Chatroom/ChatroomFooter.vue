@@ -1,32 +1,38 @@
 <template>
   <div class="chatroom-footer">
-    <el-tooltip
-      effect="dark"
-      :content="forbiddenTips"
-      placement="top-end"
-      v-if="isTeacher"
-    >
-      <icon
-        name="comment-slash"
-        size="34"
-        color="#737882"
-        @click.native="toggleForbiddenStatus"
-        :class="{
-          mr10: true,
-          forbidden: !globalMessage
-        }"
-      />
-    </el-tooltip>
     <el-input
+      type="textarea"
       v-model="message"
       :placeholder="$t('class.message.placeholder')"
       size="small"
       class="mr10"
       @keyup.enter.native="onSubmit"
     ></el-input>
-    <el-button type="primary" size="small" @click="onSubmit">{{
-      $t("button.send")
-    }}</el-button>
+    <div class="buttom-btn">
+      <div class="forbidden-wrapper" @click="toggleForbiddenStatus">
+        <el-tooltip
+          effect="dark"
+          :content="forbiddenTips"
+          placement="top-end"
+          v-if="isTeacher"
+        >
+          <icon
+            name="comment-slash"
+            size="16"
+            color="#737882"
+            @click.native="toggleForbiddenStatus"
+            :class="{
+              mr5: true,
+              forbidden: !globalMessage,
+            }"
+          />
+        </el-tooltip>
+        {{ this.forbiddenTips }}
+      </div>
+      <el-button type="primary" size="small" @click="onSubmit">{{
+        $t("button.send")
+      }}</el-button>
+    </div>
   </div>
 </template>
 
@@ -37,7 +43,7 @@ export default {
   name: "ChatroomFooter",
   data() {
     return {
-      message: ""
+      message: "",
     };
   },
   computed: {
@@ -47,7 +53,7 @@ export default {
       return !this.globalMessage
         ? this.$t("class.message.liftAllBans")
         : this.$t("class.message.openAllMute");
-    }
+    },
   },
   methods: {
     ...mapMutations("features", ["SET_GLOBAL_MESSAGE"]),
@@ -66,7 +72,7 @@ export default {
       }
       this.$emit("send", this.message);
       this.message = "";
-    }
+    },
   },
   watch: {
     globalMessage(val) {
@@ -88,8 +94,8 @@ export default {
       } else {
         this.$message(this.$t("class.message.selfMute"));
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -100,15 +106,29 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  display: flex;
-  align-items: center;
-  padding: 0 15px;
-  height: 60px;
+  padding: 16px;
   @include themeify {
     border-top: 1px solid themedOpacity("color_opposite", 0.1);
   }
   .forbidden {
     fill: #dcebeb !important;
+  }
+  .forbidden-wrapper {
+    color: rgba(138, 138, 153, 1);
+  }
+  .buttom-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 10px;
+  }
+  /deep/ .el-textarea__inner {
+    background-color: transparent;
+    padding: 0;
+    color: #8a8a99;
+    font-size: 0.875rem;
+    border: 0 none;
+    min-height: 110px !important;
   }
 
   /deep/ .el-input__inner {
@@ -121,6 +141,7 @@ export default {
 
   /deep/ .el-button--primary {
     min-width: 72px;
+    height: 40px;
   }
 }
 </style>
