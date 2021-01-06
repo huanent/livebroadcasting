@@ -4,7 +4,7 @@ const state = {
   toolType: 1,
   brushThin: 20,
   brushColor: "#ba3136", // 画笔颜色
-  textColor: "#0a818c",
+  textColor: "#506efa",
   textSize: 450,
   canRedo: 0,
   canUndo: 0,
@@ -114,7 +114,7 @@ const mutations = {
     state.toolType = 1;
     state.brushThin = 20;
     state.brushColor = "#ba3136";
-    state.textColor = "#0a818c";
+    state.textColor = "#506efa";
     state.textSize = 450;
     state.canRedo = 0;
     state.canUndo = 0;

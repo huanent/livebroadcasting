@@ -22,7 +22,7 @@
           :auto-upload="false"
           :file-list="fileList"
         >
-          <icon name="add" :size="20" color="#0a818c"></icon>
+          <icon name="add" :size="20" color="#506efa"></icon>
         </el-upload>
       </el-form-item>
       <el-form-item prop="title" :label="$t('class.title')">

@@ -70,21 +70,9 @@ export default {
         display:block;
         word-wrap : break-word ;
         overflow: hidden ;
-        background: #8a9099;
+        background: #ffffff;
         text-align: left;
-        border-radius: 4px;
-      }
-      &:before {
-        font-size: 0;
-        position: absolute;
-        width: 0;
-        height: 0;
-        content: "";
-        border: 5px dashed rgba(0, 0, 0, 0);
-        top: -5px;
-        left: 0;
-        transform: translateX(100%);
-        border-bottom-color: #8a9099;
+        border-radius: 2px 8px 8px 8px;
       }
     }
   }
@@ -113,8 +101,9 @@ export default {
         transform: translateX(-100%);
       }
       .chatroom-msg__inner {
+        border-radius: 8px 2px 8px 8px;
         @include themeify {
-          background-color: themed("primary2");
+          background-color: themed("primary");
         }
 
         color: #dcebeb;

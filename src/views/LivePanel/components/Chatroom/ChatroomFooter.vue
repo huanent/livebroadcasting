@@ -120,10 +120,7 @@ export default {
   }
 
   /deep/ .el-button--primary {
-    @include themeify {
-      background-color: themed("primary2");
-      border-color: themed("primary2");
-    }
+    min-width: 72px;
   }
 }
 </style>

@@ -55,7 +55,7 @@ export default {
   height: 100%;
   position: relative;
   @include themeify {
-    background: themed("background_color3");
+    background: themed("background_color5");
 
     border-top: 1px solid themedOpacity("color_opposite", 0.1);
   }

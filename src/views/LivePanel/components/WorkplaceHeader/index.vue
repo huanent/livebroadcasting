@@ -266,7 +266,7 @@ export default {
 
 .class-btn {
   padding: 2px 4px;
-  height: 16px;
+  height: 20px;
   margin: 0 10px;
   @include themeify {
     background-color: themed("primary2");

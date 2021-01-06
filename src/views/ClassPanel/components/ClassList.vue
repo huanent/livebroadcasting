@@ -197,7 +197,7 @@ export default {
   .nodata {
     font-size: 1.5rem;
     padding: 20px 0;
-    color: #0a818c;
+    color: #506efa;
     text-align: center;
   }
   .el-pagination {

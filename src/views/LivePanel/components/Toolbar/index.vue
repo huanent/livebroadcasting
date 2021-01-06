@@ -375,18 +375,16 @@ export default {
 <style lang="scss" scoped>
 .toolbar {
   z-index: 99;
-  width: 2rem;
+  width: 2.5rem;
   color: #eee;
   @include themeify {
     background-color: themed("background_color3");
   }
   box-shadow: $shadow;
   position: absolute;
-  padding: 0.3rem 0;
   text-align: center;
 }
 .svg-icon {
-  padding: 0.4rem;
   @include themeify {
     fill: themed("font_color2");
   }
@@ -395,6 +393,8 @@ export default {
   display: inline-block;
   margin: 0 auto;
   width: 100%;
+  height: 2.5rem;
+  line-height: 2.5rem;
   outline: none;
   &:hover {
     .svg-icon {

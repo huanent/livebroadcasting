@@ -56,7 +56,8 @@ export default {
   justify-content: space-around;
   text-align: center;
   padding: 0 1rem;
-  color: #8a9099;
+  color: #8a8a99;
+  font-size: 0.875rem;
   > span {
     min-width: 2.5rem;
     padding: 0 0.5rem;

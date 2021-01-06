@@ -16,7 +16,7 @@
             class="board-tab-icon-container"
             v-if="canControlBoard"
           >
-            <icon class="board-tab-icon" name="times" :size="12"></icon>
+            <icon class="board-tab-icon" name="times" :size="14"></icon>
           </span>
         </div>
       </div>
@@ -158,9 +158,7 @@ export default {
   @include themeify {
     background: themed("background_color2");
   }
-  border-bottom: 1px solid rgba(30, 33, 37, 0.19);
   width: 100%;
-  padding: 1px 0 0.2rem 0;
   height: 100%;
 }
 .header-left {
@@ -176,7 +174,7 @@ export default {
   box-sizing: border-box;
   overflow: hidden;
   padding: 0.1rem;
-  border-bottom: rgba(0, 0, 0, 0.1) 2px solid;
+  font-size: 0.875rem;
   > .tab-item-text-wrapper {
     height: 100%;
     display: flex;
@@ -184,7 +182,7 @@ export default {
   }
   &:hover {
     @include themeify {
-      background: themed("background_color4");
+      background: themed("background_color5");
     }
   }
   &:not(:first-child) {
@@ -204,9 +202,8 @@ export default {
 }
 .tab-item-active {
   @include themeify {
-    background: themed("background_color4");
+    background: themed("background_color5");
     color: themed("font_color1");
-    border-bottom: #0a818c 2px solid;
   }
 }
 

@@ -93,5 +93,11 @@ export default {
 .btn-group {
   text-align: center;
   margin-top: 30px;
+  // element button
+  .el-button--default {
+    background-color: transparent;
+    color: white;
+    border-color: white;
+  }
 }
 </style>

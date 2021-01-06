@@ -16,13 +16,13 @@
         @click.native.stop="audioChanged"
         :name="microIcon"
         color="#737882"
-        :size="20"
+        :size="32"
       />
       <icon
         @click.native.stop="videoChanged"
         :name="videoIcon"
         color="#737882"
-        :size="20"
+        :size="32"
       />
     </div>
     <div class="footer">
@@ -220,7 +220,7 @@ export default {
   .mask-layer {
     position: absolute;
     visibility: hidden;
-    border: 2px solid #0a818c;
+    border: 2px solid #506efa;
     transition: all 0.1s;
     top: 0;
     bottom: 0;
@@ -232,7 +232,7 @@ export default {
     svg {
       background-color: #34363b;
       border-radius: 50%;
-      padding: 8px;
+      padding: 5px;
       &:hover {
         fill: #dcebeb !important;
       }

@@ -21,6 +21,6 @@ export default {
   height: 100%;
   position: absolute;
   left: 0;
-  background-color: #0a818c;
+  background-color: #506efa;
 }
 </style>

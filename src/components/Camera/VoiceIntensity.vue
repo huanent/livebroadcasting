@@ -1,6 +1,6 @@
 <template>
   <div class="camera-voice-intensity">
-    <icon :name="microIcon" class="micro" color="#0A818C" :size="18" />
+    <icon :name="microIcon" class="micro" color="#506efa" :size="18" />
     <span
       v-for="(item, index) in lines"
       :key="index"
@@ -40,7 +40,7 @@ export default {
 <style lang="scss" scoped>
 .camera-voice-intensity {
   transition: all 0.02s ease;
-  color: #0a818c;
+  color: #506efa;
   height: 16px;
   display: inline-block;
   vertical-align: middle;

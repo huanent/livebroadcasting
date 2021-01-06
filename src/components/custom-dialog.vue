@@ -99,13 +99,12 @@ export default {
   border-radius: 50%;
 }
 .cancel {
-  background: #bbbbbbff;
-  border-color: #bbbbbbff;
+  background: #ffffff;
+  border-color: #d0cfe6;
+  color: #b8b8cc;
 }
 .footer-btn {
-  font-size: 0.8rem;
-  padding: 0.5rem;
-  border-radius: 1rem;
+  font-size: 0.875rem;
   width: 80px;
 }
 

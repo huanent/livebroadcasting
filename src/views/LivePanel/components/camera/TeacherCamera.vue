@@ -63,7 +63,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    border: 2px solid #0a818c;
+    border: 2px solid #506efa;
     text-align: center;
     .self-camera-icons {
       position: relative;

@@ -144,17 +144,17 @@ export default {
   width: 100%;
   position: relative;
   @include themeify {
-    background: mix(themed("background_color3"), themed("color_like"), 85%);
+    background: themed("background_color6");
   }
   /*  @include themeify {
     background: mix(themed("background_color4"), themed("color_like"), 90%);
   }*/
 }
 .main-workplace-header {
-  height: 2rem;
+  height: 2.5rem;
 }
 .wrapper {
-  height: calc(100% - 2rem);
+  height: calc(100% - 2.5rem);
   width: 100%;
   > div {
     width: 100%;
@@ -172,20 +172,20 @@ export default {
       z-index: 1;
       width: 100%;
       overflow: hidden;
-      height: calc(100% - 2rem);
+      height: calc(100% - 2.5rem);
     }
   }
 }
 .board-footer-wrapper {
   width: 100%;
-  height: 2rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
   color: #737882;
   position: absolute;
   bottom: 0;
   @include themeify {
-    background: themed("background_color2");
+    background: themed("background_color5");
   }
-  border-top: 1px solid rgba(30, 33, 37, 0.19);
 }
 </style>
 <style lang="scss">

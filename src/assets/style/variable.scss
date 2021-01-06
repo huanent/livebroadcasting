@@ -23,14 +23,14 @@ $themes: (
     /*          :*/
   ),
   dark: (
-    font_color1: rgb(226, 222, 222),
+    font_color1: #ffffff,
     font_color2: #7f7f7f,
     background_color1: #1a1b1d,
-    background_color2: #292b2e,
-    background_color3: rgb(41, 43, 46),
+    background_color2: #27283d,
+    background_color3:#27283d,
     background_color4: rgb(41, 43, 46),
-    background_color5: rgb(24, 25, 27),
-    background_color6: rgb(30, 33, 37),
+    background_color5: #1a1b29,
+    background_color6: #f5f5fa,
     toolbar_icon: rgb(255, 255, 255),
     toolbar_active: rgb(48, 49, 51),
     active_icon: rgb(224, 224, 224),
@@ -40,9 +40,9 @@ $themes: (
     test: rgb(238, 238, 238),
     toolbar_bg: rgb(34, 34, 34),
     primary: #506EFA,
-    primary2: rgb(10, 129, 140),
+    primary2: rgba(80,110,250,1),
     bg_1: rgb(65, 65, 65),
-    board_bg: rgba(0, 0, 0, 0.07)
+    board_bg: rgba(0, 0, 0, 0)
   )
 );
 
