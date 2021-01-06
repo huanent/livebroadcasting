@@ -13,16 +13,35 @@
 <script>
 export default {
   name: "QuestionItem",
-  props: ["item", "removable"]
+  props: ["item", "removable"],
 };
 </script>
 
 <style lang="scss" scoped>
 .question-item {
   display: flex;
-  padding: 3px 5px;
+  padding: 0 5px;
   span {
     font-size: 20px;
+  }
+  .el-checkbox {
+    bottom: -35px;
+    left: 27px;
+    color: white;
+    /deep/ .el-checkbox__input {
+      .el-checkbox__inner {
+        background-color: transparent;
+      }
+      &.is-checked {
+        + .el-checkbox__label {
+          color: #ffffff;
+        }
+        .el-checkbox__inner {
+          background-color: transparent;
+          border-color: white;
+        }
+      }
+    }
   }
 }
 </style>

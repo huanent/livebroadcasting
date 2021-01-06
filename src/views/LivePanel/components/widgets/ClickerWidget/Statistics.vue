@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="statics-wrapper">
     <el-table :data="list" style="width: 100%" height="250" border>
       <el-table-column prop="name" label="姓名"> </el-table-column>
       <el-table-column prop="answer" label="答案"> </el-table-column>
@@ -48,3 +48,15 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.statics-wrapper {
+  padding: 0 24px;
+  .el-table /deep/{
+    color: #1a1b29;
+    background-color: transparent;
+    thead th .cell{
+      color: #1a1b29;
+    }
+  }
+}
+</style>

@@ -83,6 +83,7 @@ export default {
     width: 100%;
     font-size: 1rem;
     font-weight: 700;
+    padding: 1.75rem;
     .close {
       width: 28px;
       height: 28px;
@@ -102,6 +103,15 @@ export default {
   background: #27283d;
   border-radius: 8px;
   z-index: 100000;
-  padding: 1.75rem;
+  padding-bottom: 1.75rem;
+  min-width: 280px;
+  .beginBtn {
+    display: flex;
+    justify-content: center;
+    .el-button {
+      font-size: 0.75rem;
+      height: 40px;
+    }
+  }
 }
 </style>

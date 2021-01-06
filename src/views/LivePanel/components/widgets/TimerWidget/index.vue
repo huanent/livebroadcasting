@@ -1,7 +1,7 @@
 <template>
   <widget-window
     @close="SET_TIMER_VISIBLE(false)"
-    nameWidget="定时器"
+    nameWidget="计时器"
     v-if="timer.visible"
     :position="timer.position"
     @moved="UPDATE_POSITION({ name: 'timer', position: $event })"
@@ -116,21 +116,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .timer {
-  width: 200px;
-  .beginBtn {
-    display: flex;
-    justify-content: center;
-    .el-button {
-      font-size: 0.75rem;
-      height: 40px;
-    }
-  }
+  width: 210px;
+  margin: 0 auto;
   .time {
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 20px;
+    padding: 0 24px 24px;
     span.marks {
       font-size: 30px;
       color: #eee;

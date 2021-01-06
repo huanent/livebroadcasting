@@ -20,15 +20,23 @@
                 class="pointer"
                 :style="{
                   'background-color': p.color && p.color,
-                  height: p.size ? p.size + 'px' : '22px',
-                  width: p.size ? p.size + 'px' : '22px',
-                  'border-radius': p.size ? p.size / 2 + 'px' : '11px'
+                  height: p.size ? p.size + 'px' : '15px',
+                  width: p.size ? p.size + 'px' : '15px',
+                  'border-radius': p.size ? p.size / 2 + 'px' : '50%',
                 }"
               ></div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="beginBtn">
+      <el-button
+        size="mini"
+        type="primary"
+        @click="start"
+        >开始</el-button
+      >
     </div>
   </widget-window>
 </template>
@@ -40,13 +48,13 @@ var vm;
 export default {
   name: "DiceWidget",
   components: {
-    WidgetWindow
+    WidgetWindow,
   },
   data() {
     vm = this;
     return {
       pointerList: {},
-      animationClass: ""
+      animationClass: "",
     };
   },
   mounted() {
@@ -55,14 +63,14 @@ export default {
 
   computed: {
     ...mapState("widget", ["dice"]),
-    ...mapState("device", ["isMobile"])
+    ...mapState("device", ["isMobile"]),
   },
   methods: {
     ...mapMutations("widget", [
       "UPDATE_POSITION",
       "SET_DICE_VALUE",
       "SET_DICE_VISIBLE",
-      "SET_DICE_START"
+      "SET_DICE_START",
     ]),
     getSize(p) {
       if (p.size) return p.size + "rpx";
@@ -74,45 +82,57 @@ export default {
       this.pointerList = {
         1: [[{ name: "" }, { name: "1", color: red, size: 27 }, { name: "" }]],
         2: [
-          [{ name: "1", color: blue }, { name: "" }, { name: "2", color: blue }]
+          [
+            { name: "1", color: blue },
+            { name: "" },
+            { name: "2", color: blue },
+          ],
         ],
         3: [
           [{ name: "1", color: blue }, { name: "" }, { name: "" }],
           [{ name: "" }, { name: "2", color: blue }, { name: "" }],
-          [{ name: "" }, { name: "" }, { name: "3", color: blue }]
+          [{ name: "" }, { name: "" }, { name: "3", color: blue }],
         ],
         4: [
           [
             { name: "1", color: red },
-            { name: "2", color: red }
+            { name: "2", color: red },
           ],
           [
             { name: "3", color: red },
-            { name: "4", color: red }
-          ]
+            { name: "4", color: red },
+          ],
         ],
         5: [
           [
             { name: "1", color: blue },
             { name: "" },
-            { name: "2", color: blue }
+            { name: "2", color: blue },
           ],
           [{ name: "" }, { name: "3", color: blue }, { name: "" }],
-          [{ name: "4", color: blue }, { name: "" }, { name: "5", color: blue }]
+          [
+            { name: "4", color: blue },
+            { name: "" },
+            { name: "5", color: blue },
+          ],
         ],
         6: [
           [
             { name: "1", color: blue },
             { name: "" },
-            { name: "2", color: blue }
+            { name: "2", color: blue },
           ],
           [
             { name: "3", color: blue },
             { name: "" },
-            { name: "4", color: blue }
+            { name: "4", color: blue },
           ],
-          [{ name: "5", color: blue }, { name: "" }, { name: "6", color: blue }]
-        ]
+          [
+            { name: "5", color: blue },
+            { name: "" },
+            { name: "6", color: blue },
+          ],
+        ],
       };
     },
     start() {
@@ -124,33 +144,32 @@ export default {
       setTimeout(() => {
         this.SET_DICE_START(false);
       }, 2000);
-    }
+    },
   },
   watch: {
-    "dice.start": function(value) {
+    "dice.start": function (value) {
       if (value) {
         this.animationClass = "pointer-" + this.dice.value + " animation";
       } else {
         this.animationClass = "pointer-" + this.dice.value;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
 .contain {
   width: 210px;
-  height: 200px;
-  background: #54555d;
+  height: 160px;
   position: relative;
-  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: -24px auto 0;
 }
 .dice {
-  height: 100px;
-  width: 100px;
+  height: 80px;
+  width: 80px;
   /**/
 
   /*left: 50%;*/
@@ -163,17 +182,18 @@ export default {
 }
 
 .side {
-  height: 100px;
-  width: 100px;
+  height: 80px;
+  width: 80px;
   display: flex;
   background: #fff;
-  border-radius: 2px;
+  border-radius: 10px;
   border: 1px solid #e0e0e0;
   box-shadow: inset 0 0 10px #ccc;
   flex-direction: column;
   position: absolute;
   left: 0;
   top: 0;
+  padding: 13px;
 }
 .pointer-group {
   display: flex;
@@ -193,27 +213,27 @@ export default {
 }
 
 .side-1 {
-  transform: rotateX(90deg) translateZ(50px);
+  transform: rotateX(90deg) translateZ(40px);
 }
 
 .side-2 {
-  transform: translateZ(50px);
+  transform: translateZ(40px);
 }
 
 .side-5 {
-  transform: rotateY(90deg) translateZ(50px);
+  transform: rotateY(90deg) translateZ(40px);
 }
 
 .side-4 {
-  transform: rotateY(180deg) translateZ(50px);
+  transform: rotateY(180deg) translateZ(40px);
 }
 
 .side-3 {
-  transform: rotateY(-90deg) translateZ(50px);
+  transform: rotateY(-90deg) translateZ(40px);
 }
 
 .side-6 {
-  transform: rotateX(-90deg) translateZ(50px);
+  transform: rotateX(-90deg) translateZ(40px);
 }
 
 @keyframes move1 {

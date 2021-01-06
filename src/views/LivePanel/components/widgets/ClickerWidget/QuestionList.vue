@@ -1,6 +1,6 @@
 <template>
   <div class="question">
-    <el-form label-width="60px">
+    <el-form>
       <el-form-item label="题目">
         <el-input
           v-model="question.title"
@@ -9,6 +9,7 @@
           :autosize="{ minRows: 2, maxRows: 4 }"
         ></el-input>
       </el-form-item>
+      <div class="item-title">选项</div>
       <el-form-item
         v-for="(item, index) in question.items"
         :key="index"
@@ -42,9 +43,9 @@ export default {
         title: "是正确的吗？",
         items: [
           { detail: "是", isTrue: true },
-          { detail: "否", isTrue: false }
-        ]
-      }
+          { detail: "否", isTrue: false },
+        ],
+      },
     };
   },
   methods: {
@@ -53,24 +54,41 @@ export default {
       this.question.items.push({ detail: "", isTrue: false });
     },
     remove(item) {
-      this.question.items = this.question.items.filter(f => f != item);
+      this.question.items = this.question.items.filter((f) => f != item);
     },
     start() {
       this.START_CLICKER(this.question);
     },
     itemLabel(index) {
-      return `${String.fromCharCode(index + 65)} :`;
-    }
+      return `${String.fromCharCode(index + 65)}`;
+    },
   },
   components: {
-    QuestionItem
-  }
+    QuestionItem,
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .question {
-  padding: 10px;
+  padding: 0 24px;
+  /deep/ {
+    .el-form-item {
+      margin-bottom: 40px;
+    }
+    .el-form-item__label {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: #ffffff;
+    }
+  }
+  .item-title {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #ffffff;
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+  }
 }
 .btn-group {
   text-align: center;

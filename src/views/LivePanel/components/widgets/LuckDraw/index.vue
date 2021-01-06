@@ -19,7 +19,7 @@
             <div class="line"></div>
           </div>
         </div>
-        <div class="btnClick">
+        <div class="beginBtn">
           <el-button
             v-if="isTeacher && !drawing"
             size="mini "
@@ -104,15 +104,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.dice {
-  background: #54555d;
-}
 .content {
   width: 200px;
   height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
 }
 .line {
   width: 120px;
@@ -152,18 +150,6 @@ export default {
   font-size: 20px;
   height: 30px;
   width: 100%;
-}
-
-.btnClick {
-  text-align: center;
-  background: #54555d;
-  padding-bottom: 10px;
-}
-.el-button {
-  background: #018a8c;
-  width: 160px;
-  padding-bottom: 5px;
-  font-size: 14px;
 }
 .animating {
   animation: rotate 2s normal ease-in-out forwards;
