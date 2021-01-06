@@ -117,19 +117,12 @@ export default {
 <style lang="scss" scoped>
 .timer {
   width: 200px;
-  background: #54555d;
   .beginBtn {
     display: flex;
     justify-content: center;
-    padding-bottom: 5px;
-    // padding-left: 18px;
-    // width: 164px;
-    // border-radius: 3px;
     .el-button {
-      background: #018a8c;
-      width: 160px;
-      padding-bottom: 5px;
-      font-size: 14px;
+      font-size: 0.75rem;
+      height: 40px;
     }
   }
   .time {
@@ -137,7 +130,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 20px;
+    padding: 24px 20px;
     span.marks {
       font-size: 30px;
       color: #eee;

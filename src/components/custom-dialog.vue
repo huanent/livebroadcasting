@@ -19,11 +19,6 @@
     >
       <div class="title">
         <span class="main-title">{{ title }}</span>
-        <div class="secondary-title">
-          <div class="title-line"></div>
-          <span>{{ secondaryTitle }}</span>
-          <div class="title-line"></div>
-        </div>
       </div>
     </div>
     <slot></slot>
@@ -91,18 +86,13 @@ export default {
   border-radius: 50%;
 }
 /deep/ .el-dialog__body {
-  padding: 2rem 2rem;
-  min-height: 10rem;
+  padding: 1.25rem 2rem 3.4375rem;
 }
 /deep/ .el-dialog__footer {
   padding: 0 2rem 2rem 2rem;
 }
 .custom-dialog-title {
-  background: url("../assets/images/img1/dialog-banner_2x.png");
-  padding: 0;
-  min-height: 100px;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+  padding: 1.5rem;
 }
 .dialog-footer {
   text-align: center;
@@ -118,71 +108,18 @@ export default {
   border-radius: 1rem;
   width: 80px;
 }
-.title {
-  color: white;
-
-  width: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  text-align: center;
-  height: 1;
-  transform: translateX(-50%) translateY(-50%);
-  padding-bottom: 2px;
-  /*border-bottom: 2px #fff solid;*/
-}
-.title-line {
-  display: inline-block;
-
-  margin: 0.125rem 0.5rem;
-  width: 2rem;
-  background: #fff;
-  height: 1px;
-}
 
 .main-title {
-  font-size: 1.75rem;
-  font-weight: 500;
-  letter-spacing: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1b29;
   text-align: center;
-}
-.secondary-title {
-  font-size: 0.5rem;
-  letter-spacing: 2px;
-  text-align: center;
-}
-@media (max-width: 1400px) {
-  .main-title {
-    font-size: 1.75rem;
-  }
-  .secondary-title {
-    font-size: 0.5rem;
-  }
-}
-
-@media (max-width: 1200px) {
-  .main-title {
-    font-size: 1.5rem;
-  }
-  .secondary-title {
-    font-size: 0.5rem;
-  }
 }
 
 @media (max-width: 768px) {
   /deep/ .el-dialog__body {
     padding: 0.5rem 1rem;
     min-height: 10rem;
-  }
-  .main-title {
-    font-size: 1.2rem;
-  }
-  .secondary-title {
-    font-size: xx-small;
-  }
-  .title-line {
-    width: 0.75rem;
-    margin: 0.125rem 0.2rem;
   }
 }
 /deep/ .el-dialog {
@@ -216,7 +153,7 @@ export default {
 
 .mini {
   /deep/ .el-dialog {
-    width: 30%;
+    width: 31.3%;
   }
   @media (max-width: 1400px) {
     /deep/ .el-dialog {

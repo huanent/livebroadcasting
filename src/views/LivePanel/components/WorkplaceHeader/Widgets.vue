@@ -108,8 +108,6 @@ export default {
   align-items: center;
   justify-items: center;
   justify-content: space-between;
-
-  padding: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   @media (max-width: 768px) {
@@ -123,33 +121,23 @@ export default {
   }
 }
 
-/deep/ .el-dialog__body {
-  padding: 2rem 1rem;
-}
-
 .app-wrapper:hover {
   box-shadow: $shadow;
 }
 .app-wrapper {
   width: 100px;
   height: 100px;
-
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-
   text-align: center;
   cursor: pointer;
+  margin-bottom: 2rem;
   img {
-    margin: 0 auto;
-    padding: 0.5rem 0 0 0;
-    width: 70%;
+    margin: 0.625rem auto;
+    width: 80%;
     object-fit: contain;
   }
   span {
-    margin: 0.25rem 0;
-    font-size: 0.5rem;
-    color: #8a8a8a;
+    font-size: 0.875rem;
+    color: #1a1b29;
   }
 }
 </style>

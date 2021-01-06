@@ -79,19 +79,19 @@ export default {
   header {
     text-align: center;
     color: #fff;
-    height: 26px;
-    line-height: 26px;
-    background-color: #484950;
+    line-height: 1.3125rem;
     width: 100%;
+    font-size: 1rem;
+    font-weight: 700;
     .close {
-      width: 20px;
-      height: 20px;
+      width: 28px;
+      height: 28px;
       position: absolute;
-      top: 0;
+      top: 8px;
       bottom: 0;
-      right: 0px;
-      font-size: 20px;
-      color: #98989c;
+      right: 8px;
+      font-size: 28px;
+      color: #d0cfe6;
       transform: rotate(45deg);
       cursor: pointer;
     }
@@ -99,8 +99,9 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  box-shadow: 0px 0px 5px #888888;
-  background-color: #fff;
+  background: #27283d;
+  border-radius: 8px;
   z-index: 100000;
+  padding: 1.75rem;
 }
 </style>
