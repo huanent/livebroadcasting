@@ -129,16 +129,6 @@ export default {
       color: #eee;
       user-select: none;
     }
-    .line {
-      width: 160px;
-      height: 1px;
-      opacity: 0.2;
-      background: #54555d;
-      position: absolute;
-      top: 0px;
-      bottom: 0px;
-      margin: auto;
-    }
   }
 }
 </style>
