@@ -156,16 +156,22 @@ export default {
     @media screen and (min-width: 768px) {
       padding-left: 90px;
     }
+    @media screen and (max-width: 767px) {
+      padding: 1rem;
+    }
   }
   .form-wrapper {
     background: url(../../assets/images/board.jpg) no-repeat right center;
     background-size: 764px 613px;
+    @media screen and (max-width: 767px) {
+      background: none;
+    }
   }
   .form-container {
     max-width: 350px;
     @media screen and (max-width: 767px) {
       width: 80%;
-      max-width: 450px;
+      margin: 0 auto;
     }
   }
   .title {
@@ -177,6 +183,9 @@ export default {
   .logo {
     max-width: 256px;
     margin-bottom: 6rem;
+    @media screen and (max-width: 767px) {
+      margin-bottom: 2rem;
+    }
     img {
       max-width: 100%;
       width: 100%;
@@ -200,29 +209,35 @@ export default {
       border: 1px solid #d0cfe6;
       border-radius: 4px;
     }
+    @media screen and (min-width: 767px) {
+      .el-form-item__error {
+        left: 100%;
+        top: 50%;
+        margin-left: 2.5rem;
+        transform: translateY(-65%);
+        width: 100%;
+        color: #1a1b29;
+      }
+      .el-input__validateIcon {
+        position: absolute;
+        left: 100%;
+      }
+    }
     .el-form-item__error {
-      left: 100%;
-      top: 50%;
-      margin-left: 2.5rem;
-      transform: translateY(-65%);
-      width: 100%;
       font-size: 1rem;
       font-weight: 400;
-      color: #1a1b29;
-      padding-top: 0;
+      color: #ff331f;
     }
     .el-input__validateIcon {
-      position: absolute;
-      left: 100%;
       margin-left: 1rem;
       font-size: 1.25rem;
       &.el-icon-circle-close:before {
         color: #ff331f;
-        content:'\e79d';
+        content: "\e79d";
       }
       &.el-icon-circle-check:before {
         color: #13ce66;
-        content: '\e79c';
+        content: "\e79c";
       }
     }
     .login-btn {
