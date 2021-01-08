@@ -17,9 +17,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .hand {
-  width: 70px;
-  height: 70px;
-  opacity: 0.5;
+  width: 60px;
+  height: 60px;
   @include themeify {
     background-color: themed("toolbar_bg");
   }
@@ -35,6 +34,5 @@ export default {
 }
 .hand:hover {
   transform: scale(1.1);
-  opacity: 0.8;
 }
 </style>

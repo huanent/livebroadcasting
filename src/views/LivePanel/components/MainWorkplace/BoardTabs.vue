@@ -236,7 +236,7 @@ export default {
   .select-option {
     z-index: 100;
     cursor: pointer;
-    padding: 0.3rem 0;
+    padding: 0.3rem 0.5rem;
     @include themeify {
       background-color: themed("background_color2");
     }
