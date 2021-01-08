@@ -344,10 +344,8 @@ export default {
 
 .icon-upload {
   @include themeify {
-    width: 0.7rem !important;
-    height: 0.7rem !important;
     fill: #fff !important;
-    padding: 0 0.4rem 0 0;
+    padding: 0 4px 0 0;
     border-right: 1px #fff solid;
   }
 }
