@@ -262,6 +262,7 @@ export default {
       padding: 0;
       margin-left: 0;
       color: #506efa;
+      cursor: pointer;
     }
     .el-form-item {
       margin-bottom: 2.5rem;
