@@ -42,6 +42,10 @@ export default {
   @media screen and (max-width: 1200px) {
     width: auto;
   }
+  @media screen and (max-width: 767px) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
   .setting-tabs {
     /deep/ .el-tabs__item {
       height: 44px;
