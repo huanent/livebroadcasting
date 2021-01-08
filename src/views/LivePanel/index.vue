@@ -11,7 +11,7 @@
     <div
       :class="{
         'workplace-panel-content': true,
-        'sidebar-hide': !isSidebarShow
+        'sidebar-hide': !isSidebarShow,
       }"
     >
       <div
@@ -31,7 +31,14 @@
       <div id="workplace-panel-right">
         <teacher-camera />
         <div class="message-panel-wrapper">
-          <chatroom />
+          <el-tabs class="panel-tab" v-model="messageWrapperActiveTab">
+            <el-tab-pane label="聊天" name="chat">
+              <chatroom />
+            </el-tab-pane>
+            <el-tab-pane label="成员" name="member">
+              <member-list />
+            </el-tab-pane>
+          </el-tabs>
         </div>
       </div>
     </div>
@@ -44,6 +51,7 @@
 import WorkplacePanelHeader from "./components/WorkplaceHeader";
 import MainWorkplace from "./components/MainWorkplace";
 import Chatroom from "./components/Chatroom";
+import MemberList from "./components/widgets/Register/member-list";
 import TeacherCamera from "./components/camera/TeacherCamera";
 import StudentCamera from "./components/camera/StudentCamera";
 import { destroyEmitter, Emitter, initEmitter } from "@/core/emit";
@@ -53,7 +61,7 @@ import Widgets from "./components/widgets";
 import { app } from "@/main";
 import {
   initLiveBroadcastService,
-  liveBroadcastService
+  liveBroadcastService,
 } from "@/core/live-broadcast";
 import HandUpList from "./components/handUp/HandUpList";
 import { autoSyncState, destroySyncState } from "@/core/state-sync";
@@ -62,7 +70,7 @@ import Hand from "./components/handUp/Hand";
 import Toolbar from "./components/Toolbar";
 export default {
   name: "LivePanel",
-  data: function() {
+  data: function () {
     return {
       ready: false,
       timer: null,
@@ -73,7 +81,8 @@ export default {
       classStatus: 0,
       isSidebarShow: true,
       offlineUserClearer: null,
-      active: true
+      active: true,
+      messageWrapperActiveTab: "chat",
     };
   },
   computed: {
@@ -84,13 +93,13 @@ export default {
       "panelType",
       "cameraPanelId",
       "token",
-      "isToolBarShow"
+      "isToolBarShow",
     ]),
     ...mapState("features", ["canControlBoard", "classing", "canControlBoard"]),
     ...mapGetters("workplace", ["isTeacher"]),
     isToolBarShow() {
       return this.panelType === "board" && this.canControlBoard;
-    }
+    },
   },
   async mounted() {
     initEmitter();
@@ -134,7 +143,7 @@ export default {
       this.setTimesamp();
     }
 
-    Emitter.on("tim_kicked_out", type => {
+    Emitter.on("tim_kicked_out", (type) => {
       let tips = "";
       switch (type) {
         case "MULT_ACCOUNT":
@@ -152,7 +161,7 @@ export default {
         type: "error",
         onClose: () => {
           this.$router.push({ name: "Classlist" });
-        }
+        },
       });
     });
   },
@@ -167,7 +176,7 @@ export default {
     ...mapMutations("features", ["SET_TIMESTAMP"]),
     ...mapMutations("workplace", [
       "SET_CAMERA_PANEL_VISIBILITY",
-      "CLEAR_OFFLINE_USER"
+      "CLEAR_OFFLINE_USER",
     ]),
     ...mapActions("workplace", ["enterRoom", "destroyRoom", "getRoomInfo"]),
     ...mapActions("board", ["boardResize"]),
@@ -176,7 +185,7 @@ export default {
     },
     toggleCameraPanel() {
       this.SET_CAMERA_PANEL_VISIBILITY(!this.cameraPanelVisibity);
-      this.$nextTick(_ => this.boardResize());
+      this.$nextTick((_) => this.boardResize());
     },
     async clearOfflineUser() {
       while (this.active) {
@@ -189,7 +198,7 @@ export default {
         this.SET_TIMESTAMP(new Date().getTime());
         await delay(10000);
       }
-    }
+    },
   },
   watch: {
     canControlBoard(value) {
@@ -205,7 +214,7 @@ export default {
       if (value === false) {
         this.$notify.success({
           title: "下课啦",
-          message: "即将返回课堂列表"
+          message: "即将返回课堂列表",
         });
 
         this.timer = setTimeout(() => {
@@ -221,7 +230,7 @@ export default {
     roomInfo(value) {
       if (!value) return;
       document.title = value.title;
-    }
+    },
   },
   components: {
     MainWorkplace,
@@ -232,8 +241,9 @@ export default {
     Widgets,
     HandUpList,
     Hand,
-    Toolbar
-  }
+    Toolbar,
+    MemberList,
+  },
 };
 </script>
 
@@ -311,6 +321,43 @@ export default {
   grid-template-rows: 0 100% !important;
 }
 .message-panel-wrapper {
-  background: #292b2e;
+  .panel-tab {
+    @include themeify {
+      background: themed("background_color3");
+    }
+    display: grid;
+    height: 100%;
+    grid-template-rows: 40px auto;
+    /deep/ {
+      .el-tabs__content {
+        @include themeify {
+          background: themed("background_color5");
+          border-top: 1px solid themedOpacity("color_opposite", 0.1);
+        }
+      }
+      .el-tabs__content .el-tab-pane {
+        height: 100%;
+      }
+      .el-tabs__nav-wrap::after {
+        @include themeify {
+          background-color: themed("background_color3");
+        }
+      }
+      .el-tabs__nav {
+        width: 100%;
+      }
+      .el-tabs__header {
+        margin: 0;
+      }
+      .el-tabs__item {
+        width: 50%;
+        padding: 0;
+        text-align: center;
+        @include themeify {
+          color: themed("font_color1");
+        }
+      }
+    }
+  }
 }
 </style>

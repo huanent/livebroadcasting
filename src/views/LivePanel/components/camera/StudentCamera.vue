@@ -2,7 +2,7 @@
   <div class="camera-panel-wrapper" ref="wrapper">
     <div class="ctrl left">
       <a @click.stop="leftMove">
-        <icon name="chevron-circle-left" size="24"></icon>
+        <icon name="chevron-circle-left" size="16"></icon>
       </a>
     </div>
     <div class="items" ref="items" :style="{ left: offset + 50 + 'px' }">
@@ -34,7 +34,7 @@
     </div>
     <div class="ctrl right">
       <a @click.stop="rightMove">
-        <icon name="chevron-circle-right" size="24"></icon>
+        <icon name="chevron-circle-right" size="16"></icon>
       </a>
     </div>
   </div>
@@ -97,6 +97,9 @@ export default {
     align-items: center;
     z-index: 1;
     user-select: none;
+    @include themeify {
+      background-color: themed("background_color7");
+    }
     .svg-icon {
       @include themeify {
         fill: themed("font_color2");
