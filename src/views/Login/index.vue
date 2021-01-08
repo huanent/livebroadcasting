@@ -162,7 +162,7 @@ export default {
   }
   .form-wrapper {
     background: url(../../assets/images/board.jpg) no-repeat right center;
-    background-size: 764px 613px;
+    background-size: 60%;
     @media screen and (max-width: 767px) {
       background: none;
     }
