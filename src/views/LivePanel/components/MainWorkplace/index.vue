@@ -24,10 +24,10 @@
       <share-screen v-if="panelType === 'screen'" />
       <camera v-if="panelType === 'camera'" />
     </div>
-    <StreamSourceDialog
+    <!-- <StreamSourceDialog
       :visible.sync="showStreamSelectdialog"
       @selected="onSelected"
-    />
+    /> -->
   </div>
 </template>
 
