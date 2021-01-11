@@ -31,11 +31,11 @@
       <div id="workplace-panel-right">
         <teacher-camera />
         <div class="message-panel-wrapper">
-          <el-tabs class="panel-tab" v-model="messageWrapperActiveTab">
+          <el-tabs class="panel-tab" v-model="messageWrapperActiveTab" :class="{'member-tab': !isTeacher}">
             <el-tab-pane label="聊天" name="chat">
               <chatroom />
             </el-tab-pane>
-            <el-tab-pane label="成员" name="member">
+            <el-tab-pane v-if="isTeacher" label="成员" name="member">
               <member-list />
             </el-tab-pane>
           </el-tabs>
@@ -356,6 +356,14 @@ export default {
         @include themeify {
           color: themed("font_color1");
         }
+      }
+    }
+    &.member-tab /deep/ {
+      .el-tabs__item {
+        width: 100%;
+      }
+      .el-tabs__active-bar {
+        display: none;
       }
     }
   }
