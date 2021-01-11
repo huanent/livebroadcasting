@@ -2,7 +2,7 @@
   <div class="page-controller">
     <icon
       name="chevron-circle-left"
-      color="#737882"
+      color="#8a8a99"
       @click.native.stop="handleMinus"
       v-if="canControlBoard"
     />
@@ -12,7 +12,7 @@
     </span>
     <icon
       name="chevron-circle-right"
-      color="#737882"
+      color="#8a8a99"
       @click.native.stop="handleAdd"
       custom-class="custom-svg-icon"
       v-if="canControlBoard"

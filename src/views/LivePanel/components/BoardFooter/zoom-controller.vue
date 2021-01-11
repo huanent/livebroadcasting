@@ -3,14 +3,14 @@
     <icon
       v-if="canControlBoard"
       name="minus-circle"
-      color="#737882"
+      color="#8a8a99"
       @click.native.stop="handleMinus"
     />
     <span>{{ currentFile.scale + "%" }}</span>
     <icon
       v-if="canControlBoard"
       name="plus-circle"
-      color="#737882"
+      color="#8a8a99"
       @click.native.stop="handleAdd"
     />
   </div>
