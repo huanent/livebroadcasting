@@ -9,7 +9,7 @@
       @keyup.enter.native="onSubmit"
     ></el-input>
     <div class="buttom-btn">
-      <div class="forbidden-wrapper" @click="toggleForbiddenStatus">
+      <div class="forbidden-wrapper">
         <el-tooltip
           effect="dark"
           :content="forbiddenTips"

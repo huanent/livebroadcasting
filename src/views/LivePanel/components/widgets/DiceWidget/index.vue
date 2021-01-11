@@ -7,7 +7,12 @@
     @moved="UPDATE_POSITION({ name: 'dice', position: $event })"
   >
     <div class="contain">
-      <div class="dice" :class="animationClass" ref="dice" @click="start">
+      <div
+        class="dice"
+        :class="animationClass"
+        ref="dice"
+        @click="isTeacher && start()"
+      >
         <div
           v-for="(group, key, index) in pointerList"
           class="side"
@@ -30,13 +35,8 @@
         </div>
       </div>
     </div>
-    <div class="beginBtn">
-      <el-button
-        size="mini"
-        type="primary"
-        @click="start"
-        >开始</el-button
-      >
+    <div class="beginBtn" v-if="isTeacher">
+      <el-button size="mini" type="primary" @click="start">开始</el-button>
     </div>
   </widget-window>
 </template>
@@ -44,6 +44,7 @@
 import WidgetWindow from "../WidgetWindow";
 import { mapState, mapMutations, mapGetters } from "vuex";
 import BezierAnimation from "../../../../../core/common/animation/animation";
+import { ROLE } from "../../../../../models/role";
 var vm;
 export default {
   name: "DiceWidget",
@@ -64,6 +65,7 @@ export default {
   computed: {
     ...mapState("widget", ["dice"]),
     ...mapState("device", ["isMobile"]),
+    ...mapGetters("workplace", ["isTeacher"]),
   },
   methods: {
     ...mapMutations("widget", [
