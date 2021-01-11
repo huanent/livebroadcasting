@@ -172,13 +172,13 @@ export default {
       z-index: 1;
       width: 100%;
       overflow: hidden;
-      height: calc(100% - 2.5rem);
+      height: calc(100% - 3rem);
     }
   }
 }
 .board-footer-wrapper {
   width: 100%;
-  height: 2.5rem;
+  height: 3rem;
   line-height: 2.5rem;
   color: #737882;
   position: absolute;

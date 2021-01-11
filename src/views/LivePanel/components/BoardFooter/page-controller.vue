@@ -72,13 +72,7 @@ export default {
   }
 }
 .svg-icon {
-  height: 14px !important;
-  width: 14px !important;
-}
-@media screen and (max-width: 768px) {
-  .svg-icon {
-    height: 12px !important;
-    width: 12px !important;
-  }
+  height: 10px !important;
+  width: 10px !important;
 }
 </style>
