@@ -53,7 +53,6 @@ export default {
   padding: 0 24px;
   .el-table /deep/{
     color: #1a1b29;
-    background-color: transparent;
     thead th .cell{
       color: #1a1b29;
     }

@@ -55,7 +55,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .answer {
-  padding: 5px;
+  padding: 0 24px;
+  color: white;
   .el-alert {
     margin: 15px 0;
   }
@@ -64,6 +65,12 @@ export default {
   }
   .commited {
     text-align: center;
+  }
+  /deep/ {
+    .el-alert--info.is-light,
+    .el-alert--success.is-light {
+      background-color: transparent;
+    }
   }
 }
 </style>
