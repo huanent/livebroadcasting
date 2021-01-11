@@ -16,7 +16,7 @@
             class="board-tab-icon-container"
             v-if="canControlBoard"
           >
-            <icon class="board-tab-icon" name="times" :size="14"></icon>
+            <icon class="board-tab-icon" name="times" :size="20"></icon>
           </span>
         </div>
       </div>
@@ -195,7 +195,7 @@ export default {
   fill: #bfbfbf !important;
 }
 .board-tab-icon-container {
-  padding: 0.2rem 0 0.2rem 0.5rem;
+  padding: 0.2rem;
 }
 .board-tab-title-container {
   padding: 0 0.2rem;
