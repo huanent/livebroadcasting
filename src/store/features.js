@@ -8,7 +8,7 @@ export const initFeaturesState = function(role) {
     canControlBoard: isTeacher,
     videoStatus: true,
     audioStatus: true,
-    subscribeVideo: true,
+    subscribeVideo: isTeacher,
     subscribeAudio: isTeacher,
     handUp: HAND_UP_STATUS.NONE,
     globalMessage: true,
@@ -52,6 +52,7 @@ const mutations = {
       case HAND_UP_STATUS.SPEAKING:
       case HAND_UP_STATUS.DRAWING:
         state.handUp = HAND_UP_STATUS.NONE;
+        liveBroadcastService.trtcService.toAudience();
         break;
       default:
         break;
@@ -63,13 +64,18 @@ const mutations = {
         state.handUp = HAND_UP_STATUS.NONE;
         state.canControlBoard = false;
         state.subscribeAudio = false;
+        state.subscribeVideo = false;
+        liveBroadcastService.trtcService.toAudience();
         break;
       case HAND_UP_STATUS.SPEAKING:
         state.subscribeAudio = true;
+        state.subscribeVideo = true;
         state.canControlBoard = false;
+        liveBroadcastService.trtcService.publish();
         break;
       case HAND_UP_STATUS.DRAWING:
         state.subscribeAudio = true;
+        state.subscribeVideo = true;
         state.canControlBoard = true;
         break;
       default:

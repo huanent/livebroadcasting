@@ -40,6 +40,11 @@ export class ArtcService {
       this.remoteStreams.push(e.stream);
     });
 
+    client.on("stream-removed", e => {
+      let userId = e.stream.streamId;
+      this.remoteStreams = this.remoteStreams.filter(f => f.streamId != userId);
+    });
+
     client.on("peer-leave", e => {
       let userId = e.stream.streamId;
 
@@ -236,7 +241,12 @@ export class ArtcService {
 
     try {
       await new Promise((rs, rj) => this.localStream.init(rs, rj));
-      this.mainClient.publish(this.localStream);
+
+      if (this.isTeacher()) {
+        this.publish();
+      } else {
+        this.toAudience();
+      }
 
       let selectedDevices = {
         camera: this.localStream.getVideoTrack().label,
@@ -246,6 +256,14 @@ export class ArtcService {
     } catch (error) {
       store.dispatch("tips/notAccessDevice");
     }
+  }
+
+  publish() {
+    this.mainClient.publish(this.localStream);
+  }
+
+  toAudience() {
+    this.mainClient.unpublish(this.localStream);
   }
 
   async destroy() {

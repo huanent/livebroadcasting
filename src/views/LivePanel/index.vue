@@ -11,7 +11,7 @@
     <div
       :class="{
         'workplace-panel-content': true,
-        'sidebar-hide': !isSidebarShow,
+        'sidebar-hide': !isSidebarShow
       }"
     >
       <div
@@ -31,7 +31,11 @@
       <div id="workplace-panel-right">
         <teacher-camera />
         <div class="message-panel-wrapper">
-          <el-tabs class="panel-tab" v-model="messageWrapperActiveTab" :class="{'member-tab': !isTeacher}">
+          <el-tabs
+            class="panel-tab"
+            v-model="messageWrapperActiveTab"
+            :class="{ 'member-tab': !isTeacher }"
+          >
             <el-tab-pane label="聊天" name="chat">
               <chatroom />
             </el-tab-pane>
@@ -61,7 +65,7 @@ import Widgets from "./components/widgets";
 import { app } from "@/main";
 import {
   initLiveBroadcastService,
-  liveBroadcastService,
+  liveBroadcastService
 } from "@/core/live-broadcast";
 import HandUpList from "./components/handUp/HandUpList";
 import { autoSyncState, destroySyncState } from "@/core/state-sync";
@@ -70,7 +74,7 @@ import Hand from "./components/handUp/Hand";
 import Toolbar from "./components/Toolbar";
 export default {
   name: "LivePanel",
-  data: function () {
+  data: function() {
     return {
       ready: false,
       timer: null,
@@ -82,7 +86,7 @@ export default {
       isSidebarShow: true,
       offlineUserClearer: null,
       active: true,
-      messageWrapperActiveTab: "chat",
+      messageWrapperActiveTab: "chat"
     };
   },
   computed: {
@@ -93,13 +97,13 @@ export default {
       "panelType",
       "cameraPanelId",
       "token",
-      "isToolBarShow",
+      "isToolBarShow"
     ]),
     ...mapState("features", ["canControlBoard", "classing", "canControlBoard"]),
     ...mapGetters("workplace", ["isTeacher"]),
     isToolBarShow() {
       return this.panelType === "board" && this.canControlBoard;
-    },
+    }
   },
   async mounted() {
     initEmitter();
@@ -143,7 +147,7 @@ export default {
       this.setTimesamp();
     }
 
-    Emitter.on("tim_kicked_out", (type) => {
+    Emitter.on("tim_kicked_out", type => {
       let tips = "";
       switch (type) {
         case "MULT_ACCOUNT":
@@ -161,7 +165,7 @@ export default {
         type: "error",
         onClose: () => {
           this.$router.push({ name: "Classlist" });
-        },
+        }
       });
     });
   },
@@ -176,7 +180,7 @@ export default {
     ...mapMutations("features", ["SET_TIMESTAMP"]),
     ...mapMutations("workplace", [
       "SET_CAMERA_PANEL_VISIBILITY",
-      "CLEAR_OFFLINE_USER",
+      "CLEAR_OFFLINE_USER"
     ]),
     ...mapActions("workplace", ["enterRoom", "destroyRoom", "getRoomInfo"]),
     ...mapActions("board", ["boardResize"]),
@@ -185,7 +189,7 @@ export default {
     },
     toggleCameraPanel() {
       this.SET_CAMERA_PANEL_VISIBILITY(!this.cameraPanelVisibity);
-      this.$nextTick((_) => this.boardResize());
+      this.$nextTick(_ => this.boardResize());
     },
     async clearOfflineUser() {
       while (this.active) {
@@ -198,7 +202,7 @@ export default {
         this.SET_TIMESTAMP(new Date().getTime());
         await delay(10000);
       }
-    },
+    }
   },
   watch: {
     canControlBoard(value) {
@@ -214,7 +218,7 @@ export default {
       if (value === false) {
         this.$notify.success({
           title: "下课啦",
-          message: "即将返回课堂列表",
+          message: "即将返回课堂列表"
         });
 
         this.timer = setTimeout(() => {
@@ -230,7 +234,7 @@ export default {
     roomInfo(value) {
       if (!value) return;
       document.title = value.title;
-    },
+    }
   },
   components: {
     MainWorkplace,
@@ -242,8 +246,8 @@ export default {
     HandUpList,
     Hand,
     Toolbar,
-    MemberList,
-  },
+    MemberList
+  }
 };
 </script>
 
